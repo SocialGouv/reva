@@ -30,6 +30,7 @@ export type CandidacyEntity = Partial<
 export type CreateCandidacyEntityOptions = {
   status?: CandidacyStatusStep;
   readyForJuryEstimatedAt?: Candidacy["readyForJuryEstimatedAt"];
+  firstAppointmentOccuredAt?: Candidacy["firstAppointmentOccuredAt"];
   typeAccompagnement?: Candidacy["typeAccompagnement"];
   organism?: Organism | null;
   certification?: Certification | null;
@@ -73,6 +74,7 @@ export const createCandidacyEntity = (
     certification,
     status,
     readyForJuryEstimatedAt,
+    firstAppointmentOccuredAt,
     jury,
     activeDossierDeValidation,
     goalsCount,
@@ -183,6 +185,10 @@ export const createCandidacyEntity = (
 
   if (appointments) {
     candidacy.appointments = appointments;
+  }
+
+  if (firstAppointmentOccuredAt !== undefined) {
+    candidacy.firstAppointmentOccuredAt = firstAppointmentOccuredAt;
   }
 
   return candidacy;

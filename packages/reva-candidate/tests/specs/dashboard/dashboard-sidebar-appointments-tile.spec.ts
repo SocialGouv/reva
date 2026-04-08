@@ -90,12 +90,8 @@ test.describe("RendezVousGeneriqueTile", () => {
     const candidacy = createCandidacyEntity({
       candidate: createCandidateEntity(),
       typeAccompagnement: "ACCOMPAGNE",
+      firstAppointmentOccuredAt: format(subDays(new Date(), 5), "yyyy-MM-dd"),
     });
-
-    candidacy.firstAppointmentOccuredAt = format(
-      subDays(new Date(), 5),
-      "yyyy-MM-dd",
-    );
 
     await setupDashboard(page, msw, candidacy);
 
