@@ -1,4 +1,6 @@
 import { Candidate } from "@/modules/candidate/candidate.types";
+import { getCivilInformationCompletedByCandidateId } from "@/modules/candidate/features/getCivilInformationCompletedByCandidateId";
+import { getContactInformationCompletedByCandidateId } from "@/modules/candidate/features/getContactInformationCompletedByCandidateId";
 
 import { CandidacyMenu, CandidacyMenuEntry } from "../candidacy-menu.types";
 
@@ -26,22 +28,25 @@ export const getCandidacyMenu = async ({
 
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
 
-  const isCandidateSummaryComplete = checkCandidateFields(candidate, [
-    "firstname",
-    "lastname",
-    "phone",
-    "email",
-    "birthdate",
-    "birthCity",
-    "nationality",
-    "street",
-    "zip",
-    "city",
-    "countryId",
-    "departmentId",
+  const isCivilInformationCompleted =
+    await getCivilInformationCompletedByCandidateId({
+      candidateId: candidate!.id,
+    });
+
+  const isContactInformationCompleted =
+    await getContactInformationCompletedByCandidateId({
+      candidateId: candidate!.id,
+    });
+
+  const isCandidateProfileCompleted = checkCandidateFields(candidate, [
     "highestDegreeId",
     "niveauDeFormationLePlusEleveDegreeId",
   ]);
+
+  const isCandidateSummaryComplete =
+    isCivilInformationCompleted &&
+    isContactInformationCompleted &&
+    isCandidateProfileCompleted;
 
   const menuHeader: CandidacyMenuEntry[] = [
     {

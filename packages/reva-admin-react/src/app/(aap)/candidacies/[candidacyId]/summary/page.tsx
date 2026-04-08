@@ -48,20 +48,13 @@ const CandidacySummaryPage = () => {
 
   const { candidate, goals } = candidacy;
 
-  const isCandidateInformationCompleted =
-    candidate.civilInformationCompleted &&
-    candidate.contactInformationCompleted;
+  const isCivilInformationCompleted = candidate.civilInformationCompleted;
+
+  const isContactInformationCompleted = candidate.contactInformationCompleted;
 
   const isCandidateProfileCompleted = checkCandidateFields(candidate, [
     "highestDegree",
     "niveauDeFormationLePlusEleve",
-  ]);
-
-  const candidateHasAddressCompleted = checkCandidateFields(candidate, [
-    "street",
-    "zip",
-    "city",
-    "department",
   ]);
 
   const showFundingAlert = candidacy.financeModule === "hors_plateforme";
@@ -136,7 +129,9 @@ const CandidacySummaryPage = () => {
               title="Les informations du candidat"
               buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-information`}
               status={
-                isCandidateInformationCompleted ? "COMPLETED" : "TO_COMPLETE"
+                isCivilInformationCompleted && isContactInformationCompleted
+                  ? "COMPLETED"
+                  : "TO_COMPLETE"
               }
               isEditable={isCandidateEditable || isAdmin}
             >
@@ -160,7 +155,7 @@ const CandidacySummaryPage = () => {
                 </dd>
                 <dt className="sr-only">Adresse</dt>
                 <dd>
-                  {candidateHasAddressCompleted &&
+                  {isContactInformationCompleted &&
                     `${candidate.street}, ${candidate.zip} ${candidate.city}, ${candidate.department.label}`}
                 </dd>
               </dl>

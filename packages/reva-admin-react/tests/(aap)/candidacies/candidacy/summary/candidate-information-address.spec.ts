@@ -22,6 +22,7 @@ const DEFAULT_CANDIDATE = {
   city: "Paris",
   zip: "75001",
   department: { id: "dep-75", label: "Île-de-France", code: "75" },
+  contactInformationCompleted: true,
 };
 
 type CandidateInfo = {
