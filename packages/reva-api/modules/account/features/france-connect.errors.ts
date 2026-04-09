@@ -38,12 +38,21 @@ export class FranceConnectReconciliationError extends FranceConnectUserError {
   constructor({
     candidateId,
     mismatchedFields,
+    birthdateFC,
   }: {
     candidateId: string;
     mismatchedFields: string[];
+    birthdateFC?: Date | string;
   }) {
+    const isValidDate =
+      birthdateFC instanceof Date && !isNaN(birthdateFC.getTime());
+    const birthdateDisplay = isValidDate
+      ? birthdateFC.toISOString()
+      : (birthdateFC ?? "");
+
     super({
-      message: `Échec de réconciliation pour le candidat ${candidateId} : champs non-correspondants [${mismatchedFields.join(", ")}]`,
+      // log temporaire
+      message: `Échec de réconciliation pour le candidat ${candidateId} : champs non-correspondants [${mismatchedFields.join(", ")}] ${birthdateDisplay ? `(date de naissance: ${birthdateDisplay})` : ""}`,
       statusCode: 401,
       userMessage:
         "Les informations d'identité ne correspondent pas au compte existant. Connectez-vous avec vos identifiants habituels pour vérifier vos informations, ou contactez le support.",
