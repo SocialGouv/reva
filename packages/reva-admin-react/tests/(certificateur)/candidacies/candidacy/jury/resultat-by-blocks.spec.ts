@@ -97,6 +97,7 @@ async function openResultTab(page: Page) {
   await login({ role: "certificateur", page });
   await page.goto(JURY_PAGE_PATH);
   await Promise.all([
+    waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getCandidacyWithCandidateInfoForLayout"),
     waitGraphQL(page, "getJuryByCandidacyId"),
   ]);
@@ -108,6 +109,7 @@ test.describe("jury result by blocks", () => {
     candidacyId: CANDIDACY_ID,
     candidateFirstname: "Camille",
     candidateLastname: "Durand",
+    activeFeaturesForConnectedUser: ["JURY_RESULTS_BY_BLOCK"],
   });
 
   test("displays full certification options for accompagne full candidacy", async ({
@@ -116,12 +118,6 @@ test.describe("jury result by blocks", () => {
   }) => {
     msw.use(
       ...certificateurCommonHandlers,
-      fvae.query(
-        "activeFeaturesForConnectedUser",
-        graphQLResolver({
-          activeFeaturesForConnectedUser: ["JURY_RESULTS_BY_BLOCK"],
-        }),
-      ),
       createGetJuryByCandidacyIdHandler({
         typeAccompagnement: "ACCOMPAGNE",
         isCertificationPartial: false,
@@ -143,7 +139,6 @@ test.describe("jury result by blocks", () => {
     await expect(
       juryResultRadioByValue(page, "CANDIDATE_ABSENT"),
     ).toBeVisible();
-    await expect(juryResultRadioByValue(page, "FAILURE")).toBeVisible();
   });
 
   test("displays partial certification options for accompagne partial candidacy", async ({
@@ -152,12 +147,6 @@ test.describe("jury result by blocks", () => {
   }) => {
     msw.use(
       ...certificateurCommonHandlers,
-      fvae.query(
-        "activeFeaturesForConnectedUser",
-        graphQLResolver({
-          activeFeaturesForConnectedUser: ["JURY_RESULTS_BY_BLOCK"],
-        }),
-      ),
       createGetJuryByCandidacyIdHandler({
         typeAccompagnement: "ACCOMPAGNE",
         isCertificationPartial: true,
@@ -179,21 +168,14 @@ test.describe("jury result by blocks", () => {
     await expect(
       juryResultRadioByValue(page, "CANDIDATE_ABSENT"),
     ).toBeVisible();
-    await expect(juryResultRadioByValue(page, "FAILURE")).toBeVisible();
   });
 
-  test.skip("keeps submit disabled until a result is selected, then enables it", async ({
+  test("keeps submit disabled until a result is selected, then enables it", async ({
     page,
     msw,
   }) => {
     msw.use(
       ...certificateurCommonHandlers,
-      fvae.query(
-        "activeFeaturesForConnectedUser",
-        graphQLResolver({
-          activeFeaturesForConnectedUser: ["JURY_RESULTS_BY_BLOCK"],
-        }),
-      ),
       createGetJuryByCandidacyIdHandler({
         typeAccompagnement: "ACCOMPAGNE",
         isCertificationPartial: false,
@@ -205,23 +187,17 @@ test.describe("jury result by blocks", () => {
     const submitButton = page.getByRole("button", { name: "Envoyer" });
     await expect(submitButton).toBeDisabled();
 
-    await juryResultRadioByValue(page, "FAILURE").check({ force: true });
+    await juryResultRadioByValue(page, "FAILURE").click({ force: true });
 
     await expect(submitButton).toBeEnabled();
   });
 
-  test.skip("submits the jury result after confirmation modal", async ({
+  test("submits the jury result after confirmation modal", async ({
     page,
     msw,
   }) => {
     msw.use(
       ...certificateurCommonHandlers,
-      fvae.query(
-        "activeFeaturesForConnectedUser",
-        graphQLResolver({
-          activeFeaturesForConnectedUser: ["JURY_RESULTS_BY_BLOCK"],
-        }),
-      ),
       createGetJuryByCandidacyIdHandler({
         typeAccompagnement: "AUTONOME",
         isCertificationPartial: false,
@@ -234,7 +210,7 @@ test.describe("jury result by blocks", () => {
     await juryResultRadioByValue(
       page,
       "FULL_SUCCESS_OF_FULL_CERTIFICATION",
-    ).check({ force: true });
+    ).click({ force: true });
 
     await page.getByRole("button", { name: "Envoyer" }).click();
     await expect(

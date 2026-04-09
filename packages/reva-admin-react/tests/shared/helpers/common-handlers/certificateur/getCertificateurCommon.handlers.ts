@@ -18,10 +18,13 @@ export const getCertificateurCommonHandlers = ({
   candidacyId = "42288593-2a6b-4606-aedd-0d76348b39f4",
   candidateFirstname = "Alice",
   candidateLastname = "Doe",
+  activeFeaturesForConnectedUser = [],
 }: {
   candidacyId?: string;
   candidateFirstname?: string;
   candidateLastname?: string;
+  /** Feature flags returned by `activeFeaturesForConnectedUser` (default: none). */
+  activeFeaturesForConnectedUser?: string[];
 } = {}) => {
   const fvae = graphql.link("https://reva-api/api/graphql");
 
@@ -30,7 +33,7 @@ export const getCertificateurCommonHandlers = ({
       fvae.query(
         "activeFeaturesForConnectedUser",
         graphQLResolver({
-          activeFeaturesForConnectedUser: [],
+          activeFeaturesForConnectedUser,
         }),
       ),
       fvae.query(
