@@ -457,7 +457,7 @@ model Experience {
   createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime?          @map("updated_at") @db.Timestamptz(6)
 
-  @@index([candidacyId])
+  @@index([candidacyId, startedAt(sort: Desc)])
   @@map("experience")
 }
 
