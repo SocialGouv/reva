@@ -1,6 +1,6 @@
-import { arePivotFieldsMatching } from "./france-connect.utils";
+import { checkPivotFieldsMatch } from "./france-connect.utils";
 
-describe("arePivotFieldsMatching", () => {
+describe("checkPivotFieldsMatch", () => {
   const baseCandidate = {
     candidateFirstname: "Jean",
     candidateLastname: "Dupont",
@@ -13,82 +13,99 @@ describe("arePivotFieldsMatching", () => {
     fcBirthdate: "1990-05-15",
   };
 
-  test("returns true when all pivot fields match", () => {
-    expect(arePivotFieldsMatching({ ...baseCandidate, ...baseFc })).toBe(true);
+  test("returns isMatch true when all pivot fields match", () => {
+    const result = checkPivotFieldsMatch({ ...baseCandidate, ...baseFc });
+    expect(result.isMatch).toBe(true);
+    expect(result.mismatchedFields).toEqual([]);
   });
 
-  test("returns true with accent differences in names", () => {
-    expect(
-      arePivotFieldsMatching({
-        ...baseFc,
-        candidateFirstname: "René",
-        candidateLastname: "Müller",
-        candidateBirthdate: new Date("1990-05-15"),
-        fcGivenName: "Rene",
-        fcFamilyName: "Muller",
-      }),
-    ).toBe(true);
+  test("returns isMatch true with accent differences in names", () => {
+    const result = checkPivotFieldsMatch({
+      ...baseFc,
+      candidateFirstname: "René",
+      candidateLastname: "Müller",
+      candidateBirthdate: new Date("1990-05-15"),
+      fcGivenName: "Rene",
+      fcFamilyName: "Muller",
+    });
+    expect(result.isMatch).toBe(true);
+    expect(result.mismatchedFields).toEqual([]);
   });
 
-  test("returns true with case differences", () => {
-    expect(
-      arePivotFieldsMatching({
-        ...baseCandidate,
-        ...baseFc,
-        candidateFirstname: "JEAN",
-        candidateLastname: "DUPONT",
-      }),
-    ).toBe(true);
+  test("returns isMatch true with case differences", () => {
+    const result = checkPivotFieldsMatch({
+      ...baseCandidate,
+      ...baseFc,
+      candidateFirstname: "JEAN",
+      candidateLastname: "DUPONT",
+    });
+    expect(result.isMatch).toBe(true);
+    expect(result.mismatchedFields).toEqual([]);
   });
 
-  test("returns false when firstname mismatches", () => {
-    expect(
-      arePivotFieldsMatching({
-        ...baseCandidate,
-        ...baseFc,
-        candidateFirstname: "Marie",
-      }),
-    ).toBe(false);
+  test("returns isMatch false with firstname in mismatchedFields", () => {
+    const result = checkPivotFieldsMatch({
+      ...baseCandidate,
+      ...baseFc,
+      candidateFirstname: "Marie",
+    });
+    expect(result.isMatch).toBe(false);
+    expect(result.mismatchedFields).toEqual(["firstname"]);
   });
 
-  test("returns false when lastname mismatches", () => {
-    expect(
-      arePivotFieldsMatching({
-        ...baseCandidate,
-        ...baseFc,
-        candidateLastname: "Martin",
-      }),
-    ).toBe(false);
+  test("returns isMatch false with lastname in mismatchedFields", () => {
+    const result = checkPivotFieldsMatch({
+      ...baseCandidate,
+      ...baseFc,
+      candidateLastname: "Martin",
+    });
+    expect(result.isMatch).toBe(false);
+    expect(result.mismatchedFields).toEqual(["lastname"]);
   });
 
-  test("returns false when birthdate mismatches", () => {
-    expect(
-      arePivotFieldsMatching({
-        ...baseCandidate,
-        ...baseFc,
-        candidateBirthdate: new Date("1985-01-01"),
-      }),
-    ).toBe(false);
+  test("returns isMatch false with birthdate in mismatchedFields", () => {
+    const result = checkPivotFieldsMatch({
+      ...baseCandidate,
+      ...baseFc,
+      candidateBirthdate: new Date("1985-01-01"),
+    });
+    expect(result.isMatch).toBe(false);
+    expect(result.mismatchedFields).toEqual(["birthdate"]);
   });
 
-  test("returns false when candidate birthdate is null", () => {
-    expect(
-      arePivotFieldsMatching({
-        ...baseFc,
-        candidateFirstname: "Jean",
-        candidateLastname: "Dupont",
-        candidateBirthdate: null,
-      }),
-    ).toBe(false);
+  test("returns isMatch false when candidate birthdate is null", () => {
+    const result = checkPivotFieldsMatch({
+      ...baseFc,
+      candidateFirstname: "Jean",
+      candidateLastname: "Dupont",
+      candidateBirthdate: null,
+    });
+    expect(result.isMatch).toBe(false);
+    expect(result.mismatchedFields).toEqual(["birthdate"]);
   });
 
-  test("returns false when FC birthdate is invalid", () => {
-    expect(
-      arePivotFieldsMatching({
-        ...baseCandidate,
-        ...baseFc,
-        fcBirthdate: "invalid-date",
-      }),
-    ).toBe(false);
+  test("returns isMatch false when FC birthdate is invalid", () => {
+    const result = checkPivotFieldsMatch({
+      ...baseCandidate,
+      ...baseFc,
+      fcBirthdate: "invalid-date",
+    });
+    expect(result.isMatch).toBe(false);
+    expect(result.mismatchedFields).toEqual(["birthdate"]);
+  });
+
+  test("returns multiple mismatchedFields when several fields differ", () => {
+    const result = checkPivotFieldsMatch({
+      ...baseFc,
+      candidateFirstname: "Marie",
+      candidateLastname: "Martin",
+      candidateBirthdate: new Date("1985-01-01"),
+    });
+    expect(result.isMatch).toBe(false);
+    expect(result.mismatchedFields).toEqual([
+      "firstname",
+      "lastname",
+      "birthdate",
+    ]);
   });
 });

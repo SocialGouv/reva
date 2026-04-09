@@ -1,41 +1,73 @@
 export class FranceConnectError extends Error {
   public idToken?: string;
-  constructor(
-    message: string,
-    public statusCode: number,
-  ) {
+  public userMessage: string;
+  public statusCode: number;
+
+  constructor({
+    message,
+    statusCode,
+    userMessage,
+  }: {
+    message: string;
+    statusCode: number;
+    userMessage?: string;
+  }) {
     super(message);
     this.name = "FranceConnectError";
+    this.statusCode = statusCode;
+    this.userMessage = userMessage ?? message;
   }
 }
 
 export class FranceConnectUserError extends FranceConnectError {
-  constructor(message: string, statusCode: number = 401) {
-    super(message, statusCode);
+  constructor({
+    message,
+    statusCode = 401,
+    userMessage,
+  }: {
+    message: string;
+    statusCode?: number;
+    userMessage?: string;
+  }) {
+    super({ message, statusCode, userMessage });
     this.name = "FranceConnectUserError";
   }
 }
 
 export class FranceConnectReconciliationError extends FranceConnectUserError {
-  constructor() {
-    super(
-      "Les informations d'identité ne correspondent pas au compte existant. Connectez-vous avec vos identifiants habituels pour vérifier vos informations, ou contactez le support.",
-      401,
-    );
+  constructor({
+    candidateId,
+    mismatchedFields,
+  }: {
+    candidateId: string;
+    mismatchedFields: string[];
+  }) {
+    super({
+      message: `Échec de réconciliation pour le candidat ${candidateId} : champs non-correspondants [${mismatchedFields.join(", ")}]`,
+      statusCode: 401,
+      userMessage:
+        "Les informations d'identité ne correspondent pas au compte existant. Connectez-vous avec vos identifiants habituels pour vérifier vos informations, ou contactez le support.",
+    });
     this.name = "FranceConnectReconciliationError";
   }
 }
 
 export class FranceConnectSystemError extends FranceConnectError {
-  constructor(message: string) {
-    super(message, 500);
+  constructor({ message }: { message: string }) {
+    super({ message, statusCode: 500 });
     this.name = "FranceConnectSystemError";
   }
 }
 
 export class FranceConnectForbiddenError extends FranceConnectError {
-  constructor(message: string) {
-    super(message, 403);
+  constructor({
+    message,
+    userMessage,
+  }: {
+    message: string;
+    userMessage?: string;
+  }) {
+    super({ message, statusCode: 403, userMessage });
     this.name = "FranceConnectForbiddenError";
   }
 }
@@ -44,10 +76,10 @@ export const mapToOAuthError = (
   error: unknown,
 ): { code: string; description: string } => {
   if (error instanceof FranceConnectForbiddenError) {
-    return { code: "access_denied", description: error.message };
+    return { code: "access_denied", description: error.userMessage };
   }
   if (error instanceof FranceConnectUserError) {
-    return { code: "invalid_request", description: error.message };
+    return { code: "invalid_request", description: error.userMessage };
   }
   if (error instanceof FranceConnectSystemError) {
     return {

@@ -34,7 +34,7 @@ import {
   FranceConnectUserError,
 } from "./france-connect.errors";
 import {
-  arePivotFieldsMatching,
+  checkPivotFieldsMatch,
   getAndDeleteFcStateCookie,
   getOAuthConfig,
   isValidCertificationId,
@@ -69,9 +69,9 @@ export const handleFranceConnectCallback = async (
   });
 
   if (!franceConnectEnabled) {
-    throw new FranceConnectForbiddenError(
-      "L'authentification FranceConnect n'est pas activée",
-    );
+    throw new FranceConnectForbiddenError({
+      message: "L'authentification FranceConnect n'est pas activée",
+    });
   }
 
   const code = currentUrl.searchParams.get("code") ?? undefined;
@@ -85,24 +85,29 @@ export const handleFranceConnectCallback = async (
     // Préserver le code d'erreur FC d'origine en utilisant la classe d'erreur correspondante
     switch (error) {
       case "access_denied":
-        throw new FranceConnectForbiddenError(message);
+        throw new FranceConnectForbiddenError({ message });
       case "server_error":
       case "temporarily_unavailable":
-        throw new FranceConnectSystemError(message);
+        throw new FranceConnectSystemError({ message });
       default:
         // Couvre : null (pas de paramètre error), invalid_request, invalid_scope, login_required, etc.
-        throw new FranceConnectUserError(message, 400);
+        throw new FranceConnectUserError({ message, statusCode: 400 });
     }
   }
 
   const state = currentUrl.searchParams.get("state") ?? undefined;
   if (!state) {
-    throw new FranceConnectUserError("Paramètre state manquant", 400);
+    throw new FranceConnectUserError({
+      message: "Paramètre state manquant",
+      statusCode: 400,
+    });
   }
 
   const stored = getAndDeleteFcStateCookie(request, reply, state);
   if (!stored) {
-    throw new FranceConnectUserError("La session d'authentification a expiré");
+    throw new FranceConnectUserError({
+      message: "La session d'authentification a expiré",
+    });
   }
 
   const config = await getOAuthConfig();
@@ -114,17 +119,19 @@ export const handleFranceConnectCallback = async (
   });
 
   if (!tokenSet.access_token || !tokenSet.id_token) {
-    throw new FranceConnectSystemError("Erreur lors de l'authentification");
+    throw new FranceConnectSystemError({
+      message: "Erreur lors de l'authentification",
+    });
   }
 
   try {
     const claims = tokenSet.claims();
     const idTokenResult = FranceConnectClaimsSchema.safeParse(claims);
     if (!idTokenResult.success) {
-      throw new FranceConnectUserError(
-        "Une erreur est survenue lors de l'authentification",
-        400,
-      );
+      throw new FranceConnectUserError({
+        message: "Une erreur est survenue lors de l'authentification",
+        statusCode: 400,
+      });
     }
     const idTokenPayload = idTokenResult.data;
 
@@ -285,18 +292,21 @@ const getOrCreateCandidate = async (
     // On vérifie que les données pivots (nom, prénom, date de naissance)
     // correspondent pour éviter qu'un utilisateur FC récupère le compte
     // d'une autre personne ayant la même adresse email.
-    if (
-      !arePivotFieldsMatching({
-        candidateFirstname: candidate.firstname,
-        candidateLastname: candidate.lastname,
-        candidateBirthdate: candidate.birthdate,
-        fcGivenName: userInfo.given_name,
-        fcFamilyName: userInfo.family_name,
-        fcBirthdate: userInfo.birthdate,
-      })
-    ) {
+    const { isMatch, mismatchedFields } = checkPivotFieldsMatch({
+      candidateFirstname: candidate.firstname,
+      candidateLastname: candidate.lastname,
+      candidateBirthdate: candidate.birthdate,
+      fcGivenName: userInfo.given_name,
+      fcFamilyName: userInfo.family_name,
+      fcBirthdate: userInfo.birthdate,
+    });
+
+    if (!isMatch) {
       await unlinkFranceConnectIdentity(keycloakId);
-      throw new FranceConnectReconciliationError();
+      throw new FranceConnectReconciliationError({
+        candidateId: candidate.id,
+        mismatchedFields,
+      });
     }
     const updated = await updateCandidateFromFCClaims({
       candidateId: candidate.id,
@@ -311,9 +321,11 @@ const getOrCreateCandidate = async (
 
   if (candidate) {
     if (candidate.keycloakId && candidate.keycloakId !== keycloakId) {
-      throw new FranceConnectForbiddenError(
-        "Un compte existe déjà avec cette adresse email. Veuillez vous connecter avec vos identifiants habituels.",
-      );
+      throw new FranceConnectForbiddenError({
+        message: `Conflit de keycloakId pour le candidat ${candidate.id} : le compte est déjà lié à un autre identifiant FranceConnect`,
+        userMessage:
+          "Un compte existe déjà avec cette adresse email. Veuillez vous connecter avec vos identifiants habituels.",
+      });
     }
 
     logger.info(
@@ -369,7 +381,9 @@ const getDefaultDepartment = async () => {
   });
 
   if (!department) {
-    throw new FranceConnectSystemError("Erreur de configuration du système");
+    throw new FranceConnectSystemError({
+      message: "Erreur de configuration du système",
+    });
   }
 
   return department;
@@ -394,10 +408,11 @@ const getCountry = async (
     where: { inseeCode: countryCode },
   });
   if (!country) {
-    throw new FranceConnectUserError(
-      "Les informations de pays sont invalides",
-      400,
-    );
+    throw new FranceConnectUserError({
+      message: `Code pays INSEE "${countryCode}" introuvable en base`,
+      statusCode: 400,
+      userMessage: "Les informations de pays sont invalides",
+    });
   }
   return country;
 };
@@ -405,7 +420,9 @@ const getCountry = async (
 const assignCandidateRole = async (keycloakId: string): Promise<void> => {
   const realm = process.env.KEYCLOAK_APP_REALM;
   if (!realm) {
-    throw new FranceConnectSystemError("Erreur de configuration du système");
+    throw new FranceConnectSystemError({
+      message: "Erreur de configuration du système",
+    });
   }
 
   const keycloakAdmin = await getKeycloakAdmin();
@@ -415,7 +432,9 @@ const assignCandidateRole = async (keycloakId: string): Promise<void> => {
   });
 
   if (!role?.id) {
-    throw new FranceConnectSystemError("Erreur de configuration du système");
+    throw new FranceConnectSystemError({
+      message: "Erreur de configuration du système",
+    });
   }
 
   await keycloakAdmin.users.addRealmRoleMappings({

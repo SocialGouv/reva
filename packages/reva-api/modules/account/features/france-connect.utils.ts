@@ -114,7 +114,7 @@ export const parseFranceConnectDate = (dateString: string): Date | null => {
   return isNaN(date.getTime()) ? null : date;
 };
 
-export const arePivotFieldsMatching = ({
+export const checkPivotFieldsMatch = ({
   candidateFirstname,
   candidateLastname,
   candidateBirthdate,
@@ -128,15 +128,16 @@ export const arePivotFieldsMatching = ({
   fcGivenName: string;
   fcFamilyName: string;
   fcBirthdate: string;
-}): boolean => {
+}): { isMatch: boolean; mismatchedFields: string[] } => {
+  const mismatchedFields: string[] = [];
   const fcFirstname = fcGivenName.split(/\s+/)[0] || "";
 
   if (normalizeName(candidateFirstname || "") !== normalizeName(fcFirstname)) {
-    return false;
+    mismatchedFields.push("firstname");
   }
 
   if (normalizeName(candidateLastname || "") !== normalizeName(fcFamilyName)) {
-    return false;
+    mismatchedFields.push("lastname");
   }
 
   const parsedFcBirthdate = parseFranceConnectDate(fcBirthdate);
@@ -145,10 +146,10 @@ export const arePivotFieldsMatching = ({
     !parsedFcBirthdate ||
     candidateBirthdate.getTime() !== parsedFcBirthdate.getTime()
   ) {
-    return false;
+    mismatchedFields.push("birthdate");
   }
 
-  return true;
+  return { isMatch: mismatchedFields.length === 0, mismatchedFields };
 };
 
 export const unlinkFranceConnectIdentity = async (
@@ -156,7 +157,9 @@ export const unlinkFranceConnectIdentity = async (
 ): Promise<void> => {
   const realm = process.env.KEYCLOAK_APP_REALM;
   if (!realm) {
-    throw new FranceConnectSystemError("Erreur de configuration du système");
+    throw new FranceConnectSystemError({
+      message: "Erreur de configuration du système",
+    });
   }
 
   const keycloakAdmin = await getKeycloakAdmin();
