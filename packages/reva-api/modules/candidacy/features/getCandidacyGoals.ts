@@ -5,9 +5,9 @@ export const getCandidacyGoals = async ({
 }: {
   candidacyId: string;
 }) =>
-  (
-    await prismaClient.candicadiesOnGoals.findMany({
-      where: { candidacyId },
-      include: { goal: true },
+  prismaClient.candidacy
+    .findUnique({
+      where: { id: candidacyId },
     })
-  ).map((cog) => cog.goal);
+    .goals({ include: { goal: true } })
+    .then((goals) => goals?.map((goal) => goal.goal));
