@@ -2074,6 +2074,7 @@ model Appointment {
   candidacyId String               @map("candidacy_id") @db.Uuid
   candidacy   Candidacy            @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
 
+  @@index([candidacyId, date])
   @@map("appointment")
 }
 
