@@ -4,7 +4,7 @@ describe("checkPivotFieldsMatch", () => {
   const baseCandidate = {
     candidateFirstname: "Jean",
     candidateLastname: "Dupont",
-    candidateBirthdate: new Date("1990-05-15"),
+    candidateBirthdate: "1990-05-15",
   };
 
   const baseFc = {
@@ -24,7 +24,7 @@ describe("checkPivotFieldsMatch", () => {
       ...baseFc,
       candidateFirstname: "René",
       candidateLastname: "Müller",
-      candidateBirthdate: new Date("1990-05-15"),
+      candidateBirthdate: "1990-05-15",
       fcGivenName: "Rene",
       fcFamilyName: "Muller",
     });
@@ -67,7 +67,7 @@ describe("checkPivotFieldsMatch", () => {
     const result = checkPivotFieldsMatch({
       ...baseCandidate,
       ...baseFc,
-      candidateBirthdate: new Date("1985-01-01"),
+      candidateBirthdate: "1985-01-01",
     });
     expect(result.isMatch).toBe(false);
     expect(result.mismatchedFields).toEqual(["birthdate"]);
@@ -84,7 +84,17 @@ describe("checkPivotFieldsMatch", () => {
     expect(result.mismatchedFields).toEqual(["birthdate"]);
   });
 
-  test("returns isMatch false when FC birthdate is invalid", () => {
+  test("returns isMatch false when FC birthdate has a non-ISO format", () => {
+    const result = checkPivotFieldsMatch({
+      ...baseCandidate,
+      ...baseFc,
+      fcBirthdate: "15/05/1990",
+    });
+    expect(result.isMatch).toBe(false);
+    expect(result.mismatchedFields).toEqual(["birthdate"]);
+  });
+
+  test("returns isMatch false when FC birthdate is an invalid string", () => {
     const result = checkPivotFieldsMatch({
       ...baseCandidate,
       ...baseFc,
@@ -99,7 +109,7 @@ describe("checkPivotFieldsMatch", () => {
       ...baseFc,
       candidateFirstname: "Marie",
       candidateLastname: "Martin",
-      candidateBirthdate: new Date("1985-01-01"),
+      candidateBirthdate: "1985-01-01",
     });
     expect(result.isMatch).toBe(false);
     expect(result.mismatchedFields).toEqual([

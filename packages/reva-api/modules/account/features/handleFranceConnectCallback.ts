@@ -292,10 +292,16 @@ const getOrCreateCandidate = async (
     // On vérifie que les données pivots (nom, prénom, date de naissance)
     // correspondent pour éviter qu'un utilisateur FC récupère le compte
     // d'une autre personne ayant la même adresse email.
+    //
+    // La birthdate est récupérée via TO_CHAR côté Postgres pour garantir
+    // un format "YYYY-MM-DD" indépendant de la timezone du process Node et
+    // du driver pg (cf. colonne DATE).
+    const candidateBirthdate = await getCandidateBirthdateAsYMD(candidate.id);
+
     const { isMatch, mismatchedFields } = checkPivotFieldsMatch({
       candidateFirstname: candidate.firstname,
       candidateLastname: candidate.lastname,
-      candidateBirthdate: candidate.birthdate,
+      candidateBirthdate,
       fcGivenName: userInfo.given_name,
       fcFamilyName: userInfo.family_name,
       fcBirthdate: userInfo.birthdate,
@@ -307,7 +313,8 @@ const getOrCreateCandidate = async (
         candidateId: candidate.id,
         mismatchedFields,
         // log temporaire
-        birthdateFC: userInfo.birthdate,
+        birthdateDb: candidateBirthdate,
+        birthdateFc: userInfo.birthdate,
       });
     }
     const updated = await updateCandidateFromFCClaims({
@@ -375,6 +382,15 @@ const createCandidateFromFranceConnect = async ({
     `[France Connect] Nouveau compte candidat créé avec succès : ${candidate.id}`,
   );
   return candidate;
+};
+
+const getCandidateBirthdateAsYMD = async (
+  candidateId: string,
+): Promise<string | null> => {
+  const rows = await prismaClient.$queryRaw<
+    Array<{ birthdate: string | null }>
+  >`SELECT TO_CHAR(birthdate, 'YYYY-MM-DD') AS birthdate FROM candidate WHERE id = ${candidateId}::uuid`;
+  return rows[0]?.birthdate ?? null;
 };
 
 const getDefaultDepartment = async () => {
