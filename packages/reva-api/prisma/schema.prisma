@@ -551,6 +551,7 @@ model Account {
 
   @@index([email])
   @@index([certificationAuthorityId])
+  @@index([keycloakId])
   @@map("account")
 }
 
