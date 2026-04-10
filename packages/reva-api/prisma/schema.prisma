@@ -279,6 +279,7 @@ model Candidacy {
   @@index([organismId])
   @@index([candidateId])
   @@index([certificationId])
+  @@index([status, createdAt(sort: Desc)])
   @@map("candidacy")
 }
 
