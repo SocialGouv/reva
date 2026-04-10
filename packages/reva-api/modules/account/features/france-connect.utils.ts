@@ -124,7 +124,9 @@ export const checkPivotFieldsMatch = ({
 }: {
   candidateFirstname: string | null;
   candidateLastname: string | null;
-  candidateBirthdate: Date | null;
+  // Format attendu : "YYYY-MM-DD" (extrait via TO_CHAR côté Postgres pour
+  // neutraliser toute ambiguïté de timezone sur la colonne DATE).
+  candidateBirthdate: string | null;
   fcGivenName: string;
   fcFamilyName: string;
   fcBirthdate: string;
@@ -140,12 +142,7 @@ export const checkPivotFieldsMatch = ({
     mismatchedFields.push("lastname");
   }
 
-  const parsedFcBirthdate = parseFranceConnectDate(fcBirthdate);
-  if (
-    !candidateBirthdate ||
-    !parsedFcBirthdate ||
-    candidateBirthdate.getTime() !== parsedFcBirthdate.getTime()
-  ) {
+  if (candidateBirthdate !== fcBirthdate) {
     mismatchedFields.push("birthdate");
   }
 
