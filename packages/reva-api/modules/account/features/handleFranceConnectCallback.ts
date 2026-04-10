@@ -232,7 +232,6 @@ const buildCandidateDataFromFCClaims = async ({
     birthDepartmentId = (await getDefaultDepartment()).id;
   }
 
-  const currentDepartment = await getDefaultDepartment();
   const nationality = existingNationality ?? country?.nationality ?? null;
 
   const middleNames = [firstname2, firstname3].filter(Boolean).join(" ");
@@ -251,7 +250,6 @@ const buildCandidateDataFromFCClaims = async ({
     franceConnectLinked: true,
     birthDepartmentId,
     ...(countryIsFrance ? { birthCity } : {}),
-    departmentId: currentDepartment.id,
   };
 };
 
@@ -365,6 +363,8 @@ const createCandidateFromFranceConnect = async ({
     userInfo,
   });
 
+  const currentDepartment = await getDefaultDepartment();
+
   const candidate = await prismaClient.candidate.create({
     data: {
       ...fcData,
@@ -374,6 +374,7 @@ const createCandidateFromFranceConnect = async ({
       city: "",
       zip: "",
       street: "",
+      departmentId: currentDepartment.id,
     },
   });
 
