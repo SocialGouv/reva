@@ -109,6 +109,7 @@ model Certification {
   certificationEmails                                    CertificationEmail[]
   parcours                                               ParcoursCertification[]
 
+  @@index([level])
   @@index([label(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_certification_label_trgm")
   @@index([rncpTypeDiplome(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_certification_rncp_type_diplome_trgm")
   @@map("certification")
@@ -598,6 +599,7 @@ model Organism {
   cohorteVaeCollectives                    CohorteVaeCollective[]
 
   @@index([maisonMereAAPId])
+  @@index([typology])
   @@index([label(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_organism_label_trgm")
   @@map("organism")
 }
@@ -651,6 +653,7 @@ model OrganismOnDegree {
   degreeId   String   @map("degree_id") @db.Uuid
 
   @@unique([organismId, degreeId])
+  @@index([degreeId])
   @@map("organism_on_degree")
 }
 
@@ -1071,6 +1074,7 @@ model OrganismOnConventionCollective {
   updatedAt  DateTime?            @map("updated_at") @db.Timestamptz(6)
 
   @@id([ccnId, organismId])
+  @@index([organismId])
   @@map("organism_on_ccn")
 }
 
@@ -1921,6 +1925,7 @@ model CertificationOnFormacode {
   isMain          Boolean       @default(false) @map("is_main")
 
   @@unique([formacodeId, certificationId])
+  @@index([certificationId])
   @@map("certification_on_formacode")
 }
 
@@ -1934,6 +1939,7 @@ model OrganismOnFormacode {
   updatedAt   DateTime? @map("updated_at") @db.Timestamptz(6)
 
   @@unique([formacodeId, organismId])
+  @@index([organismId])
   @@map("organism_on_formacode")
 }
 
