@@ -53,7 +53,7 @@ type ScheduleJuryInputType = {
   convocationFile?: File;
 };
 
-export const useJuryPageLogic = () => {
+export const useJuryDatePageLogic = () => {
   const { graphqlClient } = useGraphQlClient();
   const { candidacyId } = useParams<{
     candidacyId: string;

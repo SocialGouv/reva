@@ -25,8 +25,8 @@ import {
   sanitizedText,
 } from "@/utils/input-sanitization";
 
-import { DateDeJuryCard } from "../[[...juryId]]/DateDeJuryCard";
-import { useJuryPageLogic } from "../[[...juryId]]/juryPageLogic";
+import { DateDeJuryCard } from "./DateDeJuryCard";
+import { useJuryDatePageLogic } from "./juryDatePageLogic";
 
 const schema = z
   .object({
@@ -58,7 +58,7 @@ const schema = z
 type DateDeJuryFormData = z.infer<typeof schema>;
 
 export default function JuryDatePage() {
-  const { getCandidacy, scheduleJury } = useJuryPageLogic();
+  const { getCandidacy, scheduleJury } = useJuryDatePageLogic();
 
   const candidacy = getCandidacy.data?.getCandidacyById;
   const {
