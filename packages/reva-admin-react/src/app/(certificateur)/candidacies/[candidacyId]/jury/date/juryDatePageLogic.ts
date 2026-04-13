@@ -1,0 +1,110 @@
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { REST_API_URL } from "@/config/config";
+
+import { graphql } from "@/graphql/generated";
+
+const getJuryByCandidacyIdQuery = graphql(`
+  query getJuryForDatePageByCandidacyId($candidacyId: ID!) {
+    getCandidacyById(id: $candidacyId) {
+      id
+      isCertificationPartial
+      typeAccompagnement
+      activeDossierDeValidation {
+        updatedAt
+        decision
+      }
+      certification {
+        id
+        label
+        codeRncp
+        typeDiplome
+      }
+      jury {
+        id
+        dateOfSession
+        timeOfSession
+        timeSpecified
+        addressOfSession
+        informationOfSession
+        result
+        dateOfResult
+        informationOfResult
+        convocationFile {
+          name
+          url
+          previewUrl
+        }
+      }
+    }
+  }
+`);
+
+type ScheduleJuryInputType = {
+  candidacyId: string;
+  date: string;
+  time?: string;
+  timeSpecified: boolean;
+  address?: string;
+  information?: string;
+  convocationFile?: File;
+};
+
+export const useJuryPageLogic = () => {
+  const { graphqlClient } = useGraphQlClient();
+  const { candidacyId } = useParams<{
+    candidacyId: string;
+    juryId?: string[];
+  }>();
+
+  const { accessToken } = useKeycloakContext();
+
+  const getCandidacy = useQuery({
+    queryKey: ["getJuryForDatePageByCandidacyId", candidacyId],
+    queryFn: () =>
+      graphqlClient.request(getJuryByCandidacyIdQuery, {
+        candidacyId: candidacyId,
+      }),
+  });
+
+  const scheduleJury = useMutation({
+    mutationKey: ["scheduleJuryByCandidacyId", candidacyId],
+    mutationFn: (data: ScheduleJuryInputType) => {
+      const formData = new FormData();
+      formData.append("candidacyId", data.candidacyId);
+      formData.append("date", data.date);
+      formData.append("timeSpecified", data.timeSpecified ? "true" : "false");
+
+      if (data.time) {
+        formData.append("time", data.time);
+      }
+      if (data.address) {
+        formData.append("address", data.address);
+      }
+      if (data.information) {
+        formData.append("information", data.information);
+      }
+      if (data.convocationFile) {
+        formData.append("convocationFile", data.convocationFile);
+      }
+
+      return fetch(`${REST_API_URL}/jury/schedule-session`, {
+        method: "post",
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: formData,
+      });
+    },
+    onSuccess: () => {
+      getCandidacy.refetch();
+    },
+  });
+  return {
+    getCandidacy,
+    scheduleJury,
+  };
+};

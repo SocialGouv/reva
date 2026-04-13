@@ -1,0 +1,521 @@
+"use client";
+
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { isAfter, startOfDay } from "date-fns";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { useAuth } from "@/components/auth/auth";
+import { CertificationCard } from "@/components/card/certification-card/CertificationCard";
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast } from "@/components/toast/toast";
+import { sanitizedOptionalTextAllowSpecialCharacters } from "@/utils/input-sanitization";
+
+import { JuryResult } from "@/graphql/generated/graphql";
+
+import { HistoryResultatView } from "./HistoryResultatView";
+import { useJuryResultPageLogic } from "./juryResultPageLogic";
+import { ResultatCard } from "./ResultatCard";
+
+const modal = createModal({
+  id: "confirm-result",
+  isOpenedByDefault: false,
+});
+
+const revokeModal = createModal({
+  id: "revoke-jury-decision",
+  isOpenedByDefault: false,
+});
+
+const juryResultOptions: {
+  [key in JuryResult]: { label: string; hintText?: string };
+} = {
+  FULL_SUCCESS_OF_FULL_CERTIFICATION: {
+    label: "Tous les blocs visés ont été validés",
+    hintText:
+      "Le candidat a validé l'ensemble des blocs pour lesquels il est recevable. Son parcours de VAE est terminé pour cette candidature.",
+  },
+  PARTIAL_SUCCESS_OF_FULL_CERTIFICATION: {
+    label: "Certains blocs visés ont été validés",
+    hintText:
+      "Le candidat a validé une partie des blocs pour lesquels il est recevable. Il pourra redéposer un dossier de validation pour les blocs restants.",
+  },
+  FULL_SUCCESS_OF_PARTIAL_CERTIFICATION: {
+    label: "Tous les blocs visés ont été validés",
+    hintText:
+      "Le candidat a validé l'ensemble des blocs pour lesquels il est recevable. Son parcours de VAE est terminé pour cette candidature.",
+  },
+  PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION: {
+    label: "Certains blocs visés ont été validés",
+    hintText:
+      "Le candidat a validé une partie des blocs pour lesquels il est recevable. Il pourra redéposer un dossier de validation pour les blocs restants.",
+  },
+  PARTIAL_SUCCESS_PENDING_CONFIRMATION: {
+    label:
+      "Réussite partielle (sous reserve de confirmation par un certificateur)",
+    hintText:
+      "Réussite partielle (sous reserve de confirmation par un certificateur)",
+  },
+  FAILURE: {
+    label: "Aucun bloc visé n’a été validé",
+    hintText:
+      "Le candidat n'a validé aucun des blocs  pour lesquels il est recevable. ",
+  },
+  CANDIDATE_EXCUSED: {
+    label: "Candidat excusé sur justificatif",
+  },
+  CANDIDATE_ABSENT: {
+    label: "Candidat non présent",
+  },
+};
+
+const juryResultModalContent = (result: JuryResult) => {
+  switch (result) {
+    case "FULL_SUCCESS_OF_FULL_CERTIFICATION":
+    case "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION":
+      return (
+        <div>
+          <p>
+            Vous vous apprêtez à déclarer <b>une réussite totale</b> pour ce
+            candidat.
+          </p>
+          <p>
+            Conséquence : Le candidat a validé l'ensemble des blocs pour
+            lesquels il est recevable. Son parcours de VAE est terminé pour
+            cette candidature.
+          </p>
+          <p>Confirmez-vous ce résultat ?</p>
+        </div>
+      );
+    case "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION":
+    case "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION":
+    case "PARTIAL_SUCCESS_PENDING_CONFIRMATION":
+      return (
+        <div>
+          <p>
+            Vous vous apprêtez à déclarer <b>une réussite partielle</b> pour ce
+            candidat.
+          </p>
+          <p>
+            Conséquence : Le candidat a validé une partie des blocs pour
+            lesquels il est recevable. Il pourra redéposer un dossier de
+            validation pour passer à nouveau devant le jury pour les blocs non
+            validés.
+          </p>
+          <p>Confirmez-vous ce résultat ?</p>
+        </div>
+      );
+    case "FAILURE":
+      return (
+        <div>
+          <p>
+            Vous vous apprêtez à déclarer <b>une non validation</b> pour ce
+            candidat.
+          </p>
+          <p>
+            Conséquence : Le candidat n'a validé aucun des blocs pour lesquels
+            il est recevable. Il pourra redéposer un dossier de validation pour
+            passer à nouveau devant le jury pour les blocs non validés.
+          </p>
+          <p>Confirmez-vous ce résultat ?</p>
+        </div>
+      );
+    case "CANDIDATE_EXCUSED":
+    case "CANDIDATE_ABSENT":
+      return (
+        <div>
+          <p>
+            Vous vous apprêtez à déclarer que le candidat était{" "}
+            <b>non présent</b> lors du jury.
+          </p>
+          <p>
+            Conséquence : Le candidat n'a validé aucun bloc. Il pourra redéposer
+            un dossier de validation pour passer à nouveau devant le jury pour
+            les blocs non validés.
+          </p>
+          <p>Confirmez-vous ce résultat ?</p>
+        </div>
+      );
+  }
+};
+
+// Options communes à tous les types de certification
+const COMMON_OPTIONS = [
+  "FAILURE",
+  "CANDIDATE_EXCUSED",
+  "CANDIDATE_ABSENT",
+] as const;
+
+// Options spécifiques à la certification partielle
+const PARTIAL_CERTIFICATION_OPTIONS = [
+  "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  ...COMMON_OPTIONS,
+] as const;
+
+// Options spécifiques à la certification totale
+const FULL_CERTIFICATION_OPTIONS = [
+  "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+  "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+  ...COMMON_OPTIONS,
+] as const;
+
+const ALL_OPTIONS = [
+  "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+  "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+  ...COMMON_OPTIONS,
+] as const;
+
+const schema = z.object({
+  result: z.enum(ALL_OPTIONS),
+  informationOfResult: sanitizedOptionalTextAllowSpecialCharacters(),
+  validatedBlocks: z.array(z.string()),
+});
+
+type ResultatFormData = {
+  result:
+    | "FULL_SUCCESS_OF_FULL_CERTIFICATION"
+    | "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION"
+    | "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION"
+    | "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION"
+    | "FAILURE"
+    | "CANDIDATE_EXCUSED"
+    | "CANDIDATE_ABSENT";
+  informationOfResult: string;
+  validatedBlocks: string[];
+};
+
+const revokeSchema = z.object({
+  reason: sanitizedOptionalTextAllowSpecialCharacters(),
+});
+
+type RevokeFormData = z.infer<typeof revokeSchema>;
+
+export const ResultatByBlocks = () => {
+  const { getCandidacy, updateJuryResult, revokeJuryDecision } =
+    useJuryResultPageLogic();
+  const { isAdmin } = useAuth();
+  const candidacy = getCandidacy.data?.getCandidacyById;
+
+  let availableResultOptions: JuryResult[] = [];
+  if (candidacy?.typeAccompagnement === "AUTONOME") {
+    availableResultOptions = [...ALL_OPTIONS];
+  } else if (
+    candidacy?.typeAccompagnement === "ACCOMPAGNE" &&
+    candidacy?.isCertificationPartial
+  ) {
+    availableResultOptions = [...PARTIAL_CERTIFICATION_OPTIONS];
+  } else if (
+    candidacy?.typeAccompagnement === "ACCOMPAGNE" &&
+    !candidacy?.isCertificationPartial
+  ) {
+    availableResultOptions = [...FULL_CERTIFICATION_OPTIONS];
+  }
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors, isValid, isSubmitting },
+  } = useForm<ResultatFormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      validatedBlocks: [],
+    },
+  });
+
+  const {
+    register: revokeRegister,
+    handleSubmit: handleRevokeSubmit,
+    formState: { isSubmitting: isRevokeSubmitting },
+    reset: resetRevokeForm,
+  } = useForm<RevokeFormData>({ resolver: zodResolver(revokeSchema) });
+
+  const handleFormSubmit = handleSubmit(() => {
+    modal.open();
+  });
+
+  const formData = getValues();
+
+  const submitData = async () => {
+    modal.close();
+    if (candidacy?.jury?.id) {
+      try {
+        await updateJuryResult.mutateAsync({
+          juryId: candidacy.jury.id,
+          input: {
+            result: formData.result,
+            informationOfResult: formData.informationOfResult,
+          },
+        });
+      } catch (error) {
+        console.error(error);
+        graphqlErrorToast(error);
+      }
+    }
+  };
+
+  const handleRevokeDecision = handleRevokeSubmit(async (data) => {
+    if (candidacy?.jury?.id) {
+      try {
+        await revokeJuryDecision.mutateAsync({
+          juryId: candidacy.jury.id,
+          reason: data.reason,
+        });
+        revokeModal.close();
+        resetRevokeForm();
+      } catch (error) {
+        graphqlErrorToast(error);
+      }
+    }
+  });
+
+  if (getCandidacy.isLoading || !candidacy) {
+    return null;
+  }
+
+  const jury = candidacy?.jury;
+  const historyJury = candidacy?.historyJury;
+
+  const result = jury?.result;
+
+  const editable = candidacy?.jury
+    ? isAfter(new Date(), startOfDay(candidacy?.jury.dateOfSession)) && !result
+    : false;
+
+  return (
+    <>
+      <h1>Résultat de jury</h1>
+      <FormOptionalFieldsDisclaimer />
+
+      <div className="flex flex-col gap-10">
+        {!result && (
+          <p className="m-0 text-gray-600">
+            Ce résultat sera communiqué par e-mail au candidat et à son
+            accompagnateur le cas échéant.
+          </p>
+        )}
+
+        <CertificationCard certification={candidacy?.certification} />
+
+        {candidacy?.feasibility?.dematerializedFeasibilityFile
+          ?.blocsDeCompetences && (
+          <GrayCard as="div" className="-mt-4">
+            <h4 className="mb-6">Recevabilité obtenue sur les blocs : </h4>
+            <ul className="my-0">
+              {candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
+                (bloc) => (
+                  <li key={bloc.certificationCompetenceBloc.code}>
+                    {bloc.certificationCompetenceBloc.code} -{" "}
+                    {bloc.certificationCompetenceBloc.label}
+                  </li>
+                ),
+              )}
+            </ul>
+          </GrayCard>
+        )}
+        {historyJury && (
+          <HistoryResultatView
+            historyJury={historyJury.map((jury) => ({
+              id: jury.id,
+              dateOfSession: jury.dateOfSession,
+              // Only jury with result are in jury history
+              result: jury.result!,
+              informationOfResult: jury.informationOfResult,
+            }))}
+          />
+        )}
+
+        {!getCandidacy.isLoading && result && (
+          <>
+            <ResultatCard
+              jury={{
+                id: jury.id,
+                dateOfSession: jury.dateOfSession,
+                result: result,
+                informationOfResult: jury.informationOfResult,
+              }}
+            />
+
+            {isAdmin && (
+              <div className="flex justify-end">
+                <Button priority="secondary" onClick={() => revokeModal.open()}>
+                  Annuler la décision
+                </Button>
+              </div>
+            )}
+
+            {jury.result != "FULL_SUCCESS_OF_FULL_CERTIFICATION" &&
+              jury.result != "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION" && (
+                <CallOut title="Le candidat peut renvoyer un dossier de validation">
+                  Suite à ce résultat, le candidat peut repasser devant le jury.
+                  Il devra, en amont, retravailler sur son dossier de validation
+                  et vous le renvoyer. Une fois reçu, vous pourrez lui
+                  transmettre une nouvelle date de passage devant le jury.
+                </CallOut>
+              )}
+          </>
+        )}
+
+        {!getCandidacy.isLoading && !result && (
+          <form onSubmit={handleFormSubmit}>
+            <RadioButtons
+              legend="Résultats possibles :"
+              small
+              hintText={
+                isAdmin
+                  ? "Sous réserve de contre remplissage par le certificateur."
+                  : ""
+              }
+              className="m-0 p-0 mb-4"
+              classes={{
+                inputGroup: "border w-full max-w-full mb-4 px-4",
+              }}
+              options={availableResultOptions.map((key) => {
+                const label = juryResultOptions[key as JuryResult].label;
+                const hintText = juryResultOptions[key as JuryResult].hintText;
+
+                return {
+                  label,
+                  hintText,
+                  nativeInputProps: {
+                    value: key,
+                    ...register("result"),
+                    disabled: !editable,
+                  },
+                };
+              })}
+              state={errors.result ? "error" : "default"}
+              stateRelatedMessage={
+                errors.result ? "Veuillez sélectionner une option" : undefined
+              }
+            />
+
+            <Checkbox
+              legend="Quels blocs ont été validés ?"
+              small
+              className="m-0 p-0 mb-4"
+              classes={{
+                inputGroup: "-my-2",
+              }}
+              options={
+                candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
+                  (bloc) => ({
+                    label: `${bloc.certificationCompetenceBloc.code} - ${bloc.certificationCompetenceBloc.label}`,
+                    hintText: "Recevabilité obtenue sur ce bloc",
+                    nativeInputProps: {
+                      value: bloc.certificationCompetenceBloc.id,
+                      ...register(`validatedBlocks`),
+                    },
+                    disabled: !editable,
+                  }),
+                ) || []
+              }
+            />
+
+            <Input
+              label="Commentaires (optionnel) :"
+              nativeTextAreaProps={register("informationOfResult")}
+              textArea
+              hintText={
+                <>
+                  <p className="m-0 text-xs">
+                    Indiquer ici toutes les réserves, consignes ou attendus
+                    éventuels.
+                  </p>
+                  <p className="m-0 text-xs">
+                    <b>
+                      Si des blocs ont été validés alors que le candidat n'était
+                      pas recevable dessus, vous pouvez l’indiquer ici.
+                    </b>
+                  </p>
+                </>
+              }
+              disabled={!editable}
+              state={errors.informationOfResult ? "error" : "default"}
+              stateRelatedMessage={errors.informationOfResult?.message}
+            />
+
+            <div className="flex flex-row items-end">
+              <Button
+                className="ml-auto mt-8 text-right"
+                disabled={isSubmitting || !isValid || !editable}
+              >
+                Envoyer
+              </Button>
+            </div>
+          </form>
+        )}
+
+        <>
+          <modal.Component
+            title="Confirmer le résultat du jury"
+            className="modal-confirm-jury-result"
+            size="large"
+            buttons={[
+              {
+                priority: "secondary",
+                children: "Annuler",
+              },
+              {
+                priority: "primary",
+                onClick: submitData,
+                children: "Confirmer",
+              },
+            ]}
+          >
+            <div className="flex flex-col gap-4">
+              {juryResultModalContent(formData.result as JuryResult)}
+            </div>
+          </modal.Component>
+
+          <revokeModal.Component
+            title={
+              <div className="flex gap-2">
+                <span
+                  className="fr-icon--lg fr-icon-warning-fill"
+                  aria-hidden="true"
+                />
+                Annuler une décision prise par un certificateur.
+              </div>
+            }
+            buttons={[
+              {
+                priority: "secondary",
+                children: "Retour",
+              },
+              {
+                priority: "primary",
+                onClick: handleRevokeDecision,
+                children: "Confirmer",
+                disabled: isRevokeSubmitting,
+              },
+            ]}
+            size="large"
+          >
+            <p>
+              Vous êtes sur le point d'annuler une décision prise par un
+              certificateur. Cette action l'obligera à prononcer sa décision de
+              nouveau. Vous ne pourrez pas prendre de décision définitive à sa
+              place.
+            </p>
+            <Input
+              label="Commentaire : (Optionnel)"
+              nativeTextAreaProps={{ rows: 3, ...revokeRegister("reason") }}
+              textArea
+            />
+            <p>Voulez vous confirmer l'annulation de cette décision ?</p>
+          </revokeModal.Component>
+        </>
+      </div>
+    </>
+  );
+};

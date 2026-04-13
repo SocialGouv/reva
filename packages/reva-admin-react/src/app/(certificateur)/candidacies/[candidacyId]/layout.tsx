@@ -8,6 +8,7 @@ import { ReactNode } from "react";
 import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
 import { useAuth } from "@/components/auth/auth";
 import { useCanAccessCandidacy } from "@/components/can-access-candidacy/canAccessCandidacy";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { NotAuthorized } from "@/components/not-authorized";
 
@@ -36,6 +37,10 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
     candidacyId: string;
   }>();
   const { graphqlClient } = useGraphQlClient();
+  const { isFeatureActive } = useFeatureflipping();
+  const isJuryResultsByBlockFeatureActive = isFeatureActive(
+    "JURY_RESULTS_BY_BLOCK",
+  );
 
   const { data: getCandidacyResponse, isLoading: isLoadingMenu } = useQuery({
     queryKey: [candidacyId, "getCandidacyQuery"],
@@ -71,8 +76,21 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
       "Dossier de validation",
       `/candidacies/${candidacyId}/dossier-de-validation`,
     ),
-    menuItem("Jury", `/candidacies/${candidacyId}/jury`),
   ];
+
+  if (isJuryResultsByBlockFeatureActive) {
+    items.push(
+      menuItem(
+        "Passage devant le jury",
+        `/candidacies/${candidacyId}/jury/date`,
+      ),
+    );
+    items.push(
+      menuItem("Résultat de jury", `/candidacies/${candidacyId}/jury/resultat`),
+    );
+  } else {
+    items.push(menuItem("Jury", `/candidacies/${candidacyId}/jury`));
+  }
 
   const footerItems = [];
 

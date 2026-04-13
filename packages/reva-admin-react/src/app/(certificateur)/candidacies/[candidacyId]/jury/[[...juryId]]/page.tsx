@@ -3,20 +3,13 @@
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 
 import { BackButton } from "@/components/back-button/BackButton";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 import { DateDeJury } from "./DateDeJury";
 import { useJuryPageLogic } from "./juryPageLogic";
 import { Resultat } from "./Resultat";
-import { ResultatByBlocks } from "./ResultatByBlocks";
 
 const JuryPage = () => {
   const { getCandidacy } = useJuryPageLogic();
-  const { isFeatureActive } = useFeatureflipping();
-  const isJuryResultsByBlockFeatureActive = isFeatureActive(
-    "JURY_RESULTS_BY_BLOCK",
-  );
-
   const candidaciesUrl = "/candidacies/annuaire";
 
   const candidacy = getCandidacy.data?.getCandidacyById;
@@ -39,13 +32,7 @@ const JuryPage = () => {
               },
               {
                 label: "Résultat",
-                content:
-                  isJuryResultsByBlockFeatureActive &&
-                  candidacy?.typeAccompagnement === "ACCOMPAGNE" ? (
-                    <ResultatByBlocks />
-                  ) : (
-                    <Resultat />
-                  ),
+                content: <Resultat />,
               },
             ]}
           />
