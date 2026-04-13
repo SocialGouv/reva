@@ -10,7 +10,7 @@ type SearchResultsPage<T> = {
   rows: T[];
 };
 
-export interface SearchListProps<T> {
+interface SearchListProps<T> {
   title?: string | null;
   hint?: ({ totalRows }: { totalRows: number }) => ReactNode;
   searchBarProps?: {
