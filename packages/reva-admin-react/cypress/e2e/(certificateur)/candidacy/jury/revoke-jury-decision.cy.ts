@@ -65,23 +65,23 @@ describe("revoke jury decision", () => {
     });
 
     it("should confirm revoke successfully with reason and refresh data", () => {
-      // Set up intercept for the refetch that will happen after mutation
+      // Override the getJuryByCandidacyId stub so the refetch returns revoked data
       cy.intercept("POST", "/api/graphql", (req) => {
         stubQuery(req, "getJuryByCandidacyId", candidacyWithJuryResultRevoked);
-      }).as("getJuryByCandidacyIdRefetch");
+      });
 
-      // Click revoke button
       cy.contains("button", "Annuler la décision").click();
       cy.get("#revoke-jury-decision").should("be.visible");
       cy.get("#revoke-jury-decision textarea").type("erreur de saisie");
 
       cy.get("#revoke-jury-decision button").contains("Confirmer").click();
 
-      // Wait for the mutation to complete and the refetch to happen
+      // Wait for the mutation and the subsequent refetch
+      // stubQuery sets req.alias = "getJuryByCandidacyId" which overrides any .as() route alias,
+      // so we wait on the alias that stubQuery actually assigns
       cy.wait("@jury_revokeDecision");
-      cy.wait("@getJuryByCandidacyIdRefetch");
+      cy.wait("@getJuryByCandidacyId");
 
-      // Verify modal is closed and revoke button is no longer shown
       cy.get("#revoke-jury-decision").should("not.exist");
       cy.contains("button", "Annuler la décision").should("not.exist");
     });
