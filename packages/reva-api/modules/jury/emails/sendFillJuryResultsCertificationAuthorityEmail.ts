@@ -11,7 +11,7 @@ export const sendFillJuryResultsCertificationAuthorityEmail = async ({
     templateId: 588,
     params: {
       candidaciesUrl: getBackofficeUrl({
-        path: `/candidacies/juries/?page=1&CATEGORY=PASSED`,
+        path: `/candidacies/annuaire?juryStatus=PASSED`,
       }),
     },
   });
