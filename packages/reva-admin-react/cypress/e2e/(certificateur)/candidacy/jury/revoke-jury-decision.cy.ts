@@ -1,8 +1,5 @@
 import { stubMutation, stubQuery } from "../../../../utils/graphql";
 import candidacyInfoForLayout from "../../fixtures/candidacy-info-for-layout.json";
-import dossierDeValidationCountByCategory from "../../fixtures/dossier-de-validation-count-by-category.json";
-import feasibilityCountByCategory from "../../fixtures/feasibility-count-by-category.json";
-import juryCountByCategory from "../../fixtures/jury-count-by-category.json";
 import maisonMereCGU from "../../fixtures/maison-mere-cgu.json";
 
 import candidacyWithJuryResultRevoked from "./fixtures/candidacy-with-jury-result-revoked.json";
@@ -26,20 +23,6 @@ describe("revoke jury decision", () => {
         candidacyInfoForLayout,
       );
 
-      stubQuery(
-        req,
-        "getFeasibilityCountByCategory",
-        feasibilityCountByCategory,
-      );
-
-      stubQuery(
-        req,
-        "getDossierDeValidationCountByCategory",
-        dossierDeValidationCountByCategory,
-      );
-
-      stubQuery(req, "getJuryCountByCategory", juryCountByCategory);
-
       stubQuery(req, "getJuryByCandidacyId", candidacyWithJuryResult);
     });
   });
@@ -56,9 +39,6 @@ describe("revoke jury decision", () => {
         "@activeFeaturesForConnectedUser",
         "@getMaisonMereCGUQuery",
         "@getCandidacyWithCandidateInfoForLayout",
-        "@getFeasibilityCountByCategory",
-        "@getDossierDeValidationCountByCategory",
-        "@getJuryCountByCategory",
         "@getJuryByCandidacyId",
       ]);
 
@@ -115,9 +95,6 @@ describe("revoke jury decision", () => {
         "@activeFeaturesForConnectedUser",
         "@getMaisonMereCGUQuery",
         "@getCandidacyWithCandidateInfoForLayout",
-        "@getFeasibilityCountByCategory",
-        "@getDossierDeValidationCountByCategory",
-        "@getJuryCountByCategory",
         "@getJuryByCandidacyId",
       ]);
 

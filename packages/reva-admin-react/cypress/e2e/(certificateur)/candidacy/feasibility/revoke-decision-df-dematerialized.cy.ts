@@ -1,8 +1,5 @@
 import { stubMutation, stubQuery } from "../../../../utils/graphql";
 import candidacyInfoForLayout from "../../fixtures/candidacy-info-for-layout.json";
-import dossierDeValidationCountByCategory from "../../fixtures/dossier-de-validation-count-by-category.json";
-import feasibilityCountByCategory from "../../fixtures/feasibility-count-by-category.json";
-import juryCountByCategory from "../../fixtures/jury-count-by-category.json";
 import maisonMereCGU from "../../fixtures/maison-mere-cgu.json";
 
 import feasibilityDematerializedAdmissible from "./fixtures/feasibility-dematerialized-admissible.json";
@@ -40,20 +37,6 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
 
       stubQuery(
         req,
-        "getFeasibilityCountByCategory",
-        feasibilityCountByCategory,
-      );
-
-      stubQuery(
-        req,
-        "getDossierDeValidationCountByCategory",
-        dossierDeValidationCountByCategory,
-      );
-
-      stubQuery(req, "getJuryCountByCategory", juryCountByCategory);
-
-      stubQuery(
-        req,
         "getCandidacyWithFeasibilityQuery",
         "candidacy/candidacy.json",
       );
@@ -81,9 +64,6 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
           "@activeFeaturesForConnectedUser",
           "@getMaisonMereCGUQuery",
           "@getCandidacyWithCandidateInfoForLayout",
-          "@getFeasibilityCountByCategory",
-          "@getDossierDeValidationCountByCategory",
-          "@getJuryCountByCategory",
           "@getCandidacyWithFeasibilityQuery",
           "@candidacy_canAccessCandidacy",
           "@feasibilityGetActiveFeasibilityByCandidacyId",
@@ -125,9 +105,6 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
           "@activeFeaturesForConnectedUser",
           "@getMaisonMereCGUQuery",
           "@getCandidacyWithCandidateInfoForLayout",
-          "@getFeasibilityCountByCategory",
-          "@getDossierDeValidationCountByCategory",
-          "@getJuryCountByCategory",
           "@getCandidacyWithFeasibilityQuery",
           "@candidacy_canAccessCandidacy",
           "@feasibilityGetActiveFeasibilityByCandidacyId",
@@ -161,9 +138,6 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
         "@activeFeaturesForConnectedUser",
         "@getMaisonMereCGUQuery",
         "@getCandidacyWithCandidateInfoForLayout",
-        "@getFeasibilityCountByCategory",
-        "@getDossierDeValidationCountByCategory",
-        "@getJuryCountByCategory",
         "@getCandidacyWithFeasibilityQuery",
         "@candidacy_canAccessCandidacy",
         "@feasibilityGetActiveFeasibilityByCandidacyId",
@@ -191,9 +165,6 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
         "@activeFeaturesForConnectedUser",
         "@getMaisonMereCGUQuery",
         "@getCandidacyWithCandidateInfoForLayout",
-        "@getFeasibilityCountByCategory",
-        "@getDossierDeValidationCountByCategory",
-        "@getJuryCountByCategory",
         "@getCandidacyWithFeasibilityQuery",
         "@candidacy_canAccessCandidacy",
         "@feasibilityGetActiveFeasibilityByCandidacyId",
@@ -274,9 +245,6 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
             "@activeFeaturesForConnectedUser",
             "@getMaisonMereCGUQuery",
             "@getCandidacyWithCandidateInfoForLayout",
-            "@getFeasibilityCountByCategory",
-            "@getDossierDeValidationCountByCategory",
-            "@getJuryCountByCategory",
             "@getCandidacyWithFeasibilityQuery",
             "@candidacy_canAccessCandidacy",
             "@feasibilityGetActiveFeasibilityByCandidacyId",

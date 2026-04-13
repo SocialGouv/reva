@@ -8,9 +8,6 @@ const certificateurCommonWait = async (page: Page) => {
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
     waitGraphQL(page, "getCandidacyWithCandidateInfoForLayout"),
-    waitGraphQL(page, "getFeasibilityCountByCategory"),
-    waitGraphQL(page, "getDossierDeValidationCountByCategory"),
-    waitGraphQL(page, "getJuryCountByCategory"),
   ]);
 };
 
@@ -55,43 +52,6 @@ export const getCertificateurCommonHandlers = ({
               lastname: candidateLastname,
             },
             jury: null,
-          },
-        }),
-      ),
-      fvae.query(
-        "getFeasibilityCountByCategory",
-        graphQLResolver({
-          feasibilityCountByCategory: {
-            ALL: 151,
-            PENDING: 28,
-            REJECTED: 20,
-            ADMISSIBLE: 99,
-            COMPLETE: 9,
-            INCOMPLETE: 15,
-            ARCHIVED: 16,
-            DROPPED_OUT: 66,
-            VAE_COLLECTIVE: 1,
-          },
-          cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount:
-            [],
-        }),
-      ),
-      fvae.query(
-        "getDossierDeValidationCountByCategory",
-        graphQLResolver({
-          dossierDeValidation_dossierDeValidationCountByCategory: {
-            ALL: 28,
-            PENDING: 18,
-            INCOMPLETE: 10,
-          },
-        }),
-      ),
-      fvae.query(
-        "getJuryCountByCategory",
-        graphQLResolver({
-          jury_juryCountByCategory: {
-            SCHEDULED: 3,
-            PASSED: 118,
           },
         }),
       ),
