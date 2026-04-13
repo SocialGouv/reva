@@ -14,7 +14,7 @@ const fvae = graphql.link("https://reva-api/api/graphql");
 
 const CANDIDACY_ID = "42288593-2a6b-4606-aedd-0d76348b39f4";
 const JURY_ID = "jury-id";
-const JURY_PAGE_PATH = `/admin2/candidacies/${CANDIDACY_ID}/jury`;
+const JURY_PAGE_PATH = `/admin2/candidacies/${CANDIDACY_ID}/jury/resultat`;
 const PAST_JURY_DATE = 1711929600000;
 
 const juryResultRadioByValue = (page: Page, value: string) =>
@@ -28,7 +28,7 @@ function createGetJuryByCandidacyIdHandler({
   isCertificationPartial: boolean;
 }) {
   return fvae.query(
-    "getJuryByCandidacyId",
+    "getJuryForResultPageByCandidacyId",
     graphQLResolver({
       getCandidacyById: {
         id: CANDIDACY_ID,
@@ -93,15 +93,14 @@ function createUpdateJuryResultMutationHandler() {
   );
 }
 
-async function openResultTab(page: Page) {
+async function openResultPage(page: Page) {
   await login({ role: "certificateur", page });
   await page.goto(JURY_PAGE_PATH);
   await Promise.all([
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getCandidacyWithCandidateInfoForLayout"),
-    waitGraphQL(page, "getJuryByCandidacyId"),
+    waitGraphQL(page, "getJuryForResultPageByCandidacyId"),
   ]);
-  await page.getByRole("tab", { name: "Résultat" }).click();
 }
 
 test.describe("jury result by blocks", () => {
@@ -124,7 +123,7 @@ test.describe("jury result by blocks", () => {
       }),
     );
 
-    await openResultTab(page);
+    await openResultPage(page);
 
     await expect(
       juryResultRadioByValue(page, "FULL_SUCCESS_OF_FULL_CERTIFICATION"),
@@ -153,7 +152,7 @@ test.describe("jury result by blocks", () => {
       }),
     );
 
-    await openResultTab(page);
+    await openResultPage(page);
 
     await expect(
       juryResultRadioByValue(page, "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION"),
@@ -182,7 +181,7 @@ test.describe("jury result by blocks", () => {
       }),
     );
 
-    await openResultTab(page);
+    await openResultPage(page);
 
     const submitButton = page.getByRole("button", { name: "Envoyer" });
     await expect(submitButton).toBeDisabled();
@@ -205,7 +204,7 @@ test.describe("jury result by blocks", () => {
       createUpdateJuryResultMutationHandler(),
     );
 
-    await openResultTab(page);
+    await openResultPage(page);
 
     await juryResultRadioByValue(
       page,
