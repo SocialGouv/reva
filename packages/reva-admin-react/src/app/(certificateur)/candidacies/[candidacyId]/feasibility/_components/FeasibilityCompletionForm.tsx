@@ -6,7 +6,6 @@ import { useRef } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { sanitizedOptionalTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
@@ -96,13 +95,7 @@ export const FeasibilityCompletionForm = ({
   candidateDisplayName?: string;
   certificationDisplayName?: string;
 }) => {
-  const { isFeatureActive } = useFeatureflipping();
-  const isCertificateurCandidaciesAnnuaireEnabled = isFeatureActive(
-    "CERTIFICATEUR_CANDIDACIES_ANNUAIRE",
-  );
-  const backUrl = isCertificateurCandidaciesAnnuaireEnabled
-    ? "/candidacies/annuaire"
-    : "/candidacies/feasibilities";
+  const backUrl = "/candidacies/annuaire";
 
   const pendingSubmitDataRef = useRef<FeasibilityCompletionFormData | null>(
     null,

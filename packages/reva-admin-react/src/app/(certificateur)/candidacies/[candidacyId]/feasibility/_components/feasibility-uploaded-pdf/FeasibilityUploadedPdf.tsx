@@ -7,7 +7,6 @@ import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSec
 import { useAuth } from "@/components/auth/auth";
 import { BackButton } from "@/components/back-button/BackButton";
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
 
 import { FeasibilityBanner } from "../FeasibilityBanner";
@@ -31,14 +30,8 @@ export const FeasibilityUploadedPdf = () => {
   const queryClient = useQueryClient();
   const { isAdmin } = useAuth();
   const revokeDecisionModal = useRevokeFeasibilityDecisionModal();
-  const { isFeatureActive } = useFeatureflipping();
-  const isCertificateurCandidaciesAnnuaireEnabled = isFeatureActive(
-    "CERTIFICATEUR_CANDIDACIES_ANNUAIRE",
-  );
 
-  const candidaciesUrl = isCertificateurCandidaciesAnnuaireEnabled
-    ? "/candidacies/annuaire"
-    : "/candidacies/feasibilities";
+  const candidaciesUrl = "/candidacies/annuaire";
 
   const handleCompletionFormSubmit = async (
     data: FeasibilityCompletionFormData,

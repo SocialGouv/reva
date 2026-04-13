@@ -13,16 +13,11 @@ import { ResultatByBlocks } from "./ResultatByBlocks";
 const JuryPage = () => {
   const { getCandidacy } = useJuryPageLogic();
   const { isFeatureActive } = useFeatureflipping();
-  const isCertificateurCandidaciesAnnuaireEnabled = isFeatureActive(
-    "CERTIFICATEUR_CANDIDACIES_ANNUAIRE",
-  );
   const isJuryResultsByBlockFeatureActive = isFeatureActive(
     "JURY_RESULTS_BY_BLOCK",
   );
 
-  const candidaciesUrl = isCertificateurCandidaciesAnnuaireEnabled
-    ? "/candidacies/annuaire"
-    : "/candidacies/juries";
+  const candidaciesUrl = "/candidacies/annuaire";
 
   const candidacy = getCandidacy.data?.getCandidacyById;
   const dossierDeValidation = candidacy?.activeDossierDeValidation;

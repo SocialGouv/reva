@@ -3,7 +3,6 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import {
@@ -34,12 +33,6 @@ export default function TransferCandidacyPage() {
     candidacyIsLoading,
   } = useTransferCandidacy({ searchFilter });
 
-  const { isFeatureActive } = useFeatureflipping();
-
-  const isCertificateurCandidaciesAnnuaireFeatureActive = isFeatureActive(
-    "CERTIFICATEUR_CANDIDACIES_ANNUAIRE",
-  );
-
   const handleTransferCandidacy = async ({
     certificationAuthorityId,
     transferReason,
@@ -59,11 +52,7 @@ export default function TransferCandidacyPage() {
           "Le nouveau service recevra un courriel pour prendre connaissance de ce transfert.",
         closable: true,
       });
-      router.push(
-        isCertificateurCandidaciesAnnuaireFeatureActive
-          ? "/candidacies/annuaire"
-          : "/candidacies/feasibilities",
-      );
+      router.push("/candidacies/annuaire");
     } catch (error) {
       graphqlErrorToast(error);
     }

@@ -204,7 +204,7 @@ export const FeasibilityValidationForm = ({
         </fieldset>
         <br />
         <FormButtons
-          backUrl="/candidacies/feasibilities"
+          backUrl="/candidacies/annuaire"
           formState={{ isSubmitting, isDirty }}
         />
       </form>

@@ -4,13 +4,11 @@ import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal/Modal";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import LocalAccountGeneralInformationSummaryCard from "@/components/certification-authority/local-account/summary-cards/general-information-card/LocalAccountGeneralInformationSummaryCard";
 import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { useUpdateLocalAccountPage } from "./updateLocalAccountPage.hook";
@@ -75,11 +73,7 @@ export default function UpdateLocalAccountPage() {
     }
   };
 
-  const { isFeatureActive } = useFeatureflipping();
-
-  const candidaciesUrl = isFeatureActive("CERTIFICATEUR_CANDIDACIES_ANNUAIRE")
-    ? `/candidacies/annuaire/?page=1&certificationAuthorityLocalAccountId=${certificationAuthorityLocalAccountId}`
-    : `/candidacies/feasibilities/?CATEGORY=ALL&page=1&certificationAuthorityLocalAccountId=${certificationAuthorityLocalAccountId}`;
+  const candidaciesUrl = `/candidacies/annuaire/?page=1&certificationAuthorityLocalAccountId=${certificationAuthorityLocalAccountId}`;
 
   return (
     <div
