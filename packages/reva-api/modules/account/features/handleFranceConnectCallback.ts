@@ -310,9 +310,6 @@ const getOrCreateCandidate = async (
       throw new FranceConnectReconciliationError({
         candidateId: candidate.id,
         mismatchedFields,
-        // log temporaire
-        birthdateDb: candidateBirthdate,
-        birthdateFc: userInfo.birthdate,
       });
     }
     const updated = await updateCandidateFromFCClaims({
