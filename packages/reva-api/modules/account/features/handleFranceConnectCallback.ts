@@ -193,10 +193,25 @@ export const handleFranceConnectCallback = async (
   }
 };
 
+const logAnonymizedFcUserInfo = ({
+  candidateId,
+  userInfo,
+}: {
+  candidateId?: string;
+  userInfo: FranceConnectClaims;
+}) => {
+  const { family_name, given_name, ...anonymizedUserInfo } = userInfo;
+  logger.warn(
+    `[France Connect] userInfo pour le candidat ${candidateId}: ${JSON.stringify(anonymizedUserInfo, null, 2)}`,
+  );
+};
+
 const buildCandidateDataFromFCClaims = async ({
+  candidateId,
   userInfo,
   existingNationality,
 }: {
+  candidateId?: string;
   userInfo: FranceConnectClaims;
   existingNationality?: string | null;
 }) => {
@@ -206,6 +221,14 @@ const buildCandidateDataFromFCClaims = async ({
   const country = await getCountry(userInfo.birthcountry);
   let birthDepartmentId: string | null = null;
   let birthCity: string | null = null;
+
+  if (!userInfo.birthplace) {
+    const displayCandidateId = candidateId ?? "inconnu";
+    logger.warn(
+      `[France Connect] Lieu de naissance (champ fc birthplace) manquant pour le candidat ${displayCandidateId}`,
+    );
+    logAnonymizedFcUserInfo({ candidateId, userInfo });
+  }
 
   if (country?.label === "France" && userInfo.birthplace) {
     const resolution = await resolveBirthplaceFromInseeCode(
@@ -267,6 +290,7 @@ const updateCandidateFromFCClaims = async ({
   const existingNationality = existingCandidate?.nationality;
 
   const fcData = await buildCandidateDataFromFCClaims({
+    candidateId,
     userInfo,
     existingNationality,
   });
