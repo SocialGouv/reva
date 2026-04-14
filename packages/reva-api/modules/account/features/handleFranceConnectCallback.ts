@@ -200,7 +200,7 @@ const logAnonymizedFcUserInfo = ({
   candidateId?: string;
   userInfo: FranceConnectClaims;
 }) => {
-  const { family_name, given_name, ...anonymizedUserInfo } = userInfo;
+  const { email, family_name, given_name, ...anonymizedUserInfo } = userInfo;
   logger.warn(
     `[France Connect] userInfo pour le candidat ${candidateId}: ${JSON.stringify(anonymizedUserInfo, null, 2)}`,
   );
@@ -222,37 +222,40 @@ const buildCandidateDataFromFCClaims = async ({
   let birthDepartmentId: string | null = null;
   let birthCity: string | null = null;
 
-  if (!userInfo.birthplace) {
-    const displayCandidateId = candidateId ?? "inconnu";
-    logger.warn(
-      `[France Connect] Lieu de naissance (champ fc birthplace) manquant pour le candidat ${displayCandidateId}`,
-    );
-    logAnonymizedFcUserInfo({ candidateId, userInfo });
-  }
-
-  if (country?.label === "France" && userInfo.birthplace) {
-    const resolution = await resolveBirthplaceFromInseeCode(
-      userInfo.birthplace,
-    );
-    if (resolution) {
-      birthCity = resolution.cityName;
-      const department = await prismaClient.department.findUnique({
-        where: { code: resolution.departmentCode },
-      });
-      if (department) {
-        birthDepartmentId = department.id;
+  if (country?.label === "France") {
+    if (userInfo.birthplace) {
+      const resolution = await resolveBirthplaceFromInseeCode(
+        userInfo.birthplace,
+      );
+      if (resolution) {
+        birthCity = resolution.cityName;
+        const department = await prismaClient.department.findUnique({
+          where: { code: resolution.departmentCode },
+        });
+        if (department) {
+          birthDepartmentId = department.id;
+        } else {
+          logger.warn(
+            `[France Connect] Code département "${resolution.departmentCode}" retourné par l'API Geo introuvable en base pour le code INSEE "${userInfo.birthplace}"`,
+          );
+          birthDepartmentId = (await getDepartment(userInfo.birthplace)).id;
+        }
       } else {
-        logger.warn(
-          `[France Connect] Code département "${resolution.departmentCode}" retourné par l'API Geo introuvable en base pour le code INSEE "${userInfo.birthplace}"`,
-        );
+        // Fallback : API indisponible, on conserve le comportement actuel
         birthDepartmentId = (await getDepartment(userInfo.birthplace)).id;
       }
     } else {
-      // Fallback : API indisponible, on conserve le comportement actuel
-      birthDepartmentId = (await getDepartment(userInfo.birthplace)).id;
+      // Country == France mais birthplace est manquant
+      const displayCandidateId = candidateId ?? "inconnu";
+      logger.warn(
+        `[France Connect] Lieu de naissance (champ fc birthplace) manquant pour le candidat ${displayCandidateId}`,
+      );
+      logAnonymizedFcUserInfo({ candidateId, userInfo });
+      throw new FranceConnectUserError({
+        message: "Lieu de naissance manquant",
+        statusCode: 400,
+      });
     }
-  } else if (country?.label === "France") {
-    birthDepartmentId = (await getDefaultDepartment()).id;
   }
 
   const nationality = existingNationality ?? country?.nationality ?? null;
