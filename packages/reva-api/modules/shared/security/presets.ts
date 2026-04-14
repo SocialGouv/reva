@@ -16,6 +16,7 @@ import { isCertificationAuthorityLocalAccountManager } from "./middlewares/isCer
 import { isCertificationAuthorityLocalAccountOwner } from "./middlewares/isCertificationAuthorityLocalAccountOwner";
 import { isCertificationAuthorityOwner } from "./middlewares/isCertificationAuthorityOwner";
 import { isCertificationRegistryManagerOfCertification } from "./middlewares/isCertificationRegistryManagerOfCertification.security";
+import { isExperienceOfCandidacy } from "./middlewares/isExperienceOfCandidacy";
 import { isFeasibilityManager } from "./middlewares/isFeasibilityManager";
 import { isGestionnaireOfCohorteVaeCollective } from "./middlewares/isGestionnaireOfCohorteVaeCollective";
 import { isGestionnaireOfCommanditaireVaeCollective } from "./middlewares/isGestionnaireOfCommanditaireVaeCollective";
@@ -101,6 +102,13 @@ export const isAdminOrCanManageAppointment = [
   hasRole(["admin", "manage_candidacy"]),
   whenHasRole("manage_candidacy", isCandidacyOwner),
   isAppointmentOfCandidacy,
+];
+
+export const isOwnerOrCanManageExperienceOfCandidacy = [
+  hasRole(["admin", "manage_candidacy", "candidate"]),
+  whenHasRole("manage_candidacy", isCandidacyOwner),
+  whenHasRole("candidate", isCandidateOwnerOfCandidacy),
+  isExperienceOfCandidacy,
 ];
 
 export const isAdminOrCertificationRegistryManagerOfCertification = [

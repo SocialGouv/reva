@@ -41,9 +41,22 @@ export const updateExperienceOfCandidacy = async ({
     );
   }
 
+  const experienceToUpdate = await prismaClient.experience.findUnique({
+    where: {
+      id: experienceId,
+      candidacyId,
+    },
+    select: { id: true },
+  });
+
+  if (!experienceToUpdate) {
+    throw new Error("Aucune expérience n'a été trouvée");
+  }
+
   const result = await prismaClient.experience.update({
     where: {
       id: experienceId,
+      candidacyId,
     },
     data: {
       title: experience.title,
