@@ -46,7 +46,9 @@ export const PasswordDefinitionInput = ({
       atLeast14Chars: value.length >= 14 ? "valid" : "error",
       atLeast1Uppercase: /[A-Z]/.test(value) ? "valid" : "error",
       atLeast1Lowercase: /[a-z]/.test(value) ? "valid" : "error",
-      atLeast1SpecialChar: /[^A-Za-z0-9]/.test(value) ? "valid" : "error",
+      atLeast1SpecialChar: /[^A-Za-z0-9À-ÖØ-öø-ÿ]/.test(value)
+        ? "valid"
+        : "error",
       atLeast1Number: /[0-9]/.test(value) ? "valid" : "error",
     } as const;
 

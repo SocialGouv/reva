@@ -36,7 +36,7 @@ export default function ResetPassword() {
     e.stopPropagation();
 
     const regex = new RegExp(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{14,}$/,
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9À-ÖØ-öø-ÿ]).{14,}$/,
     );
 
     if (password != passwordConfirmation) {
