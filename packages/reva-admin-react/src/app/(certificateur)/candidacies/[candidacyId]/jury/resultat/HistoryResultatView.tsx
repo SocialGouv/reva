@@ -2,13 +2,23 @@ import Accordion from "@codegouvfr/react-dsfr/Accordion";
 
 import { JuryResult } from "@/graphql/generated/graphql";
 
-import { ResultatCard } from "./ResultatCard";
+import { ResultatCardWithBlocks } from "./ResultatCardWithBlocks";
 
 type JuryType = {
   id: string;
   dateOfSession: number;
   result: JuryResult;
   informationOfResult?: string | null;
+  juryResultByCompetenceBlocs?:
+    | {
+        competenceBloc: {
+          id: string;
+          code?: string | null;
+          label: string;
+        };
+        isCompetenceBlocValidated: boolean;
+      }[]
+    | null;
 };
 
 interface Props {
@@ -22,13 +32,18 @@ export const HistoryResultatView = (props: Props) => {
 
   return (
     <Accordion label="Voir les résultats précédents">
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8">
         {historyJury.map((jury) => (
-          <div
-            key={jury.id}
-            className="border-b border-neutral-300 last:border-none"
-          >
-            <ResultatCard jury={jury} />
+          <div key={jury.id} className="">
+            <ResultatCardWithBlocks
+              jury={{
+                id: jury.id,
+                dateOfSession: jury.dateOfSession,
+                result: jury.result,
+                informationOfResult: jury.informationOfResult,
+                juryResultByCompetenceBlocs: jury.juryResultByCompetenceBlocs,
+              }}
+            />
           </div>
         ))}
       </div>

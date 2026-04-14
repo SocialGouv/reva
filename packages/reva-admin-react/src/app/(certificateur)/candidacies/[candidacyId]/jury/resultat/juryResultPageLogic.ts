@@ -32,6 +32,14 @@ const getJuryByCandidacyIdQuery = graphql(`
         result
         dateOfResult
         informationOfResult
+        juryResultByCompetenceBlocs {
+          competenceBloc {
+            id
+            code
+            label
+          }
+          isCompetenceBlocValidated
+        }
         convocationFile {
           name
           url
@@ -59,6 +67,14 @@ const getJuryByCandidacyIdQuery = graphql(`
         result
         dateOfResult
         informationOfResult
+        juryResultByCompetenceBlocs {
+          competenceBloc {
+            id
+            code
+            label
+          }
+          isCompetenceBlocValidated
+        }
         convocationFile {
           name
           url
@@ -70,7 +86,7 @@ const getJuryByCandidacyIdQuery = graphql(`
 `);
 
 const updateJuryResultMutation = graphql(`
-  mutation jury_updateResult($juryId: ID!, $input: JuryInfoInput!) {
+  mutation jury_updateResultWithBlocks($juryId: ID!, $input: JuryInfoInput!) {
     jury_updateResult(juryId: $juryId, input: $input) {
       id
       dateOfSession
@@ -81,6 +97,14 @@ const updateJuryResultMutation = graphql(`
       result
       dateOfResult
       informationOfResult
+      juryResultByCompetenceBlocs {
+        competenceBloc {
+          id
+          code
+          label
+        }
+        isCompetenceBlocValidated
+      }
       convocationFile {
         name
         url

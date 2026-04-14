@@ -8,7 +8,8 @@ import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAfter, startOfDay } from "date-fns";
-import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { useAuth } from "@/components/auth/auth";
@@ -22,7 +23,7 @@ import { JuryResult } from "@/graphql/generated/graphql";
 
 import { HistoryResultatView } from "./HistoryResultatView";
 import { useJuryResultPageLogic } from "./juryResultPageLogic";
-import { ResultatCard } from "./ResultatCard";
+import { ResultatCardWithBlocks } from "./ResultatCardWithBlocks";
 
 const modal = createModal({
   id: "confirm-result",
@@ -224,7 +225,9 @@ export const ResultatByBlocks = () => {
     register,
     handleSubmit,
     getValues,
+    setValue,
     formState: { errors, isValid, isSubmitting },
+    control,
   } = useForm<ResultatFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -243,6 +246,34 @@ export const ResultatByBlocks = () => {
     modal.open();
   });
 
+  const resultSelected = useWatch({ name: "result", control });
+
+  useEffect(() => {
+    if (
+      (resultSelected === "FULL_SUCCESS_OF_FULL_CERTIFICATION" ||
+        resultSelected === "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION") &&
+      candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences
+    ) {
+      setValue(
+        "validatedBlocks",
+        candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
+          (block) => block.certificationCompetenceBloc.id,
+        ),
+      );
+    } else if (
+      (resultSelected === "FAILURE" ||
+        resultSelected === "CANDIDATE_EXCUSED" ||
+        resultSelected === "CANDIDATE_ABSENT") &&
+      candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences
+    ) {
+      setValue("validatedBlocks", []);
+    }
+  }, [
+    resultSelected,
+    setValue,
+    candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences,
+  ]);
+
   const formData = getValues();
 
   const submitData = async () => {
@@ -254,6 +285,15 @@ export const ResultatByBlocks = () => {
           input: {
             result: formData.result,
             informationOfResult: formData.informationOfResult,
+            juryResultByCompetenceBlocs:
+              candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
+                (block) => ({
+                  competenceBlocId: block.certificationCompetenceBloc.id,
+                  isCompetenceBlocValidated: formData.validatedBlocks.includes(
+                    block.certificationCompetenceBloc.id,
+                  ),
+                }),
+              ),
           },
         });
       } catch (error) {
@@ -330,21 +370,22 @@ export const ResultatByBlocks = () => {
               // Only jury with result are in jury history
               result: jury.result!,
               informationOfResult: jury.informationOfResult,
+              juryResultByCompetenceBlocs: jury.juryResultByCompetenceBlocs,
             }))}
           />
         )}
 
         {!getCandidacy.isLoading && result && (
           <>
-            <ResultatCard
+            <ResultatCardWithBlocks
               jury={{
                 id: jury.id,
                 dateOfSession: jury.dateOfSession,
                 result: result,
                 informationOfResult: jury.informationOfResult,
+                juryResultByCompetenceBlocs: jury.juryResultByCompetenceBlocs,
               }}
             />
-
             {isAdmin && (
               <div className="flex justify-end">
                 <Button priority="secondary" onClick={() => revokeModal.open()}>
