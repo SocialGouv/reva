@@ -7,16 +7,25 @@ import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../../graphql/generated";
 
-const deleteExperienceMutation = graphql(`
-  mutation deleteExperience($candidacyId: ID!, $experienceId: ID!) {
-    candidacy_deleteExperience(
+const updateExperienceMutation = graphql(`
+  mutation updateExperience_with_candidate_owner(
+    $candidacyId: ID!
+    $experienceId: ID!
+    $experience: ExperienceInput!
+  ) {
+    candidacy_updateExperience(
       candidacyId: $candidacyId
       experienceId: $experienceId
-    )
+      experience: $experience
+    ) {
+      id
+      title
+      description
+    }
   }
 `);
 
-describe("delete experience from candidacy", () => {
+describe("update experience of candidacy", () => {
   const createExperienceForCandidacy = async (
     candidacyId: string,
     title: string,
@@ -51,44 +60,39 @@ describe("delete experience from candidacy", () => {
       },
     });
 
-  test("should successfully delete one experience and keep the other", async () => {
+  test("should update an experience attached to the authorized candidacy", async () => {
     const candidacy = await createCandidacyHelper({
       candidacyActiveStatus: CandidacyStatusStep.PROJET,
     });
 
-    const experience1 = await createExperienceForCandidacy(
+    const experience = await createExperienceForCandidacy(
       candidacy.id,
       "Experience 1",
-    );
-    const experience2 = await createExperienceForCandidacy(
-      candidacy.id,
-      "Experience 2",
     );
 
     const graphqlClient = getGraphQLClientForCandidate(
       candidacy.candidate?.keycloakId,
     );
 
-    const result = await graphqlClient.request(deleteExperienceMutation, {
+    const result = await graphqlClient.request(updateExperienceMutation, {
       candidacyId: candidacy.id,
-      experienceId: experience1.id,
+      experienceId: experience.id,
+      experience: {
+        title: "Updated experience",
+        description: "Updated description",
+        duration: ExperienceDuration.moreThanThreeYears,
+        startedAt: Date.parse("2021-01-01T00:00:00.000Z"),
+      },
     });
 
-    expect(result.candidacy_deleteExperience).toBe(true);
-
-    const deletedExperience = await prismaClient.experience.findUnique({
-      where: { id: experience1.id },
+    expect(result.candidacy_updateExperience).toMatchObject({
+      id: experience.id,
+      title: "Updated experience",
+      description: "Updated description",
     });
-    const remainingExperience = await prismaClient.experience.findUnique({
-      where: { id: experience2.id },
-    });
-
-    expect(deletedExperience).toBeNull();
-    expect(remainingExperience).not.toBeNull();
-    expect(remainingExperience?.title).toBe("Experience 2");
   });
 
-  test("should reject deleting an experience that is not attached to the authorized candidacy", async () => {
+  test("should reject updating an experience that is not attached to the authorized candidacy", async () => {
     const ownedCandidacy = await createCandidacyHelper({
       candidacyActiveStatus: CandidacyStatusStep.PROJET,
     });
@@ -106,14 +110,50 @@ describe("delete experience from candidacy", () => {
     );
 
     await expect(
-      graphqlClient.request(deleteExperienceMutation, {
+      graphqlClient.request(updateExperienceMutation, {
         candidacyId: ownedCandidacy.id,
         experienceId: foreignExperience.id,
+        experience: {
+          title: "Updated experience",
+          description: "Updated description",
+          duration: ExperienceDuration.moreThanThreeYears,
+          startedAt: Date.parse("2021-01-01T00:00:00.000Z"),
+        },
       }),
     ).rejects.toThrow();
   });
 
-  test("should let an AAP delete an experience attached to a candidacy it owns", async () => {
+  test("should prevent a candidate from updating an experience after confirming the parcours", async () => {
+    const candidacy = await createCandidacyHelper({
+      candidacyActiveStatus: CandidacyStatusStep.PARCOURS_CONFIRME,
+    });
+
+    const experience = await createExperienceForCandidacy(
+      candidacy.id,
+      "Experience 1",
+    );
+
+    const graphqlClient = getGraphQLClientForCandidate(
+      candidacy.candidate?.keycloakId,
+    );
+
+    await expect(
+      graphqlClient.request(updateExperienceMutation, {
+        candidacyId: candidacy.id,
+        experienceId: experience.id,
+        experience: {
+          title: "Updated experience",
+          description: "Updated description",
+          duration: ExperienceDuration.moreThanThreeYears,
+          startedAt: Date.parse("2021-01-01T00:00:00.000Z"),
+        },
+      }),
+    ).rejects.toThrow(
+      "Impossible de mettre à jour les experiences après avoir confirmé le parcours",
+    );
+  });
+
+  test("should let an AAP update an experience attached to a candidacy it owns", async () => {
     const candidacy = await createCandidacyHelper({
       candidacyActiveStatus: CandidacyStatusStep.PROJET,
     });
@@ -127,21 +167,25 @@ describe("delete experience from candidacy", () => {
       candidacy.organism?.organismOnAccounts[0].account.keycloakId,
     );
 
-    const result = await graphqlClient.request(deleteExperienceMutation, {
+    const result = await graphqlClient.request(updateExperienceMutation, {
       candidacyId: candidacy.id,
       experienceId: experience.id,
+      experience: {
+        title: "Updated experience",
+        description: "Updated description",
+        duration: ExperienceDuration.moreThanThreeYears,
+        startedAt: Date.parse("2021-01-01T00:00:00.000Z"),
+      },
     });
 
-    expect(result.candidacy_deleteExperience).toBe(true);
-
-    const deletedExperience = await prismaClient.experience.findUnique({
-      where: { id: experience.id },
+    expect(result.candidacy_updateExperience).toMatchObject({
+      id: experience.id,
+      title: "Updated experience",
+      description: "Updated description",
     });
-
-    expect(deletedExperience).toBeNull();
   });
 
-  test("should reject an AAP deleting an experience that is not attached to a candidacy it owns", async () => {
+  test("should reject an AAP updating an experience that is not attached to a candidacy it owns", async () => {
     const ownedCandidacy = await createCandidacyHelper({
       candidacyActiveStatus: CandidacyStatusStep.PROJET,
     });
@@ -159,50 +203,16 @@ describe("delete experience from candidacy", () => {
     );
 
     await expect(
-      graphqlClient.request(deleteExperienceMutation, {
+      graphqlClient.request(updateExperienceMutation, {
         candidacyId: ownedCandidacy.id,
         experienceId: foreignExperience.id,
+        experience: {
+          title: "Updated experience",
+          description: "Updated description",
+          duration: ExperienceDuration.moreThanThreeYears,
+          startedAt: Date.parse("2021-01-01T00:00:00.000Z"),
+        },
       }),
     ).rejects.toThrow();
   });
-
-  test.each<CandidacyStatusStep>([
-    "VALIDATION",
-    "PRISE_EN_CHARGE",
-    "PARCOURS_ENVOYE",
-    "PARCOURS_CONFIRME",
-    "DOSSIER_FAISABILITE_INCOMPLET",
-    "DOSSIER_FAISABILITE_ENVOYE",
-    "DOSSIER_FAISABILITE_COMPLET",
-    "DOSSIER_FAISABILITE_RECEVABLE",
-    "DOSSIER_FAISABILITE_NON_RECEVABLE",
-    "DOSSIER_DE_VALIDATION_ENVOYE",
-    "DOSSIER_DE_VALIDATION_SIGNALE",
-    "ARCHIVE",
-  ])(
-    "should prevent deletion when candidacy status is %s",
-    async (status: CandidacyStatusStep) => {
-      const candidacy = await createCandidacyHelper({
-        candidacyActiveStatus: status,
-      });
-
-      const experience = await createExperienceForCandidacy(
-        candidacy.id,
-        "Test Experience",
-      );
-
-      const graphqlClient = getGraphQLClientForCandidate(
-        candidacy.candidate?.keycloakId,
-      );
-
-      await expect(
-        graphqlClient.request(deleteExperienceMutation, {
-          candidacyId: candidacy.id,
-          experienceId: experience.id,
-        }),
-      ).rejects.toThrow(
-        "Impossible de supprimer les expériences après avoir envoyé la candidature à l'AAP",
-      );
-    },
-  );
 });

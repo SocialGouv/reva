@@ -31,8 +31,20 @@ export const deleteExperienceFromCandidacy = async ({
     );
   }
 
+  const experienceToDelete = await prismaClient.experience.findUnique({
+    where: {
+      id: experienceId,
+      candidacyId,
+    },
+    select: { id: true },
+  });
+
+  if (!experienceToDelete) {
+    throw new Error("Aucune expérience n'a été trouvée");
+  }
+
   await prismaClient.experience.delete({
-    where: { id: experienceId },
+    where: { id: experienceId, candidacyId },
   });
 
   await logCandidacyAuditEvent({
