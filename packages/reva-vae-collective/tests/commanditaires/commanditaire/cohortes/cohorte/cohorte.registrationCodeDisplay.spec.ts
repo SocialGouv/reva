@@ -9,7 +9,7 @@ import { login } from "../../../../shared/utils/auth/login";
 import { mockQueryActiveFeatures } from "../../../../shared/utils/mockActiveFeatures";
 const fvae = graphql.link("https://reva-api/api/graphql");
 
-test.describe("registration code and url display", () => {
+test.describe("registration code display", () => {
   test.describe("when the cohorte status is 'BROUILLON'", () => {
     test.use({
       mswHandlers: [
@@ -31,7 +31,7 @@ test.describe("registration code and url display", () => {
         { scope: "test" },
       ],
     });
-    test("the registration code and url display should not be displayed", async ({
+    test("the registration code display should not be displayed", async ({
       page,
     }) => {
       await login({ page, role: "gestionnaireVaeCollective" });
@@ -45,7 +45,6 @@ test.describe("registration code and url display", () => {
       );
 
       await expect(page.getByTestId("registration-code-display")).toBeHidden();
-      await expect(page.getByTestId("registration-url-display")).toBeHidden();
     });
   });
   test.describe("when the cohorte status is 'PUBLIE'", () => {
@@ -70,7 +69,7 @@ test.describe("registration code and url display", () => {
         { scope: "test" },
       ],
     });
-    test("the registration code and url display should be displayed", async ({
+    test("the registration code display should be displayed", async ({
       page,
     }) => {
       await login({ page, role: "gestionnaireVaeCollective" });
@@ -81,9 +80,6 @@ test.describe("registration code and url display", () => {
 
       await expect(page.getByTestId("registration-code-display")).toContainText(
         "CODE1234",
-      );
-      await expect(page.getByTestId("registration-url-display")).toContainText(
-        "http://localhost:3002/inscription-candidat/vae-collective?codeInscription=CODE1234",
       );
     });
   });

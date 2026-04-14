@@ -71,7 +71,7 @@ export const GenerateCohorteCodeInscriptionButton = ({
         </div>
       </modal.Component>
       <Tile
-        title="Générez un lien et un code d’accès à la cohorte"
+        title="Générez le code d’accès à la cohorte"
         small
         pictogram={
           <Image
@@ -89,8 +89,7 @@ export const GenerateCohorteCodeInscriptionButton = ({
             certification et l’accompagnement liés à cette cohorte. Vous ne
             pourrez plus la supprimer non plus.
             <br />
-            Ce code et ce lien vous permettent d’inviter vos candidats à
-            rejoindre la cohorte.
+            Ce code vous permet d’inviter vos candidats à rejoindre la cohorte.
           </>
         }
         detail="L’activation de l’accès est irréversible."

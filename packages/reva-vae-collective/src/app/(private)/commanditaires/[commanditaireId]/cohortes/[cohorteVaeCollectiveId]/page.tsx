@@ -13,10 +13,6 @@ import { DeleteCohorteButton } from "./_components/delete-cohorte-button/DeleteC
 import { GenerateCohorteCodeInscriptionButton } from "./_components/generate-cohorte-code-inscription-button/GenerateCohorteCodeInscriptionButton";
 import { OrganismCard } from "./_components/organism-card/OrganismCard";
 import { RegistrationCodeDisplay } from "./_components/registration-code-display/RegistrationCodeDisplay";
-import { RegistrationUrlDisplay } from "./_components/registration-url-display/RegistrationUrlDisplay";
-
-const websiteBaseUrl =
-  (process.env.BASE_URL as string) || "http://localhost:3002";
 
 const getCohorteById = async (
   commanditaireVaeCollectiveId: string,
@@ -124,8 +120,8 @@ export default async function CohortePage({
         </Link>
       </div>
       <p className="text-xl mb-12">
-        Paramétrez votre cohorte, afin de générer un code unique ainsi qu’un
-        lien d’accès à transmettre aux candidats devant intégrer cette cohorte.
+        Paramétrez votre cohorte, afin de générer un code unique à transmettre
+        aux candidats devant intégrer cette cohorte.
       </p>
       <CertificationsCard
         numberOfCertifications={certifications.length}
@@ -170,31 +166,36 @@ export default async function CohortePage({
       )}
       {cohorte.status === "PUBLIE" && (
         <div className="flex flex-col gap-4">
-          <p className="text-lg mb-2">
-            Afin de permettre à vos candidats de s’inscrire sur la plateforme,
-            et d’être automatiquement orientés vers la certification visée et
-            l’AAP sélectionné, 2 possibilités.
-          </p>
           <p className="text-lg mb-0">
-            Nous vous invitons à leur transmettre ce code. Ils pourront le
-            renseigner sur la page d’inscription du site institutionnel :
+            Afin de permettre à vos candidats de s’inscrire à cette cohorte,
+            nous vous invitons à leur transmettre ce code. Ils pourront le
+            renseigner sur la page de création de candidature en VAE collective
+            :
           </p>
           <RegistrationCodeDisplay
             registrationCode={cohorte.codeInscription || ""}
           />
-          <p className="text-lg sm:mb-0 mt-6">
-            Vous pouvez également leur transmettre ce lien qui les orientera
-            directement vers la page d’inscription à cette cohorte :{" "}
+          <p className="text-lg mb-0">
+            Il sera alors orienté vers les certifications sélectionnées et l’AAP
+            en charge de cette cohorte.
           </p>
-          <RegistrationUrlDisplay
-            registrationUrl={`${websiteBaseUrl}/inscription-candidat/vae-collective?codeInscription=${cohorte.codeInscription}`}
-          />
-          <p className="text-lg sm:mb-0 mt-6">
-            Vous pouvez aussi transmettre ces informations à l'accompagnateur en
-            charge de la cohorte. Il pourra les utiliser afin de guider les
-            candidats de cette cohorte dans leur création de candidature en VAE
-            collective.Des modèles de mails sont mis à votre disposition pour
-            informer votre accompagnateur et les candidats concernés.
+
+          <p className="text-lg mt-4 mb-0">
+            Vous pouvez aussi transmettre ce code à l'accompagnateur en charge
+            de la cohorte. Il pourra l’utiliser afin de guider les candidats de
+            cette cohorte dans leur création de candidature en VAE collective.
+            <br />
+            Des{" "}
+            <a
+              className="fr-link text-lg"
+              href="https://www.notion.so/francevae/Comment-transmettre-le-code-d-inscription-d-une-cohorte-2ea100b69ece81a3992ee4a6998c4bb3?source=copy_link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              modèles de mails
+            </a>{" "}
+            sont mis à votre disposition pour informer votre accompagnateur et
+            les candidats concernés.
           </p>
         </div>
       )}
