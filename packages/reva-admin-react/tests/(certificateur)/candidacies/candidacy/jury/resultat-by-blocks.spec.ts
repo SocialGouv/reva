@@ -84,7 +84,7 @@ function createGetJuryByCandidacyIdHandler({
 
 function createUpdateJuryResultMutationHandler() {
   return fvae.mutation(
-    "jury_updateResult",
+    "jury_updateResultWithBlocks",
     graphQLResolver({
       jury_updateResult: {
         id: JURY_ID,
@@ -198,7 +198,7 @@ test.describe("jury result by blocks", () => {
     msw.use(
       ...certificateurCommonHandlers,
       createGetJuryByCandidacyIdHandler({
-        typeAccompagnement: "AUTONOME",
+        typeAccompagnement: "ACCOMPAGNE",
         isCertificationPartial: false,
       }),
       createUpdateJuryResultMutationHandler(),
@@ -216,8 +216,136 @@ test.describe("jury result by blocks", () => {
       page.getByRole("dialog", { name: "Confirmer le résultat du jury" }),
     ).toBeVisible();
 
-    const updateResultPromise = waitGraphQL(page, "jury_updateResult");
+    const updateResultPromise = waitGraphQL(
+      page,
+      "jury_updateResultWithBlocks",
+    );
     await page.getByRole("button", { name: "Confirmer" }).click();
     await updateResultPromise;
+  });
+
+  test("Automatically checks all blocks when full success of full certification is selected", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...certificateurCommonHandlers,
+      createGetJuryByCandidacyIdHandler({
+        typeAccompagnement: "ACCOMPAGNE",
+        isCertificationPartial: false,
+      }),
+      createUpdateJuryResultMutationHandler(),
+    );
+
+    await openResultPage(page);
+
+    await juryResultRadioByValue(
+      page,
+      "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+    ).click({ force: true });
+
+    await expect(page.getByRole("checkbox", { name: "Bloc 1" })).toBeChecked();
+    await expect(page.getByRole("checkbox", { name: "Bloc 2" })).toBeChecked();
+  });
+
+  test("Automatically checks all blocks when full success of partial certification is selected", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...certificateurCommonHandlers,
+      createGetJuryByCandidacyIdHandler({
+        typeAccompagnement: "ACCOMPAGNE",
+        isCertificationPartial: true,
+      }),
+      createUpdateJuryResultMutationHandler(),
+    );
+
+    await openResultPage(page);
+
+    await juryResultRadioByValue(
+      page,
+      "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+    ).click({ force: true });
+
+    await expect(page.getByRole("checkbox", { name: "Bloc 1" })).toBeChecked();
+    await expect(page.getByRole("checkbox", { name: "Bloc 2" })).toBeChecked();
+  });
+
+  test("Unselects all blocks when failure is selected", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...certificateurCommonHandlers,
+      createGetJuryByCandidacyIdHandler({
+        typeAccompagnement: "ACCOMPAGNE",
+        isCertificationPartial: false,
+      }),
+      createUpdateJuryResultMutationHandler(),
+    );
+
+    await openResultPage(page);
+
+    await juryResultRadioByValue(page, "FAILURE").click({ force: true });
+
+    await expect(
+      page.getByRole("checkbox", { name: "Bloc 1" }),
+    ).not.toBeChecked();
+    await expect(
+      page.getByRole("checkbox", { name: "Bloc 2" }),
+    ).not.toBeChecked();
+  });
+
+  test("Unselects all blocks when candidate excused is selected", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...certificateurCommonHandlers,
+      createGetJuryByCandidacyIdHandler({
+        typeAccompagnement: "ACCOMPAGNE",
+        isCertificationPartial: false,
+      }),
+      createUpdateJuryResultMutationHandler(),
+    );
+
+    await openResultPage(page);
+
+    await juryResultRadioByValue(page, "CANDIDATE_EXCUSED").click({
+      force: true,
+    });
+    await expect(
+      page.getByRole("checkbox", { name: "Bloc 1" }),
+    ).not.toBeChecked();
+    await expect(
+      page.getByRole("checkbox", { name: "Bloc 2" }),
+    ).not.toBeChecked();
+  });
+
+  test("Unselects all blocks when candidate absent is selected", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...certificateurCommonHandlers,
+      createGetJuryByCandidacyIdHandler({
+        typeAccompagnement: "ACCOMPAGNE",
+        isCertificationPartial: false,
+      }),
+      createUpdateJuryResultMutationHandler(),
+    );
+
+    await openResultPage(page);
+
+    await juryResultRadioByValue(page, "CANDIDATE_ABSENT").click({
+      force: true,
+    });
+    await expect(
+      page.getByRole("checkbox", { name: "Bloc 1" }),
+    ).not.toBeChecked();
+    await expect(
+      page.getByRole("checkbox", { name: "Bloc 2" }),
+    ).not.toBeChecked();
   });
 });
