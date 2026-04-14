@@ -1,7 +1,9 @@
 import {
   defaultSecurity,
   isAdminOrCandidacyCompanion,
+  isAdminOrCanManageAppointment,
   isOwnerOrCanManageCandidacy,
+  isOwnerOrCanManageAppointment,
 } from "@/modules/shared/security/presets";
 
 export const resolversSecurityMap = {
@@ -11,10 +13,10 @@ export const resolversSecurityMap = {
   "Query.*": defaultSecurity,
   "Mutation.*": defaultSecurity,
 
-  "Query.appointment_getAppointmentById": isOwnerOrCanManageCandidacy,
+  "Query.appointment_getAppointmentById": isOwnerOrCanManageAppointment,
 
   "Mutation.appointment_createAppointment": isAdminOrCandidacyCompanion,
-  "Mutation.appointment_updateAppointment": isAdminOrCandidacyCompanion,
-  "Mutation.appointment_deleteAppointment": isAdminOrCandidacyCompanion,
+  "Mutation.appointment_updateAppointment": isAdminOrCanManageAppointment,
+  "Mutation.appointment_deleteAppointment": isAdminOrCanManageAppointment,
   "Candidacy.appointments": isOwnerOrCanManageCandidacy,
 };

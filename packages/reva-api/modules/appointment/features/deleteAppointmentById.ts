@@ -11,6 +11,7 @@ import { prismaClient } from "@/prisma/client";
 import { getAppointmentTemporalStatus } from "./getAppointmentTemporalStatus";
 
 export const deleteAppointmentById = async ({
+  candidacyId,
   appointmentId,
   userInfo,
 }: {
@@ -19,7 +20,7 @@ export const deleteAppointmentById = async ({
   userInfo: CandidacyAuditLogUserInfo;
 }) => {
   const appointment = await prismaClient.appointment.findUnique({
-    where: { id: appointmentId },
+    where: { id: appointmentId, candidacyId },
   });
 
   if (!appointment) {
@@ -39,7 +40,7 @@ export const deleteAppointmentById = async ({
   }
 
   const result = await prismaClient.appointment.delete({
-    where: { id: appointmentId },
+    where: { id: appointmentId, candidacyId },
     include: {
       candidacy: { include: { candidate: { include: { department: true } } } },
     },

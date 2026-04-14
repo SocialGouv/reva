@@ -19,6 +19,26 @@ const graphqlClient = getGraphQLClient({
   },
 });
 
+const getGraphQLClientForAap = (keycloakId?: string) =>
+  getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "manage_candidacy",
+        keycloakId,
+      }),
+    },
+  });
+
+const getGraphQLClientForCandidate = (keycloakId?: string) =>
+  getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "candidate",
+        keycloakId,
+      }),
+    },
+  });
+
 test("should get a candidacy appointments", async () => {
   const getCandidacyById = graphql(`
     query getCandidacyByIdForAppointmentTest($id: ID!) {
@@ -91,6 +111,148 @@ test("should get an appointment by its id", async () => {
   });
 });
 
+test("should let an AAP get an appointment attached to a candidacy it owns", async () => {
+  const getAppointmentById = graphql(`
+    query getAppointmentById_for_owned_aap(
+      $candidacyId: ID!
+      $appointmentId: ID!
+    ) {
+      appointment_getAppointmentById(
+        candidacyId: $candidacyId
+        appointmentId: $appointmentId
+      ) {
+        id
+      }
+    }
+  `);
+
+  const ownedCandidacy = await createCandidacyHelper();
+  const ownedAppointment = await createAppointmentHelper({
+    candidacyId: ownedCandidacy.id,
+    date: new Date("2225-08-12"),
+  });
+
+  const graphqlClient = getGraphQLClientForAap(
+    ownedCandidacy.organism?.organismOnAccounts[0].account.keycloakId,
+  );
+
+  const result = await graphqlClient.request(getAppointmentById, {
+    candidacyId: ownedCandidacy.id,
+    appointmentId: ownedAppointment.id,
+  });
+
+  expect(result).toMatchObject({
+    appointment_getAppointmentById: {
+      id: ownedAppointment.id,
+    },
+  });
+});
+
+test("should let a candidate get an appointment attached to their candidacy", async () => {
+  const getAppointmentById = graphql(`
+    query getAppointmentById_for_candidate_owner(
+      $candidacyId: ID!
+      $appointmentId: ID!
+    ) {
+      appointment_getAppointmentById(
+        candidacyId: $candidacyId
+        appointmentId: $appointmentId
+      ) {
+        id
+      }
+    }
+  `);
+
+  const candidacy = await createCandidacyHelper();
+  const appointment = await createAppointmentHelper({
+    candidacyId: candidacy.id,
+    date: new Date("2225-08-12"),
+  });
+
+  const graphqlClient = getGraphQLClientForCandidate(
+    candidacy.candidate?.keycloakId,
+  );
+
+  const result = await graphqlClient.request(getAppointmentById, {
+    candidacyId: candidacy.id,
+    appointmentId: appointment.id,
+  });
+
+  expect(result).toMatchObject({
+    appointment_getAppointmentById: {
+      id: appointment.id,
+    },
+  });
+});
+
+test("should reject a candidate getting an appointment that is not attached to their candidacy", async () => {
+  const getAppointmentById = graphql(`
+    query getAppointmentById_with_mismatched_candidacy_and_appointment_for_candidate(
+      $candidacyId: ID!
+      $appointmentId: ID!
+    ) {
+      appointment_getAppointmentById(
+        candidacyId: $candidacyId
+        appointmentId: $appointmentId
+      ) {
+        id
+      }
+    }
+  `);
+
+  const ownedCandidacy = await createCandidacyHelper();
+  const foreignCandidacy = await createCandidacyHelper();
+  const foreignAppointment = await createAppointmentHelper({
+    candidacyId: foreignCandidacy.id,
+    date: new Date("2225-08-12"),
+  });
+
+  const graphqlClient = getGraphQLClientForCandidate(
+    ownedCandidacy.candidate?.keycloakId,
+  );
+
+  await expect(
+    graphqlClient.request(getAppointmentById, {
+      candidacyId: ownedCandidacy.id,
+      appointmentId: foreignAppointment.id,
+    }),
+  ).rejects.toThrow();
+});
+
+test("should reject getting an appointment that is not attached to the authorized candidacy", async () => {
+  const getAppointmentById = graphql(`
+    query getAppointmentById_with_mismatched_candidacy_and_appointment(
+      $candidacyId: ID!
+      $appointmentId: ID!
+    ) {
+      appointment_getAppointmentById(
+        candidacyId: $candidacyId
+        appointmentId: $appointmentId
+      ) {
+        id
+      }
+    }
+  `);
+
+  const ownedCandidacy = await createCandidacyHelper();
+  const foreignCandidacy = await createCandidacyHelper();
+  const foreignAppointment = await createAppointmentHelper({
+    candidacyId: foreignCandidacy.id,
+    date: new Date("2225-08-12"),
+  });
+
+  const graphqlClient = getGraphQLClientForAap(
+    ownedCandidacy.organism?.organismOnAccounts[0].account.keycloakId,
+  );
+
+  await expect(
+    graphqlClient.request(getAppointmentById, {
+      candidacyId: ownedCandidacy.id,
+      appointmentId: foreignAppointment.id,
+    }),
+  ).rejects.toThrow();
+});
+
 test("should create an appointment and send an email to the candidate", async () => {
   const sendEmailUsingTemplateSpy = vi.spyOn(
     EmailModule,
@@ -159,6 +321,39 @@ test("should create an appointment and send an email to the candidate", async ()
       appointmentUrl: `${getCandidateAppUrl()}/${candidacy.id}/appointments/${res.appointment_createAppointment.id}`,
     },
     templateId: 632,
+  });
+});
+
+test("should let an AAP create an appointment on a candidacy it owns", async () => {
+  const createAppointment = graphql(`
+    mutation createAppointment_for_owned_aap($input: CreateAppointmentInput!) {
+      appointment_createAppointment(input: $input) {
+        id
+        title
+        type
+      }
+    }
+  `);
+
+  const candidacy = await createCandidacyHelper();
+  const graphqlClient = getGraphQLClientForAap(
+    candidacy.organism?.organismOnAccounts[0].account.keycloakId,
+  );
+
+  const result = await graphqlClient.request(createAppointment, {
+    input: {
+      candidacyId: candidacy.id,
+      type: AppointmentType.RENDEZ_VOUS_DE_SUIVI,
+      title: "AAP Appointment",
+      date: "2225-09-26T10:00:00.000Z",
+    },
+  });
+
+  expect(result).toMatchObject({
+    appointment_createAppointment: {
+      title: "AAP Appointment",
+      type: AppointmentType.RENDEZ_VOUS_DE_SUIVI,
+    },
   });
 });
 
@@ -294,6 +489,48 @@ test("should update an appointment when it is not past and send an email to the 
   });
 });
 
+test("should let an AAP update an appointment attached to a candidacy it owns", async () => {
+  const updateAppointment = graphql(`
+    mutation updateAppointment_for_owned_aap($input: UpdateAppointmentInput!) {
+      appointment_updateAppointment(input: $input) {
+        id
+        title
+        description
+      }
+    }
+  `);
+
+  const candidacy = await createCandidacyHelper();
+  const appointment = await createAppointmentHelper({
+    candidacyId: candidacy.id,
+    date: new Date("2225-08-12"),
+  });
+
+  const graphqlClient = getGraphQLClientForAap(
+    candidacy.organism?.organismOnAccounts[0].account.keycloakId,
+  );
+
+  const result = await graphqlClient.request(updateAppointment, {
+    input: {
+      appointmentId: appointment.id,
+      candidacyId: candidacy.id,
+      title: "Updated by AAP",
+      description: "Updated description",
+      location: "Updated test Location",
+      date: "2225-09-26T10:00:00.000Z",
+      duration: "TWO_HOURS",
+    },
+  });
+
+  expect(result).toMatchObject({
+    appointment_updateAppointment: {
+      id: appointment.id,
+      title: "Updated by AAP",
+      description: "Updated description",
+    },
+  });
+});
+
 test("should not update an appointment when it is past", async () => {
   const updateAppointment = graphql(`
     mutation updateAppointment($input: UpdateAppointmentInput!) {
@@ -328,6 +565,43 @@ test("should not update an appointment when it is past", async () => {
       },
     }),
   ).rejects.toThrowError("Impossible de modifier un rendez-vous passé");
+});
+
+test("should reject updating an appointment that is not attached to the authorized candidacy", async () => {
+  const updateAppointment = graphql(`
+    mutation updateAppointment_with_mismatched_candidacy_and_appointment(
+      $input: UpdateAppointmentInput!
+    ) {
+      appointment_updateAppointment(input: $input) {
+        id
+      }
+    }
+  `);
+
+  const ownedCandidacy = await createCandidacyHelper();
+  const foreignCandidacy = await createCandidacyHelper();
+  const foreignAppointment = await createAppointmentHelper({
+    candidacyId: foreignCandidacy.id,
+    date: new Date("2225-08-12"),
+  });
+
+  const graphqlClient = getGraphQLClientForAap(
+    ownedCandidacy.organism?.organismOnAccounts[0].account.keycloakId,
+  );
+
+  await expect(
+    graphqlClient.request(updateAppointment, {
+      input: {
+        appointmentId: foreignAppointment.id,
+        candidacyId: ownedCandidacy.id,
+        title: "Updated test Appointment",
+        description: "Updated test Description",
+        location: "Updated test Location",
+        date: "2225-09-26T10:00:00.000Z",
+        duration: "TWO_HOURS",
+      },
+    }),
+  ).rejects.toThrow();
 });
 
 test("should delete an upcoming appointment of type RENDEZ_VOUS_DE_SUIVI and send an email to the candidate", async () => {
@@ -398,6 +672,50 @@ test("should delete an upcoming appointment of type RENDEZ_VOUS_DE_SUIVI and sen
   });
 });
 
+test("should let an AAP delete an appointment attached to a candidacy it owns", async () => {
+  const deleteAppointment = graphql(`
+    mutation deleteAppointment_for_owned_aap(
+      $candidacyId: ID!
+      $appointmentId: ID!
+    ) {
+      appointment_deleteAppointment(
+        candidacyId: $candidacyId
+        appointmentId: $appointmentId
+      ) {
+        id
+      }
+    }
+  `);
+
+  const candidacy = await createCandidacyHelper();
+  const appointment = await createAppointmentHelper({
+    candidacyId: candidacy.id,
+    type: AppointmentType.RENDEZ_VOUS_DE_SUIVI,
+    date: new Date("2225-08-12"),
+  });
+
+  const graphqlClient = getGraphQLClientForAap(
+    candidacy.organism?.organismOnAccounts[0].account.keycloakId,
+  );
+
+  const result = await graphqlClient.request(deleteAppointment, {
+    candidacyId: candidacy.id,
+    appointmentId: appointment.id,
+  });
+
+  expect(result).toMatchObject({
+    appointment_deleteAppointment: {
+      id: appointment.id,
+    },
+  });
+
+  const deletedAppointment = await prismaClient.appointment.findUnique({
+    where: { id: appointment.id },
+  });
+
+  expect(deletedAppointment).toBeNull();
+});
+
 test("should not delete an appointment of type RENDEZ_VOUS_DE_SUIVI when it is past", async () => {
   const deleteAppointment = graphql(`
     mutation deleteAppointment($candidacyId: ID!, $appointmentId: ID!) {
@@ -446,4 +764,39 @@ test("should not delete an appointment of type RENDEZ_VOUS_PEDAGOGIQUE", async (
       appointmentId: appointment.id,
     }),
   ).rejects.toThrowError("Impossible de supprimer un rendez-vous pedagogique");
+});
+
+test("should reject deleting an appointment that is not attached to the authorized candidacy", async () => {
+  const deleteAppointment = graphql(`
+    mutation deleteAppointment_with_mismatched_candidacy_and_appointment(
+      $candidacyId: ID!
+      $appointmentId: ID!
+    ) {
+      appointment_deleteAppointment(
+        candidacyId: $candidacyId
+        appointmentId: $appointmentId
+      ) {
+        id
+      }
+    }
+  `);
+
+  const ownedCandidacy = await createCandidacyHelper();
+  const foreignCandidacy = await createCandidacyHelper();
+  const foreignAppointment = await createAppointmentHelper({
+    candidacyId: foreignCandidacy.id,
+    type: AppointmentType.RENDEZ_VOUS_DE_SUIVI,
+    date: new Date("2225-08-12"),
+  });
+
+  const graphqlClient = getGraphQLClientForAap(
+    ownedCandidacy.organism?.organismOnAccounts[0].account.keycloakId,
+  );
+
+  await expect(
+    graphqlClient.request(deleteAppointment, {
+      candidacyId: ownedCandidacy.id,
+      appointmentId: foreignAppointment.id,
+    }),
+  ).rejects.toThrow();
 });

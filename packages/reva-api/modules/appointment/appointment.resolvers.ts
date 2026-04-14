@@ -54,8 +54,11 @@ const unsafeResolvers = {
   Query: {
     appointment_getAppointmentById: async (
       _: unknown,
-      { appointmentId }: { appointmentId: string },
-    ) => getAppointmentById({ appointmentId }),
+      {
+        candidacyId,
+        appointmentId,
+      }: { candidacyId: string; appointmentId: string },
+    ) => getAppointmentById({ candidacyId, appointmentId }),
   },
   Mutation: {
     appointment_createAppointment: async (
