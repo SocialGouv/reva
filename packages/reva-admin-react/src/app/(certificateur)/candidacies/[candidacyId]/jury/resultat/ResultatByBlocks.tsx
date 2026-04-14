@@ -247,6 +247,7 @@ export const ResultatByBlocks = () => {
   });
 
   const resultSelected = useWatch({ name: "result", control });
+  console.log("resultSelected", resultSelected);
 
   useEffect(() => {
     if (
@@ -455,8 +456,12 @@ export const ResultatByBlocks = () => {
                     nativeInputProps: {
                       value: bloc.certificationCompetenceBloc.id,
                       ...register(`validatedBlocks`),
+                      disabled:
+                        !editable ||
+                        resultSelected === "FAILURE" ||
+                        resultSelected === "CANDIDATE_EXCUSED" ||
+                        resultSelected === "CANDIDATE_ABSENT",
                     },
-                    disabled: !editable,
                   }),
                 ) || []
               }

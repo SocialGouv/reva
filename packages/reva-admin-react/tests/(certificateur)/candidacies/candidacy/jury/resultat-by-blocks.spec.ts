@@ -272,7 +272,7 @@ test.describe("jury result by blocks", () => {
     await expect(page.getByRole("checkbox", { name: "Bloc 2" })).toBeChecked();
   });
 
-  test("Unselects all blocks when failure is selected", async ({
+  test("Unselects and disables all blocks when failure is selected", async ({
     page,
     msw,
   }) => {
@@ -295,9 +295,11 @@ test.describe("jury result by blocks", () => {
     await expect(
       page.getByRole("checkbox", { name: "Bloc 2" }),
     ).not.toBeChecked();
+    await expect(page.getByRole("checkbox", { name: "Bloc 1" })).toBeDisabled();
+    await expect(page.getByRole("checkbox", { name: "Bloc 2" })).toBeDisabled();
   });
 
-  test("Unselects all blocks when candidate excused is selected", async ({
+  test("Unselects and disables all blocks when candidate excused is selected", async ({
     page,
     msw,
   }) => {
@@ -321,9 +323,11 @@ test.describe("jury result by blocks", () => {
     await expect(
       page.getByRole("checkbox", { name: "Bloc 2" }),
     ).not.toBeChecked();
+    await expect(page.getByRole("checkbox", { name: "Bloc 1" })).toBeDisabled();
+    await expect(page.getByRole("checkbox", { name: "Bloc 2" })).toBeDisabled();
   });
 
-  test("Unselects all blocks when candidate absent is selected", async ({
+  test("Unselects and disables all blocks when candidate absent is selected", async ({
     page,
     msw,
   }) => {
@@ -347,5 +351,7 @@ test.describe("jury result by blocks", () => {
     await expect(
       page.getByRole("checkbox", { name: "Bloc 2" }),
     ).not.toBeChecked();
+    await expect(page.getByRole("checkbox", { name: "Bloc 1" })).toBeDisabled();
+    await expect(page.getByRole("checkbox", { name: "Bloc 2" })).toBeDisabled();
   });
 });
