@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 
 import { useAuth } from "@/components/auth/auth";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 
 import {
@@ -44,7 +43,6 @@ export type CandidacyForStatus = {
 
 export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
   const { isAdmin } = useAuth();
-  const { isFeatureActive } = useFeatureflipping();
 
   const currentStatus = useMemo(() => {
     return candidacy.status;
@@ -123,14 +121,7 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     candidacy.typeAccompagnement === "ACCOMPAGNE";
 
   // Permissions de fin d'accompagnement
-  const isFeatureEndAccompagnementActive =
-    isFeatureActive("END_ACCOMPAGNEMENT");
-
-  const hasFeasibilityAdmissible =
-    candidacy.feasibility?.decision === "ADMISSIBLE";
-
-  const canEndAccompagnement =
-    hasFeasibilityAdmissible && isFeatureEndAccompagnementActive;
+  const canEndAccompagnement = candidacy.feasibility?.decision === "ADMISSIBLE";
 
   return {
     candidacyCurrentActiveStatus: currentStatus,
