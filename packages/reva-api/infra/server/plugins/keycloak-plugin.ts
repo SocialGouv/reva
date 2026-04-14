@@ -60,6 +60,7 @@ const keycloakPlugin: FastifyPluginAsync<KeycloakPluginOptions> = async (
 
       const decodedToken = jwt.decode(token) as { azp?: string };
       if (validateAuthToken && !decodedToken) {
+        logger.error(`JWT invalide: ${token}`);
         throw new Error("JWT invalide");
       }
 
