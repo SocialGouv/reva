@@ -14,7 +14,7 @@ export const updateAppointment = async ({
   const { appointmentId, ...rest } = input;
 
   const oldAppointment = await prismaClient.appointment.findUnique({
-    where: { id: appointmentId },
+    where: { id: appointmentId, candidacyId: input.candidacyId },
   });
 
   if (!oldAppointment) {
@@ -26,7 +26,10 @@ export const updateAppointment = async ({
   }
 
   const updatedAppointment = await prismaClient.appointment.update({
-    where: { id: input.appointmentId },
+    where: {
+      id: input.appointmentId,
+      candidacyId: input.candidacyId,
+    },
     data: rest,
     include: {
       candidacy: { include: { candidate: true } },

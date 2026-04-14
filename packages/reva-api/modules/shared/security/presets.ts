@@ -10,6 +10,7 @@ import {
 import { getIsCertificationAuthorityAccountOrLocalAccountStructureMember } from "./middlewares/getIsCertificationAuthorityAccountOrLocalAccountStructureMember.security";
 import { getIsCertificationAuthorityStructureMember } from "./middlewares/getIsCertificationAuthorityStructureMember.security";
 import { getIsCertificationAuthorityStructureRegistryManagerMember } from "./middlewares/getIsCertificationAuthorityStructureRegistryManagerMember.security";
+import { isAppointmentOfCandidacy } from "./middlewares/isAppointmentOfCandidacy";
 import { isCandidateOwnerOfCandidacy } from "./middlewares/isCandidateOwnerOfCandidacy.security";
 import { isCertificationAuthorityLocalAccountManager } from "./middlewares/isCertificationAuthorityLocalAccountManager";
 import { isCertificationAuthorityLocalAccountOwner } from "./middlewares/isCertificationAuthorityLocalAccountOwner";
@@ -87,6 +88,19 @@ export const isOwnerOrCanManageCandidacy = [
   hasRole(["admin", "manage_candidacy", "candidate"]),
   whenHasRole("manage_candidacy", isCandidacyOwner),
   whenHasRole("candidate", isCandidateOwnerOfCandidacy),
+];
+
+export const isOwnerOrCanManageAppointment = [
+  hasRole(["admin", "manage_candidacy", "candidate"]),
+  whenHasRole("manage_candidacy", isCandidacyOwner),
+  whenHasRole("candidate", isCandidateOwnerOfCandidacy),
+  isAppointmentOfCandidacy,
+];
+
+export const isAdminOrCanManageAppointment = [
+  hasRole(["admin", "manage_candidacy"]),
+  whenHasRole("manage_candidacy", isCandidacyOwner),
+  isAppointmentOfCandidacy,
 ];
 
 export const isAdminOrCertificationRegistryManagerOfCertification = [
