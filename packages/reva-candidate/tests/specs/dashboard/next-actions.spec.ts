@@ -16,8 +16,6 @@ import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
 
 import { TypeAccompagnement } from "@/graphql/generated/graphql";
 
-const FEATURE_FLAG = ["CANDIDATE_NEXT_ACTIONS"];
-
 // Candidacy
 const createCandidacyWithGoals = (goalsCount: number) => {
   const certification = createCertificationEntity();
@@ -58,7 +56,6 @@ test.describe("Next actions tiles", () => {
       const candidacy = createCandidacyWithGoals(0);
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
-        activeFeaturesForConnectedUser: FEATURE_FLAG,
       });
       test.use({
         mswHandlers: [handlers, { scope: "test" }],
@@ -79,7 +76,6 @@ test.describe("Next actions tiles", () => {
     test.describe("Remplir mes expériences", () => {
       const candidacy = createCandidacyWithGoalsAndExperiences(1, 0);
       const { handlers, dashboardWait } = dashboardHandlers({
-        activeFeaturesForConnectedUser: FEATURE_FLAG,
         candidacy,
       });
       test.use({
@@ -109,7 +105,6 @@ test.describe("Next actions tiles", () => {
       });
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
-        activeFeaturesForConnectedUser: FEATURE_FLAG,
       });
       test.use({
         mswHandlers: [handlers, { scope: "test" }],
@@ -140,7 +135,6 @@ test.describe("Next actions tiles", () => {
       });
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
-        activeFeaturesForConnectedUser: FEATURE_FLAG,
       });
       test.use({
         mswHandlers: [handlers, { scope: "test" }],
@@ -182,7 +176,6 @@ test.describe("Next actions tiles", () => {
       });
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
-        activeFeaturesForConnectedUser: FEATURE_FLAG,
       });
       test.use({
         mswHandlers: [handlers, { scope: "test" }],
@@ -228,7 +221,6 @@ test.describe("Next actions tiles", () => {
       });
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
-        activeFeaturesForConnectedUser: FEATURE_FLAG,
       });
       test.use({
         mswHandlers: [handlers, { scope: "test" }],
@@ -274,7 +266,6 @@ test.describe("Next actions tiles", () => {
       });
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
-        activeFeaturesForConnectedUser: FEATURE_FLAG,
       });
       test.use({
         mswHandlers: [handlers, { scope: "test" }],
@@ -310,7 +301,6 @@ test.describe("Next actions tiles", () => {
       });
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
-        activeFeaturesForConnectedUser: FEATURE_FLAG,
       });
       test.use({
         mswHandlers: [handlers, { scope: "test" }],
@@ -361,7 +351,6 @@ test.describe("Next actions tiles", () => {
           });
           const { handlers, dashboardWait } = dashboardHandlers({
             candidacy,
-            activeFeaturesForConnectedUser: FEATURE_FLAG,
           });
           test.use({
             mswHandlers: [handlers, { scope: "test" }],
@@ -428,7 +417,6 @@ test.describe("Next actions tiles", () => {
           });
           const { handlers, dashboardWait } = dashboardHandlers({
             candidacy,
-            activeFeaturesForConnectedUser: FEATURE_FLAG,
           });
           test.use({
             mswHandlers: [handlers, { scope: "test" }],
@@ -464,7 +452,6 @@ test.describe("Next actions tiles", () => {
       });
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
-        activeFeaturesForConnectedUser: FEATURE_FLAG,
       });
       test.use({
         mswHandlers: [handlers, { scope: "test" }],

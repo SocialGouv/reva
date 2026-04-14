@@ -6,11 +6,9 @@ import { NextActionTiles } from "./next-actions/NextActionTiles";
 
 export const DashboardSidebar = ({
   candidacy,
-  isNextActionsFeatureActive,
   className,
 }: {
   candidacy: CandidacyUseCandidateForDashboard;
-  isNextActionsFeatureActive: boolean;
   className?: string;
 }) => {
   return (
@@ -18,7 +16,7 @@ export const DashboardSidebar = ({
       className={`flex flex-col gap-y-8 ${className || ""}`}
       data-testid="dashboard-sidebar"
     >
-      {isNextActionsFeatureActive && <NextActionTiles candidacy={candidacy} />}
+      <NextActionTiles candidacy={candidacy} />
       <AppointmentTiles candidacy={candidacy} />
       <ContactTiles candidacy={candidacy} />
     </div>

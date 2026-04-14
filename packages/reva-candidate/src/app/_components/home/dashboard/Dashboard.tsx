@@ -3,7 +3,6 @@ import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { useMemo } from "react";
 
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCandidacyToAap.util";
 
 import { DashboardBanner } from "./banners/DashboardBanner";
@@ -21,8 +20,6 @@ const modalDistanceInfo = createModal({
 const Dashboard = () => {
   const { candidacy, candidacyAlreadySubmitted, archiveCandidacy } =
     useCandidacyForDashboard();
-  const { isFeatureActive } = useFeatureFlipping();
-  const isNextActionsFeatureActive = isFeatureActive("CANDIDATE_NEXT_ACTIONS");
 
   const hasSelectedCertification = useMemo(
     () => candidacy?.certification?.id !== undefined,
@@ -114,11 +111,7 @@ const Dashboard = () => {
           />
         )}
       </div>
-      <DashboardSidebar
-        candidacy={candidacy}
-        className="basis-1/3"
-        isNextActionsFeatureActive={isNextActionsFeatureActive}
-      />
+      <DashboardSidebar candidacy={candidacy} className="basis-1/3" />
 
       <modalDistanceInfo.Component
         iconId="fr-icon-warning-fill"
@@ -198,11 +191,7 @@ const Dashboard = () => {
           hasSelectedOrganism={hasSelectedOrganism}
           hasCompletedGoals={hasCompletedGoals}
         />
-        <DashboardSidebar
-          candidacy={candidacy}
-          className="basis-1/3"
-          isNextActionsFeatureActive={isNextActionsFeatureActive}
-        />
+        <DashboardSidebar candidacy={candidacy} className="basis-1/3" />
       </div>
     </div>
   );
