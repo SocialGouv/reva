@@ -24,4 +24,8 @@ type JuryResult =
 export interface JuryInfo {
   result: JuryResult;
   informationOfResult?: string;
+  juryResultByCompetenceBlocs?: {
+    competenceBlocId: string;
+    isCompetenceBlocValidated: boolean;
+  }[];
 }

@@ -7,6 +7,7 @@ import {
 
 import { Candidacy } from "../candidacy/candidacy.types";
 import { getCandidacy } from "../candidacy/features/getCandidacy";
+import { getCompetenceBlocById } from "../referential/features/getCompetenceBlocById";
 
 import { getActiveJuries } from "./features/getActiveJuries";
 import { getActivejuryByCandidacyId } from "./features/getActiveJuryByCandidacyId";
@@ -14,6 +15,7 @@ import { getActiveJuryCountByCategory } from "./features/getActiveJuryCountByCat
 import { getExamInfo } from "./features/getExamInfo";
 import { getHistoryJuryByCandidacyId } from "./features/getHistoryJuryByCandidacyId";
 import { getJuryFilesNamesAndUrls } from "./features/getJuryFilesNamesAndUrls";
+import { getJuryResultByCompetenceBlocsByJuryId } from "./features/getJuryResultByCompetenceBlocsByJuryId";
 import { revokeJuryDecision } from "./features/revokeJuryDecision";
 import { updateExamInfo } from "./features/updateExamInfo";
 import { updateResultOfJury } from "./features/updateResultOfJury";
@@ -51,6 +53,18 @@ const unsafeResolvers = {
         : undefined,
     candidacy: async ({ candidacyId }: { candidacyId: string }) =>
       getCandidacy({ candidacyId }),
+    juryResultByCompetenceBlocs: async ({ id }: { id: string }) => {
+      return getJuryResultByCompetenceBlocsByJuryId({ juryId: id });
+    },
+  },
+  JuryResultByCompetenceBloc: {
+    competenceBloc: async ({
+      competenceBlocId,
+    }: {
+      competenceBlocId: string;
+    }) => {
+      return getCompetenceBlocById({ competenceBlocId });
+    },
   },
   Query: {
     jury_getJuries: (

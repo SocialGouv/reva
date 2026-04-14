@@ -73,6 +73,12 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
       result: juryInfo.result,
       isResultTemporary,
       dateOfResult: new Date(),
+      juryResultByCompetenceBlocs: {
+        create: juryInfo.juryResultByCompetenceBlocs?.map((competenceBloc) => ({
+          competenceBlocId: competenceBloc.competenceBlocId,
+          isCompetenceBlocValidated: competenceBloc.isCompetenceBlocValidated,
+        })),
+      },
       informationOfResult:
         juryInfo.informationOfResult == ""
           ? undefined

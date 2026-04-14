@@ -30,6 +30,12 @@ enum JuryResultFilter {
 input JuryInfoInput {
   result: JuryResult!
   informationOfResult: String
+  juryResultByCompetenceBlocs: [ResultByCompetenceBlocInput]
+}
+
+input ResultByCompetenceBlocInput {
+  competenceBlocId: ID!
+  isCompetenceBlocValidated: Boolean!
 }
 
 type Jury {
@@ -41,10 +47,17 @@ type Jury {
   addressOfSession: String
   informationOfSession: String
   convocationFile: File
+  juryResultByCompetenceBlocs: [JuryResultByCompetenceBloc!]
   result: JuryResult
   dateOfResult: Timestamp
   informationOfResult: String
   isResultTemporary: Boolean
+}
+
+type JuryResultByCompetenceBloc {
+  id: ID!
+  competenceBloc: CertificationCompetenceBloc!
+  isCompetenceBlocValidated: Boolean!
 }
 
 type Candidacy {
@@ -102,4 +115,8 @@ type Mutation {
   jury_updateExamInfo(candidacyId: UUID!, examInfo: ExamInfoInput!): ExamInfo!
   jury_updateResult(juryId: ID!, input: JuryInfoInput!): Jury!
   jury_revokeDecision(juryId: ID!, reason: String): Jury!
+  # jury_updateResultWithCompetenceBlocs(
+  #   juryId: ID!
+  #   input: JuryInfoInputWithCompetenceBlocs!
+  # ): Jury!
 }

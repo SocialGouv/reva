@@ -137,6 +137,7 @@ model CertificationCompetenceBloc {
   FCCompetences                  String?                          @map("fc_competences") @db.VarChar
   competences                    CertificationCompetence[]
   dffCertificationCompetenceBloc DFFCertificationCompetenceBloc[]
+  juryResultByCompetenceBlocs    JuryResultByCompetenceBloc[]
 
   @@map("certification_competence_bloc")
 }
@@ -1408,10 +1409,22 @@ model Jury {
   reminderToCandidateWithScheduledJurySendAt            DateTime?                         @map("reminder_to_candidate_with_scheduled_jury_send_at") @db.Timestamptz(6)
   reminderToCertificationAuthorityFillJuryResultsSentAt DateTime?                         @map("reminder_to_certification_authority_fill_jury_results_sent_at") @db.Timestamptz(6)
   candidacyWithLastActiveDfDvJurys                      CandidacyWithLastActiveDfDvJury[]
+  juryResultByCompetenceBlocs                           JuryResultByCompetenceBloc[]
 
   @@index([candidacyId, isActive])
   @@index([certificationAuthorityId, isActive])
   @@map("jury")
+}
+
+model JuryResultByCompetenceBloc {
+  id                        String                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  juryId                    String                      @map("jury_id") @db.Uuid
+  jury                      Jury                        @relation(fields: [juryId], references: [id], onDelete: Cascade)
+  competenceBlocId          String                      @map("competence_bloc_id") @db.Uuid
+  competenceBloc            CertificationCompetenceBloc @relation(fields: [competenceBlocId], references: [id])
+  isCompetenceBlocValidated Boolean                     @default(false) @map("is_competence_bloc_validated")
+
+  @@map("jury_result_by_competence_bloc")
 }
 
 model File {
