@@ -1,4 +1,8 @@
-import { Candidacy, CandidacyTypeAccompagnement } from "@prisma/client";
+import {
+  Candidacy,
+  CandidacyTypeAccompagnement,
+  CandidateTypology,
+} from "@prisma/client";
 
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "@/modules/candidacy-menu/features/isCandidacyStatusEqualOrAboveGivenStatus";
 import { getCertificationById } from "@/modules/referential/features/getCertificationById";
@@ -14,7 +18,10 @@ export const updateCandidacyTypeAccompagnement = async ({
   candidacyId: string;
   typeAccompagnement: CandidacyTypeAccompagnement;
 }): Promise<Candidacy> => {
-  const candidacy = await getCandidacyById({ candidacyId });
+  const candidacy = await getCandidacyById({
+    candidacyId,
+    includes: { candidate: true },
+  });
 
   if (!candidacy) {
     throw new Error("Candidature non trouvée");
@@ -63,9 +70,18 @@ export const updateCandidacyTypeAccompagnement = async ({
         additionalHourCount: null,
         isCertificationPartial: null,
         firstAppointmentOccuredAt: null,
-        typology: "NON_SPECIFIE",
-        typologyAdditional: null,
-        ccn: { disconnect: true },
+        ccn:
+          typeAccompagnement === "ACCOMPAGNE" && candidacy.candidate?.ccnId
+            ? { connect: { id: candidacy.candidate.ccnId } }
+            : { disconnect: true },
+        typology:
+          typeAccompagnement === "ACCOMPAGNE"
+            ? (candidacy.candidate?.typology ?? CandidateTypology.NON_SPECIFIE)
+            : CandidateTypology.NON_SPECIFIE,
+        typologyAdditional:
+          typeAccompagnement === "ACCOMPAGNE"
+            ? (candidacy.candidate?.typologyAdditional ?? null)
+            : null,
         feasibilityFormat:
           typeAccompagnement === "AUTONOME"
             ? "UPLOADED_PDF"

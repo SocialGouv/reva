@@ -53,9 +53,15 @@ export const createCandidacy = async ({
           status: CandidacyStatusStep.PROJET,
         },
       },
-      ccnId: candidate?.ccnId,
-      typology: candidate?.typology ?? CandidateTypology.NON_SPECIFIE,
-      typologyAdditional: candidate?.typologyAdditional,
+      ccnId: typeAccompagnement === "ACCOMPAGNE" ? candidate?.ccnId : null,
+      typology:
+        typeAccompagnement === "ACCOMPAGNE"
+          ? (candidate?.typology ?? CandidateTypology.NON_SPECIFIE)
+          : CandidateTypology.NON_SPECIFIE,
+      typologyAdditional:
+        typeAccompagnement === "ACCOMPAGNE"
+          ? candidate?.typologyAdditional
+          : null,
     },
   });
 };
