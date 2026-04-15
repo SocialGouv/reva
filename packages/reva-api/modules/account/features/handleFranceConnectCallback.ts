@@ -252,7 +252,8 @@ const buildCandidateDataFromFCClaims = async ({
       );
       logAnonymizedFcUserInfo({ candidateId, userInfo });
       throw new FranceConnectUserError({
-        message: "Lieu de naissance manquant",
+        message:
+          "L'information concernant votre lieu de naissance est manquante dans votre profil FranceConnect. Contactez le support afin de résoudre le problème.",
         statusCode: 400,
       });
     }
