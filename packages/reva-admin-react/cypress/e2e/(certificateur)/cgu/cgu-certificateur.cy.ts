@@ -25,14 +25,12 @@ const SELECTORS = {
 
 interface VisitCguCertificateurParams {
   isRegistryManagerOrAuthorityAdmin?: boolean;
-  isCguCertificateurActive?: boolean;
   cguStructure?: { isLatestVersion: boolean };
   acceptCguError?: boolean;
 }
 
 function visitCguCertificateur({
   isRegistryManagerOrAuthorityAdmin = true,
-  isCguCertificateurActive = true,
   cguStructure = { isLatestVersion: false },
   acceptCguError = false,
 }: VisitCguCertificateurParams = {}) {
@@ -46,9 +44,7 @@ function visitCguCertificateur({
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(req, "activeFeaturesForConnectedUser", {
       data: {
-        activeFeaturesForConnectedUser: isCguCertificateurActive
-          ? ["CGU_CERTIFICATEUR"]
-          : [],
+        activeFeaturesForConnectedUser: [],
       },
     });
 
@@ -173,14 +169,6 @@ describe("CGU Certificateur Page", () => {
   });
 
   context("Access Control", () => {
-    it("should redirect away from CGU page when feature flag is inactive and CGU already accepted", () => {
-      visitCguCertificateur({
-        isCguCertificateurActive: false,
-        cguStructure: { isLatestVersion: true },
-      });
-      cy.url().should("not.include", "/certificateur-cgu");
-    });
-
     it("should display CGU page for Registry Manager when CGU version not accepted", () => {
       visitCguCertificateur();
       cy.url().should("include", "/certificateur-cgu");

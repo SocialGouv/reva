@@ -1,0 +1,1 @@
+DELETE FROM features WHERE key = 'CGU_CERTIFICATEUR';

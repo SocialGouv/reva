@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 
 import { useAuth } from "@/components/auth/auth";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
@@ -54,8 +53,6 @@ export const useCertificateurLayout = () => {
     isCertificationRegistryManager,
     isCertificationLocalAccount,
   } = useAuth();
-  const { isFeatureActive } = useFeatureflipping();
-  const isCguCertificateurActive = isFeatureActive("CGU_CERTIFICATEUR");
 
   const { graphqlClient } = useGraphQlClient();
 
@@ -66,7 +63,6 @@ export const useCertificateurLayout = () => {
     queryKey: ["certificateur", "getCertificationAuthorityStructureCGU"],
     queryFn: () =>
       graphqlClient.request(getCertificationAuthorityStructureCGUQuery),
-    enabled: isCguCertificateurActive,
   });
 
   const certificationAuthorityStructure =
@@ -91,7 +87,6 @@ export const useCertificateurLayout = () => {
     currentPathName === "/certificateur-cgu";
 
   const displayCguCertificateur =
-    isCguCertificateurActive &&
     !isAdmin &&
     cguAcceptanceRequired &&
     !certificationAuthorityStructureCGU?.isLatestVersion &&

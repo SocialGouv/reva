@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import request from "graphql-request";
 
 import { useAuth } from "@/components/auth/auth";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
@@ -79,8 +78,6 @@ export const useCguCertificateur = () => {
     isCertificationAuthority,
     isCertificationLocalAccount,
   } = useAuth();
-  const { isFeatureActive } = useFeatureflipping();
-  const isCguCertificateurActive = isFeatureActive("CGU_CERTIFICATEUR");
 
   const {
     data: getCertificationAuthorityStructureCGU,
@@ -91,7 +88,6 @@ export const useCguCertificateur = () => {
       graphqlClient.request(
         getCertificationAuthorityStructureCGUInCguPageQuery,
       ),
-    enabled: isCguCertificateurActive,
   });
 
   const isCertificateur =
@@ -114,9 +110,7 @@ export const useCguCertificateur = () => {
     certificationAuthorityStructure?.cguAcceptanceRequired;
 
   const canAccessCguCertificateur =
-    isCertificateur &&
-    isCguCertificateurActive &&
-    !cguStructure?.isLatestVersion;
+    isCertificateur && !cguStructure?.isLatestVersion;
 
   const certificationAuthorityManagerFirstname =
     (
@@ -152,7 +146,6 @@ export const useCguCertificateur = () => {
         (process.env.NEXT_PUBLIC_WEBSITE_STRAPI_BASE_URL ?? "") + "/graphql",
         getCguCertificateurQuery,
       ),
-    enabled: isCguCertificateurActive,
   });
 
   const cguCertificateur = getCguCertificateurResponse?.legals?.[0];
