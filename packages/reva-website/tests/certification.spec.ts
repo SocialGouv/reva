@@ -188,26 +188,6 @@ test("display expiration date tile", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("should display VAE collective button", async ({ page }) => {
-  await page.goto(certificationPath);
-  const vaeCollectiveButton = page.getByRole("link", {
-    name: "Utiliser un code VAE collective",
-  });
-  await expect(vaeCollectiveButton).toBeVisible();
-});
-
-test("should navigate to VAE collective page when button is clicked", async ({
-  page,
-}) => {
-  await page.goto(certificationPath);
-  const vaeCollectiveButton = page.getByRole("link", {
-    name: "Utiliser un code VAE collective",
-  });
-  await vaeCollectiveButton.click();
-
-  await expect(page).toHaveURL("/inscription-candidat/vae-collective/");
-});
-
 certificationTabsVisibilityScenarios.forEach(
   ({
     name,

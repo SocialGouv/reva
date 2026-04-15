@@ -24,7 +24,6 @@ export const Header = (props: { className?: string }) => {
     {
       isActive:
         !!pathname.match(/\/espace-candidat/)?.length ||
-        !!pathname.match(/\/inscription-candidat/)?.length ||
         !!pathname.match(/\/certifications/)?.length,
       linkProps: {
         href: "/espace-candidat",

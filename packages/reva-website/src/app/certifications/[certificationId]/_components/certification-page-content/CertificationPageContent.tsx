@@ -4,11 +4,8 @@ import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 
-import { isFeatureActive } from "@/utils/featureFlipping";
-
 import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
 
-import { SelectCertificationButton } from "./_components/select-certification-button/SelectCertificationButton";
 import { BlocsDeCompetenceTab } from "./tabs/BlocsDeCompetenceTab";
 import DocumentationTab from "./tabs/DocumentationTab";
 import { JuryTab } from "./tabs/JuryTab";
@@ -87,9 +84,6 @@ export const CertificationPageContent = async ({
   const hasReducedRequirements =
     certification.certificationAuthorityStructure?.hasReducedRequirements ??
     false;
-  const isDisableMagicLinkActive = await isFeatureActive(
-    "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
-  );
 
   const tabs = [
     {
@@ -206,19 +200,6 @@ export const CertificationPageContent = async ({
                 imageAlt="icône calendrier"
               />
             </div>
-            {!isDisableMagicLinkActive && (
-              <div className="flex flex-wrap gap-4">
-                <SelectCertificationButton certificationId={certification.id} />
-                <Button
-                  priority="secondary"
-                  linkProps={{
-                    href: `/inscription-candidat/vae-collective/`,
-                  }}
-                >
-                  Utiliser un code VAE collective
-                </Button>
-              </div>
-            )}
           </div>
         </div>
         <Tabs className="mt-12" tabs={tabs} />
@@ -233,9 +214,6 @@ export const CertificationPageContent = async ({
           >
             Retour
           </Button>
-          {!isDisableMagicLinkActive && (
-            <SelectCertificationButton certificationId={certification.id} />
-          )}
         </div>
       </div>
     </div>

@@ -33,6 +33,7 @@ const useFeatureFlippingStore = create<{
     get().activeFeatures.includes(featureName),
 }));
 
+// eslint-disable-next-line import/no-unused-modules
 export const useFeatureflipping = () => {
   const { activeFeatures, isFeatureActive, init, status } =
     useFeatureFlippingStore();

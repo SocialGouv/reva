@@ -35,17 +35,6 @@ export default function CommencerPage() {
               imageUrl="/candidate-space/pictograms/avatar.svg"
               imageSvg
             />
-            <Tile
-              title="Je dispose d'un code VAE collective"
-              desc="VAE collective"
-              linkProps={{
-                href: "/inscription-candidat/vae-collective",
-              }}
-              enlargeLinkOrButton
-              orientation="vertical"
-              imageUrl="/candidate-space/pictograms/company.svg"
-              imageSvg
-            />
           </div>
 
           <div className="flex flex-col gap-4">
