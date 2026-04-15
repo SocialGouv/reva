@@ -6,7 +6,7 @@ import { FranceConnectButton } from "@codegouvfr/react-dsfr/FranceConnectButton"
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useState } from "react";
+import React, { useState } from "react";
 
 import { getFranceConnectLoginUrl } from "@/components/auth/keycloak-france-connect.utils";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
@@ -38,7 +38,7 @@ export default function Login() {
     "ENABLE_REGISTER_WITH_PASSWORD",
   );
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -228,21 +228,6 @@ export default function Login() {
               </Button>
             </div>
           )}
-
-          <div>
-            <p className="text-lg leading-7 mb-0">
-              Consultez nos diplômes disponibles pour débuter une VAE :
-            </p>
-            <Button
-              priority="secondary"
-              className="w-full justify-center mt-4"
-              onClick={() => {
-                window.location.href = "/espace-candidat/";
-              }}
-            >
-              Commencer une VAE
-            </Button>
-          </div>
         </div>
       </div>
     </div>

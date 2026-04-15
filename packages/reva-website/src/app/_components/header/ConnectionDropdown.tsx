@@ -15,10 +15,10 @@ export const ConnectionDropdown = () => {
         <Button
           aria-controls={menuId}
           aria-expanded="false"
-          title="Se connecter"
+          title="Mon espace"
           className="fr-translate__btn before:content-none mb-0 px-2 mx-0 lg:mx-2"
         >
-          Se connecter
+          Mon espace
         </Button>
         <div
           className="fr-collapse fr-menu"

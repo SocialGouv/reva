@@ -1,20 +1,13 @@
 "use client";
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 import { ConnectionDropdown } from "./ConnectionDropdown";
 
 export const Header = (props: { className?: string }) => {
   const pathname = usePathname() || "";
   const [isClient, setIsClient] = useState(false);
-  const { isFeatureActive } = useFeatureflipping();
-  const isDisableMagicLinkActive = isFeatureActive(
-    "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
-  );
 
   useEffect(() => {
     setIsClient(true);
@@ -129,22 +122,7 @@ export const Header = (props: { className?: string }) => {
       serviceTitle="Le service public de la VAE"
       classes={{ operator: "min-w-[9.0625rem] min-h-[90px]" }}
       quickAccessItems={
-        isClient
-          ? [
-              <ConnectionDropdown key="connection" />,
-              <Button
-                key="start"
-                priority="secondary"
-                linkProps={{
-                  href: isDisableMagicLinkActive
-                    ? `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`
-                    : "/commencer",
-                }}
-              >
-                Commencer une VAE
-              </Button>,
-            ]
-          : []
+        isClient ? [<ConnectionDropdown key="connection" />] : []
       }
       navigation={isClient ? navigation : []}
     />
