@@ -66,6 +66,7 @@ export const login = async ({
     const tokensForPostLoginUrl = {
       accessToken: tokens.access_token,
       refreshToken: tokens.refresh_token,
+      idToken: tokens.access_token,
     };
 
     await page.goto(
