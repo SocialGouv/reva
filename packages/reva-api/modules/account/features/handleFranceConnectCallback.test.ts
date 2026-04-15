@@ -20,7 +20,9 @@ const MATCHING_PIVOTS = {
 };
 
 const mockKeycloakAdmin = ({
-  findOneByName = vi.fn().mockResolvedValue({ id: "role-id", name: "candidate" }),
+  findOneByName = vi
+    .fn()
+    .mockResolvedValue({ id: "role-id", name: "candidate" }),
   addRealmRoleMappings = vi.fn().mockResolvedValue(undefined),
   listFederatedIdentities = vi.fn().mockResolvedValue([]),
   delFromFederatedIdentity = vi.fn().mockResolvedValue(undefined),
@@ -41,16 +43,25 @@ const mockKeycloakAdmin = ({
     },
   };
   vi.spyOn(getKeycloakAdminModule, "getKeycloakAdmin").mockImplementation(
-    () => Promise.resolve(admin) as unknown as ReturnType<
-      typeof getKeycloakAdminModule.getKeycloakAdmin
-    >,
+    () =>
+      Promise.resolve(admin) as unknown as ReturnType<
+        typeof getKeycloakAdminModule.getKeycloakAdmin
+      >,
   );
-  return { findOneByName, addRealmRoleMappings, listFederatedIdentities, delFromFederatedIdentity };
+  return {
+    findOneByName,
+    addRealmRoleMappings,
+    listFederatedIdentities,
+    delFromFederatedIdentity,
+  };
 };
 
 describe("getOrCreateCandidate - réconciliation FranceConnect", () => {
   beforeEach(() => {
-    vi.spyOn(birthplaceModule, "resolveBirthplaceFromInseeCode").mockResolvedValue({
+    vi.spyOn(
+      birthplaceModule,
+      "resolveBirthplaceFromInseeCode",
+    ).mockResolvedValue({
       cityName: "Paris",
       departmentCode: "75",
     });
@@ -86,7 +97,9 @@ describe("getOrCreateCandidate - réconciliation FranceConnect", () => {
 
   test("met à jour le candidat existant quand le keycloakId et les données pivots correspondent", async () => {
     mockKeycloakAdmin();
-    const birthplaceSpy = vi.mocked(birthplaceModule.resolveBirthplaceFromInseeCode);
+    const birthplaceSpy = vi.mocked(
+      birthplaceModule.resolveBirthplaceFromInseeCode,
+    );
 
     await createCandidateHelper({
       keycloakId: FC_KEYCLOAK_ID,
@@ -104,15 +117,16 @@ describe("getOrCreateCandidate - réconciliation FranceConnect", () => {
     const dbCandidate = await prismaClient.candidate.findUnique({
       where: { id: result.candidate.id },
     });
-    const expectedCityName = (await birthplaceSpy.mock.results[0]?.value)?.cityName;
+    const expectedCityName = (await birthplaceSpy.mock.results[0]?.value)
+      ?.cityName;
     expect(dbCandidate?.birthCity).toBe(expectedCityName);
   });
 
   test("rejette avec FranceConnectReconciliationError et délie l'identité FC quand les pivots ne correspondent pas", async () => {
     const spies = mockKeycloakAdmin({
-      listFederatedIdentities: vi.fn().mockResolvedValue([
-        { identityProvider: "franceconnect-particulier" },
-      ]),
+      listFederatedIdentities: vi
+        .fn()
+        .mockResolvedValue([{ identityProvider: "franceconnect-particulier" }]),
     });
 
     await createCandidateHelper({

@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-export type FranceConnectClaimsFixture = {
+type FranceConnectClaims = {
   sub: string;
   email: string;
   given_name: string;
@@ -11,8 +11,8 @@ export type FranceConnectClaimsFixture = {
 };
 
 export const buildFranceConnectClaims = (
-  overrides?: Partial<FranceConnectClaimsFixture>,
-): FranceConnectClaimsFixture => ({
+  overrides?: Partial<FranceConnectClaims>,
+): FranceConnectClaims => ({
   sub: faker.string.uuid(),
   email: faker.internet.email().toLowerCase(),
   given_name: "Jean",
