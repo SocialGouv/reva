@@ -5,7 +5,6 @@ export const getJuryResultByCompetenceBlocsByJuryId = async ({
 }: {
   juryId: string;
 }) => {
-  console.log("juryId", juryId);
   return prismaClient.jury
     .findUnique({
       where: { id: juryId },

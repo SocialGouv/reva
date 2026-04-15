@@ -52,6 +52,7 @@ type Jury {
   dateOfResult: Timestamp
   informationOfResult: String
   isResultTemporary: Boolean
+  previouslyValidatedBlocks: [CertificationCompetenceBloc!]
 }
 
 type JuryResultByCompetenceBloc {

@@ -16,6 +16,7 @@ import { getExamInfo } from "./features/getExamInfo";
 import { getHistoryJuryByCandidacyId } from "./features/getHistoryJuryByCandidacyId";
 import { getJuryFilesNamesAndUrls } from "./features/getJuryFilesNamesAndUrls";
 import { getJuryResultByCompetenceBlocsByJuryId } from "./features/getJuryResultByCompetenceBlocsByJuryId";
+import { getPreviouslyValidatedBlocksByCandidacyId } from "./features/getPreviouslyValidatedBlocksByCandidacyId";
 import { revokeJuryDecision } from "./features/revokeJuryDecision";
 import { updateExamInfo } from "./features/updateExamInfo";
 import { updateResultOfJury } from "./features/updateResultOfJury";
@@ -55,6 +56,13 @@ const unsafeResolvers = {
       getCandidacy({ candidacyId }),
     juryResultByCompetenceBlocs: async ({ id }: { id: string }) => {
       return getJuryResultByCompetenceBlocsByJuryId({ juryId: id });
+    },
+    previouslyValidatedBlocks: async ({
+      candidacyId,
+    }: {
+      candidacyId: string;
+    }) => {
+      return getPreviouslyValidatedBlocksByCandidacyId({ candidacyId });
     },
   },
   JuryResultByCompetenceBloc: {
