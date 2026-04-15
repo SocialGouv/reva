@@ -17,6 +17,7 @@ const getDossiersDeValidationQuery = graphql(`
       limit: $limit
     ) {
       rows {
+        id
         candidacy {
           id
         }

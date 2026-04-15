@@ -103,6 +103,7 @@ const mapDossierDeValidation = (
   }
 
   return {
+    id: dossierDeValidation.id,
     candidatureId: dossierDeValidation.candidacy.id,
     dateEnvoi: new Date(
       dossierDeValidation.dossierDeValidationSentAt,

@@ -7,6 +7,7 @@ const getDossierDeValidationByCandidacyIdQuery = graphql(`
     getCandidacyById(id: $candidacyId) {
       id
       activeDossierDeValidation {
+        id
         dossierDeValidationSentAt
         decision
         dossierDeValidationFile {

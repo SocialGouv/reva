@@ -514,11 +514,18 @@ export const dossierDeValidationSchema = {
   $id: "http://vae.gouv.fr/components/schemas/DossierDeValidation",
   type: "object",
   required: [
+    "id",
     "candidatureId",
     "dateEnvoi",
     // "documents",
   ],
   properties: {
+    id: {
+      type: "string",
+      format: "uuid",
+      example: "123e4567-e89b-12d3-a456-426614174000",
+      description: "ID du dossier de validation",
+    },
     candidatureId: {
       $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
     },
