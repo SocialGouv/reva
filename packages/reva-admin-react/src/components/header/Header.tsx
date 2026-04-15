@@ -119,7 +119,6 @@ const getNavigationTabs = ({
   isAdminCertificationAuthority,
   metabaseDashboardIframeUrl,
   showAAPVaeCollectivesTab,
-  showAAPAideTab,
   showCertificateurAideTab,
   certificationAuthorityId,
 }: {
@@ -132,7 +131,6 @@ const getNavigationTabs = ({
   isAdminCertificationAuthority: boolean;
   metabaseDashboardIframeUrl?: string | null;
   showAAPVaeCollectivesTab: boolean;
-  showAAPAideTab: boolean;
   showCertificateurAideTab: boolean;
   certificationAuthorityId?: string;
 }) => {
@@ -190,15 +188,11 @@ const getNavigationTabs = ({
     {
       text: LABELS.HELP_PAGES,
       menuLinks: [
-        ...(showAAPAideTab
-          ? [
-              createTab({
-                text: LABELS.AAP,
-                href: PATHS.AAP_HELP,
-                isActive: currentPathname.startsWith(PATHS.AAP_HELP),
-              }),
-            ]
-          : []),
+        createTab({
+          text: LABELS.AAP,
+          href: PATHS.AAP_HELP,
+          isActive: currentPathname.startsWith(PATHS.AAP_HELP),
+        }),
         ...(showCertificateurAideTab
           ? [
               createTab({
@@ -232,15 +226,11 @@ const getNavigationTabs = ({
       href: PATHS.AGENCIES_SETTINGS,
       isActive: currentPathname.startsWith("/agencies-settings"),
     }),
-    ...(showAAPAideTab
-      ? [
-          createTab({
-            text: LABELS.HELP,
-            href: PATHS.AAP_HELP,
-            isActive: currentPathname.startsWith(PATHS.AAP_HELP),
-          }),
-        ]
-      : []),
+    createTab({
+      text: LABELS.HELP,
+      href: PATHS.AAP_HELP,
+      isActive: currentPathname.startsWith(PATHS.AAP_HELP),
+    }),
   ];
 
   const registryManagerTabs = [
@@ -367,7 +357,6 @@ export const Header = () => {
     getCertificationAuthorityForHeader?.account_getAccountForConnectedUser
       ?.certificationAuthorityLocalAccount?.certificationAuthority?.id;
 
-  const isAAPAideFeatureActive = isFeatureActive("AAP_HELP");
   const isCertificateurAideFeatureActive =
     isFeatureActive("CERTIFICATEUR_HELP");
 
@@ -384,7 +373,6 @@ export const Header = () => {
     !!getCohortesVaeCollectivesForConnectedAap
       ?.cohortesVaeCollectivesForConnectedAap?.length;
 
-  const showAAPAideTab = isAAPAideFeatureActive;
   const showCertificateurAideTab = isCertificateurAideFeatureActive;
 
   const navigation = getNavigationTabs({
@@ -397,7 +385,6 @@ export const Header = () => {
     isAdminCertificationAuthority,
     metabaseDashboardIframeUrl,
     showAAPVaeCollectivesTab,
-    showAAPAideTab,
     showCertificateurAideTab,
     certificationAuthorityId,
   });
