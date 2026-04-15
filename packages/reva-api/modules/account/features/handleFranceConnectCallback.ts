@@ -14,9 +14,7 @@ import { prismaClient } from "@/prisma/client";
 
 import {
   sanitizedEmail,
-  sanitizedOptionalPhone,
   sanitizedOptionalText,
-  sanitizedOptionalZipCode,
   sanitizedText,
 } from "../utils/input-sanitization";
 
@@ -45,10 +43,6 @@ const FranceConnectClaimsSchema = z.object({
   birthdate: sanitizedText(),
   birthplace: sanitizedOptionalText(),
   birthcountry: sanitizedOptionalText(),
-  phone_number: sanitizedOptionalPhone(),
-  locality: sanitizedOptionalText(),
-  postal_code: sanitizedOptionalZipCode(),
-  street_address: sanitizedOptionalText(),
 });
 
 type FranceConnectClaims = z.infer<typeof FranceConnectClaimsSchema>;
@@ -277,7 +271,7 @@ const updateCandidateFromFCClaims = async ({
   return candidate;
 };
 
-const getOrCreateCandidate = async (
+export const getOrCreateCandidate = async (
   keycloakId: string,
   userInfo: FranceConnectClaims,
 ): Promise<{ candidate: { id: string }; isNewAccount: boolean }> => {

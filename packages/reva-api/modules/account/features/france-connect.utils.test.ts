@@ -1,4 +1,8 @@
-import { checkPivotFieldsMatch } from "./france-connect.utils";
+import {
+  checkPivotFieldsMatch,
+  parseFranceConnectDate,
+  splitGivenName,
+} from "./france-connect.utils";
 
 describe("checkPivotFieldsMatch", () => {
   const baseCandidate = {
@@ -117,5 +121,56 @@ describe("checkPivotFieldsMatch", () => {
       "lastname",
       "birthdate",
     ]);
+  });
+});
+
+describe("splitGivenName", () => {
+  test("retourne firstname seul quand la chaîne contient un seul prénom", () => {
+    expect(splitGivenName("Jean")).toEqual({
+      firstname: "Jean",
+      firstname2: undefined,
+      firstname3: undefined,
+    });
+  });
+
+  test("répartit deux prénoms sur firstname et firstname2", () => {
+    expect(splitGivenName("Jean Pierre")).toEqual({
+      firstname: "Jean",
+      firstname2: "Pierre",
+      firstname3: undefined,
+    });
+  });
+
+  test("regroupe les prénoms supplémentaires dans firstname3", () => {
+    const result = splitGivenName("Jean Pierre Marie Paul");
+    expect(result.firstname).toBe("Jean");
+    expect(result.firstname2).toBe("Pierre");
+    expect(result.firstname3).toBe("Marie Paul");
+  });
+
+  test("retourne firstname vide quand la chaîne est vide ou ne contient que des espaces", () => {
+    expect(splitGivenName("")).toEqual({
+      firstname: "",
+      firstname2: undefined,
+      firstname3: undefined,
+    });
+    expect(splitGivenName("   ")).toEqual({
+      firstname: "",
+      firstname2: undefined,
+      firstname3: undefined,
+    });
+  });
+});
+
+describe("parseFranceConnectDate", () => {
+  test("retourne une Date valide pour un format ISO", () => {
+    const result = parseFranceConnectDate("1990-05-15");
+    expect(result).toBeInstanceOf(Date);
+    expect(result && isNaN(result.getTime())).toBe(false);
+  });
+
+  test("retourne null pour une chaîne invalide", () => {
+    expect(parseFranceConnectDate("pas-une-date")).toBeNull();
+    expect(parseFranceConnectDate("")).toBeNull();
   });
 });
