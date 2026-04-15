@@ -1,5 +1,8 @@
-import { expect, test } from "next/experimental/testmode/playwright/msw";
-import { graphql } from "next/experimental/testmode/playwright/msw";
+import {
+  expect,
+  graphql,
+  test,
+} from "next/experimental/testmode/playwright/msw";
 
 import { setupKeycloakUnauthenticated } from "@tests/helpers/auth/auth";
 import { graphQLResolver } from "@tests/helpers/network/msw";
@@ -22,7 +25,7 @@ async function navigateToRegisterPage(page: import("@playwright/test").Page) {
 test.describe("Register page", () => {
   test.use({ mswHandlers: [handlers, { scope: "test" }] });
 
-  test("shows registration form with login link and public agents warning", async ({
+  test("affiche le formulaire d'inscription avec le lien de connexion et l'avertissement pour les agents publics", async ({
     page,
   }) => {
     await navigateToRegisterPage(page);
@@ -42,7 +45,9 @@ test.describe("Register page", () => {
     ).toBeVisible();
   });
 
-  test("navigates to login page when clicking connect", async ({ page }) => {
+  test("redirige vers la page de connexion au clic sur « Se connecter »", async ({
+    page,
+  }) => {
     await navigateToRegisterPage(page);
 
     await page.getByRole("link", { name: "Se connecter" }).click();
@@ -52,7 +57,7 @@ test.describe("Register page", () => {
     ).toBeVisible();
   });
 
-  test("redirects to confirmation page after successful registration", async ({
+  test("redirige vers la page de confirmation après une inscription réussie", async ({
     page,
     msw,
   }) => {
@@ -75,6 +80,7 @@ test.describe("Register page", () => {
     await page.getByRole("button", { name: "S'inscrire" }).click();
     await mutationPromise;
 
+    await expect(page).toHaveURL(/register-confirmation/);
     await expect(
       page.getByRole("heading", {
         name: "Dernière étape, activez votre compte !",

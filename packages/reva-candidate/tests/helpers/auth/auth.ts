@@ -28,7 +28,11 @@ async function setupAuthenticated(page: Page) {
     {
       name: "tokens",
       value: encodeURIComponent(
-        JSON.stringify({ accessToken: TOKEN, refreshToken: TOKEN }),
+        JSON.stringify({
+          accessToken: TOKEN,
+          refreshToken: TOKEN,
+          idToken: TOKEN,
+        }),
       ),
       domain: "localhost",
       path: "/",

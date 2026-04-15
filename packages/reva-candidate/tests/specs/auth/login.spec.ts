@@ -1,5 +1,8 @@
-import { expect, test } from "next/experimental/testmode/playwright/msw";
-import { graphql } from "next/experimental/testmode/playwright/msw";
+import {
+  expect,
+  graphql,
+  test,
+} from "next/experimental/testmode/playwright/msw";
 
 import { login } from "@tests/helpers/auth/auth";
 import { graphQLResolver } from "@tests/helpers/network/msw";
@@ -18,7 +21,7 @@ test.describe("Login page", () => {
 
     test.use({ mswHandlers: [handlers, { scope: "test" }] });
 
-    test("shows both login methods", async ({ page }) => {
+    test("affiche les deux méthodes de connexion", async ({ page }) => {
       await login(page, { authenticated: false });
 
       await expect(
@@ -29,7 +32,7 @@ test.describe("Login page", () => {
       ).toBeVisible();
     });
 
-    test("does not show notice banner", async ({ page }) => {
+    test("n'affiche pas le bandeau d'information", async ({ page }) => {
       await login(page, { authenticated: false });
 
       await expect(
@@ -43,7 +46,7 @@ test.describe("Login page", () => {
       ).not.toBeVisible();
     });
 
-    test("redirects to confirmation page after asking for a magic link", async ({
+    test("redirige vers la page de confirmation après une demande de lien magique", async ({
       page,
       msw,
     }) => {
@@ -83,7 +86,7 @@ test.describe("Login page", () => {
 
     test.use({ mswHandlers: [handlers, { scope: "test" }] });
 
-    test("navigates to register page when clicking create account", async ({
+    test("redirige vers la page d'inscription au clic sur « Créer mon compte »", async ({
       page,
     }) => {
       await login(page, { authenticated: false });
@@ -110,7 +113,9 @@ test.describe("Login page", () => {
 
     test.use({ mswHandlers: [handlers, { scope: "test" }] });
 
-    test("hides magic link login form", async ({ page }) => {
+    test("masque le formulaire de connexion par lien magique", async ({
+      page,
+    }) => {
       await login(page, { authenticated: false });
 
       await expect(
@@ -122,7 +127,9 @@ test.describe("Login page", () => {
       ).not.toBeVisible();
     });
 
-    test("shows only password login form without heading", async ({ page }) => {
+    test("affiche uniquement le formulaire de connexion par mot de passe sans titre", async ({
+      page,
+    }) => {
       await login(page, { authenticated: false });
 
       await expect(
@@ -132,7 +139,9 @@ test.describe("Login page", () => {
       await expect(page.getByLabel("Mot de passe")).toBeVisible();
     });
 
-    test("shows notice banner with password instructions", async ({ page }) => {
+    test("affiche le bandeau d'information avec les instructions de mot de passe", async ({
+      page,
+    }) => {
       await login(page, { authenticated: false });
 
       const noticeBanner = page.getByTestId("magic-link-disabled-notice");
