@@ -4,7 +4,6 @@ import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
 
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
-import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 import { UserDropdown } from "./UserDropdown";
 
@@ -19,12 +18,10 @@ const NAVIGATION_FORBIDDEN_PATHS = [
 
 const getNavigation = ({
   currentPathname,
-  candidateHelpIsActive,
   candidateId,
   candidacyId,
 }: {
   currentPathname: string;
-  candidateHelpIsActive: boolean;
   candidateId: string;
   candidacyId: string;
 }) => {
@@ -49,20 +46,14 @@ const getNavigation = ({
         `/candidates/${candidateId}/profile`,
       ),
     },
-    ...(candidateHelpIsActive
-      ? [
-          {
-            text: "Aide",
-            linkProps: {
-              href: `/candidates/${candidateId}/help`,
-              target: "_self",
-            },
-            isActive: currentPathname.startsWith(
-              `/candidates/${candidateId}/help`,
-            ),
-          },
-        ]
-      : []),
+    {
+      text: "Aide",
+      linkProps: {
+        href: `/candidates/${candidateId}/help`,
+        target: "_self",
+      },
+      isActive: currentPathname.startsWith(`/candidates/${candidateId}/help`),
+    },
   ];
 };
 
@@ -81,10 +72,6 @@ export const Header = () => {
     candidacyId: string;
   }>();
 
-  const { isFeatureActive } = useAnonymousFeatureFlipping();
-
-  const candidateHelpIsActive = isFeatureActive("candidate-help");
-
   const isForbiddenPath = NAVIGATION_FORBIDDEN_PATHS.some((path) =>
     currentPathname.includes(path),
   );
@@ -94,7 +81,6 @@ export const Header = () => {
       ? []
       : getNavigation({
           currentPathname,
-          candidateHelpIsActive,
           candidateId,
           candidacyId,
         });
