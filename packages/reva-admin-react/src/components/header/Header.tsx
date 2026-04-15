@@ -9,8 +9,6 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 
 import { graphql } from "@/graphql/generated";
 
-import { useFeatureflipping } from "../feature-flipping/featureFlipping";
-
 const getCertificationAuthorityForHeaderQuery = graphql(`
   query getCertificationAuthorityForHeader {
     account_getAccountForConnectedUser {
@@ -119,7 +117,6 @@ const getNavigationTabs = ({
   isAdminCertificationAuthority,
   metabaseDashboardIframeUrl,
   showAAPVaeCollectivesTab,
-  showCertificateurAideTab,
   certificationAuthorityId,
 }: {
   currentPathname: string;
@@ -131,7 +128,6 @@ const getNavigationTabs = ({
   isAdminCertificationAuthority: boolean;
   metabaseDashboardIframeUrl?: string | null;
   showAAPVaeCollectivesTab: boolean;
-  showCertificateurAideTab: boolean;
   certificationAuthorityId?: string;
 }) => {
   const certificateurCandidaciesPath = PATHS.CERTIFICATEUR_CANDIDACIES_ANNUAIRE;
@@ -193,15 +189,11 @@ const getNavigationTabs = ({
           href: PATHS.AAP_HELP,
           isActive: currentPathname.startsWith(PATHS.AAP_HELP),
         }),
-        ...(showCertificateurAideTab
-          ? [
-              createTab({
-                text: LABELS.CERTIFICATION_AUTHORITY,
-                href: PATHS.CERTIFICATEUR_HELP,
-                isActive: currentPathname.startsWith(PATHS.CERTIFICATEUR_HELP),
-              }),
-            ]
-          : []),
+        createTab({
+          text: LABELS.CERTIFICATION_AUTHORITY,
+          href: PATHS.CERTIFICATEUR_HELP,
+          isActive: currentPathname.startsWith(PATHS.CERTIFICATEUR_HELP),
+        }),
       ],
     },
   ];
@@ -239,15 +231,11 @@ const getNavigationTabs = ({
       href: PATHS.RESPONSABLE_CERTIFICATIONS,
       isActive: currentPathname.startsWith(PATHS.RESPONSABLE_CERTIFICATIONS),
     }),
-    ...(showCertificateurAideTab
-      ? [
-          createTab({
-            text: LABELS.HELP,
-            href: PATHS.CERTIFICATEUR_HELP,
-            isActive: currentPathname.startsWith(PATHS.CERTIFICATEUR_HELP),
-          }),
-        ]
-      : []),
+    createTab({
+      text: LABELS.HELP,
+      href: PATHS.CERTIFICATEUR_HELP,
+      isActive: currentPathname.startsWith(PATHS.CERTIFICATEUR_HELP),
+    }),
   ];
 
   const certificationAuthorityAdminTabs = [
@@ -263,15 +251,11 @@ const getNavigationTabs = ({
       ),
       isActive: currentPathname.includes("/settings"),
     }),
-    ...(showCertificateurAideTab
-      ? [
-          createTab({
-            text: LABELS.HELP,
-            href: PATHS.CERTIFICATEUR_HELP,
-            isActive: currentPathname.startsWith(PATHS.CERTIFICATEUR_HELP),
-          }),
-        ]
-      : []),
+    createTab({
+      text: LABELS.HELP,
+      href: PATHS.CERTIFICATEUR_HELP,
+      isActive: currentPathname.startsWith(PATHS.CERTIFICATEUR_HELP),
+    }),
     ...(metabaseDashboardIframeUrl
       ? [
           createTab({
@@ -296,15 +280,11 @@ const getNavigationTabs = ({
       ),
       isActive: currentPathname.includes("/settings"),
     }),
-    ...(showCertificateurAideTab
-      ? [
-          createTab({
-            text: LABELS.HELP,
-            href: PATHS.CERTIFICATEUR_HELP,
-            isActive: currentPathname.startsWith(PATHS.CERTIFICATEUR_HELP),
-          }),
-        ]
-      : []),
+    createTab({
+      text: LABELS.HELP,
+      href: PATHS.CERTIFICATEUR_HELP,
+      isActive: currentPathname.startsWith(PATHS.CERTIFICATEUR_HELP),
+    }),
   ];
 
   switch (true) {
@@ -338,8 +318,6 @@ export const Header = () => {
 
   const { graphqlClient } = useGraphQlClient();
 
-  const { isFeatureActive } = useFeatureflipping();
-
   const { data: getCertificationAuthorityForHeader } = useQuery({
     queryKey: ["certificateur", "getCertificationAuthorityForHeader"],
     queryFn: () =>
@@ -357,9 +335,6 @@ export const Header = () => {
     getCertificationAuthorityForHeader?.account_getAccountForConnectedUser
       ?.certificationAuthorityLocalAccount?.certificationAuthority?.id;
 
-  const isCertificateurAideFeatureActive =
-    isFeatureActive("CERTIFICATEUR_HELP");
-
   const { data: getCohortesVaeCollectivesForConnectedAap } = useQuery({
     queryKey: ["aap", "getCohortesVaeCollectivesForConnectedAap"],
     queryFn: () =>
@@ -373,8 +348,6 @@ export const Header = () => {
     !!getCohortesVaeCollectivesForConnectedAap
       ?.cohortesVaeCollectivesForConnectedAap?.length;
 
-  const showCertificateurAideTab = isCertificateurAideFeatureActive;
-
   const navigation = getNavigationTabs({
     currentPathname,
     isAdmin,
@@ -385,7 +358,6 @@ export const Header = () => {
     isAdminCertificationAuthority,
     metabaseDashboardIframeUrl,
     showAAPVaeCollectivesTab,
-    showCertificateurAideTab,
     certificationAuthorityId,
   });
 
