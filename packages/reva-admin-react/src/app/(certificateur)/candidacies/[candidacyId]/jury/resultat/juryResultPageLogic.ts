@@ -12,6 +12,10 @@ const getJuryByCandidacyIdQuery = graphql(`
       id
       isCertificationPartial
       typeAccompagnement
+      candidate {
+        firstname
+        lastname
+      }
       activeDossierDeValidation {
         updatedAt
         decision
@@ -39,6 +43,11 @@ const getJuryByCandidacyIdQuery = graphql(`
             label
           }
           isCompetenceBlocValidated
+        }
+        previouslyValidatedBlocks {
+          id
+          code
+          label
         }
         convocationFile {
           name
@@ -104,6 +113,11 @@ const updateJuryResultMutation = graphql(`
           label
         }
         isCompetenceBlocValidated
+      }
+      previouslyValidatedBlocks {
+        id
+        code
+        label
       }
       convocationFile {
         name

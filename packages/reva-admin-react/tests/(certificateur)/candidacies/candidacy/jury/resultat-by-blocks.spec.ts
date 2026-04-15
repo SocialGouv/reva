@@ -5,6 +5,8 @@ import {
   test,
 } from "next/experimental/testmode/playwright/msw";
 
+import { JuryResult } from "@/graphql/generated/graphql";
+
 import { login } from "../../../../shared/helpers/auth/login";
 import { getCertificateurCommonHandlers } from "../../../../shared/helpers/common-handlers/certificateur/getCertificateurCommon.handlers";
 import { graphQLResolver } from "../../../../shared/helpers/network/msw";
@@ -23,9 +25,24 @@ const juryResultRadioByValue = (page: Page, value: string) =>
 function createGetJuryByCandidacyIdHandler({
   typeAccompagnement,
   isCertificationPartial,
+  historyJury = [],
 }: {
   typeAccompagnement: "AUTONOME" | "ACCOMPAGNE";
   isCertificationPartial: boolean;
+  historyJury?: {
+    id: string;
+    dateOfSession: number;
+    result: JuryResult;
+    informationOfResult?: string | null;
+    juryResultByCompetenceBlocs?: {
+      competenceBloc: {
+        id: string;
+        code?: string | null;
+        label: string;
+      };
+      isCompetenceBlocValidated: boolean;
+    }[];
+  }[];
 }) {
   return fvae.query(
     "getJuryForResultPageByCandidacyId",
@@ -76,7 +93,7 @@ function createGetJuryByCandidacyIdHandler({
             ],
           },
         },
-        historyJury: [],
+        historyJury,
       },
     }),
   );
@@ -353,5 +370,72 @@ test.describe("jury result by blocks", () => {
     ).not.toBeChecked();
     await expect(page.getByRole("checkbox", { name: "Bloc 1" })).toBeDisabled();
     await expect(page.getByRole("checkbox", { name: "Bloc 2" })).toBeDisabled();
+  });
+
+  test("Displays history jury results", async ({ page, msw }) => {
+    msw.use(
+      ...certificateurCommonHandlers,
+      createGetJuryByCandidacyIdHandler({
+        typeAccompagnement: "ACCOMPAGNE",
+        isCertificationPartial: false,
+        historyJury: [
+          {
+            id: "past-jury-id-1",
+            dateOfSession: 1711929600000,
+            result: "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+            informationOfResult: "Information of result 1",
+            juryResultByCompetenceBlocs: [
+              {
+                competenceBloc: {
+                  id: "bloc-id-1",
+                  code: "B1",
+                  label: "Bloc 1",
+                },
+                isCompetenceBlocValidated: true,
+              },
+              {
+                competenceBloc: {
+                  id: "bloc-id-2",
+                  code: "B2",
+                  label: "Bloc 2",
+                },
+                isCompetenceBlocValidated: false,
+              },
+              {
+                competenceBloc: {
+                  id: "bloc-id-3",
+                  code: "B3",
+                  label: "Bloc 3",
+                },
+                isCompetenceBlocValidated: true,
+              },
+            ],
+          },
+        ],
+      }),
+    );
+
+    await openResultPage(page);
+
+    await expect(page.getByText("Voir les résultats précédents")).toBeVisible();
+    await page
+      .getByRole("button", { name: "Voir les résultats précédents" })
+      .click();
+    const accordionContent = page.getByTestId("history-resultat-view");
+    await expect(accordionContent).toBeVisible();
+    await expect(
+      accordionContent.getByRole("listitem", { name: "B1 - Bloc 1 (validé)" }),
+    ).toBeVisible();
+    await expect(
+      accordionContent.getByRole("listitem", {
+        name: "B2 - Bloc 2 (non validé)",
+      }),
+    ).toBeVisible();
+    await expect(
+      accordionContent.getByRole("listitem", { name: "B3 - Bloc 3 (validé)" }),
+    ).toBeVisible();
+    await expect(
+      accordionContent.getByText("Information of result 1"),
+    ).toBeVisible();
   });
 });

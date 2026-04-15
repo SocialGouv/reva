@@ -1,5 +1,6 @@
 "use client";
 
+import Badge from "@codegouvfr/react-dsfr/Badge";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
@@ -8,7 +9,7 @@ import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAfter, startOfDay } from "date-fns";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -77,74 +78,77 @@ const juryResultOptions: {
   },
 };
 
-const juryResultModalContent = (result: JuryResult) => {
-  switch (result) {
-    case "FULL_SUCCESS_OF_FULL_CERTIFICATION":
-    case "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION":
-      return (
-        <div>
-          <p>
-            Vous vous apprêtez à déclarer <b>une réussite totale</b> pour ce
-            candidat.
-          </p>
-          <p>
-            Conséquence : Le candidat a validé l'ensemble des blocs pour
-            lesquels il est recevable. Son parcours de VAE est terminé pour
-            cette candidature.
-          </p>
-          <p>Confirmez-vous ce résultat ?</p>
-        </div>
-      );
-    case "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION":
-    case "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION":
-    case "PARTIAL_SUCCESS_PENDING_CONFIRMATION":
-      return (
-        <div>
-          <p>
-            Vous vous apprêtez à déclarer <b>une réussite partielle</b> pour ce
-            candidat.
-          </p>
-          <p>
-            Conséquence : Le candidat a validé une partie des blocs pour
-            lesquels il est recevable. Il pourra redéposer un dossier de
-            validation pour passer à nouveau devant le jury pour les blocs non
-            validés.
-          </p>
-          <p>Confirmez-vous ce résultat ?</p>
-        </div>
-      );
-    case "FAILURE":
-      return (
-        <div>
-          <p>
-            Vous vous apprêtez à déclarer <b>une non validation</b> pour ce
-            candidat.
-          </p>
-          <p>
-            Conséquence : Le candidat n'a validé aucun des blocs pour lesquels
-            il est recevable. Il pourra redéposer un dossier de validation pour
-            passer à nouveau devant le jury pour les blocs non validés.
-          </p>
-          <p>Confirmez-vous ce résultat ?</p>
-        </div>
-      );
-    case "CANDIDATE_EXCUSED":
-    case "CANDIDATE_ABSENT":
-      return (
-        <div>
-          <p>
-            Vous vous apprêtez à déclarer que le candidat était{" "}
-            <b>non présent</b> lors du jury.
-          </p>
-          <p>
-            Conséquence : Le candidat n'a validé aucun bloc. Il pourra redéposer
-            un dossier de validation pour passer à nouveau devant le jury pour
-            les blocs non validés.
-          </p>
-          <p>Confirmez-vous ce résultat ?</p>
-        </div>
-      );
-  }
+const juryResultLabels: { [key in JuryResult]: string } = {
+  FULL_SUCCESS_OF_FULL_CERTIFICATION: "Réussite totale",
+  PARTIAL_SUCCESS_OF_FULL_CERTIFICATION: "Réussite partielle",
+  FULL_SUCCESS_OF_PARTIAL_CERTIFICATION: "Réussite totale",
+  PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION: "Réussite partielle",
+  PARTIAL_SUCCESS_PENDING_CONFIRMATION:
+    "Réussite partielle (sous reserve de confirmation par un certificateur)",
+  FAILURE: "Non validation",
+  CANDIDATE_EXCUSED: "Non présent le jour du jury",
+  CANDIDATE_ABSENT: "Non présent le jour du jury",
+};
+const juryResultNotice: {
+  [key in JuryResult]: "info" | "new" | "success" | "error";
+} = {
+  FULL_SUCCESS_OF_FULL_CERTIFICATION: "success",
+  PARTIAL_SUCCESS_OF_FULL_CERTIFICATION: "info",
+  FULL_SUCCESS_OF_PARTIAL_CERTIFICATION: "success",
+  PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION: "info",
+  PARTIAL_SUCCESS_PENDING_CONFIRMATION: "info",
+  FAILURE: "error",
+  CANDIDATE_EXCUSED: "new",
+  CANDIDATE_ABSENT: "new",
+};
+
+const juryResultModalContent = ({
+  result,
+  candidate,
+  certification,
+}: {
+  result: JuryResult;
+  candidate: {
+    firstName: string;
+    lastName: string;
+  };
+  certification: {
+    label: string;
+  };
+}) => {
+  const consequence = (result: JuryResult) => {
+    switch (result) {
+      case "FULL_SUCCESS_OF_FULL_CERTIFICATION":
+      case "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION":
+        return "Le candidat a validé l'ensemble des blocs pour lesquels il est recevable. Son parcours de VAE est terminé pour cette candidature.";
+      case "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION":
+      case "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION":
+      case "PARTIAL_SUCCESS_PENDING_CONFIRMATION":
+        return "Le candidat a validé une partie des blocs pour lesquels il est recevable. Il pourra redéposer un dossier de validation pour les blocs restants.";
+      case "FAILURE":
+        return "Le candidat n'a validé aucun des blocs pour lesquels il est recevable. Il pourra redéposer un dossier de validation pour les blocs restants.";
+      case "CANDIDATE_EXCUSED":
+        return "Le candidat n'a validé aucun bloc. Il pourra redéposer un dossier de validation pour les blocs restants.";
+      case "CANDIDATE_ABSENT":
+        return "Le candidat n'a validé aucun bloc. Il pourra redéposer un dossier de validation pour les blocs restants.";
+    }
+  };
+  return (
+    <div>
+      <p>Vous êtes sur le point de confirmer le résultat pour :</p>
+      <ul>
+        <li>
+          Candidat : {candidate.firstName} {candidate.lastName}
+        </li>
+        <li>Diplôme : {certification.label}</li>
+      </ul>
+      <Badge severity={juryResultNotice[result]} className="mb-4">
+        {juryResultLabels[result]}
+      </Badge>
+      <p>Conséquence : {consequence(result)}</p>
+      <p>Confirmez-vous ce résultat ?</p>
+    </div>
+  );
 };
 
 // Options communes à tous les types de certification
@@ -207,6 +211,26 @@ export const ResultatByBlocks = () => {
   const { isAdmin } = useAuth();
   const candidacy = getCandidacy.data?.getCandidacyById;
 
+  const previouslyValidatedBlocksIds = useMemo(() => {
+    return (
+      candidacy?.jury?.previouslyValidatedBlocks?.map((block) => block.id) || []
+    );
+  }, [candidacy?.jury?.previouslyValidatedBlocks]);
+
+  const blocksTargetedForThisSession = useMemo(() => {
+    return (
+      candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.filter(
+        (block) =>
+          !previouslyValidatedBlocksIds.includes(
+            block.certificationCompetenceBloc.id,
+          ),
+      ) || []
+    );
+  }, [
+    candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences,
+    previouslyValidatedBlocksIds,
+  ]);
+
   let availableResultOptions: JuryResult[] = [];
   if (candidacy?.typeAccompagnement === "AUTONOME") {
     availableResultOptions = [...ALL_OPTIONS];
@@ -247,17 +271,16 @@ export const ResultatByBlocks = () => {
   });
 
   const resultSelected = useWatch({ name: "result", control });
-  console.log("resultSelected", resultSelected);
 
   useEffect(() => {
     if (
       (resultSelected === "FULL_SUCCESS_OF_FULL_CERTIFICATION" ||
         resultSelected === "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION") &&
-      candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences
+      blocksTargetedForThisSession
     ) {
       setValue(
         "validatedBlocks",
-        candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
+        blocksTargetedForThisSession.map(
           (block) => block.certificationCompetenceBloc.id,
         ),
       );
@@ -265,15 +288,11 @@ export const ResultatByBlocks = () => {
       (resultSelected === "FAILURE" ||
         resultSelected === "CANDIDATE_EXCUSED" ||
         resultSelected === "CANDIDATE_ABSENT") &&
-      candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences
+      blocksTargetedForThisSession
     ) {
       setValue("validatedBlocks", []);
     }
-  }, [
-    resultSelected,
-    setValue,
-    candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences,
-  ]);
+  }, [resultSelected, setValue, blocksTargetedForThisSession]);
 
   const formData = getValues();
 
@@ -286,15 +305,14 @@ export const ResultatByBlocks = () => {
           input: {
             result: formData.result,
             informationOfResult: formData.informationOfResult,
-            juryResultByCompetenceBlocs:
-              candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
-                (block) => ({
-                  competenceBlocId: block.certificationCompetenceBloc.id,
-                  isCompetenceBlocValidated: formData.validatedBlocks.includes(
-                    block.certificationCompetenceBloc.id,
-                  ),
-                }),
-              ),
+            juryResultByCompetenceBlocs: blocksTargetedForThisSession?.map(
+              (block) => ({
+                competenceBlocId: block.certificationCompetenceBloc.id,
+                isCompetenceBlocValidated: formData.validatedBlocks.includes(
+                  block.certificationCompetenceBloc.id,
+                ),
+              }),
+            ),
           },
         });
       } catch (error) {
@@ -368,11 +386,13 @@ export const ResultatByBlocks = () => {
             historyJury={historyJury.map((jury) => ({
               id: jury.id,
               dateOfSession: jury.dateOfSession,
-              // Only jury with result are in jury history
               result: jury.result!,
               informationOfResult: jury.informationOfResult,
               juryResultByCompetenceBlocs: jury.juryResultByCompetenceBlocs,
             }))}
+            previouslyValidatedBlocks={
+              candidacy?.jury?.previouslyValidatedBlocks
+            }
           />
         )}
 
@@ -386,6 +406,9 @@ export const ResultatByBlocks = () => {
                 informationOfResult: jury.informationOfResult,
                 juryResultByCompetenceBlocs: jury.juryResultByCompetenceBlocs,
               }}
+              previouslyValidatedBlocks={
+                candidacy?.jury?.previouslyValidatedBlocks
+              }
             />
             {isAdmin && (
               <div className="flex justify-end">
@@ -455,12 +478,23 @@ export const ResultatByBlocks = () => {
                     hintText: "Recevabilité obtenue sur ce bloc",
                     nativeInputProps: {
                       value: bloc.certificationCompetenceBloc.id,
-                      ...register(`validatedBlocks`),
+                      ...(previouslyValidatedBlocksIds.includes(
+                        bloc.certificationCompetenceBloc.id,
+                      )
+                        ? {
+                            checked: true,
+                          }
+                        : {
+                            ...register("validatedBlocks"),
+                          }),
                       disabled:
                         !editable ||
                         resultSelected === "FAILURE" ||
                         resultSelected === "CANDIDATE_EXCUSED" ||
-                        resultSelected === "CANDIDATE_ABSENT",
+                        resultSelected === "CANDIDATE_ABSENT" ||
+                        previouslyValidatedBlocksIds.includes(
+                          bloc.certificationCompetenceBloc.id,
+                        ),
                     },
                   }),
                 ) || []
@@ -519,7 +553,16 @@ export const ResultatByBlocks = () => {
             ]}
           >
             <div className="flex flex-col gap-4">
-              {juryResultModalContent(formData.result as JuryResult)}
+              {juryResultModalContent({
+                result: formData.result as JuryResult,
+                candidate: {
+                  firstName: candidacy?.candidate?.firstname,
+                  lastName: candidacy?.candidate?.lastname,
+                },
+                certification: {
+                  label: candidacy?.certification?.label || "",
+                },
+              })}
             </div>
           </modal.Component>
 
