@@ -1,13 +1,8 @@
-import {
-  CandidacyTypeAccompagnement,
-  Country,
-  Department,
-} from "@prisma/client";
+import { Country, Department } from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { authorizationCodeGrant } from "openid-client";
 import { z } from "zod";
 
-import { createCandidacy } from "@/modules/candidacy/features/createCandidacy";
 import { getActiveCandidaciesByCandidateId } from "@/modules/candidacy/features/getActiveCandidaciesByCandidateId";
 import { getCandidateByKeycloakId } from "@/modules/candidate/features/getCandidateByKeycloakId";
 import { updateAllCandidaciesDerniereDateActiviteByCandidateId } from "@/modules/candidate/features/updateAllCandidaciesDerniereDateActiviteByCandidateId";
@@ -37,7 +32,6 @@ import {
   checkPivotFieldsMatch,
   getAndDeleteFcStateCookie,
   getOAuthConfig,
-  isValidCertificationId,
   parseFranceConnectDate,
   splitGivenName,
   unlinkFranceConnectIdentity,
@@ -141,30 +135,6 @@ export const handleFranceConnectCallback = async (
       keycloakId,
       idTokenPayload,
     );
-
-    const certificationId = isValidCertificationId(stored.certificationId)
-      ? stored.certificationId
-      : undefined;
-
-    const typeAccompagnement =
-      stored.typeAccompagnement as CandidacyTypeAccompagnement;
-
-    if (certificationId && typeAccompagnement) {
-      try {
-        await createCandidacy({
-          candidateId: candidate.id,
-          certificationId,
-          typeAccompagnement,
-        });
-        logger.info(
-          `[France Connect] Candidature créée automatiquement pour le candidat ${candidate.id}`,
-        );
-      } catch (error) {
-        logger.error(
-          `[France Connect] Erreur lors de la création automatique de candidature pour le candidat ${candidate.id}: ${error}`,
-        );
-      }
-    }
 
     let redirectPath: string = `${CANDIDATE_BASE_URL}/candidates/${candidate.id}`;
     if (isNewAccount) {

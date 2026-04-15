@@ -97,8 +97,6 @@ export const getAndDeleteFcStateCookie = (
   return {
     nonce: data.nonce,
     code_verifier: data.code_verifier,
-    certificationId: data.certificationId,
-    typeAccompagnement: data.typeAccompagnement,
   };
 };
 
