@@ -5,7 +5,7 @@ import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { FranceConnectButton } from "@codegouvfr/react-dsfr/FranceConnectButton";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 import { getFranceConnectLoginUrl } from "@/components/auth/keycloak-france-connect.utils";
@@ -17,8 +17,6 @@ import { useLogin } from "./login.hooks";
 
 export default function Login() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const certificationId = searchParams.get("certificationId");
 
   const [emailForMagicLink, setEmailForMagicLink] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -82,9 +80,7 @@ export default function Login() {
                 FranceConnect est la solution proposée par l'État pour sécuriser
                 et simplifier la connexion à vos services en ligne.
               </p>
-              <FranceConnectButton
-                url={getFranceConnectLoginUrl(certificationId ?? undefined)}
-              />
+              <FranceConnectButton url={getFranceConnectLoginUrl()} />
               <div className="flex flex-row items-center gap-3 mt-2 w-full">
                 <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
                 <span className="text-dsfrGray-700 text-sm font-bold uppercase">

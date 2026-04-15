@@ -4,8 +4,8 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { FranceConnectButton } from "@codegouvfr/react-dsfr/FranceConnectButton";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 
 import { getFranceConnectLoginUrl } from "@/components/auth/keycloak-france-connect.utils";
 import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
@@ -16,22 +16,19 @@ import { useRegister } from "./register.hooks";
 
 export default function Register() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const certificationId = searchParams.get("certificationId");
 
   const [email, setEmail] = useState<string>("");
 
   const { askForRegistration } = useRegister();
   const { isFeatureActive, status } = useAnonymousFeatureFlipping();
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
     try {
       const response = await askForRegistration.mutateAsync({
         email,
-        certificationId: certificationId ?? undefined,
       });
       if (response) {
         router.push("/register-confirmation");
@@ -89,9 +86,7 @@ export default function Register() {
                 FranceConnect est la solution proposée par l'État pour sécuriser
                 et simplifier la connexion à vos services en ligne.
               </p>
-              <FranceConnectButton
-                url={getFranceConnectLoginUrl(certificationId ?? undefined)}
-              />
+              <FranceConnectButton url={getFranceConnectLoginUrl()} />
             </div>
           ) : (
             <form className="flex flex-col gap-6" onSubmit={onSubmit}>
