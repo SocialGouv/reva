@@ -38,6 +38,9 @@ export const revokeJuryDecision = async ({
       where: { id: juryId },
       data: {
         isActive: false,
+        juryResultByCompetenceBlocs: {
+          deleteMany: {},
+        },
       },
     });
 
