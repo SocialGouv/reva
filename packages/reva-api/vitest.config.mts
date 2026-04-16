@@ -11,7 +11,6 @@ export default defineConfig({
       ADMIN_REACT_BASE_URL: "http://localhost:3003/admin2",
       NODE_ENV: "test",
       DATABASE_URL: "postgresql://reva:password@localhost:5444/reva-test",
-      KEYCLOAK_APP_REALM: "test-realm",
     },
     setupFiles: ["./vitest.setup.ts"],
     globalSetup: ["./vitest.global-setup.ts"],
