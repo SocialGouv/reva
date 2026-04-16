@@ -6,14 +6,8 @@ import * as LoginEmailModule from "../emails/sendLoginEmail";
 import * as RegistrationEmailModule from "../emails/sendRegistrationWithPasswordEmail";
 
 const askForRegistrationWithPasswordMutation = graphql(`
-  mutation candidate_askForRegistrationWithPassword_test(
-    $email: String!
-    $certificationId: String
-  ) {
-    candidate_askForRegistrationWithPassword(
-      email: $email
-      certificationId: $certificationId
-    )
+  mutation candidate_askForRegistrationWithPassword_test($email: String!) {
+    candidate_askForRegistrationWithPassword(email: $email)
   }
 `);
 
@@ -36,7 +30,6 @@ describe("candidateAskForRegistrationWithPassword", () => {
       askForRegistrationWithPasswordMutation,
       {
         email: "alice.doe@example.com",
-        certificationId: "certification-id",
       },
     );
 
@@ -47,7 +40,6 @@ describe("candidateAskForRegistrationWithPassword", () => {
     );
     expect(sendEmailSpy).toHaveBeenCalledWith({
       email: "alice.doe@example.com",
-      certificationId: "certification-id",
     });
     expect(loginEmailSpy).not.toHaveBeenCalled();
   });
@@ -70,7 +62,6 @@ describe("candidateAskForRegistrationWithPassword", () => {
       askForRegistrationWithPasswordMutation,
       {
         email: "alice.doe@example.com",
-        certificationId: "certification-id",
       },
     );
 

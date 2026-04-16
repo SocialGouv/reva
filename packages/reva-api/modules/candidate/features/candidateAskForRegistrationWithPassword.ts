@@ -5,10 +5,8 @@ import { sendRegistrationWithPasswordEmail } from "../emails/sendRegistrationWit
 
 export const candidateAskForRegistrationWithPassword = async ({
   email,
-  certificationId,
 }: {
   email: string;
-  certificationId?: string;
 }) => {
   const existingAccount = await getAccountInIAM(
     email,
@@ -17,7 +15,7 @@ export const candidateAskForRegistrationWithPassword = async ({
 
   await (existingAccount
     ? sendLoginEmail(email) // TODO: send link to the futur login page with certification selected
-    : sendRegistrationWithPasswordEmail({ email, certificationId }));
+    : sendRegistrationWithPasswordEmail({ email }));
 
   return "ok";
 };

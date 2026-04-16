@@ -111,7 +111,7 @@ const unsafeResolvers = {
   Mutation: {
     candidate_askForRegistrationWithPassword: async (
       _: any,
-      params: { email: string; certificationId?: string },
+      params: { email: string },
     ) => candidateAskForRegistrationWithPassword(params),
     candidate_askForLogin: async (_: unknown, params: { email: string }) =>
       askForLogin(params.email),

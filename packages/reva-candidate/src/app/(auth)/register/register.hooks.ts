@@ -5,14 +5,8 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 
 const CANDIDATE_ASK_FOR_REGISTRATION_WITH_PASSWORD = graphql(`
-  mutation candidate_askForRegistrationWithPassword(
-    $email: String!
-    $certificationId: String
-  ) {
-    candidate_askForRegistrationWithPassword(
-      email: $email
-      certificationId: $certificationId
-    )
+  mutation candidate_askForRegistrationWithPassword($email: String!) {
+    candidate_askForRegistrationWithPassword(email: $email)
   }
 `);
 
@@ -21,16 +15,9 @@ export const useRegister = () => {
 
   const askForRegistration = useMutation({
     mutationKey: ["candidate_askForRegistrationWithPassword"],
-    mutationFn: ({
-      email,
-      certificationId,
-    }: {
-      email: string;
-      certificationId?: string;
-    }) =>
+    mutationFn: ({ email }: { email: string }) =>
       graphqlClient.request(CANDIDATE_ASK_FOR_REGISTRATION_WITH_PASSWORD, {
         email,
-        certificationId,
       }),
   });
 

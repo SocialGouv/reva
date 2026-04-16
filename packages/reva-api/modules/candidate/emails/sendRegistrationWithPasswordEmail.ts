@@ -3,14 +3,12 @@ import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTem
 
 export const sendRegistrationWithPasswordEmail = async ({
   email,
-  certificationId,
 }: {
   email: string;
-  certificationId?: string;
 }) => {
   const baseUrl = process.env.BASE_URL || "http://localhost";
   const token = generateJwt(
-    { email, action: "finalize-registration", certificationId },
+    { email, action: "finalize-registration" },
     4 * 60 * 60,
   ); // 4 hours
   const path = `/candidat/reset-password?setPasswordToken=${token}`;
