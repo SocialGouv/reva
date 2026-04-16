@@ -65,17 +65,6 @@ type Query {
   candidate_getCandidateWithCandidacy: Candidate!
 }
 
-input CandidateInput {
-  email: String!
-  phone: String!
-  firstname: String!
-  lastname: String!
-  departmentId: String!
-  certificationId: String
-  typeAccompagnement: TypeAccompagnement!
-  cohorteVaeCollectiveId: String
-}
-
 input CandidateUpdateInformationInput {
   gender: Gender!
   lastname: String!
@@ -136,7 +125,6 @@ input CandidateUpdateTypologyAndCcnInput {
 }
 
 type Mutation {
-  candidate_askForRegistration(candidate: CandidateInput!): String!
   candidate_askForRegistrationWithPassword(
     email: String!
     certificationId: String

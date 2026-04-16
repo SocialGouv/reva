@@ -12,10 +12,8 @@ import {
   CandidateProfileUpdateInput,
   CandidateUpdateBySelfInput,
   CandidateUpdateInput,
-  TypeAccompagnement,
 } from "./candidate.types";
 import { askForLogin } from "./features/candidateAskForLogin";
-import { askForRegistration } from "./features/candidateAskForRegistration";
 import { candidateAskForRegistrationWithPassword } from "./features/candidateAskForRegistrationWithPassword";
 import { candidateForgotPassword } from "./features/candidateForgotPassword";
 import { candidateLoginWithCredentials } from "./features/candidateLoginWithCredentials";
@@ -111,20 +109,6 @@ const unsafeResolvers = {
       getCandidateById({ candidateId: params.id }),
   },
   Mutation: {
-    candidate_askForRegistration: async (
-      _: any,
-      params: {
-        candidate: {
-          email: string;
-          phone: string;
-          firstname: string;
-          lastname: string;
-          departmentId: string;
-          typeAccompagnement: TypeAccompagnement;
-          cohorteVaeCollectiveId?: string;
-        };
-      },
-    ) => askForRegistration(params.candidate),
     candidate_askForRegistrationWithPassword: async (
       _: any,
       params: { email: string; certificationId?: string },

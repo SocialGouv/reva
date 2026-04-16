@@ -43,17 +43,6 @@ export interface Candidate {
 export type Gender = "undisclosed" | "man" | "woman";
 
 export type TypeAccompagnement = "AUTONOME" | "ACCOMPAGNE";
-export interface CandidateRegistrationInput {
-  firstname: string;
-  lastname: string;
-  email: string;
-  phone: string;
-  departmentId: string;
-  certificationId?: string;
-  typeAccompagnement: TypeAccompagnement;
-  cohorteVaeCollectiveId?: string;
-  action: "registration";
-}
 
 // eslint-disable-next-line
 export interface CandidateLoginInput {
@@ -61,9 +50,7 @@ export interface CandidateLoginInput {
   action: "login";
 }
 
-export type CandidateAuthenticationInput =
-  | CandidateRegistrationInput
-  | CandidateLoginInput;
+export type CandidateAuthenticationInput = CandidateLoginInput;
 
 export type CandidateResetPasswordInput = {
   email: string;

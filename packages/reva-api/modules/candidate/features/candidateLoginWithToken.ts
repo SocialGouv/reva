@@ -1,13 +1,4 @@
-import { updateCertification } from "@/modules/candidacy/certification/features/updateCertification";
-import { getFirstActiveCandidacyByCandidateId } from "@/modules/candidacy/features/getFirstActiveCandidacyByCandidateId";
-import { updateCandidacyOrganism } from "@/modules/candidacy/features/updateCandidacyOrganism";
-import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
-import { getCertificationById } from "@/modules/referential/features/getCertificationById";
-import { isCertificationAvailable } from "@/modules/referential/features/isCertificationAvailable";
-import {
-  createAccountInIAM,
-  getAccountInIAM,
-} from "@/modules/shared/auth/auth.helper";
+import { getAccountInIAM } from "@/modules/shared/auth/auth.helper";
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
 import { getJWTContent, generateJwt } from "@/modules/shared/auth/jwt.helper";
 import { BACKEND_BASE_URL } from "@/modules/shared/config/config";
@@ -15,16 +6,10 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
-import { getCertificationCohortesByCohorteId } from "@/modules/vae-collective/features/getCertificationCohortesByCohorteId";
-import { getCohorteVAECollectiveById } from "@/modules/vae-collective/features/getCohorteVAECollectiveById";
 import { prismaClient } from "@/prisma/client";
 
-import {
-  CandidateAuthenticationInput,
-  CandidateRegistrationInput,
-} from "../candidate.types";
+import { CandidateAuthenticationInput } from "../candidate.types";
 
-import { createCandidateWithCandidacy } from "./createCandidateWithCandidacy";
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
 import { updateAllCandidaciesDerniereDateActiviteByCandidateId } from "./updateAllCandidaciesDerniereDateActiviteByCandidateId";
 
@@ -35,22 +20,7 @@ export const candidateLoginWithToken = async ({ token }: { token: string }) => {
     token,
   )) as CandidateAuthenticationInput;
 
-  if (candidateAuthenticationInput.action === "registration") {
-    const account = await getAccountInIAM(
-      candidateAuthenticationInput.email,
-      process.env.KEYCLOAK_APP_REALM as string,
-    );
-
-    if (account) {
-      return loginCandidate({
-        email: candidateAuthenticationInput.email,
-      });
-    } else {
-      return confirmRegistration({
-        candidateRegistrationInput: candidateAuthenticationInput,
-      });
-    }
-  } else if (candidateAuthenticationInput.action === "login") {
+  if (candidateAuthenticationInput.action === "login") {
     return loginCandidate({
       email: candidateAuthenticationInput.email,
     });
@@ -60,110 +30,6 @@ export const candidateLoginWithToken = async ({ token }: { token: string }) => {
       `Action non reconnue`,
     );
   }
-};
-
-const confirmRegistration = async ({
-  candidateRegistrationInput,
-}: {
-  candidateRegistrationInput: CandidateRegistrationInput;
-}) => {
-  const { certificationId, ...candidateInput } = candidateRegistrationInput;
-  const candidateKeycloakId = await createAccountInIAM(
-    {
-      email: candidateInput.email,
-      firstname: candidateInput.firstname,
-      lastname: candidateInput.lastname,
-    },
-    process.env.KEYCLOAK_APP_REALM as string,
-    ["candidate"],
-  );
-
-  const candidate = await createCandidateWithCandidacy({
-    ...candidateInput,
-    keycloakId: candidateKeycloakId,
-  });
-
-  const candidacy = await getFirstActiveCandidacyByCandidateId({
-    candidateId: candidate.id,
-  });
-
-  if (!candidacy) {
-    throw new Error("Candidature non trouvée");
-  }
-
-  // if the candidate has selected a certification during its registration, we assign it if it's available
-  if (
-    certificationId &&
-    (await isCertificationAvailable({
-      certificationId,
-    }))
-  ) {
-    const certification = await getCertificationById({ certificationId });
-    if (!certification) {
-      throw new Error("Certification non trouvée");
-    }
-
-    await updateCertification({
-      candidacyId: candidacy.id,
-      author: "candidate",
-      certificationId,
-      feasibilityFormat:
-        candidacy.typeAccompagnement === "ACCOMPAGNE"
-          ? certification.feasibilityFormat
-          : "UPLOADED_PDF",
-    });
-  }
-
-  // special case of registration for a vae collective
-  if (candidateInput.cohorteVaeCollectiveId) {
-    const cohorteVaeCollective = await getCohorteVAECollectiveById({
-      cohorteVaeCollectiveId: candidateInput.cohorteVaeCollectiveId,
-    });
-
-    if (!cohorteVaeCollective) {
-      throw new Error("Cohorte de VAE Collective non trouvée");
-    }
-
-    const certificationCohorteVaeCollective =
-      await getCertificationCohortesByCohorteId({
-        cohorteVaeCollectiveId: candidateInput.cohorteVaeCollectiveId,
-      });
-
-    // if there is only one certification for the vae collective, we assign it
-    if (certificationCohorteVaeCollective?.length === 1) {
-      const certificationCohorte = certificationCohorteVaeCollective[0];
-      await updateCertification({
-        candidacyId: candidacy.id,
-        author: "candidate",
-        certificationId: certificationCohorte.certificationId,
-        feasibilityFormat: "DEMATERIALIZED",
-      });
-    }
-
-    if (!cohorteVaeCollective.organismId) {
-      throw new Error("Aucun AAP n'est assigné à cette cohorte");
-    }
-
-    //we assign the cohorte organism to the candidacy
-    await updateCandidacyOrganism({
-      candidacyId: candidacy.id,
-      organismId: cohorteVaeCollective.organismId,
-    });
-  }
-  const url = getImpersonateUrl({
-    keycloakId: candidate.keycloakId,
-    candidateId: candidate.id,
-  });
-
-  await logCandidacyAuditEvent({
-    candidacyId: candidacy.id,
-    eventType: "CANDIDATE_REGISTRATION_CONFIRMED",
-    userRoles: [],
-    userKeycloakId: candidateKeycloakId,
-    userEmail: candidateInput.email,
-  });
-
-  return url;
 };
 
 const loginCandidate = async ({ email }: { email: string }) => {
