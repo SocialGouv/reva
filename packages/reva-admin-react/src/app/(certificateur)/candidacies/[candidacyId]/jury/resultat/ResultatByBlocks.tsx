@@ -23,14 +23,14 @@ import { JuryResult } from "@/graphql/generated/graphql";
 import {
   ConfirmJuryResultModal,
   confirmResultModal,
-} from "./ConfirmJuryResultModal";
-import { HistoryResultatView } from "./HistoryResultatView";
-import { useJuryResultPageLogic } from "./juryResultPageLogic";
-import { ResultatCardWithBlocks } from "./ResultatCardWithBlocks";
+} from "./_components/ConfirmJuryResultModal";
+import { HistoryResultatView } from "./_components/HistoryResultatView";
+import { ResultatCardWithBlocks } from "./_components/ResultatCardWithBlocks";
 import {
   RevokeJuryDecisionModal,
   revokeJuryDecisionModal,
-} from "./RevokeJuryDecisionModal";
+} from "./_components/RevokeJuryDecisionModal";
+import { useJuryResultPageLogic } from "./juryResultPageLogic";
 
 const juryResultOptions: {
   [key in JuryResult]: { label: string; hintText?: string };

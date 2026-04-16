@@ -17,9 +17,9 @@ import { sanitizedOptionalTextAllowSpecialCharacters } from "@/utils/input-sanit
 
 import { JuryResult } from "@/graphql/generated/graphql";
 
-import { HistoryResultatView } from "./HistoryResultatView";
+import { HistoryResultatView } from "./_components/HistoryResultatView";
+import { ResultatCard } from "./_components/ResultatCard";
 import { useJuryResultPageLogic } from "./juryResultPageLogic";
-import { ResultatCard } from "./ResultatCard";
 
 const modal = createModal({
   id: "confirm-result",
