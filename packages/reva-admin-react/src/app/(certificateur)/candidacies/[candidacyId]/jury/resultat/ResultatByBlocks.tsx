@@ -39,22 +39,22 @@ const juryResultOptions: {
   [key in JuryResult]: { label: string; hintText?: string };
 } = {
   FULL_SUCCESS_OF_FULL_CERTIFICATION: {
-    label: "Tous les blocs visés ont été validés",
+    label: "Tous les blocs visés ont été validés pour ce jury",
     hintText:
       "Le candidat a validé l'ensemble des blocs pour lesquels il est recevable. Son parcours de VAE est terminé pour cette candidature.",
   },
   PARTIAL_SUCCESS_OF_FULL_CERTIFICATION: {
-    label: "Certains blocs visés ont été validés",
+    label: "Certains blocs visés ont été validés pour ce jury",
     hintText:
       "Le candidat a validé une partie des blocs pour lesquels il est recevable. Il pourra redéposer un dossier de validation pour les blocs restants.",
   },
   FULL_SUCCESS_OF_PARTIAL_CERTIFICATION: {
-    label: "Tous les blocs visés ont été validés",
+    label: "Tous les blocs visés ont été validés pour ce jury",
     hintText:
       "Le candidat a validé l'ensemble des blocs pour lesquels il est recevable. Son parcours de VAE est terminé pour cette candidature.",
   },
   PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION: {
-    label: "Certains blocs visés ont été validés",
+    label: "Certains blocs visés ont été validés pour ce jury",
     hintText:
       "Le candidat a validé une partie des blocs pour lesquels il est recevable. Il pourra redéposer un dossier de validation pour les blocs restants.",
   },
@@ -65,15 +65,15 @@ const juryResultOptions: {
       "Réussite partielle (sous reserve de confirmation par un certificateur)",
   },
   FAILURE: {
-    label: "Aucun bloc visé n’a été validé",
+    label: "Aucun bloc visé n’a été validé pour ce jury",
     hintText:
       "Le candidat n'a validé aucun des blocs  pour lesquels il est recevable. ",
   },
   CANDIDATE_EXCUSED: {
-    label: "Candidat excusé sur justificatif",
+    label: "Candidat excusé sur justificatif pour ce jury",
   },
   CANDIDATE_ABSENT: {
-    label: "Candidat non présent",
+    label: "Candidat non présent pour ce jury",
   },
 };
 
@@ -444,7 +444,7 @@ export const ResultatByBlocks = () => {
             />
 
             <Checkbox
-              legend="Quels blocs ont été validés ?"
+              legend="Quels blocs de compétence ont été validés pour ce jury ?"
               small
               className="m-0 p-0 mb-4"
               classes={{
