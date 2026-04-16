@@ -23,10 +23,7 @@ export const RevokeJuryDecisionModal = ({
   <revokeJuryDecisionModal.Component
     title={
       <div className="flex gap-2">
-        <span
-          className="fr-icon--lg fr-icon-warning-fill"
-          aria-hidden="true"
-        />
+        <span className="fr-icon--lg fr-icon-warning-fill" aria-hidden="true" />
         Annuler une décision prise par un certificateur.
       </div>
     }

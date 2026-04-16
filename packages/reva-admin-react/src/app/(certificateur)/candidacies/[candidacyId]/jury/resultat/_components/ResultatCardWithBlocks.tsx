@@ -1,5 +1,6 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { format } from "date-fns";
+import { type ReactNode } from "react";
 
 import { JuryResult } from "@/graphql/generated/graphql";
 
@@ -70,10 +71,11 @@ interface Props {
         label: string;
       }[]
     | null;
+  additionalInformation?: ReactNode;
 }
 
 export const ResultatCardWithBlocks = (props: Props) => {
-  const { jury, previouslyValidatedBlocks } = props;
+  const { jury, previouslyValidatedBlocks, additionalInformation } = props;
   const hasBlocksToShow =
     jury.juryResultByCompetenceBlocs &&
     jury.juryResultByCompetenceBlocs.length > 0;
@@ -85,6 +87,9 @@ export const ResultatCardWithBlocks = (props: Props) => {
           ? juryResultLabels[jury.result]
           : juryResultLabelsWithoutBlocks[jury.result]}
       </Badge>
+      {additionalInformation && (
+        <div className="mt-2 mb-6">{additionalInformation}</div>
+      )}
       <div className="flex flex-row justify-between border-t py-2 px-4">
         <dt>Passage devant le jury :</dt>
         <dd className="font-bold">

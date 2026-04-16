@@ -7,13 +7,13 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAfter, startOfDay } from "date-fns";
+import Link from "next/link";
 import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { useAuth } from "@/components/auth/auth";
 import { CertificationCard } from "@/components/card/certification-card/CertificationCard";
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { sanitizedOptionalTextAllowSpecialCharacters } from "@/utils/input-sanitization";
@@ -24,6 +24,10 @@ import {
   ConfirmJuryResultModal,
   confirmResultModal,
 } from "./_components/ConfirmJuryResultModal";
+import {
+  FeasibilityCompetenceBlocksModal,
+  feasibilityCompetenceBlocksModal,
+} from "./_components/FeasibilityCompetenceBlocks";
 import { HistoryResultatView } from "./_components/HistoryResultatView";
 import { ResultatCardWithBlocks } from "./_components/ResultatCardWithBlocks";
 import {
@@ -31,7 +35,6 @@ import {
   revokeJuryDecisionModal,
 } from "./_components/RevokeJuryDecisionModal";
 import { useJuryResultPageLogic } from "./juryResultPageLogic";
-
 const juryResultOptions: {
   [key in JuryResult]: { label: string; hintText?: string };
 } = {
@@ -287,23 +290,6 @@ export const ResultatByBlocks = () => {
         )}
 
         <CertificationCard certification={candidacy?.certification} />
-
-        {candidacy?.feasibility?.dematerializedFeasibilityFile
-          ?.blocsDeCompetences && (
-          <GrayCard as="div" className="-mt-4">
-            <h4 className="mb-6">Recevabilité obtenue sur les blocs : </h4>
-            <ul className="my-0">
-              {candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
-                (bloc) => (
-                  <li key={bloc.certificationCompetenceBloc.code}>
-                    {bloc.certificationCompetenceBloc.code} -{" "}
-                    {bloc.certificationCompetenceBloc.label}
-                  </li>
-                ),
-              )}
-            </ul>
-          </GrayCard>
-        )}
         {historyJury && (
           <HistoryResultatView
             historyJury={historyJury.map((jury) => ({
@@ -332,6 +318,19 @@ export const ResultatByBlocks = () => {
               previouslyValidatedBlocks={
                 candidacy?.jury?.previouslyValidatedBlocks
               }
+              additionalInformation={
+                <Link
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    feasibilityCompetenceBlocksModal.open();
+                  }}
+                  className="fr-link"
+                >
+                  Voir les détails de la recevabilité du candidat sur cette
+                  certification <i className="fr-icon-arrow-right-line" />
+                </Link>
+              }
             />
             {isAdmin && (
               <div className="flex justify-end">
@@ -359,12 +358,32 @@ export const ResultatByBlocks = () => {
         {!getCandidacy.isLoading && !result && (
           <form onSubmit={handleFormSubmit}>
             <RadioButtons
-              legend="Résultats possibles :"
+              legend="Quel est le résultat du jury pour ce candidat ?"
               small
               hintText={
-                isAdmin
-                  ? "Sous réserve de contre remplissage par le certificateur."
-                  : ""
+                <div className="mb-4">
+                  {isAdmin && (
+                    <p className=" text-xs">
+                      Sous réserve de contre remplissage par le certificateur.
+                    </p>
+                  )}
+                  <p className=" text-xs">
+                    Sélectionnez le résultat obtenu par le candidat suite à son
+                    passage devant le jury.{" "}
+                    <Link
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        feasibilityCompetenceBlocksModal.open();
+                      }}
+                      className="fr-link text-xs"
+                    >
+                      Voir les détails de la recevabilité du candidat sur cette
+                      certification{" "}
+                      <i className="fr-icon-arrow-right-line fr-icon--xs" />
+                    </Link>
+                  </p>
+                </div>
               }
               className="m-0 p-0 mb-4"
               classes={{
@@ -478,6 +497,16 @@ export const ResultatByBlocks = () => {
           isSubmitting={isRevokeSubmitting}
           reasonTextAreaProps={revokeRegister("reason")}
         />
+        {candidacy?.feasibility?.dematerializedFeasibilityFile
+          ?.blocsDeCompetences &&
+          candidacy?.certification?.competenceBlocs && (
+            <FeasibilityCompetenceBlocksModal
+              targetedBlocks={candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
+                (block) => block.certificationCompetenceBloc,
+              )}
+              certificationBlocks={candidacy?.certification?.competenceBlocs}
+            />
+          )}
       </div>
     </>
   );
