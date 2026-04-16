@@ -78,11 +78,16 @@ async function graphqlUpdateJuryResult({
   account,
   juryId,
   result,
+  juryResultByCompetenceBlocs,
 }: {
   role: KeyCloakUserRole;
   account: { keycloakId: string };
   juryId: string;
   result: JuryResult;
+  juryResultByCompetenceBlocs?: {
+    competenceBlocId: string;
+    isCompetenceBlocValidated: boolean;
+  }[];
 }) {
   const graphqlClient = getGraphQLClient({
     headers: {
@@ -105,8 +110,50 @@ async function graphqlUpdateJuryResult({
     juryId,
     input: {
       result,
+      juryResultByCompetenceBlocs,
     },
   });
+}
+
+async function setupJuryResultByBlockContext(
+  candidacyId: string,
+  certificationId: string,
+) {
+  const [bloc1, bloc2] = await Promise.all([
+    prismaClient.certificationCompetenceBloc.create({
+      data: {
+        certificationId,
+        label: "Bloc 1",
+      },
+    }),
+    prismaClient.certificationCompetenceBloc.create({
+      data: {
+        certificationId,
+        label: "Bloc 2",
+      },
+    }),
+  ]);
+
+  const feasibility = await prismaClient.feasibility.findFirstOrThrow({
+    where: { candidacyId, isActive: true },
+    select: { id: true },
+  });
+
+  await prismaClient.dematerializedFeasibilityFile.create({
+    data: {
+      feasibilityId: feasibility.id,
+      dffCertificationCompetenceBlocs: {
+        createMany: {
+          data: [
+            { certificationCompetenceBlocId: bloc1.id },
+            { certificationCompetenceBlocId: bloc2.id },
+          ],
+        },
+      },
+    },
+  });
+
+  return [bloc1, bloc2];
 }
 
 const failedJuryResults: JuryResult[] = [
@@ -193,6 +240,102 @@ test("should save jury result without errors", async () => {
   expect(res).toMatchObject({ jury_updateResult: { id: jury.id } });
   expect(juryUpdated?.result).toEqual("FULL_SUCCESS_OF_FULL_CERTIFICATION");
   expect(juryUpdated?.isResultTemporary).toEqual(false);
+});
+
+test("should save jury result by competence blocs", async () => {
+  const { jury, certificationAuthorityLocalAccount } =
+    await createJuryAndDependenciesHelper();
+  if (!jury.candidacy.certificationId) {
+    throw new Error("Certification id is not defined");
+  }
+
+  const [bloc1, bloc2] = await setupJuryResultByBlockContext(
+    jury.candidacyId,
+    jury.candidacy.certificationId,
+  );
+
+  await graphqlUpdateJuryResult({
+    role: "manage_feasibility",
+    account: certificationAuthorityLocalAccount.account,
+    juryId: jury.id,
+    result: "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+    juryResultByCompetenceBlocs: [
+      { competenceBlocId: bloc1.id, isCompetenceBlocValidated: true },
+      { competenceBlocId: bloc2.id, isCompetenceBlocValidated: false },
+    ],
+  });
+
+  const resultByBloc = await prismaClient.juryResultByCompetenceBloc.findMany({
+    where: { juryId: jury.id },
+  });
+
+  expect(resultByBloc).toHaveLength(2);
+  expect(resultByBloc).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        competenceBlocId: bloc1.id,
+        isCompetenceBlocValidated: true,
+      }),
+      expect.objectContaining({
+        competenceBlocId: bloc2.id,
+        isCompetenceBlocValidated: false,
+      }),
+    ]),
+  );
+});
+
+test("should reject successful result by block when no bloc is validated", async () => {
+  const { jury, certificationAuthorityLocalAccount } =
+    await createJuryAndDependenciesHelper();
+  if (!jury.candidacy.certificationId) {
+    throw new Error("Certification id is not defined");
+  }
+
+  const [bloc1, bloc2] = await setupJuryResultByBlockContext(
+    jury.candidacyId,
+    jury.candidacy.certificationId,
+  );
+
+  await expect(
+    graphqlUpdateJuryResult({
+      role: "manage_feasibility",
+      account: certificationAuthorityLocalAccount.account,
+      juryId: jury.id,
+      result: "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+      juryResultByCompetenceBlocs: [
+        { competenceBlocId: bloc1.id, isCompetenceBlocValidated: false },
+        { competenceBlocId: bloc2.id, isCompetenceBlocValidated: false },
+      ],
+    }),
+  ).rejects.toThrow("Vous devez valider au moins un bloc pour ce résultat");
+});
+
+test("should reject partial success result when all blocs are validated", async () => {
+  const { jury, certificationAuthorityLocalAccount } =
+    await createJuryAndDependenciesHelper();
+  if (!jury.candidacy.certificationId) {
+    throw new Error("Certification id is not defined");
+  }
+
+  const [bloc1, bloc2] = await setupJuryResultByBlockContext(
+    jury.candidacyId,
+    jury.candidacy.certificationId,
+  );
+
+  await expect(
+    graphqlUpdateJuryResult({
+      role: "manage_feasibility",
+      account: certificationAuthorityLocalAccount.account,
+      juryId: jury.id,
+      result: "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+      juryResultByCompetenceBlocs: [
+        { competenceBlocId: bloc1.id, isCompetenceBlocValidated: true },
+        { competenceBlocId: bloc2.id, isCompetenceBlocValidated: true },
+      ],
+    }),
+  ).rejects.toThrow(
+    "Vous ne pouvez pas valider tous les blocs pour ce résultat",
+  );
 });
 
 test("should send jury result to candidate", async () => {
