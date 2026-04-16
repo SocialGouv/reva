@@ -1,11 +1,9 @@
 "use client";
 
-import Badge from "@codegouvfr/react-dsfr/Badge";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAfter, startOfDay } from "date-fns";
@@ -22,19 +20,17 @@ import { sanitizedOptionalTextAllowSpecialCharacters } from "@/utils/input-sanit
 
 import { JuryResult } from "@/graphql/generated/graphql";
 
+import {
+  ConfirmJuryResultModal,
+  confirmResultModal,
+} from "./ConfirmJuryResultModal";
 import { HistoryResultatView } from "./HistoryResultatView";
 import { useJuryResultPageLogic } from "./juryResultPageLogic";
 import { ResultatCardWithBlocks } from "./ResultatCardWithBlocks";
-
-const modal = createModal({
-  id: "confirm-result",
-  isOpenedByDefault: false,
-});
-
-const revokeModal = createModal({
-  id: "revoke-jury-decision",
-  isOpenedByDefault: false,
-});
+import {
+  RevokeJuryDecisionModal,
+  revokeJuryDecisionModal,
+} from "./RevokeJuryDecisionModal";
 
 const juryResultOptions: {
   [key in JuryResult]: { label: string; hintText?: string };
@@ -76,79 +72,6 @@ const juryResultOptions: {
   CANDIDATE_ABSENT: {
     label: "Candidat non présent",
   },
-};
-
-const juryResultLabels: { [key in JuryResult]: string } = {
-  FULL_SUCCESS_OF_FULL_CERTIFICATION: "Réussite totale",
-  PARTIAL_SUCCESS_OF_FULL_CERTIFICATION: "Réussite partielle",
-  FULL_SUCCESS_OF_PARTIAL_CERTIFICATION: "Réussite totale",
-  PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION: "Réussite partielle",
-  PARTIAL_SUCCESS_PENDING_CONFIRMATION:
-    "Réussite partielle (sous reserve de confirmation par un certificateur)",
-  FAILURE: "Non validation",
-  CANDIDATE_EXCUSED: "Non présent le jour du jury",
-  CANDIDATE_ABSENT: "Non présent le jour du jury",
-};
-const juryResultNotice: {
-  [key in JuryResult]: "info" | "new" | "success" | "error";
-} = {
-  FULL_SUCCESS_OF_FULL_CERTIFICATION: "success",
-  PARTIAL_SUCCESS_OF_FULL_CERTIFICATION: "info",
-  FULL_SUCCESS_OF_PARTIAL_CERTIFICATION: "success",
-  PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION: "info",
-  PARTIAL_SUCCESS_PENDING_CONFIRMATION: "info",
-  FAILURE: "error",
-  CANDIDATE_EXCUSED: "new",
-  CANDIDATE_ABSENT: "new",
-};
-
-const juryResultModalContent = ({
-  result,
-  candidate,
-  certification,
-}: {
-  result: JuryResult;
-  candidate: {
-    firstName: string;
-    lastName: string;
-  };
-  certification: {
-    label: string;
-  };
-}) => {
-  const consequence = (result: JuryResult) => {
-    switch (result) {
-      case "FULL_SUCCESS_OF_FULL_CERTIFICATION":
-      case "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION":
-        return "Le candidat a validé l'ensemble des blocs pour lesquels il est recevable. Son parcours de VAE est terminé pour cette candidature.";
-      case "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION":
-      case "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION":
-      case "PARTIAL_SUCCESS_PENDING_CONFIRMATION":
-        return "Le candidat a validé une partie des blocs pour lesquels il est recevable. Il pourra redéposer un dossier de validation pour les blocs restants.";
-      case "FAILURE":
-        return "Le candidat n'a validé aucun des blocs pour lesquels il est recevable. Il pourra redéposer un dossier de validation pour les blocs restants.";
-      case "CANDIDATE_EXCUSED":
-        return "Le candidat n'a validé aucun bloc. Il pourra redéposer un dossier de validation pour les blocs restants.";
-      case "CANDIDATE_ABSENT":
-        return "Le candidat n'a validé aucun bloc. Il pourra redéposer un dossier de validation pour les blocs restants.";
-    }
-  };
-  return (
-    <div>
-      <p>Vous êtes sur le point de confirmer le résultat pour :</p>
-      <ul>
-        <li>
-          Candidat : {candidate.firstName} {candidate.lastName}
-        </li>
-        <li>Diplôme : {certification.label}</li>
-      </ul>
-      <Badge severity={juryResultNotice[result]} className="mb-4">
-        {juryResultLabels[result]}
-      </Badge>
-      <p>Conséquence : {consequence(result)}</p>
-      <p>Confirmez-vous ce résultat ?</p>
-    </div>
-  );
 };
 
 // Options communes à tous les types de certification
@@ -267,7 +190,7 @@ export const ResultatByBlocks = () => {
   } = useForm<RevokeFormData>({ resolver: zodResolver(revokeSchema) });
 
   const handleFormSubmit = handleSubmit(() => {
-    modal.open();
+    confirmResultModal.open();
   });
 
   const resultSelected = useWatch({ name: "result", control });
@@ -297,7 +220,7 @@ export const ResultatByBlocks = () => {
   const formData = getValues();
 
   const submitData = async () => {
-    modal.close();
+    confirmResultModal.close();
     if (candidacy?.jury?.id) {
       try {
         await updateJuryResult.mutateAsync({
@@ -329,7 +252,7 @@ export const ResultatByBlocks = () => {
           juryId: candidacy.jury.id,
           reason: data.reason,
         });
-        revokeModal.close();
+        revokeJuryDecisionModal.close();
         resetRevokeForm();
       } catch (error) {
         graphqlErrorToast(error);
@@ -412,7 +335,10 @@ export const ResultatByBlocks = () => {
             />
             {isAdmin && (
               <div className="flex justify-end">
-                <Button priority="secondary" onClick={() => revokeModal.open()}>
+                <Button
+                  priority="secondary"
+                  onClick={() => revokeJuryDecisionModal.open()}
+                >
                   Annuler la décision
                 </Button>
               </div>
@@ -535,75 +461,23 @@ export const ResultatByBlocks = () => {
           </form>
         )}
 
-        <>
-          <modal.Component
-            title="Confirmer le résultat du jury"
-            className="modal-confirm-jury-result"
-            size="large"
-            buttons={[
-              {
-                priority: "secondary",
-                children: "Annuler",
-              },
-              {
-                priority: "primary",
-                onClick: submitData,
-                children: "Confirmer",
-              },
-            ]}
-          >
-            <div className="flex flex-col gap-4">
-              {juryResultModalContent({
-                result: formData.result as JuryResult,
-                candidate: {
-                  firstName: candidacy?.candidate?.firstname,
-                  lastName: candidacy?.candidate?.lastname,
-                },
-                certification: {
-                  label: candidacy?.certification?.label || "",
-                },
-              })}
-            </div>
-          </modal.Component>
+        <ConfirmJuryResultModal
+          result={formData.result as JuryResult}
+          candidate={{
+            firstName: candidacy?.candidate?.firstname,
+            lastName: candidacy?.candidate?.lastname,
+          }}
+          certification={{
+            label: candidacy?.certification?.label || "",
+          }}
+          onConfirm={submitData}
+        />
 
-          <revokeModal.Component
-            title={
-              <div className="flex gap-2">
-                <span
-                  className="fr-icon--lg fr-icon-warning-fill"
-                  aria-hidden="true"
-                />
-                Annuler une décision prise par un certificateur.
-              </div>
-            }
-            buttons={[
-              {
-                priority: "secondary",
-                children: "Retour",
-              },
-              {
-                priority: "primary",
-                onClick: handleRevokeDecision,
-                children: "Confirmer",
-                disabled: isRevokeSubmitting,
-              },
-            ]}
-            size="large"
-          >
-            <p>
-              Vous êtes sur le point d'annuler une décision prise par un
-              certificateur. Cette action l'obligera à prononcer sa décision de
-              nouveau. Vous ne pourrez pas prendre de décision définitive à sa
-              place.
-            </p>
-            <Input
-              label="Commentaire : (Optionnel)"
-              nativeTextAreaProps={{ rows: 3, ...revokeRegister("reason") }}
-              textArea
-            />
-            <p>Voulez vous confirmer l'annulation de cette décision ?</p>
-          </revokeModal.Component>
-        </>
+        <RevokeJuryDecisionModal
+          onConfirm={handleRevokeDecision}
+          isSubmitting={isRevokeSubmitting}
+          reasonTextAreaProps={revokeRegister("reason")}
+        />
       </div>
     </>
   );
