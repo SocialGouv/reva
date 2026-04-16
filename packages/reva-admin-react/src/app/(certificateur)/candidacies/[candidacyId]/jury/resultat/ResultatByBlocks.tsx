@@ -27,7 +27,7 @@ import {
 import {
   FeasibilityCompetenceBlocksModal,
   feasibilityCompetenceBlocksModal,
-} from "./_components/FeasibilityCompetenceBlocks";
+} from "./_components/FeasibilityCompetenceBlocksModal";
 import { HistoryResultatView } from "./_components/HistoryResultatView";
 import { ResultatCardWithBlocks } from "./_components/ResultatCardWithBlocks";
 import {
@@ -106,12 +106,6 @@ const ALL_OPTIONS = [
   ...COMMON_OPTIONS,
 ] as const;
 
-const schema = z.object({
-  result: z.enum(ALL_OPTIONS),
-  informationOfResult: sanitizedOptionalTextAllowSpecialCharacters(),
-  validatedBlocks: z.array(z.string()),
-});
-
 type ResultatFormData = {
   result:
     | "FULL_SUCCESS_OF_FULL_CERTIFICATION"
@@ -157,6 +151,44 @@ export const ResultatByBlocks = () => {
     previouslyValidatedBlocksIds,
   ]);
 
+  const schema = useMemo(
+    () =>
+      z
+        .object({
+          result: z.enum(ALL_OPTIONS),
+          informationOfResult: sanitizedOptionalTextAllowSpecialCharacters(),
+          validatedBlocks: z.array(z.string()),
+        })
+        .superRefine((data, ctx) => {
+          if (
+            (data.result === "FULL_SUCCESS_OF_FULL_CERTIFICATION" ||
+              data.result === "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION" ||
+              data.result === "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION" ||
+              data.result === "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION") &&
+            data.validatedBlocks.length === 0
+          ) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Vous devez valider au moins un bloc pour ce résultat",
+              path: ["validatedBlocks"],
+            });
+          }
+          if (
+            (data.result === "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION" ||
+              data.result === "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION") &&
+            data.validatedBlocks.length === blocksTargetedForThisSession.length
+          ) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message:
+                "Vous ne pouvez pas valider tous les blocs pour ce résultat",
+              path: ["validatedBlocks"],
+            });
+          }
+        }),
+    [blocksTargetedForThisSession],
+  );
+
   let availableResultOptions: JuryResult[] = [];
   if (candidacy?.typeAccompagnement === "AUTONOME") {
     availableResultOptions = [...ALL_OPTIONS];
@@ -183,6 +215,7 @@ export const ResultatByBlocks = () => {
     defaultValues: {
       validatedBlocks: [],
     },
+    mode: "all",
   });
 
   const {
@@ -209,6 +242,7 @@ export const ResultatByBlocks = () => {
         blocksTargetedForThisSession.map(
           (block) => block.certificationCompetenceBloc.id,
         ),
+        { shouldValidate: true },
       );
     } else if (
       (resultSelected === "FAILURE" ||
@@ -416,6 +450,8 @@ export const ResultatByBlocks = () => {
               classes={{
                 inputGroup: "-my-2",
               }}
+              state={errors.validatedBlocks ? "error" : "default"}
+              stateRelatedMessage={errors.validatedBlocks?.message}
               options={
                 candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
                   (bloc) => ({
