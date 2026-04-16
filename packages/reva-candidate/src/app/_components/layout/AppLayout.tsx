@@ -5,18 +5,14 @@ import SkipLinks from "@codegouvfr/react-dsfr/SkipLinks";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { Footer } from "@/components/footer/Footer";
 
 import { Header } from "./Header";
 
 export const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
-  const { isFeatureActive } = useAnonymousFeatureFlipping();
 
-  const showMagicLinkNotice =
-    pathname.startsWith("/login") &&
-    isFeatureActive("DISABLE_CANDIDATE_MAGIC_LINK_LOGIN");
+  const showMagicLinkNotice = pathname.startsWith("/login");
 
   return (
     <div className="w-full min-h-screen flex flex-col">

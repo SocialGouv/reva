@@ -5,33 +5,27 @@ import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { FranceConnectButton } from "@codegouvfr/react-dsfr/FranceConnectButton";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 import { getFranceConnectLoginUrl } from "@/components/auth/keycloak-france-connect.utils";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
-import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
+import { errorToast } from "@/components/toast/toast";
 
 import { useLogin } from "./login.hooks";
 
 export default function Login() {
-  const router = useRouter();
-
-  const [emailForMagicLink, setEmailForMagicLink] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [revealPassword, setRevealPassword] = useState<boolean>(false);
 
-  const { askForLogin, loginWithWithCredentials } = useLogin();
+  const { loginWithWithCredentials } = useLogin();
 
-  const isPending = askForLogin.isPending || loginWithWithCredentials.isPending;
+  const isPending = loginWithWithCredentials.isPending;
 
   const { resetKeycloakInstance } = useKeycloakContext();
   const { isFeatureActive } = useAnonymousFeatureFlipping();
-  const isMagicLinkDisabled = isFeatureActive(
-    "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
-  );
+
   const isRegisterWithPasswordEnabled = isFeatureActive(
     "ENABLE_REGISTER_WITH_PASSWORD",
   );
@@ -40,31 +34,18 @@ export default function Login() {
     e.preventDefault();
     e.stopPropagation();
 
-    if (emailForMagicLink.length > 0) {
-      try {
-        const response = await askForLogin.mutateAsync({
-          email: emailForMagicLink,
-        });
-        if (response) {
-          router.push("/login-confirmation");
-        }
-      } catch (error) {
-        graphqlErrorToast(error);
-      }
-    } else {
-      try {
-        const response = await loginWithWithCredentials.mutateAsync({
-          email,
-          password,
-        });
+    try {
+      const response = await loginWithWithCredentials.mutateAsync({
+        email,
+        password,
+      });
 
-        const tokens = response.candidate_loginWithCredentials.tokens;
-        if (tokens) {
-          resetKeycloakInstance(tokens);
-        }
-      } catch (_) {
-        errorToast("Adresse électronique ou mot de passe incorrect.");
+      const tokens = response.candidate_loginWithCredentials.tokens;
+      if (tokens) {
+        resetKeycloakInstance(tokens);
       }
+    } catch (_) {
+      errorToast("Adresse électronique ou mot de passe incorrect.");
     }
   };
 
@@ -92,55 +73,10 @@ export default function Login() {
           )}
 
           <form className="flex flex-col gap-6" onSubmit={onSubmit}>
-            {!isMagicLinkDisabled && (
-              <>
-                <div className="flex flex-col gap-4">
-                  <h2 className="text-lg font-bold mb-0">
-                    Se connecter avec un lien
-                  </h2>
-
-                  <p className="mb-0">
-                    Vous recevrez un courriel avec un lien qui vous redirigera
-                    vers votre espace candidat.
-                  </p>
-
-                  <Input
-                    disabled={
-                      (email.length > 0 && emailForMagicLink.length === 0) ||
-                      askForLogin.isPending
-                    }
-                    hintText="Format attendu : nom@domaine.fr"
-                    nativeInputProps={{
-                      id: "emailForMagicLink",
-                      name: "emailForMagicLink",
-                      required: true,
-                      type: "email",
-                      autoComplete: "email",
-                      spellCheck: "false",
-                      onChange: (e) => setEmailForMagicLink(e.target.value),
-                    }}
-                    label="Adresse électronique"
-                  />
-                </div>
-
-                <div className="flex flex-row items-center gap-3">
-                  <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
-                  <span className="text-dsfrGray-500 text-sm">ou</span>
-                  <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
-                </div>
-              </>
-            )}
-
             <div className="flex flex-col gap-4">
-              {!isMagicLinkDisabled && (
-                <h2 className="text-lg font-bold mb-0">
-                  Se connecter avec mot de passe
-                </h2>
-              )}
-
               <Input
                 className="mb-0"
-                disabled={emailForMagicLink.length > 0 || isPending}
+                disabled={isPending}
                 hintText="Format attendu : nom@domaine.fr"
                 nativeInputProps={{
                   id: "email",
@@ -156,7 +92,7 @@ export default function Login() {
 
               <Input
                 className="mb-0"
-                disabled={emailForMagicLink.length > 0 || isPending}
+                disabled={isPending}
                 nativeInputProps={{
                   id: "password",
                   name: "password",

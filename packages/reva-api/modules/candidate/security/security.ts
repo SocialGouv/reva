@@ -11,7 +11,6 @@ export const resolversSecurityMap = {
   "Mutation.*": defaultSecurity, // forbidden
 
   "Mutation.candidate_askForRegistrationWithPassword": isAnyone,
-  "Mutation.candidate_askForLogin": isAnyone,
   "Mutation.candidate_loginWithToken": isAnyone,
   "Mutation.candidate_loginWithCredentials": isAnyone,
   "Mutation.candidate_forgotPassword": isAnyone,

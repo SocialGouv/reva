@@ -8,7 +8,6 @@ import { ReactNode } from "react";
 
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { PICTOGRAMS } from "@/components/pictograms";
-import { isFeatureActive } from "@/utils/featureFlipping";
 
 import { graphql } from "@/graphql/generated";
 import {
@@ -101,10 +100,6 @@ const BienvenueSection = async () => {
 
   const backgroundImage = getBackgroundImage(srcSet);
 
-  const isDisableMagicLinkActive = await isFeatureActive(
-    "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
-  );
-
   return (
     <section className="w-full md:px-6 md:py-8 md:pt-12 md:pb-20 relative">
       <div
@@ -131,9 +126,7 @@ const BienvenueSection = async () => {
             iconPosition="right"
             className="mt-auto"
             linkProps={{
-              href: isDisableMagicLinkActive
-                ? `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`
-                : "/commencer",
+              href: `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`,
               target: "_self",
             }}
           >
@@ -146,10 +139,6 @@ const BienvenueSection = async () => {
 };
 
 const QuiEtesVousSection = async () => {
-  const isDisableMagicLinkActive = await isFeatureActive(
-    "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
-  );
-
   return (
     <section className="w-full px-6 py-8 md:pt-12 md:pb-20 bg-[#cedff4]">
       <div className="fr-container !p-0">
@@ -176,9 +165,7 @@ const QuiEtesVousSection = async () => {
               iconPosition="right"
               className="mt-auto"
               linkProps={{
-                href: isDisableMagicLinkActive
-                  ? `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`
-                  : "/commencer",
+                href: `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`,
                 target: "_self",
               }}
             >
@@ -421,10 +408,6 @@ const AvantageCard = ({
 );
 
 const LaVAEUnDispositifAccessibleATousSection = async () => {
-  const isDisableMagicLinkActive = await isFeatureActive(
-    "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
-  );
-
   return (
     <section className="w-full bg-white px-6 py-8 md:pt-12 md:pb-20">
       <div className="fr-container flex flex-col items-center md:flex-row !p-0 gap-12 md:gap-20">
@@ -456,9 +439,7 @@ const LaVAEUnDispositifAccessibleATousSection = async () => {
           </p>
           <Button
             linkProps={{
-              href: isDisableMagicLinkActive
-                ? `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`
-                : "/commencer",
+              href: `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`,
               target: "_self",
             }}
           >

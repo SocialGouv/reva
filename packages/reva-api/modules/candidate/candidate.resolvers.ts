@@ -13,7 +13,6 @@ import {
   CandidateUpdateBySelfInput,
   CandidateUpdateInput,
 } from "./candidate.types";
-import { askForLogin } from "./features/candidateAskForLogin";
 import { candidateAskForRegistrationWithPassword } from "./features/candidateAskForRegistrationWithPassword";
 import { candidateForgotPassword } from "./features/candidateForgotPassword";
 import { candidateLoginWithCredentials } from "./features/candidateLoginWithCredentials";
@@ -113,8 +112,6 @@ const unsafeResolvers = {
       _: any,
       params: { email: string },
     ) => candidateAskForRegistrationWithPassword(params),
-    candidate_askForLogin: async (_: unknown, params: { email: string }) =>
-      askForLogin(params.email),
     candidate_loginWithToken: async (
       _: any,
       params: {

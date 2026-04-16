@@ -13,7 +13,6 @@ import { usePreviousPath } from "@/components/previous-path/previousPath";
 
 const UNAUTHENTICATED_PATHS = [
   "/auth-error",
-  "/login-confirmation",
   "/login",
   "/logout-confirmation",
   "/forgot-password",
