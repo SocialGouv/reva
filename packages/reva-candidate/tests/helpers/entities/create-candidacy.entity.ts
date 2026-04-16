@@ -56,6 +56,9 @@ export type CreateCandidacyEntityOptions = {
   additionalHourCount?: Candidacy["additionalHourCount"];
   candidacyStatuses?: Candidacy["candidacyStatuses"];
   warningOnFeasibilitySubmission?: Candidacy["warningOnFeasibilitySubmission"];
+  certificationAuthorityLocalAccounts?:
+    | Candidacy["certificationAuthorityLocalAccounts"]
+    | null;
 };
 
 export function createCandidacyStatuses(statuses: CandidacyStatusStep[]) {
@@ -98,6 +101,7 @@ export const createCandidacyEntity = (
     additionalHourCount,
     candidacyStatuses,
     warningOnFeasibilitySubmission,
+    certificationAuthorityLocalAccounts,
   } = options;
 
   const candidacy: CandidacyEntity = {
@@ -123,6 +127,8 @@ export const createCandidacyEntity = (
     individualHourCount: individualHourCount ?? null,
     collectiveHourCount: collectiveHourCount ?? null,
     additionalHourCount: additionalHourCount ?? null,
+    certificationAuthorityLocalAccounts:
+      certificationAuthorityLocalAccounts ?? null,
     mandatoryTrainings: mandatoryTrainings ?? [],
     feasibilityFormat: feasibilityFormat || "DEMATERIALIZED",
     certificationAuthorities: certificationAuthorities || [],
