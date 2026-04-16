@@ -60,6 +60,23 @@ function createGetJuryByCandidacyIdHandler({
           label: "Certification test",
           codeRncp: "RNCP12345",
           typeDiplome: "Titre professionnel",
+          competenceBlocs: [
+            {
+              id: "bloc-id-1",
+              code: "B1",
+              label: "Bloc 1",
+            },
+            {
+              id: "bloc-id-2",
+              code: "B2",
+              label: "Bloc 2",
+            },
+            {
+              id: "bloc-id-3",
+              code: "B3",
+              label: "Bloc 3",
+            },
+          ],
         },
         jury: {
           id: JURY_ID,
@@ -437,5 +454,39 @@ test.describe("jury result by blocks", () => {
     await expect(
       accordionContent.getByText("Information of result 1"),
     ).toBeVisible();
+  });
+
+  test("Shows modal with feasibility competence blocks when clicking on 'Voir les détails de la recevabilité du candidat sur cette certification'", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...certificateurCommonHandlers,
+      createGetJuryByCandidacyIdHandler({
+        typeAccompagnement: "ACCOMPAGNE",
+        isCertificationPartial: false,
+      }),
+    );
+
+    await openResultPage(page);
+
+    await page
+      .getByText(
+        "Voir les détails de la recevabilité du candidat sur cette certification",
+      )
+      .click();
+    const modal = page.getByRole("dialog", {
+      name: "Recevabilité sur cette candidature",
+    });
+    await expect(modal).toBeVisible();
+    await expect(
+      modal.getByText("Recevabilité obtenue sur les blocs :"),
+    ).toBeVisible();
+    await expect(modal.getByText("B1 - Bloc 1")).toBeVisible();
+    await expect(modal.getByText("B2 - Bloc 2")).toBeVisible();
+    await expect(
+      modal.getByText("Blocs non concernés par la recevabilité :"),
+    ).toBeVisible();
+    await expect(modal.getByText("B3 - Bloc 3")).toBeVisible();
   });
 });

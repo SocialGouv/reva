@@ -1,7 +1,7 @@
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 
 export const feasibilityCompetenceBlocksModal = createModal({
-  id: "feasibility-competence-blocks",
+  id: "feasibility-competence-blocks-modal",
   isOpenedByDefault: false,
 });
 
