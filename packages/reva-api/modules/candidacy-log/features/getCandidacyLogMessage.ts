@@ -28,9 +28,6 @@ export const getCandidacyLogMessage = ({
     case "CANDIDATE_UPDATED":
       return log("Informations du compte candidat modifiées");
 
-    case "CANDIDATE_REGISTRATION_CONFIRMED":
-      return log("Compte candidat créé");
-
     case "CANDIDATE_PROFILE_UPDATED":
       return log("Profil du candidat modifié");
 

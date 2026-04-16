@@ -1,0 +1,1 @@
+DELETE FROM "candidacy_log" WHERE "event_type" = 'CANDIDATE_REGISTRATION_CONFIRMED';
