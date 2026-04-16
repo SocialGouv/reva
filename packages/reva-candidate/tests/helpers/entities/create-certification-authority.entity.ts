@@ -4,11 +4,11 @@ export const createCertificationAuthorityEntity = (
   options: Partial<CertificationAuthority> = {},
 ): CertificationAuthority => {
   return {
-    id: options.id || "cert-authority-1",
-    label: options.label || "UIMM - Île-de-France",
-    contactFullName: options.contactFullName || null,
-    contactEmail: options.contactEmail || null,
-    contactPhone: options.contactPhone || null,
+    id: "cert-authority-1",
+    label: "UIMM - Île-de-France",
+    contactFullName: null,
+    contactEmail: null,
+    contactPhone: null,
     certificationAuthorityLocalAccounts: [],
     certificationAuthorityStructures: [],
     certifications: [],
