@@ -64,9 +64,21 @@ describe("candidateFinalizeRegistrationWithPassword", () => {
 
     expect(result.candidate_resetPassword).toEqual(tokens);
 
-    expect(createAccountSpy).toHaveBeenCalledWith({ email }, "", ["candidate"]);
-    expect(resetPasswordSpy).toHaveBeenCalledWith(keycloakId, password, "");
-    expect(generateTokensSpy).toHaveBeenCalledWith(keycloakId, password, "");
+    expect(createAccountSpy).toHaveBeenCalledWith(
+      { email },
+      process.env.KEYCLOAK_APP_REALM,
+      ["candidate"],
+    );
+    expect(resetPasswordSpy).toHaveBeenCalledWith(
+      keycloakId,
+      password,
+      process.env.KEYCLOAK_APP_REALM,
+    );
+    expect(generateTokensSpy).toHaveBeenCalledWith(
+      keycloakId,
+      password,
+      process.env.KEYCLOAK_APP_REALM,
+    );
 
     const candidate = await prismaClient.candidate.findUnique({
       where: { email },
@@ -121,8 +133,16 @@ describe("candidateFinalizeRegistrationWithPassword", () => {
     });
 
     expect(createAccountSpy).not.toHaveBeenCalled();
-    expect(resetPasswordSpy).toHaveBeenCalledWith(keycloakId, password, "");
-    expect(generateTokensSpy).toHaveBeenCalledWith(keycloakId, password, "");
+    expect(resetPasswordSpy).toHaveBeenCalledWith(
+      keycloakId,
+      password,
+      process.env.KEYCLOAK_APP_REALM,
+    );
+    expect(generateTokensSpy).toHaveBeenCalledWith(
+      keycloakId,
+      password,
+      process.env.KEYCLOAK_APP_REALM,
+    );
     expect(result.candidate_resetPassword).toEqual(tokens);
 
     const updatedCandidate = await prismaClient.candidate.findUnique({

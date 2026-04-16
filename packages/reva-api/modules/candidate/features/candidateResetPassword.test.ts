@@ -86,8 +86,16 @@ describe("candidateResetPassword", () => {
       password,
     });
 
-    expect(resetPasswordSpy).toHaveBeenCalledWith(keycloakId, password, "");
-    expect(generateTokensSpy).toHaveBeenCalledWith(keycloakId, password, "");
+    expect(resetPasswordSpy).toHaveBeenCalledWith(
+      keycloakId,
+      password,
+      process.env.KEYCLOAK_APP_REALM,
+    );
+    expect(generateTokensSpy).toHaveBeenCalledWith(
+      keycloakId,
+      password,
+      process.env.KEYCLOAK_APP_REALM,
+    );
     expect(result.candidate_resetPassword).toEqual(tokens);
 
     const updatedCandidate = await prismaClient.candidate.findUnique({

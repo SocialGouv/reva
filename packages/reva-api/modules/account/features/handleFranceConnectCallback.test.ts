@@ -58,7 +58,7 @@ const mockKeycloakAdmin = ({
 
 describe("getOrCreateCandidate - réconciliation FranceConnect", () => {
   beforeEach(() => {
-    process.env.KEYCLOAK_APP_REALM = "test-realm";
+    vi.stubEnv("KEYCLOAK_APP_REALM", "test-realm");
 
     vi.spyOn(
       birthplaceModule,
@@ -67,10 +67,6 @@ describe("getOrCreateCandidate - réconciliation FranceConnect", () => {
       cityName: "Paris",
       departmentCode: "75",
     });
-  });
-
-  afterEach(() => {
-    delete process.env.KEYCLOAK_APP_REALM;
   });
 
   test("crée un nouveau candidat quand aucun compte n'existe pour ce keycloakId ni pour cet email", async () => {

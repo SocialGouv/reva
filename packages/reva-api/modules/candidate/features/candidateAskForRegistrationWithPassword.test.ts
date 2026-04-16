@@ -41,7 +41,10 @@ describe("candidateAskForRegistrationWithPassword", () => {
     );
 
     expect(result.candidate_askForRegistrationWithPassword).toBe("ok");
-    expect(getAccountSpy).toHaveBeenCalledWith("alice.doe@example.com", "");
+    expect(getAccountSpy).toHaveBeenCalledWith(
+      "alice.doe@example.com",
+      process.env.KEYCLOAK_APP_REALM,
+    );
     expect(sendEmailSpy).toHaveBeenCalledWith({
       email: "alice.doe@example.com",
       certificationId: "certification-id",
