@@ -8,6 +8,7 @@ const certificateurCommonWait = async (page: Page) => {
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
     waitGraphQL(page, "getCandidacyWithCandidateInfoForLayout"),
+    waitGraphQL(page, "getCertificationAuthorityStructureCGUQuery"),
   ]);
 };
 
@@ -52,6 +53,16 @@ export const getCertificateurCommonHandlers = ({
               lastname: candidateLastname,
             },
             jury: null,
+          },
+        }),
+      ),
+      fvae.query(
+        "getCertificationAuthorityStructureCGUQuery",
+        graphQLResolver({
+          account_getAccountForConnectedUser: {
+            certificationRegistryManager: null,
+            certificationAuthority: null,
+            certificationAuthorityLocalAccount: null,
           },
         }),
       ),

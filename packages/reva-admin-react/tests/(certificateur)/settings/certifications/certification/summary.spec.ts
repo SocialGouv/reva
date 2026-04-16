@@ -83,10 +83,9 @@ const {
   certificateurSettingsAdminCommonWait,
   certificateurSettingsCommonHandlers,
   certificateurSettingsCommonWait,
-} =
-  getCertificateurSettingsCommonHandlers({
-    certificationAuthorityId: CERTIFICATION_AUTHORITY_ID,
-  });
+} = getCertificateurSettingsCommonHandlers({
+  certificationAuthorityId: CERTIFICATION_AUTHORITY_ID,
+});
 
 function createCertificationSummaryHandlers({
   hasReducedRequirements,

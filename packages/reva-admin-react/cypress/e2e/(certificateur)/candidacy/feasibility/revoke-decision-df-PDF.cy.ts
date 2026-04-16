@@ -44,6 +44,15 @@ describe("Revoke PDF Feasibility Decision", () => {
       stubQuery(req, "candidacy_canAccessCandidacy", {
         data: { candidacy_canAccessCandidacy: true },
       });
+      stubQuery(req, "getCertificationAuthorityStructureCGUQuery", {
+        data: {
+          account_getAccountForConnectedUser: {
+            certificationRegistryManager: null,
+            certificationAuthority: null,
+            certificationAuthorityLocalAccount: null,
+          },
+        },
+      });
     });
   });
 

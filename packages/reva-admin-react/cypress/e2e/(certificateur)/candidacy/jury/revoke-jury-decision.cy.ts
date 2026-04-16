@@ -24,6 +24,15 @@ describe("revoke jury decision", () => {
       );
 
       stubQuery(req, "getJuryByCandidacyId", candidacyWithJuryResult);
+      stubQuery(req, "getCertificationAuthorityStructureCGUQuery", {
+        data: {
+          account_getAccountForConnectedUser: {
+            certificationRegistryManager: null,
+            certificationAuthority: null,
+            certificationAuthorityLocalAccount: null,
+          },
+        },
+      });
     });
   });
 

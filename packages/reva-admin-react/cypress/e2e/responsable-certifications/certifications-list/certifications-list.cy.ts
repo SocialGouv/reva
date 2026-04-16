@@ -15,6 +15,15 @@ function interceptCertifications(status: string, visible = true) {
       "getMaisonMereCGUQuery",
       "account/gestionnaire-cgu-accepted.json",
     );
+    stubQuery(req, "getCertificationAuthorityStructureCGUQuery", {
+      data: {
+        account_getAccountForConnectedUser: {
+          certificationRegistryManager: null,
+          certificationAuthority: null,
+          certificationAuthorityLocalAccount: null,
+        },
+      },
+    });
     const filteredRows =
       certifications.data.searchCertificationsV2ForRegistryManager.rows.filter(
         (certification) =>

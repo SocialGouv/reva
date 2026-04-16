@@ -20,6 +20,15 @@ function interceptCertificationCompetenceBloc() {
       "getCompetenceBlocForCertificationRegistryManagerUpdateCompetenceBlocPage",
       certificationCBBPBoucher1,
     );
+    stubQuery(req, "getCertificationAuthorityStructureCGUQuery", {
+      data: {
+        account_getAccountForConnectedUser: {
+          certificationRegistryManager: null,
+          certificationAuthority: null,
+          certificationAuthorityLocalAccount: null,
+        },
+      },
+    });
   });
 }
 

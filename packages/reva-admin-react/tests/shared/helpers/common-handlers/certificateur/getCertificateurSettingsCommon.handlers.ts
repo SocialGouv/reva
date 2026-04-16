@@ -8,6 +8,7 @@ export const certificateurSettingsCommonWait = async (page: Page) => {
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
     waitGraphQL(page, "getCertificationAuthorityForHeader"),
+    waitGraphQL(page, "getCertificationAuthorityStructureCGUQuery"),
   ]);
 };
 
@@ -15,6 +16,7 @@ export const certificateurSettingsAdminCommonWait = async (page: Page) => {
   await Promise.all([
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
+    waitGraphQL(page, "getCertificationAuthorityStructureCGUQuery"),
   ]);
 };
 
@@ -51,6 +53,16 @@ export const getCertificateurSettingsCommonHandlers = ({
                 isLatestVersion: true,
               },
             },
+          },
+        }),
+      ),
+      fvae.query(
+        "getCertificationAuthorityStructureCGUQuery",
+        graphQLResolver({
+          account_getAccountForConnectedUser: {
+            certificationRegistryManager: null,
+            certificationAuthority: null,
+            certificationAuthorityLocalAccount: null,
           },
         }),
       ),

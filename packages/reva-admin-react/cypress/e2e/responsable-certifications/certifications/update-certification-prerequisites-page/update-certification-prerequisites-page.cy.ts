@@ -23,6 +23,15 @@ function interceptCertification() {
         },
       },
     });
+    stubQuery(req, "getCertificationAuthorityStructureCGUQuery", {
+      data: {
+        account_getAccountForConnectedUser: {
+          certificationRegistryManager: null,
+          certificationAuthority: null,
+          certificationAuthorityLocalAccount: null,
+        },
+      },
+    });
   });
 }
 

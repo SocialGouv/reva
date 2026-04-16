@@ -49,6 +49,15 @@ context("Replace Certification Page", () => {
         "replaceCertificationMutation",
         replaceCertificationResponse,
       );
+      stubQuery(req, "getCertificationAuthorityStructureCGUQuery", {
+        data: {
+          account_getAccountForConnectedUser: {
+            certificationRegistryManager: null,
+            certificationAuthority: null,
+            certificationAuthorityLocalAccount: null,
+          },
+        },
+      });
     });
     cy.certificateurRegistryManager(
       "/responsable-certifications/certifications/123/replace",
