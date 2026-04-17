@@ -57,7 +57,6 @@ export const errorToast = (message: string) =>
 export const infoToast = (message: string) =>
   genericToast({ title: message, severity: "info" });
 
-// eslint-disable-next-line import/no-unused-modules
 export const warningToast = (message: string) =>
   genericToast({ title: message, severity: "warning" });
 
