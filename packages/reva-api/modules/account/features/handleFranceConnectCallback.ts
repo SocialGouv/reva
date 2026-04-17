@@ -144,6 +144,11 @@ export const handleFranceConnectCallback = async (
       }
     }
 
+    await prismaClient.candidate.update({
+      where: { id: candidate.id },
+      data: { lastLoginViaFranceConnectAt: new Date() },
+    });
+
     await updateAllCandidaciesDerniereDateActiviteByCandidateId({
       candidateId: candidate.id,
     });

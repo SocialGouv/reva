@@ -405,6 +405,7 @@ model Candidate {
   passwordUpdatedAt                    DateTime?                      @map("password_updated_at") @db.Timestamptz(6)
   lastLoginViaPasswordAt               DateTime?                      @map("last_login_via_password_at") @db.Timestamptz(6)
   lastLoginViaMagicLinkAt              DateTime?                      @map("last_login_via_magic_link_at") @db.Timestamptz(6)
+  lastLoginViaFranceConnectAt          DateTime?                      @map("last_login_via_france_connect_at") @db.Timestamptz(6)
   birthdate                            DateTime?                      @map("birthdate") @db.Date
   typology                             CandidateTypology              @default(NON_SPECIFIE)
   typologyAdditional                   String?                        @map("typology_additional")
