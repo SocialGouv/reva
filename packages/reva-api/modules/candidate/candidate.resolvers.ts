@@ -18,11 +18,13 @@ import { candidateForgotPassword } from "./features/candidateForgotPassword";
 import { candidateLoginWithCredentials } from "./features/candidateLoginWithCredentials";
 import { candidateLoginWithToken } from "./features/candidateLoginWithToken";
 import { candidateResetPassword } from "./features/candidateResetPassword";
+import { deleteFranceConnectSandboxCandidates } from "./features/deleteFranceConnectSandboxCandidates";
 import { getCandidateByCandidacyId } from "./features/getCandidateByCandidacyId";
 import { getCandidateById } from "./features/getCandidateById";
 import { getCandidateByKeycloakId } from "./features/getCandidateByKeycloakId";
 import { getCivilInformationCompletedByCandidateId } from "./features/getCivilInformationCompletedByCandidateId";
 import { getContactInformationCompletedByCandidateId } from "./features/getContactInformationCompletedByCandidateId";
+import { getFranceConnectSandboxCandidates } from "./features/getFranceConnectSandboxCandidates";
 import { getHighestDegreeById } from "./features/getHighestDegreeById";
 import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
 import { getTypologyAndCollectiveAgreementCompletedByCandidateId } from "./features/getTypologyAndCollectiveAgreementCompletedByCandidateId";
@@ -106,6 +108,8 @@ const unsafeResolvers = {
     },
     candidate_getCandidateById: async (_: any, params: { id: string }) =>
       getCandidateById({ candidateId: params.id }),
+    candidate_getFranceConnectSandboxCandidates: () =>
+      getFranceConnectSandboxCandidates(),
   },
   Mutation: {
     candidate_askForRegistrationWithPassword: async (
@@ -257,6 +261,10 @@ const unsafeResolvers = {
         additionalInformation,
         ccnId,
       }),
+    candidate_deleteFranceConnectSandboxCandidates: (
+      _: unknown,
+      { emails }: { emails: string[] },
+    ) => deleteFranceConnectSandboxCandidates({ emails }),
   },
 };
 

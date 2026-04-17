@@ -63,6 +63,7 @@ type Candidate {
 type Query {
   candidate_getCandidateById(id: ID!): Candidate
   candidate_getCandidateWithCandidacy: Candidate!
+  candidate_getFranceConnectSandboxCandidates: [Candidate!]!
 }
 
 input CandidateUpdateInformationInput {
@@ -154,4 +155,5 @@ type Mutation {
     candidateId: String!
     candidateTypologyAndCcn: CandidateUpdateTypologyAndCcnInput!
   ): Candidate!
+  candidate_deleteFranceConnectSandboxCandidates(emails: [String!]!): Int!
 }
