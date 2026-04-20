@@ -11,8 +11,7 @@ export default function AucuneCohortePage() {
       <div>
         <h1>Bienvenue dans votre espace France VAE</h1>
         <p className="text-xl leading-loose">
-          Retrouvez ici toutes les cohortes que vous avez créées, et demandez
-          l'accès à votre tableau de bord de pilotage.
+          Retrouvez ici toutes les cohortes que vous avez créées.
         </p>
         <p className="text-xl leading-loose">
           Commencez en créant votre première cohorte.
