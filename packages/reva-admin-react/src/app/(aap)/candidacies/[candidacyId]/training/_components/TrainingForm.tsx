@@ -18,27 +18,27 @@ const trainingFormSchema = z.object({
   individualHourCount: z
     .number({
       errorMap: () => ({
-        message: "Ce champ doit être un entier supérieur ou égal à zéro",
+        message: "Ce champ doit être un entier compris entre 0 et 100.",
       }),
     })
     .min(0)
-    .max(10000, "La valeur de ce champ est trop élevée"),
+    .max(100),
   collectiveHourCount: z
     .number({
       errorMap: () => ({
-        message: "Ce champ doit être un entier supérieur ou égal à zéro",
+        message: "Ce champ doit être un entier compris entre 0 et 100.",
       }),
     })
     .min(0)
-    .max(10000, "La valeur de ce champ est trop élevée"),
+    .max(100),
   additionalHourCount: z
     .number({
       errorMap: () => ({
-        message: "Ce champ doit être un entier supérieur ou égal à zéro",
+        message: "Ce champ doit être un entier compris entre 0 et 100.",
       }),
     })
     .min(0)
-    .max(10000, "La valeur de ce champ est trop élevée"),
+    .max(100),
 
   mandatoryTrainings: z
     .object({ id: z.string(), label: z.string(), checked: z.boolean() })
@@ -276,7 +276,7 @@ export const TrainingForm = ({
               NOMBRE D'HEURES D'ACCOMPAGNEMENT INDIVIDUEL
             </p>
           }
-          hintText="Un entier supérieur ou égal à 0"
+          hintText="Un entier compris entre 0 et 100."
           nativeInputProps={{
             type: "number",
             ...register("individualHourCount", { valueAsNumber: true }),
@@ -291,7 +291,7 @@ export const TrainingForm = ({
               NOMBRE D'HEURES D'ACCOMPAGNEMENT COLLECTIF
             </p>
           }
-          hintText="Un entier supérieur ou égal à 0"
+          hintText="Un entier compris entre 0 et 100."
           nativeInputProps={{
             type: "number",
             ...register("collectiveHourCount", { valueAsNumber: true }),
@@ -306,7 +306,7 @@ export const TrainingForm = ({
               NOMBRE D’HEURES DE FORMATIONS COMPLÉMENTAIRES
             </p>
           }
-          hintText="Un entier supérieur ou égal à 0"
+          hintText="Un entier compris entre 0 et 100."
           nativeInputProps={{
             type: "number",
             ...register("additionalHourCount", { valueAsNumber: true }),
