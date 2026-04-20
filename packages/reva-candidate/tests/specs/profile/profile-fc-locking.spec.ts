@@ -131,8 +131,6 @@ test.describe("FranceConnect linked candidate", () => {
     await expect(page.locator(SELECTORS.middleNames)).toBeDisabled();
     await expect(page.locator(SELECTORS.birthdate)).toBeDisabled();
     await expect(page.locator(SELECTORS.country)).toBeDisabled();
-    await expect(page.locator(SELECTORS.birthDepartment)).toBeDisabled();
-    await expect(page.locator(SELECTORS.birthCity)).toBeDisabled();
   });
 
   test("should keep non-locked fields editable", async ({ page }) => {
@@ -147,6 +145,8 @@ test.describe("FranceConnect linked candidate", () => {
     await expect(page.locator(SELECTORS.phone)).not.toBeDisabled();
     await expect(page.locator(SELECTORS.email)).not.toBeDisabled();
     await expect(page.locator(SELECTORS.addressComplement)).not.toBeDisabled();
+    await expect(page.locator(SELECTORS.birthDepartment)).not.toBeDisabled();
+    await expect(page.locator(SELECTORS.birthCity)).not.toBeDisabled();
   });
 });
 

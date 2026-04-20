@@ -118,22 +118,9 @@ test.describe("FranceConnect linked candidate", () => {
   test("should disable FC-locked fields", async ({ page }) => {
     await visitCivilInformations(page);
 
-    const DEFAULT_SELECTORS = {
-      ...SELECTORS,
-      birthPlace: '[data-testid="autocomplete"] input',
-    };
-
-    for (const field of [
-      "lastname",
-      "firstname",
-      "middleNames",
-      "birthdate",
-      "birthPlace",
-    ]) {
+    for (const field of ["lastname", "firstname", "middleNames", "birthdate"]) {
       await expect(
-        page.locator(
-          DEFAULT_SELECTORS[field as keyof typeof DEFAULT_SELECTORS],
-        ),
+        page.locator(SELECTORS[field as keyof typeof SELECTORS]),
       ).toBeDisabled();
     }
 
@@ -150,6 +137,9 @@ test.describe("FranceConnect linked candidate", () => {
     await expect(page.locator(SELECTORS.givenName)).not.toBeDisabled();
     await expect(
       page.locator('input[name="gender"]').first(),
+    ).not.toBeDisabled();
+    await expect(
+      page.locator('[data-testid="autocomplete"] input'),
     ).not.toBeDisabled();
   });
 });

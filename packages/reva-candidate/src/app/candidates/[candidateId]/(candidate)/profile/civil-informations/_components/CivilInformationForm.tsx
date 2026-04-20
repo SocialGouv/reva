@@ -385,7 +385,6 @@ export const CivilInformationForm = ({
                       className="w-full mb-0"
                       displayMode="municipality"
                       defaultSearchText={defaultBirthPlaceDisplayText}
-                      disabled={isFCLinked}
                       state={errors.birthCity ? "error" : "default"}
                       stateRelatedMessage={errors.birthCity?.message}
                     />
@@ -430,7 +429,7 @@ export const CivilInformationForm = ({
                 <Select
                   className="w-full mb-0"
                   label="Département de naissance"
-                  disabled={isFCLinked || !countryIsFrance}
+                  disabled={!countryIsFrance}
                   nativeSelectProps={register("birthDepartment")}
                   state={errors.birthDepartment ? "error" : "default"}
                   stateRelatedMessage={errors.birthDepartment?.message}
@@ -449,7 +448,6 @@ export const CivilInformationForm = ({
                 <Input
                   label="Ville de naissance"
                   className="w-full mb-0"
-                  disabled={isFCLinked && countryIsFrance}
                   nativeInputProps={register("birthCity")}
                   state={errors.birthCity ? "error" : "default"}
                   stateRelatedMessage={errors.birthCity?.message}
