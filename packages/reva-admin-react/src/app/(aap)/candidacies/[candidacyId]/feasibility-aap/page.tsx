@@ -83,7 +83,9 @@ const AapFeasibilityPage = () => {
 
   // ne pas afficher l'alerte d'expiration de la certification si la décision du dossier de faisabilité est incomplète
   const showCertificationExpiredAlert =
-    hasCertificationRncpExpired && !feasibilityDecisionIsIncomplete;
+    hasCertificationRncpExpired &&
+    !feasibilityDecisionIsIncomplete &&
+    !feasibilityFileSentAt;
 
   const canSendFeasibilityFileToCandidate =
     !!dematerializedFeasibilityFile?.isReadyToBeSentToCandidate &&
