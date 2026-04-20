@@ -515,6 +515,59 @@ describe("candidate information update", () => {
     );
   });
 
+  test("should preserve an existing birthDepartmentId when FranceConnect-linked candidate with non-France country updates without passing birthDepartmentId", async () => {
+    const candidacy = await createCandidacyHelper();
+
+    if (!candidacy || !candidacy.candidate) {
+      throw Error("Error while creating test candidacy");
+    }
+
+    const otherCountry = (await prismaClient.country.findFirst({
+      where: { label: { not: "France" } },
+    })) as Country;
+    const pasDeCalais = (await prismaClient.department.findUnique({
+      where: { code: "62" },
+    })) as Department;
+
+    // Donnée héritée : candidat FC non-France avec un birthDepartmentId français historique
+    await prismaClient.candidate.update({
+      where: { id: candidacy.candidate.id },
+      data: {
+        franceConnectLinked: true,
+        countryId: otherCountry.id,
+        birthDepartmentId: pasDeCalais.id,
+      },
+    });
+
+    const { birthDepartmentId, ...fieldsWithoutDepartment } =
+      await getDefaultUpdatedCandidateFields();
+
+    const resp = await injectGraphql({
+      fastify: global.testApp,
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: mockAdminKeycloakUuid,
+      }),
+      payload: {
+        requestType: "mutation",
+        arguments: {
+          candidacyId: candidacy.id,
+          candidateInformation: fieldsWithoutDepartment,
+        },
+        enumFields: ["gender"],
+        endpoint: "candidate_updateCandidateInformation",
+        returnFields: "{ birthDepartment { id } }",
+      },
+    });
+    expect(resp.statusCode).toEqual(200);
+    expect(resp.json()).not.toHaveProperty("errors");
+    const obj = resp.json();
+    // birthDepartmentId n'est pas dans l'input → il ne doit pas être modifié
+    expect(
+      obj.data.candidate_updateCandidateInformation.birthDepartment?.id,
+    ).toBe(pasDeCalais.id);
+  });
+
   test("should force birthDepartmentId to null when FranceConnect-linked candidate with non-France country submits a department id", async () => {
     const candidacy = await createCandidacyHelper();
 

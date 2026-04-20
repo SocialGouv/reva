@@ -57,10 +57,16 @@ export const updateCandidate = async ({
     delete candidateInput.birthdate;
     delete candidateInput.countryId;
 
-    // Pour un candidat FC né hors de France, on force birthDepartmentId à null :
-    // countryId vient d'être supprimé donc le bloc de normalisation plus bas ne peut plus le faire.
+    // Pour un candidat FC né hors de France, on force birthDepartmentId à null
+    // uniquement si l'appelant a explicitement inclus ce champ dans le payload :
+    // countryId vient d'être supprimé donc le bloc de normalisation plus bas ne peut
+    // plus le faire. On n'injecte pas de null pour un champ que l'appelant n'a pas
+    // touché (important pour updateCandidateInformationBySelf qui accepte des updates
+    // partiels).
     if (!countryIsFrance) {
-      candidateInput.birthDepartmentId = null;
+      if ("birthDepartmentId" in candidateInput) {
+        candidateInput.birthDepartmentId = null;
+      }
     } else if (candidateInput.birthDepartmentId) {
       // Le bloc de normalisation plus bas ne s'exécute que si countryId est présent dans l'input,
       // or on vient de le supprimer. On valide donc ici le birthDepartmentId pour renvoyer une
