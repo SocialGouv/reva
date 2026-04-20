@@ -487,18 +487,10 @@ export const ResultatByBlocks = () => {
               nativeTextAreaProps={register("informationOfResult")}
               textArea
               hintText={
-                <>
-                  <p className="m-0 text-xs">
-                    Indiquer ici toutes les réserves, consignes ou attendus
-                    éventuels.
-                  </p>
-                  <p className="m-0 text-xs">
-                    <b>
-                      Si des blocs ont été validés alors que le candidat n'était
-                      pas recevable dessus, vous pouvez l’indiquer ici.
-                    </b>
-                  </p>
-                </>
+                <p className="m-0 text-xs">
+                  Indiquer ici toutes les réserves, consignes ou attendus
+                  éventuels.
+                </p>
               }
               disabled={!editable}
               state={errors.informationOfResult ? "error" : "default"}
