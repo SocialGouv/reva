@@ -84,7 +84,7 @@ export const ResultInconsistencyErrorModal = ({
         className: "flex gap-2",
       }}
     >
-      <p>{inconsistencyMessage}</p>
+      <div>{inconsistencyMessage}</div>
     </resultInconsistencyErrorModal.Component>
   );
 };
