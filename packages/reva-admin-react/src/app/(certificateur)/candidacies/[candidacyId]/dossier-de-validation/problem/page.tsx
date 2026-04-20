@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
@@ -8,8 +7,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useDossierDeValidationProblemPageLogic } from "@/app/(certificateur)/candidacies/[candidacyId]/dossier-de-validation/problem/dossierDeValidationProblemPageLogic";
-import { BackButton } from "@/components/back-button/BackButton";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { sanitizedTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
@@ -27,7 +26,7 @@ const DossierDeValidationProblemPage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty, isSubmitting, isValid },
   } = useForm<DossierDeValidationProblemFormData>({
     resolver: zodResolver(schema),
   });
@@ -47,18 +46,18 @@ const DossierDeValidationProblemPage = () => {
   return (
     dossierDeValidation && (
       <div className="flex flex-col w-full">
-        <BackButton
-          href={`/candidacies/${candidacy?.id}/dossier-de-validation`}
-        >
-          Retour au dossier
-        </BackButton>
-        <h1>Correction du dossier de validation</h1>
+        <h1>Demander une correction</h1>
+        <FormOptionalFieldsDisclaimer />
+        <p className="text-xl mb-12">
+          Vous avez observé un ou plusieurs problèmes ou éléments manquants dans
+          le dossier ? Décrivez-les dans l’encart ci-dessous et faites parvenir
+          vos remarques à la personne concernée. Une fois modifié, le dossier de
+          validation mis à jour vous sera renvoyé.
+        </p>
         <form className="flex flex-col w-full" onSubmit={handleFormSubmit}>
-          <div className="flex items-center gap-2 mb-8">
-            <span className="uppercase text-xs font-bold">
-              dossier déposé le :
-            </span>
-            <span>
+          <div className="flex justify-between gap-2 mb-6 border-y py-2">
+            <span className="">Dossier déposé le :</span>
+            <span className="font-bold">
               {format(
                 dossierDeValidation?.dossierDeValidationSentAt,
                 "dd/MM/yyyy",
@@ -67,18 +66,23 @@ const DossierDeValidationProblemPage = () => {
           </div>
           <Input
             textArea
-            label="Précisez le ou les problèmes rencontrés"
-            classes={{ nativeInputOrTextArea: "!min-h-[320px]" }}
+            label="Observations à transmettre :"
+            className="mb-2"
+            classes={{ nativeInputOrTextArea: "!min-h-[100px]" }}
             nativeTextAreaProps={{ ...register("decisionComment") }}
             state={errors.decisionComment ? "error" : "default"}
             stateRelatedMessage={errors.decisionComment?.message}
           />
-
-          <SmallNotice>
-            Ce commentaire sera transmis à l’Architecte accompagnateur de
-            parcours.
-          </SmallNotice>
-          <Button className="ml-auto mt-10">Envoyer</Button>
+          <FormButtons
+            backUrl={`/candidacies/${candidacy?.id}/dossier-de-validation`}
+            submitButtonLabel="Envoyer"
+            hideResetButton
+            formState={{
+              isDirty: isDirty,
+              isSubmitting: isSubmitting,
+              canSubmit: isDirty && !isSubmitting && isValid,
+            }}
+          />
         </form>
       </div>
     )
