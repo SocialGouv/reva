@@ -143,9 +143,6 @@ test.describe("FranceConnect linked candidate", () => {
     await expect(page.locator(SELECTORS.firstname)).toBeDisabled();
     await expect(page.locator(SELECTORS.middleNames)).toBeDisabled();
     await expect(page.locator(SELECTORS.birthdate)).toBeDisabled();
-    await expect(
-      page.locator('[data-testid="autocomplete"] input'),
-    ).toBeDisabled();
 
     await expect(
       page.getByRole("checkbox", {
@@ -172,6 +169,9 @@ test.describe("FranceConnect linked candidate", () => {
     await expect(page.locator(SELECTORS.city)).not.toBeDisabled();
     await expect(page.locator(SELECTORS.zip)).not.toBeDisabled();
     await expect(page.locator(SELECTORS.addressComplement)).not.toBeDisabled();
+    await expect(
+      page.locator('[data-testid="autocomplete"] input'),
+    ).not.toBeDisabled();
   });
 });
 
