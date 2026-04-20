@@ -57,11 +57,21 @@ export const updateCandidate = async ({
     delete candidateInput.birthdate;
     delete candidateInput.countryId;
 
-    if (countryIsFrance) {
-      delete candidateInput.birthDepartmentId;
-      delete candidateInput.birthCity;
-    } else {
+    // Pour un candidat FC né hors de France, on force birthDepartmentId à null :
+    // countryId vient d'être supprimé donc le bloc de normalisation plus bas ne peut plus le faire.
+    if (!countryIsFrance) {
       candidateInput.birthDepartmentId = null;
+    } else if (candidateInput.birthDepartmentId) {
+      // Le bloc de normalisation plus bas ne s'exécute que si countryId est présent dans l'input,
+      // or on vient de le supprimer. On valide donc ici le birthDepartmentId pour renvoyer une
+      // erreur métier propre plutôt que de laisser la contrainte Prisma/FK remonter une 500.
+      const birthDepartmentSelected = await prismaClient.department.findUnique({
+        where: { id: candidateInput.birthDepartmentId },
+      });
+
+      if (!birthDepartmentSelected) {
+        throw new Error(`Le département de naissance n'existe pas`);
+      }
     }
   }
 

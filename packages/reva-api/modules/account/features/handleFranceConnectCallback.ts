@@ -1,4 +1,4 @@
-import { Country, Department } from "@prisma/client";
+import { Country } from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { authorizationCodeGrant } from "openid-client";
 import { z } from "zod";
@@ -207,24 +207,19 @@ const buildCandidateDataFromFCClaims = async ({
           logger.warn(
             `[France Connect] Code département "${resolution.departmentCode}" retourné par l'API Geo introuvable en base pour le code INSEE "${userInfo.birthplace}"`,
           );
-          birthDepartmentId = (await getDepartment(userInfo.birthplace)).id;
+          birthDepartmentId = null;
         }
       } else {
-        // Fallback : API indisponible, on conserve le comportement actuel
-        birthDepartmentId = (await getDepartment(userInfo.birthplace)).id;
+        // API Geo indisponible : on laisse les champs vides, le candidat pourra les renseigner lui-même
+        birthDepartmentId = null;
       }
     } else {
-      // Country == France mais birthplace est manquant
+      // Country == France mais birthplace est manquant : on laisse les champs vides sans bloquer la connexion
       const displayCandidateId = candidateId ?? "inconnu";
       logger.warn(
         `[France Connect] Lieu de naissance (champ fc birthplace) manquant pour le candidat ${displayCandidateId}`,
       );
       logAnonymizedFcUserInfo({ candidateId, userInfo });
-      throw new FranceConnectUserError({
-        message:
-          "L'information concernant votre lieu de naissance est manquante dans votre profil FranceConnect. Contactez le support afin de résoudre le problème.",
-        statusCode: 400,
-      });
     }
   }
 
@@ -235,17 +230,20 @@ const buildCandidateDataFromFCClaims = async ({
   const countryIsFrance = country?.label === "France";
 
   return {
-    firstname,
-    firstname2,
-    firstname3,
-    middleNames,
-    lastname: userInfo.family_name,
-    birthdate: parseFranceConnectDate(userInfo.birthdate),
-    countryId: country?.id ?? null,
-    nationality,
-    franceConnectLinked: true,
-    birthDepartmentId,
-    ...(countryIsFrance ? { birthCity } : {}),
+    data: {
+      firstname,
+      firstname2,
+      firstname3,
+      middleNames,
+      lastname: userInfo.family_name,
+      birthdate: parseFranceConnectDate(userInfo.birthdate),
+      countryId: country?.id ?? null,
+      nationality,
+      franceConnectLinked: true,
+      birthDepartmentId,
+      ...(countryIsFrance ? { birthCity } : {}),
+    },
+    countryIsFrance,
   };
 };
 
@@ -258,19 +256,35 @@ const updateCandidateFromFCClaims = async ({
 }) => {
   const existingCandidate = await prismaClient.candidate.findUnique({
     where: { id: candidateId },
-    select: { nationality: true },
+    select: {
+      nationality: true,
+      birthCity: true,
+      birthDepartmentId: true,
+    },
   });
   const existingNationality = existingCandidate?.nationality;
 
-  const fcData = await buildCandidateDataFromFCClaims({
-    candidateId,
-    userInfo,
-    existingNationality,
-  });
+  const { data: fcData, countryIsFrance } =
+    await buildCandidateDataFromFCClaims({
+      candidateId,
+      userInfo,
+      existingNationality,
+    });
+
+  // Backfill only : on ne remplace jamais un birthCity / birthDepartmentId déjà présent en base,
+  // sauf si le pays de naissance FC n'est plus la France : dans ce cas on laisse la valeur nulle
+  // de fcData écraser l'ancienne donnée pour éviter un département incohérent avec le nouveau pays.
+  const updatePayload: Partial<typeof fcData> = { ...fcData };
+  if (countryIsFrance && existingCandidate?.birthCity != null) {
+    delete updatePayload.birthCity;
+  }
+  if (countryIsFrance && existingCandidate?.birthDepartmentId != null) {
+    delete updatePayload.birthDepartmentId;
+  }
 
   const candidate = await prismaClient.candidate.update({
     where: { id: candidateId },
-    data: fcData,
+    data: updatePayload,
   });
 
   return candidate;
@@ -353,7 +367,7 @@ const createCandidateFromFranceConnect = async ({
   keycloakId: string;
   userInfo: FranceConnectClaims;
 }) => {
-  const fcData = await buildCandidateDataFromFCClaims({
+  const { data: fcData } = await buildCandidateDataFromFCClaims({
     userInfo,
   });
 
@@ -400,16 +414,6 @@ const getDefaultDepartment = async () => {
   }
 
   return department;
-};
-
-const getDepartment = async (birthplace?: string): Promise<Department> => {
-  if (birthplace) {
-    const department = await prismaClient.department.findUnique({
-      where: { code: birthplace.slice(0, 2) },
-    });
-    if (department) return department;
-  }
-  return getDefaultDepartment();
 };
 
 const getCountry = async (
