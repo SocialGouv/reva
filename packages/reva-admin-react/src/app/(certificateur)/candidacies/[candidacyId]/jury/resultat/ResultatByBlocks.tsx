@@ -221,6 +221,7 @@ export const ResultatByBlocks = () => {
     defaultValues: {
       validatedBlocks: [],
     },
+    mode: "onChange",
   });
 
   const {
@@ -511,7 +512,7 @@ export const ResultatByBlocks = () => {
             <div className="flex flex-row items-end">
               <Button
                 className="ml-auto mt-8 text-right"
-                disabled={isSubmitting || !editable}
+                disabled={isSubmitting || !editable || !formData.result}
               >
                 Envoyer
               </Button>

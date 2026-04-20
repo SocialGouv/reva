@@ -57,6 +57,9 @@ export const ResultInconsistencyErrorModal = ({
               séléctionné un résultat de réussite.
             </p>
             <p>
+              Pour envoyer ce résultat, vous devez corriger cette incohérence :
+            </p>
+            <p>
               <b>Si aucun bloc n'a été validé</b>
               <br />
               <i className="fr-icon-arrow-right-line fr-icon--sm" />{" "}
