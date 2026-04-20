@@ -6,10 +6,10 @@ export const feasibilityCompetenceBlocksModal = createModal({
 });
 
 export const FeasibilityCompetenceBlocksModal = ({
-  targetedBlocks,
+  receivableBlocks,
   certificationBlocks,
 }: {
-  targetedBlocks: {
+  receivableBlocks: {
     id: string;
     code?: string | null;
     label: string;
@@ -20,20 +20,22 @@ export const FeasibilityCompetenceBlocksModal = ({
     label: string;
   }[];
 }) => {
-  const untargetedBlocks = certificationBlocks.filter(
+  const nonReceivableBlocks = certificationBlocks.filter(
     (block) =>
-      !targetedBlocks.some((targetedBlock) => targetedBlock.id === block.id),
+      !receivableBlocks.some(
+        (receivableBlock) => receivableBlock.id === block.id,
+      ),
   );
   return (
     <feasibilityCompetenceBlocksModal.Component
       title="Recevabilité sur cette candidature"
       size="large"
     >
-      {targetedBlocks.length > 0 && (
+      {receivableBlocks.length > 0 && (
         <>
           <h5 className="text-base">Recevabilité obtenue sur les blocs : </h5>
           <ul>
-            {targetedBlocks.map((block) => (
+            {receivableBlocks.map((block) => (
               <li key={block.id}>
                 {block.code} - {block.label}
               </li>
@@ -41,13 +43,13 @@ export const FeasibilityCompetenceBlocksModal = ({
           </ul>
         </>
       )}
-      {untargetedBlocks.length > 0 && (
+      {nonReceivableBlocks.length > 0 && (
         <>
           <h5 className="text-base mt-8">
             Blocs non concernés par la recevabilité :
           </h5>
           <ul>
-            {untargetedBlocks.map((block) => (
+            {nonReceivableBlocks.map((block) => (
               <li key={block.id}>
                 {block.code} - {block.label}
               </li>

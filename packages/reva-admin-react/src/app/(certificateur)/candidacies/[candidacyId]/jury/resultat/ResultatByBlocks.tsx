@@ -31,6 +31,11 @@ import {
 import { HistoryResultatView } from "./_components/HistoryResultatView";
 import { ResultatCardWithBlocks } from "./_components/ResultatCardWithBlocks";
 import {
+  resultInconsistencyErrorModal,
+  ResultInconsistencyErrorModal,
+  ResultInconsistencyType,
+} from "./_components/ResultInconsistencyErrorModal";
+import {
   RevokeJuryDecisionModal,
   revokeJuryDecisionModal,
 } from "./_components/RevokeJuryDecisionModal";
@@ -169,7 +174,8 @@ export const ResultatByBlocks = () => {
           ) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: "Vous devez valider au moins un bloc pour ce résultat",
+              message:
+                "NO_BLOCKS_CHECKED_FOR_SUCCESS_RESULT" as ResultInconsistencyType,
               path: ["validatedBlocks"],
             });
           }
@@ -181,7 +187,7 @@ export const ResultatByBlocks = () => {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               message:
-                "Vous ne pouvez pas valider tous les blocs pour ce résultat",
+                "ALL_BLOCKS_CHECKED_FOR_PARTIAL_RESULT" as ResultInconsistencyType,
               path: ["validatedBlocks"],
             });
           }
@@ -208,14 +214,13 @@ export const ResultatByBlocks = () => {
     handleSubmit,
     getValues,
     setValue,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isSubmitting },
     control,
   } = useForm<ResultatFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
       validatedBlocks: [],
     },
-    mode: "all",
   });
 
   const {
@@ -225,9 +230,17 @@ export const ResultatByBlocks = () => {
     reset: resetRevokeForm,
   } = useForm<RevokeFormData>({ resolver: zodResolver(revokeSchema) });
 
-  const handleFormSubmit = handleSubmit(() => {
-    confirmResultModal.open();
-  });
+  const handleFormSubmit = handleSubmit(
+    () => {
+      confirmResultModal.open();
+    },
+    (errors) => {
+      if (errors.validatedBlocks) {
+        resultInconsistencyErrorModal.open();
+        return;
+      }
+    },
+  );
 
   const resultSelected = useWatch({ name: "result", control });
 
@@ -255,7 +268,6 @@ export const ResultatByBlocks = () => {
   }, [resultSelected, setValue, blocksTargetedForThisSession]);
 
   const formData = getValues();
-
   const submitData = async () => {
     confirmResultModal.close();
     if (candidacy?.jury?.id) {
@@ -451,7 +463,6 @@ export const ResultatByBlocks = () => {
                 inputGroup: "-my-2",
               }}
               state={errors.validatedBlocks ? "error" : "default"}
-              stateRelatedMessage={errors.validatedBlocks?.message}
               options={
                 candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
                   (bloc) => ({
@@ -500,7 +511,7 @@ export const ResultatByBlocks = () => {
             <div className="flex flex-row items-end">
               <Button
                 className="ml-auto mt-8 text-right"
-                disabled={isSubmitting || !isValid || !editable}
+                disabled={isSubmitting || !editable}
               >
                 Envoyer
               </Button>
@@ -528,12 +539,24 @@ export const ResultatByBlocks = () => {
         {candidacy?.feasibility?.dematerializedFeasibilityFile
           ?.blocsDeCompetences &&
           candidacy?.certification?.competenceBlocs && (
-            <FeasibilityCompetenceBlocksModal
-              targetedBlocks={candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
-                (block) => block.certificationCompetenceBloc,
-              )}
-              certificationBlocks={candidacy?.certification?.competenceBlocs}
-            />
+            <>
+              <FeasibilityCompetenceBlocksModal
+                receivableBlocks={candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
+                  (block) => block.certificationCompetenceBloc,
+                )}
+                certificationBlocks={candidacy?.certification?.competenceBlocs}
+              />
+              <ResultInconsistencyErrorModal
+                inconsistencyType={
+                  errors.validatedBlocks?.message as ResultInconsistencyType
+                }
+                selectedBlocks={blocksTargetedForThisSession
+                  .map((block) => block.certificationCompetenceBloc)
+                  .filter((block) =>
+                    formData.validatedBlocks.includes(block.id),
+                  )}
+              />
+            </>
           )}
       </div>
     </>
