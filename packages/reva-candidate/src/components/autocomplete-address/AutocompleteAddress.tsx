@@ -139,7 +139,7 @@ export const AutocompleteAddress = ({
     onOptionSelection?.(newSelectedOption, department);
 
     if (displayMode === "municipality") {
-      setSearchText(`${newSelectedOption.city} (${newSelectedOption.zip})`);
+      setSearchText(`${newSelectedOption.city} (${department?.code})`);
     } else {
       setSearchText(newSelectedOption.label);
     }
