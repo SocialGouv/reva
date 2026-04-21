@@ -6,6 +6,7 @@ import { graphql } from "@/graphql/generated";
 import { useGraphQlClient } from "../graphql/graphql-client/GraphqlClient";
 
 export interface AddressOption {
+  id: string;
   label: string;
   street: string;
   zip: string;
@@ -72,6 +73,7 @@ export function useAutocompleteAddress({ search }: { search?: string }) {
       }
       const result = data.features.map((feature) => {
         return {
+          id: feature.properties.id,
           label: feature.properties.label,
           street: feature.properties.name,
           zip: feature.properties.postcode,
