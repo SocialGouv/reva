@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 import { ajvFilePlugin } from "@fastify/multipart";
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 import { CrispStatusReporter } from "crisp-status-reporter";
@@ -57,10 +59,25 @@ await fastify.register(routesApiV1, {
 });
 
 fastify.addHook("onRequest", (request, reply, done) => {
-  if (
-    process.env.INTEROP_PROXY_SECRET &&
-    request.headers["x-interop-secret"] !== process.env.INTEROP_PROXY_SECRET
-  ) {
+  const secret = request.headers["x-interop-secret"] || "";
+  const proxySecret = process.env.INTEROP_PROXY_SECRET || "";
+  const lengthsMatch = secret.length === proxySecret.length;
+
+  // Do not return early when lengths differ — that leaks the secret's
+  // length through timing.  Instead, always perform a constant-time
+  // comparison: when the lengths match compare directly; otherwise
+  // compare the user input against itself (always true) and negate.
+  const isEqual = lengthsMatch
+    ? crypto.timingSafeEqual(
+        Buffer.from(secret as string),
+        Buffer.from(proxySecret as string),
+      )
+    : !crypto.timingSafeEqual(
+        Buffer.from(secret as string),
+        Buffer.from(secret as string),
+      );
+
+  if (!isEqual) {
     reply.status(403).send();
   } else {
     done();

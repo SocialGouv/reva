@@ -1,6 +1,7 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from "@fastify/type-provider-json-schema-to-ts";
 import * as jose from "jose";
 
+import { secureApiKeyCheck } from "../../../utils/secureApiKeyCheck.js";
 import { createAccount } from "../features/accounts/createAccount.js";
 import { generateJwt } from "../features/auth/generateJwt.js";
 import { invalidJwt } from "../features/auth/invalideJwt.js";
@@ -119,9 +120,19 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
             },
           },
         },
+        401: {
+          description: "Clé API invalide",
+        },
       },
     },
     handler: async (request, reply) => {
+      const { auth_api_key } = request.headers;
+
+      if (!secureApiKeyCheck(auth_api_key as string)) {
+        reply.status(401).send();
+        return;
+      }
+
       const account = await createAccount(request.graphqlClient, {
         ...request.body,
         group: "certification_authority",
@@ -179,7 +190,7 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     handler: async (request, reply) => {
       const { auth_api_key } = request.headers;
 
-      if (!auth_api_key || auth_api_key != process.env.AUTH_API_KEY) {
+      if (!secureApiKeyCheck(auth_api_key as string)) {
         reply.status(401).send();
         return;
       }
@@ -230,7 +241,7 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     handler: async (request, reply) => {
       const { auth_api_key } = request.headers;
 
-      if (!auth_api_key || auth_api_key != process.env.AUTH_API_KEY) {
+      if (!secureApiKeyCheck(auth_api_key as string)) {
         reply.status(401).send();
         return;
       }
