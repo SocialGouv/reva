@@ -20,26 +20,16 @@ const MATCHING_PIVOTS = {
 };
 
 const mockKeycloakAdmin = ({
-  findOneByName = vi
-    .fn()
-    .mockResolvedValue({ id: "role-id", name: "candidate" }),
-  addRealmRoleMappings = vi.fn().mockResolvedValue(undefined),
   listFederatedIdentities = vi.fn().mockResolvedValue([]),
   delFromFederatedIdentity = vi.fn().mockResolvedValue(undefined),
 }: Partial<{
-  findOneByName: ReturnType<typeof vi.fn>;
-  addRealmRoleMappings: ReturnType<typeof vi.fn>;
   listFederatedIdentities: ReturnType<typeof vi.fn>;
   delFromFederatedIdentity: ReturnType<typeof vi.fn>;
 }> = {}) => {
   const admin = {
     users: {
-      addRealmRoleMappings,
       listFederatedIdentities,
       delFromFederatedIdentity,
-    },
-    roles: {
-      findOneByName,
     },
   };
   vi.spyOn(getKeycloakAdminModule, "getKeycloakAdmin").mockImplementation(
@@ -49,8 +39,6 @@ const mockKeycloakAdmin = ({
       >,
   );
   return {
-    findOneByName,
-    addRealmRoleMappings,
     listFederatedIdentities,
     delFromFederatedIdentity,
   };
@@ -70,7 +58,7 @@ describe("getOrCreateCandidate - réconciliation FranceConnect", () => {
   });
 
   test("crée un nouveau candidat quand aucun compte n'existe pour ce keycloakId ni pour cet email", async () => {
-    const spies = mockKeycloakAdmin();
+    mockKeycloakAdmin();
     const claims = buildFranceConnectClaims({
       sub: FC_KEYCLOAK_ID,
       email: `new-${faker.string.uuid()}@example.com`,
@@ -88,13 +76,6 @@ describe("getOrCreateCandidate - réconciliation FranceConnect", () => {
     expect(dbCandidate?.lastname).toBe("Dupont");
     expect(dbCandidate?.franceConnectLinked).toBe(true);
     expect(dbCandidate?.keycloakId).toBe(FC_KEYCLOAK_ID);
-
-    expect(spies.findOneByName).toHaveBeenCalledTimes(1);
-    expect(spies.findOneByName).toHaveBeenCalledWith({
-      name: "candidate",
-      realm: "test-realm",
-    });
-    expect(spies.addRealmRoleMappings).toHaveBeenCalledTimes(1);
   });
 
   test("met à jour le candidat existant quand le keycloakId et les données pivots correspondent", async () => {

@@ -56,7 +56,7 @@ export const candidateFinalizeRegistrationWithPassword = async ({
     return generateIAMTokenWithPassword(keycloakId, password, realm);
   }
 
-  const keycloakId = await createAccountInIAM({ email }, realm, ["candidate"]);
+  const keycloakId = await createAccountInIAM({ email }, realm);
 
   await resetPassword(keycloakId, password, realm);
 

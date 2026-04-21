@@ -67,7 +67,6 @@ describe("candidateFinalizeRegistrationWithPassword", () => {
     expect(createAccountSpy).toHaveBeenCalledWith(
       { email },
       process.env.KEYCLOAK_APP_REALM,
-      ["candidate"],
     );
     expect(resetPasswordSpy).toHaveBeenCalledWith(
       keycloakId,

@@ -7,7 +7,6 @@ import { getActiveCandidaciesByCandidateId } from "@/modules/candidacy/features/
 import { getCandidateByKeycloakId } from "@/modules/candidate/features/getCandidateByKeycloakId";
 import { updateAllCandidaciesDerniereDateActiviteByCandidateId } from "@/modules/candidate/features/updateAllCandidaciesDerniereDateActiviteByCandidateId";
 import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
-import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
 import { CANDIDATE_BASE_URL } from "@/modules/shared/config/config";
 import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
@@ -386,7 +385,6 @@ const createCandidateFromFranceConnect = async ({
     },
   });
 
-  await assignCandidateRole(keycloakId);
   logger.info(
     `[France Connect] Nouveau compte candidat créé avec succès : ${candidate.id}`,
   );
@@ -432,31 +430,4 @@ const getCountry = async (
     });
   }
   return country;
-};
-
-const assignCandidateRole = async (keycloakId: string): Promise<void> => {
-  const realm = process.env.KEYCLOAK_APP_REALM;
-  if (!realm) {
-    throw new FranceConnectSystemError({
-      message: "Erreur de configuration du système",
-    });
-  }
-
-  const keycloakAdmin = await getKeycloakAdmin();
-  const role = await keycloakAdmin.roles.findOneByName({
-    name: "candidate",
-    realm,
-  });
-
-  if (!role?.id) {
-    throw new FranceConnectSystemError({
-      message: "Erreur de configuration du système",
-    });
-  }
-
-  await keycloakAdmin.users.addRealmRoleMappings({
-    id: keycloakId,
-    realm,
-    roles: [{ id: role.id, name: role.name ?? "candidate" }],
-  });
 };

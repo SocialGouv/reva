@@ -29,7 +29,6 @@ export const createAccountInIAM = async (
     lastname?: string;
   },
   realm: string,
-  groups?: string[],
 ) => {
   try {
     const keycloakAdmin = await getKeycloakAdmin();
@@ -39,7 +38,6 @@ export const createAccountInIAM = async (
       username: account.email,
       emailVerified: true,
       enabled: true,
-      groups,
       realm,
     });
 
