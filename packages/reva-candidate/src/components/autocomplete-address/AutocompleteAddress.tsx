@@ -139,7 +139,7 @@ export const AutocompleteAddress = ({
     onOptionSelection?.(newSelectedOption, department);
 
     if (displayMode === "municipality") {
-      setSearchText(`${newSelectedOption.city} (${department?.code})`);
+      setSearchText(`${newSelectedOption.city} (${newSelectedOption.zip})`);
     } else {
       setSearchText(newSelectedOption.label);
     }
@@ -194,6 +194,10 @@ export const AutocompleteAddress = ({
         >
           {options.map((option) => {
             const isSelected = selectedOption?.id === option.id;
+            let label = option.label;
+            if (option.type === "municipality") {
+              label = `${option.label} (${option.zip})`;
+            }
             return (
               <div
                 key={option.id}
@@ -203,7 +207,7 @@ export const AutocompleteAddress = ({
                 }`}
                 onMouseOver={() => setSelectedOption(option)}
               >
-                {option.label}
+                {label}
               </div>
             );
           })}
