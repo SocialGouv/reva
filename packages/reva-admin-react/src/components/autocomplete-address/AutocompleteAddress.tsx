@@ -121,7 +121,7 @@ export const AutocompleteAddress = ({
         e.preventDefault();
         if (options.length) {
           const index = options.findIndex(
-            (option) => option.label === selectedOption?.label,
+            (option) => option.id === selectedOption?.id,
           );
           const nextOption = options[index + 1] || options[0];
           setSelectedOption(nextOption);
@@ -131,7 +131,7 @@ export const AutocompleteAddress = ({
         e.preventDefault();
         if (options.length) {
           const index = options.findIndex(
-            (option) => option.label === selectedOption?.label,
+            (option) => option.id === selectedOption?.id,
           );
           const nextOption = options[index - 1] || options[options.length - 1];
           setSelectedOption(nextOption);
@@ -200,7 +200,7 @@ export const AutocompleteAddress = ({
           className="absolute z-10 max-h-[500px] list-none overflow-y-auto top-[75px] whitespace-normal w-full bg-white border-[1px] border-gray-300 px-4 py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
         >
           {options.map((option) => {
-            const isSelected = selectedOption?.label === option.label;
+            const isSelected = selectedOption?.id === option.id;
             return (
               <div
                 key={option.label}
