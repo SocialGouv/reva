@@ -201,6 +201,10 @@ export const AutocompleteAddress = ({
         >
           {options.map((option) => {
             const isSelected = selectedOption?.id === option.id;
+            let label = option.label;
+            if (option.type === "municipality") {
+              label = `${option.label} (${option.zip})`;
+            }
             return (
               <div
                 key={option.label}
@@ -210,7 +214,7 @@ export const AutocompleteAddress = ({
                 }`}
                 onMouseOver={() => setSelectedOption(option)}
               >
-                {option.label}
+                {label}
               </div>
             );
           })}
