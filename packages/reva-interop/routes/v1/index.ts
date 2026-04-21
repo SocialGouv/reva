@@ -143,7 +143,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
 
   await fastify.register(swaggerUi, {
     initOAuth: {
-      clientId: "reva-admin",
+      clientId: process.env.OAUTH_CLIENT_ID,
       realm: "reva",
       scopes: "openid profile roles",
     },

@@ -27,6 +27,15 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     },
     async (request) => {
       const requestBody = request.body;
+
+      if (!process.env.OAUTH_CLIENT_ID) {
+        throw new Error("OAUTH_CLIENT_ID is not set");
+      }
+
+      if (requestBody.client_id !== process.env.OAUTH_CLIENT_ID) {
+        throw new Error("Invalid client_id");
+      }
+
       const tokenReply = await fetch(
         `${process.env.KEYCLOAK_ADMIN_URL}/realms/${process.env.KEYCLOAK_REVA_ADMIN_REALM}/protocol/openid-connect/token`,
         {
@@ -45,6 +54,11 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       const tokenJson = await tokenReply.json();
       const idToken = tokenJson.id_token;
       const decodedIdToken = jose.decodeJwt(idToken);
+
+      if (decodedIdToken.aud !== process.env.OAUTH_CLIENT_ID) {
+        throw new Error("Invalid audience");
+      }
+
       const keycloakId = decodedIdToken.sub;
       if (!keycloakId) {
         throw new Error("keycloakId has not been set");
