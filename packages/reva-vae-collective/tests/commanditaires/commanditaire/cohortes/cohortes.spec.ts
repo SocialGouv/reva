@@ -65,17 +65,6 @@ test.describe("Commanditaire with multiple cohortes", () => {
                       nom: "maCohorte",
                       status: "BROUILLON",
                       createdAt: 1752593034738,
-
-                      certificationCohorteVaeCollectives: [
-                        {
-                          id: "25004fd9-efdc-4746-9bbd-ffd22565ab2c",
-                          certification: {
-                            id: "dcee4c57-e7fe-47a9-bdb2-ec479880cfdf",
-                            label:
-                              "Titre à finalité professionnelle Conducteur accompagnateur de personnes à mobilité réduite - CAPMR",
-                          },
-                        },
-                      ],
                       organism: {
                         id: "0837631c-797f-435c-bda9-b41e75117543",
                         label: "Demain",
@@ -86,7 +75,6 @@ test.describe("Commanditaire with multiple cohortes", () => {
                       nom: "maDeuxiemeCohorte",
                       status: "PUBLIE",
                       createdAt: 1752593034738,
-                      certificationCohorteVaeCollectives: [],
                     },
                   ],
                   info: {
@@ -121,11 +109,6 @@ test.describe("Commanditaire with multiple cohortes", () => {
     await expect(
       page.getByTestId("cohorte-card").first().getByRole("heading"),
     ).toHaveText("maCohorte");
-    await expect(
-      page.getByTestId("cohorte-card").first().getByTestId("certification"),
-    ).toHaveText(
-      "Titre à finalité professionnelle Conducteur accompagnateur de personnes à mobilité réduite - CAPMR",
-    );
     await expect(
       page.getByTestId("cohorte-card").first().getByTestId("organism"),
     ).toHaveText("Demain");
