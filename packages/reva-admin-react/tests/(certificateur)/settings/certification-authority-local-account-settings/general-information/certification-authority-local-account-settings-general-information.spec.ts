@@ -80,15 +80,21 @@ test.describe("local account settings general information page", () => {
   }) => {
     await gotoGeneralInformationPage(page);
     const pageRoot = page.getByTestId("general-information-local-account-page");
-    await expect(
-      pageRoot.getByTestId("account-lastname-input").locator("input"),
-    ).toHaveValue("doe");
-    await expect(
-      pageRoot.getByTestId("account-firstname-input").locator("input"),
-    ).toHaveValue("jane");
-    await expect(
-      pageRoot.getByTestId("account-email-input").locator("input"),
-    ).toHaveValue("monemail@example.com");
+    const accountLastnameInput = pageRoot
+      .getByTestId("account-lastname-input")
+      .locator("input");
+    await expect(accountLastnameInput).toHaveValue("doe");
+    await expect(accountLastnameInput).toBeDisabled();
+    const accountFirstnameInput = pageRoot
+      .getByTestId("account-firstname-input")
+      .locator("input");
+    await expect(accountFirstnameInput).toHaveValue("jane");
+    await expect(accountFirstnameInput).toBeDisabled();
+    const accountEmailInput = pageRoot
+      .getByTestId("account-email-input")
+      .locator("input");
+    await expect(accountEmailInput).toHaveValue("monemail@example.com");
+    await expect(accountEmailInput).toBeDisabled();
     await expect(
       pageRoot.getByTestId("contact-full-name-input").locator("input"),
     ).toHaveValue("contact full name");
