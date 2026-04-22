@@ -185,9 +185,9 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
           id="content"
           className={`flex flex-col flex-1 ${bgClass()}`}
         >
-          <div className="fr-container flex flex-col flex-1">
+          <div className="fr-container px-4 md:!px-0 flex flex-col flex-1">
             <div
-              className={`fr-container flex-1 px-1 mt-4 md:mt-8 md:px-6 md:pb-8 fr-grid-row mb-12 ${childrenWhiteCardLayoutClassname}`}
+              className={`flex-1 px-1 mt-4 md:mt-8 md:px-6 md:pb-8 fr-grid-row mb-12 ${childrenWhiteCardLayoutClassname}`}
             >
               {authenticated && children}
             </div>
