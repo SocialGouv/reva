@@ -18,6 +18,9 @@ const getCertificationAuthorityLocalAccount = graphql(`
           lastname
           email
         }
+        certificationAuthority {
+          label
+        }
       }
     }
   }
