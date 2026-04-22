@@ -53,7 +53,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
   return (
     <form className={className || ""} onSubmit={handleFormSubmit}>
       <h2>Informations liées au compte local</h2>
-      <p>
+      <p className="fr-text--lead">
         Ces informations sont strictement confidentielles et ne seront pas
         partagées aux autres usagers de la plateforme.
       </p>
@@ -87,7 +87,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
         />
       </div>
       <h2 className="mt-8">Contact référent </h2>
-      <p>
+      <p className="fr-text--lead">
         Le contact référent est le service administratif pour le suivi des
         dossiers. Ses coordonnées seront transmises aux candidats et aux AAP à
         des étapes clés du parcours VAE (faisabilité, validation, jury) pour
