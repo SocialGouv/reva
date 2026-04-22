@@ -30,6 +30,9 @@ const localAccountForGeneralInfo = graphQLResolver({
         lastname: "doe",
         email: "monemail@example.com",
       },
+      certificationAuthority: {
+        label: "DREETS CENTRE VAL DE LOIRE",
+      },
     },
   },
 });
@@ -73,6 +76,30 @@ test.describe("local account settings general information page", () => {
       ],
       { scope: "test" },
     ],
+  });
+
+  test("when i access the general information page - display the informations générales title and read-only certification authority label", async ({
+    page,
+  }) => {
+    await gotoGeneralInformationPage(page);
+    const pageRoot = page.getByTestId("general-information-local-account-page");
+    await expect(
+      pageRoot.getByRole("heading", {
+        level: 1,
+        name: "Informations générales",
+      }),
+    ).toBeVisible();
+    await expect(
+      pageRoot.getByRole("note", {
+        name: "Informations sur les champs grisés",
+      }),
+    ).toBeVisible();
+    const certificationAuthorityInput =
+      pageRoot.getByLabel("Gestionnaire de candidatures");
+    await expect(certificationAuthorityInput).toHaveValue(
+      "DREETS CENTRE VAL DE LOIRE",
+    );
+    await expect(certificationAuthorityInput).toBeDisabled();
   });
 
   test("when i access the general information page - display the correct form default values", async ({
