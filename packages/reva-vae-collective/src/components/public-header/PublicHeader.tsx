@@ -18,6 +18,6 @@ export const PublicHeader = () => (
       imgUrl: "/vae-collective/images/fvae_logo.svg",
       orientation: "horizontal",
     }}
-    classes={{ operator: "min-w-[9.0625rem] min-h-[90px]" }}
+    classes={{ operator: "min-w-[128px] min-h-[72px]" }}
   />
 );

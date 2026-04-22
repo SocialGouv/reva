@@ -119,7 +119,7 @@ export const Header = (props: { className?: string }) => {
         orientation: "horizontal",
       }}
       serviceTitle="Le service public de la VAE"
-      classes={{ operator: "min-w-[9.0625rem] min-h-[90px]" }}
+      classes={{ operator: "min-w-[128px] min-h-[72px]" }}
       quickAccessItems={
         isClient ? [<ConnectionDropdown key="connection" />] : []
       }
