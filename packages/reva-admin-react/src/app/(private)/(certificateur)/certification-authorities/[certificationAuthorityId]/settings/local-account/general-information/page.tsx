@@ -42,6 +42,7 @@ export default function CertificationAuthorityLocalAccountGeneralInformationPage
   return (
     <div data-testid="general-information-local-account-page">
       <Breadcrumb
+        className="mt-2 mb-4"
         segments={[
           {
             label: "Paramètres",
