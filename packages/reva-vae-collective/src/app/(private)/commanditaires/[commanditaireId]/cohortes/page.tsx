@@ -46,13 +46,6 @@ const loadCommanditaireAndCohortes = async ({
                 nom
                 status
                 createdAt
-                certificationCohorteVaeCollectives {
-                  id
-                  certification {
-                    id
-                    label
-                  }
-                }
                 organism {
                   id
                   label
@@ -123,7 +116,6 @@ export default async function CohortesPage({
 
       <ul className="flex flex-col gap-4 list-none px-0 my-0">
         {commanditaire?.cohorteVaeCollectives?.rows?.map((cohorte) => {
-          const certification = cohorte.certificationCohorteVaeCollectives[0];
           const organism = cohorte.organism;
           return (
             <li key={cohorte.id}>
@@ -132,6 +124,7 @@ export default async function CohortesPage({
                 enlargeLink
                 size="small"
                 title={cohorte.nom}
+                classes={{ end: "mt-3" }}
                 start={
                   <>
                     {cohorte.status === "BROUILLON" && (
@@ -158,14 +151,8 @@ export default async function CohortesPage({
                 }
                 desc={
                   <>
-                    {certification && (
-                      <span className="text-sm" data-testid="certification">
-                        {certification.certification.label}
-                      </span>
-                    )}
                     {organism && (
                       <>
-                        <br />
                         <span className="text-sm" data-testid="organism">
                           {organism.nomPublic || organism.label}
                         </span>
