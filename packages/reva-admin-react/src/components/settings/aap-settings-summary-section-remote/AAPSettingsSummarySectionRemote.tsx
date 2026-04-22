@@ -1,6 +1,6 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 
-import { getRemoteZoneLabel } from "@/app/(aap)/agencies-settings-v3/_components/getRemoteZoneLabel";
+import { getRemoteZoneLabel } from "@/app/(private)/(aap)/agencies-settings-v3/_components/getRemoteZoneLabel";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 
 import { RemoteZone } from "@/graphql/generated/graphql";

@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { deburr } from "lodash";
 import Image from "next/image";
 
-import { CertificationCard } from "@/app/(aap)/candidacies/[candidacyId]/_components/CertificationCard";
+import { CertificationCard } from "@/app/(private)/(aap)/candidacies/[candidacyId]/_components/CertificationCard";
 
 import {
   Candidacy,
