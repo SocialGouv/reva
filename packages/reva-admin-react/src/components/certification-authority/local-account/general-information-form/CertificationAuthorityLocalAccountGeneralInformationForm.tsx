@@ -104,6 +104,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
         />
         <Input
           data-testid="contact-email-input"
+          className="md:mb-0"
           label="Adresse électronique"
           nativeInputProps={{
             autoComplete: "email",
@@ -115,7 +116,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
         />
         <Input
           data-testid="contact-phone-input"
-          className="md:max-w-[280px] md:mt-6"
+          className="md:max-w-[280px] md:self-end"
           label="Téléphone (optionnel)"
           nativeInputProps={{
             autoComplete: "phone",
