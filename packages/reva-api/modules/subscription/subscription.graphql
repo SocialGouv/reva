@@ -21,6 +21,7 @@ enum SubscriptionRequestStatus {
 type SubscriptionRequest {
   id: ID!
   companySiret: String!
+  companySiretAlreadyUsed: Boolean
   companyLegalStatus: LegalStatus!
   companyName: String!
   managerFirstname: String!
@@ -28,6 +29,7 @@ type SubscriptionRequest {
   accountFirstname: String!
   accountLastname: String!
   accountEmail: String!
+  accountEmailAlreadyUsed: Boolean
   accountPhoneNumber: String!
   companyWebsite: String!
   delegataire: Boolean!
@@ -41,6 +43,7 @@ type SubscriptionRequest {
   createdAt: Timestamp!
   etablissement: Etablissement
 }
+
 type SubscriptionRequestsPaginated {
   rows: [SubscriptionRequest!]!
   info: PaginationInfo!

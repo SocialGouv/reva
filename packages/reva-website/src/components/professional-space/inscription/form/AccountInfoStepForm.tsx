@@ -1,7 +1,7 @@
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import Notice from "@codegouvfr/react-dsfr/Notice";
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
@@ -98,9 +98,9 @@ export const AccountInfoStepForm = () => {
                 structures et/ou lieux d’accueil, ainsi que les domaines et
                 niveaux de certification depuis son compte.
               </legend>
-              <div className="mb-6 md:mb-0 md:grid grid-cols-1 md:grid-cols-2 gap-x-8">
+              <div className="mb-6 md:mb-0 md:grid grid-cols-1 md:grid-cols-3 gap-x-8">
                 <Checkbox
-                  className="col-span-2"
+                  className="col-span-3"
                   options={[
                     {
                       label:
@@ -110,6 +110,7 @@ export const AccountInfoStepForm = () => {
                   ]}
                 />
                 <Input
+                  className="col-span-1"
                   label="Nom"
                   state={errors.accountLastname ? "error" : "default"}
                   stateRelatedMessage={errors.accountLastname?.message}
@@ -120,6 +121,7 @@ export const AccountInfoStepForm = () => {
                   }}
                 />
                 <Input
+                  className="col-span-2"
                   label="Prénom(s)"
                   state={errors.accountFirstname ? "error" : "default"}
                   stateRelatedMessage={errors.accountFirstname?.message}
@@ -129,7 +131,20 @@ export const AccountInfoStepForm = () => {
                     autoComplete: "given-name",
                   }}
                 />
-                <div className="flex flex-col">
+
+                <Input
+                  className="col-span-1"
+                  label="Numéro de téléphone"
+                  state={errors.accountPhoneNumber ? "error" : "default"}
+                  stateRelatedMessage={errors.accountPhoneNumber?.message}
+                  nativeInputProps={{
+                    ...register("accountPhoneNumber"),
+                    autoComplete: "phone",
+                    type: "phone",
+                  }}
+                />
+
+                <div className="col-span-2 flex flex-col">
                   <Input
                     label="Adresse électronique"
                     state={errors.accountEmail ? "error" : "default"}
@@ -141,36 +156,34 @@ export const AccountInfoStepForm = () => {
                       spellCheck: "false",
                     }}
                   />
-                  <Notice
-                    className="mb-4"
-                    title={
+
+                  <Alert
+                    className="self-start w-full"
+                    severity="info"
+                    title=""
+                    description={
                       <>
                         L’adresse électronique vous permettra de vous connecter
                         à la plateforme. C’est sur celle-ci que vous recevrez la
                         confirmation de la validation de votre compte
                         administrateur.
-                        <br /> <br />
-                        <span className="text-lg">⚠</span> Attention : Vous ne
-                        pouvez pas renseigner une adresse électronique déjà
-                        utilisée sur France VAE.
+                        <br />
+                        <br />
+                        <span className="font-bold">
+                          <span
+                            className="fr-icon-warning-fill fr-icon--sm"
+                            aria-hidden="true"
+                          ></span>{" "}
+                          Attention : Vous ne pouvez pas renseigner une adresse
+                          électronique déjà utilisée sur France VAE.
+                        </span>
                       </>
                     }
                   />
                 </div>
-                <Input
-                  label="Numéro de téléphone"
-                  state={errors.accountPhoneNumber ? "error" : "default"}
-                  stateRelatedMessage={errors.accountPhoneNumber?.message}
-                  className="self-start"
-                  nativeInputProps={{
-                    ...register("accountPhoneNumber"),
-                    autoComplete: "phone",
-                    type: "phone",
-                  }}
-                />
               </div>
             </fieldset>
-            <div className="h-full flex gap-2 items-end justify-end">
+            <div className="mt-16 flex gap-2 items-end justify-end">
               <Button type="reset" priority="tertiary no outline">
                 Réinitialiser
               </Button>

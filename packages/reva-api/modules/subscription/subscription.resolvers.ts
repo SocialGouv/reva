@@ -1,6 +1,8 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { buildAAPAuditLogUserInfoFromContext } from "../aap-log/features/logAAPAuditEvent";
+import { isAccountEmailAlreadyUsed } from "../account/features/isAccountEmailAlreadyUsed";
+import { isCompanySiretAlreadyUsed } from "../organism/features/isCompanySiretAlreadyUsed";
 import { findEtablissement } from "../referential/features/entreprise";
 
 import { createSubscriptionRequest } from "./features/createSubscriptionRequest";
@@ -53,6 +55,14 @@ const unsafeResolvers = {
       findEtablissement({
         siret: companySiret,
       }),
+    companySiretAlreadyUsed: async (
+      { companySiret }: { companySiret: string },
+      _: unknown,
+    ) => isCompanySiretAlreadyUsed({ companySiret }),
+    accountEmailAlreadyUsed: async (
+      { accountEmail }: { accountEmail: string },
+      _: unknown,
+    ) => isAccountEmailAlreadyUsed({ accountEmail }),
   },
   Query: {
     subscription_getSubscriptionRequests: (

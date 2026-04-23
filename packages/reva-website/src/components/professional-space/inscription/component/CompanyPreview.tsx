@@ -30,10 +30,18 @@ interface Props {
 export const CompanyPreview = (props: Props) => {
   const { siret, etablissement } = props;
 
+  const getFormattedSiret = (value: string) => {
+    if (!value) return "";
+
+    return value.replace(/(\d{3})(\d{3})(\d{3})(\d{4})/, "$1 $2 $3 $4");
+  };
+
   return (
     <div className="flex flex-col justify-between">
       <div className="md:block bg-neutral-100 p-6 mb-5">
-        <h2 className="mb-4">Informations liées au SIRET - {siret}</h2>
+        <h2 className="mb-4">
+          Informations liées au SIRET - {getFormattedSiret(siret)}
+        </h2>
 
         {!etablissement && (
           <Alert

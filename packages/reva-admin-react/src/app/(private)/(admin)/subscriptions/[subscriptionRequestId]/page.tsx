@@ -25,10 +25,12 @@ const getSubscriptionRequest = graphql(`
       accountLastname
       accountPhoneNumber
       accountEmail
+      accountEmailAlreadyUsed
       managerFirstname
       managerLastname
       companyWebsite
       companySiret
+      companySiretAlreadyUsed
       companyLegalStatus
       rejectionReason
       internalComment
@@ -72,7 +74,7 @@ const SubscriptionRequestPage = () => {
 
   return (
     subscriptionRequest && (
-      <div className="flex flex-col flex-1 px-8 py-4">
+      <div className="flex flex-col flex-1">
         <h1>{subscriptionRequest.companyName}</h1>
         <FormOptionalFieldsDisclaimer />
         <p>

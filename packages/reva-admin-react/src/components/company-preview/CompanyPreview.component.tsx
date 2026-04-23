@@ -10,6 +10,7 @@ import { useEtablissement } from "./CompanyPreview.hooks";
 
 interface CompanyProps {
   companySiret: string;
+  companySiretAlreadyUsed?: boolean | null;
   companyName: string;
   companyLegalStatus: string;
   companyWebsite?: string | null;
@@ -22,6 +23,7 @@ interface ManagerProps {
 
 interface AccountProps {
   accountEmail: string;
+  accountEmailAlreadyUsed?: boolean | null;
   accountPhoneNumber: string;
   accountFirstname: string;
   accountLastname: string;
@@ -48,11 +50,67 @@ export const CompanyPreview = (props: Props) => {
     company.companySiret,
   );
 
+  const isSiretAlreadyUsed = company.companySiretAlreadyUsed;
+  const isEmailAlreadyUsed = account?.accountEmailAlreadyUsed;
+
+  const getFormattedSiret = (value: string) => {
+    if (!value) return "";
+
+    return value.replace(/(\d{3})(\d{3})(\d{3})(\d{4})/, "$1 $2 $3 $4");
+  };
+
   return (
     <div className={`${className || ""}`}>
+      {isSiretAlreadyUsed && !isEmailAlreadyUsed && (
+        <Alert
+          className="mt-6 mb-12"
+          severity="warning"
+          small
+          description="Le numéro de SIRET renseigné est déjà utilisé pour un autre compte France VAE."
+        />
+      )}
+
+      {isEmailAlreadyUsed && !isSiretAlreadyUsed && (
+        <Alert
+          className="mt-6 mb-12"
+          severity="warning"
+          small
+          description="L’adresse électronique renseignée est déjà utilisée pour un autre compte France VAE."
+        />
+      )}
+
+      {isEmailAlreadyUsed && isSiretAlreadyUsed && (
+        <Alert
+          className="mt-6 mb-12"
+          severity="warning"
+          small
+          description={
+            <ul>
+              <li>
+                Le numéro de SIRET renseigné est déjà utilisé pour un autre
+                compte France VAE.
+              </li>
+              <li>
+                L’adresse électronique renseignée est déjà utilisée pour un
+                autre compte France VAE.
+              </li>
+            </ul>
+          }
+        />
+      )}
+
+      <div className="flex items-center gap-6 border-t border-b border-neutral-300 mt-6 mb-8 py-2 px-4 text-dsfrGray-labelGrey">
+        <div>Numéro de SIRET</div>
+        {isSiretAlreadyUsed && (
+          <Badge severity="warning">déjà enregistrée sur France VAE</Badge>
+        )}
+        <div className="font-bold flex-1 text-right">
+          {getFormattedSiret(company.companySiret)}
+        </div>
+      </div>
       <GrayCard className="col-span-2">
         <h2 className="col-span-3">
-          Informations liées au SIRET {company.companySiret}
+          Informations liées au SIRET {getFormattedSiret(company.companySiret)}
         </h2>
 
         {!isLoading && !isFetching && !etablissement && (
@@ -150,21 +208,33 @@ export const CompanyPreview = (props: Props) => {
       </GrayCard>
 
       {account && (
-        <GrayCard className="mt-8 col-span-2">
+        <div className="mt-8">
           <h2>Administrateur du compte France VAE</h2>
-          <div className="grid md:grid-cols-2">
-            <Info title="Nom">
+
+          <div className="flex items-center gap-6 border-b border-neutral-300 py-2 px-4 text-dsfrGray-labelGrey">
+            <div>Nom</div>
+            <div className="font-bold flex-1 text-right">
               {account.accountFirstname} {account.accountLastname}
-            </Info>
-            <Info title="Adresse électronique" className="break-words">
-              {account.accountEmail}
-            </Info>
-            <Info title="Téléphone">{account.accountPhoneNumber}</Info>
-            <Info title="Site internet de la structure" className="break-words">
-              {company.companyWebsite || "Non spécifié"}
-            </Info>
+            </div>
           </div>
-        </GrayCard>
+
+          <div className="flex items-center gap-6 border-b border-neutral-300 py-2 px-4 text-dsfrGray-labelGrey">
+            <div>Adresse électronique</div>
+            {isEmailAlreadyUsed && (
+              <Badge severity="warning">déjà enregistrée sur France VAE</Badge>
+            )}
+            <div className="font-bold flex-1 text-right">
+              {account.accountEmail}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-6 border-b border-neutral-300 py-2 px-4 text-dsfrGray-labelGrey">
+            <div>Site internet de la structure</div>
+            <div className="font-bold flex-1 text-right">
+              {company.companyWebsite || "Non spécifié"}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

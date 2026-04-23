@@ -131,6 +131,12 @@ const GeneralInformationPage = () => {
     !!etablissement &&
     !etablissement.dateFermeture;
 
+  const getFormattedSiret = (value: string) => {
+    if (!value) return "";
+
+    return value.replace(/(\d{3})(\d{3})(\d{3})(\d{4})/, "$1 $2 $3 $4");
+  };
+
   return (
     <div className="flex flex-col w-full">
       <h1>Informations générales</h1>
@@ -186,7 +192,7 @@ const GeneralInformationPage = () => {
         {maisonMereAAPSuccess && maisonMereAAP && (
           <div className="list-none flex flex-col gap-6 pl-0 my-1">
             <GrayCard className="min-h-[220px]">
-              <h2>Informations liées au SIRET - {siret}</h2>
+              <h2>Informations liées au SIRET - {getFormattedSiret(siret)}</h2>
               {etablissement && (
                 <>
                   <CompanyBadges
