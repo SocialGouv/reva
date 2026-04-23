@@ -459,7 +459,21 @@ export const ResultatByBlocks = () => {
             <Checkbox
               legend="Quels blocs de compétence ont été validés pour ce jury ?"
               small
-              className="m-0 p-0 mb-4"
+              hintText={
+                <Link
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    feasibilityCompetenceBlocksModal.open();
+                  }}
+                  className="fr-link text-xs"
+                >
+                  Voir les détails de la recevabilité du candidat sur cette
+                  certification{" "}
+                  <i className="fr-icon-arrow-right-line fr-icon--xs" />
+                </Link>
+              }
+              className="m-0 mb-4"
               classes={{
                 inputGroup: "-my-2",
               }}

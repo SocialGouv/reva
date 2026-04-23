@@ -29,7 +29,7 @@ const juryResultLabels: { [key in JuryResult]: string } = {
   PARTIAL_SUCCESS_PENDING_CONFIRMATION:
     "Réussite partielle (sous reserve de confirmation par un certificateur)",
   FAILURE: "Non validation",
-  CANDIDATE_EXCUSED: "Non présent le jour du jury",
+  CANDIDATE_EXCUSED: "Excusé sur justificatif",
   CANDIDATE_ABSENT: "Non présent le jour du jury",
 };
 

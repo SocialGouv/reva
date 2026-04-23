@@ -12,7 +12,7 @@ export type ResultInconsistencyType =
 
 type Props = {
   inconsistencyType: ResultInconsistencyType;
-  selectedBlocks: { id: string; label: string }[];
+  selectedBlocks: { id: string; code?: string | null; label: string }[];
 };
 
 export const ResultInconsistencyErrorModal = ({
@@ -26,8 +26,14 @@ export const ResultInconsistencyErrorModal = ({
           <>
             <p>
               Vous avez coché tous les blocs présentés lors de ce passage (
-              <em>{selectedBlocks.map((block) => block.label).join(", ")}</em>)
-              mais sélectionné "Certains blocs visés ont été validés pour ce
+              <em>
+                {selectedBlocks
+                  .map((block) =>
+                    block.code ? `${block.code} - ${block.label}` : block.label,
+                  )
+                  .join(", ")}
+              </em>
+              ) mais sélectionné "Certains blocs visés ont été validés pour ce
               jury".
             </p>
             <p>
