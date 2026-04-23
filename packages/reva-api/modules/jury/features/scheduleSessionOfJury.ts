@@ -95,6 +95,17 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     );
   }
 
+  const dossierDeValidationSentAt =
+    dossierDeValidation.dossierDeValidationSentAt;
+  if (
+    !dossierDeValidationSentAt ||
+    isBefore(dateOfSession, dossierDeValidationSentAt)
+  ) {
+    throw new Error(
+      "La date du jury doit être après la date d'envoi du dossier de validation",
+    );
+  }
+
   const convocationFileId = uuidV4();
   const convocationFilePath = `candidacies/${candidacyId}/jury/${convocationFileId}`;
 
