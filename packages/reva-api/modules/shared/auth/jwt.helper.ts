@@ -20,10 +20,9 @@ export const generateJwt = (data: unknown, expiresIn: number = 15 * 60) => {
 
 export const getJWTContent = (token: string) => {
   try {
-    const tokenData = jwt.verify(
-      token,
-      process.env.JWT_PRIVATE_KEY!,
-    ) as JwtPayload;
+    const tokenData = jwt.verify(token, process.env.JWT_PRIVATE_KEY!, {
+      algorithms: ["HS256"],
+    }) as JwtPayload;
     const dataBytes = CryptoJS.AES.decrypt(
       tokenData.data,
       process.env.DATA_ENCRYPT_PRIVATE_KEY!,
