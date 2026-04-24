@@ -17,6 +17,7 @@ export default function CertificationSection({
   certificationAuthorityStructureLabel,
   certificationCompetenceBlocs,
   blocsDeCompetencesDFF,
+  accordionsDefaultExpanded = false,
 }: {
   option?: string | null;
   firstForeignLanguage?: string | null;
@@ -26,6 +27,7 @@ export default function CertificationSection({
   certificationAuthorityStructureLabel?: string | null;
   certificationCompetenceBlocs?: CertificationCompetenceBloc[];
   blocsDeCompetencesDFF: DffCertificationCompetenceBloc[];
+  accordionsDefaultExpanded?: boolean;
 }) {
   const prequisitesByStatus = useMemo(() => {
     return {
@@ -130,7 +132,7 @@ export default function CertificationSection({
         <div className="mt-6">
           <Accordion
             label="Choix des blocs de compétences"
-            defaultExpanded={false}
+            defaultExpanded={accordionsDefaultExpanded}
           >
             <div className="flex flex-col gap-4">
               {competenceBlocs.map((b) => {
@@ -165,7 +167,7 @@ export default function CertificationSection({
           </p>
         )}
         {!!prequisitesByStatus?.acquired?.length && (
-          <Accordion label="Oui" defaultExpanded={false}>
+          <Accordion label="Oui" defaultExpanded={accordionsDefaultExpanded}>
             <ul>
               {prequisitesByStatus?.acquired?.map((prerequisite) => (
                 <li key={prerequisite?.id}>{prerequisite?.label}</li>
@@ -174,7 +176,7 @@ export default function CertificationSection({
           </Accordion>
         )}
         {!!prequisitesByStatus?.inProgress?.length && (
-          <Accordion label="Non" defaultExpanded={false}>
+          <Accordion label="Non" defaultExpanded={accordionsDefaultExpanded}>
             <ul>
               {prequisitesByStatus?.inProgress?.map((prerequisite) => (
                 <li key={prerequisite?.id}>{prerequisite?.label}</li>
@@ -183,7 +185,10 @@ export default function CertificationSection({
           </Accordion>
         )}
         {!!prequisitesByStatus?.recommended?.length && (
-          <Accordion label="Préconisés" defaultExpanded={false}>
+          <Accordion
+            label="Préconisés"
+            defaultExpanded={accordionsDefaultExpanded}
+          >
             <ul>
               {prequisitesByStatus?.recommended?.map((prerequisite) => (
                 <li key={prerequisite?.id}>{prerequisite?.label}</li>

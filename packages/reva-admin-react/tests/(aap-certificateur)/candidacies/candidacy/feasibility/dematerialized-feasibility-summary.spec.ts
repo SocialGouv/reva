@@ -803,3 +803,92 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
     }
   });
 });
+
+// Accordion expansion tests only apply to the certificateur view
+test.describe("certificateur summary – accordion default expansion", () => {
+  const { certificateurCommonHandlers, certificateurCommonWait } =
+    getCertificateurCommonHandlers({
+      candidacyId: CANDIDACY_ID,
+      candidateFirstname: "Camille",
+      candidateLastname: "Durand",
+    });
+
+  const makeFeasibilityHandler = (decision: string) =>
+    fvae.query(
+      "feasibilityGetActiveFeasibilityByCandidacyId",
+      graphQLResolver({
+        feasibility_getActiveFeasibilityByCandidacyId: {
+          ...certificateurFeasibilitySummary,
+          decision,
+        },
+      }),
+    );
+
+  const candidacyFormatHandler = fvae.query(
+    "getCandidacyWithFeasibilityQuery",
+    graphQLResolver({
+      getCandidacyById: {
+        id: CANDIDACY_ID,
+        feasibilityFormat: "DEMATERIALIZED",
+      },
+    }),
+  );
+
+  for (const decision of ["PENDING", "COMPLETE"]) {
+    test(`accordions are expanded by default when decision is ${decision}`, async ({
+      page,
+      msw,
+    }) => {
+      msw.use(
+        ...certificateurCommonHandlers,
+        candidacyFormatHandler,
+        makeFeasibilityHandler(decision),
+      );
+
+      await login({ role: "certificateur", page });
+      await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/feasibility/`);
+      await Promise.all([
+        certificateurCommonWait(page),
+        waitGraphQL(page, "getCandidacyWithFeasibilityQuery"),
+        waitGraphQL(page, "feasibilityGetActiveFeasibilityByCandidacyId"),
+      ]);
+
+      const accordion = page
+        .getByTestId("dff-summary")
+        .getByTestId("experience-accordion-0");
+      await expect(accordion.getByRole("button")).toHaveAttribute(
+        "aria-expanded",
+        "true",
+      );
+    });
+  }
+
+  for (const decision of ["ADMISSIBLE", "REJECTED"]) {
+    test(`accordions are collapsed by default when decision is ${decision}`, async ({
+      page,
+      msw,
+    }) => {
+      msw.use(
+        ...certificateurCommonHandlers,
+        candidacyFormatHandler,
+        makeFeasibilityHandler(decision),
+      );
+
+      await login({ role: "certificateur", page });
+      await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/feasibility/`);
+      await Promise.all([
+        certificateurCommonWait(page),
+        waitGraphQL(page, "getCandidacyWithFeasibilityQuery"),
+        waitGraphQL(page, "feasibilityGetActiveFeasibilityByCandidacyId"),
+      ]);
+
+      const accordion = page
+        .getByTestId("dff-summary")
+        .getByTestId("experience-accordion-0");
+      await expect(accordion.getByRole("button")).toHaveAttribute(
+        "aria-expanded",
+        "false",
+      );
+    });
+  }
+});

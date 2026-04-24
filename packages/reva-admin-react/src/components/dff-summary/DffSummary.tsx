@@ -72,11 +72,13 @@ export function DffSummary({
   candidacy,
   FeasibilityBanner,
   displayGiveYourDecisionSubtitle = false,
+  accordionsDefaultExpanded = false,
 }: {
   dematerializedFeasibilityFile?: DematerializedFeasibilityFile;
   candidacy: Candidacy;
   FeasibilityBanner?: React.ReactNode;
   displayGiveYourDecisionSubtitle?: boolean;
+  accordionsDefaultExpanded?: boolean;
 }) {
   if (!dematerializedFeasibilityFile || !candidacy) {
     return null;
@@ -178,6 +180,7 @@ export function DffSummary({
             certificationAuthorityStructureLabel={
               candidacy.certification?.certificationAuthorityStructure?.label
             }
+            accordionsDefaultExpanded={accordionsDefaultExpanded}
           />
         </div>
         <div className="border border-gray-200 p-10">
@@ -204,6 +207,7 @@ export function DffSummary({
             blocsDeCompetences={blocsDeCompetences}
             certificationCompetenceDetails={certificationCompetenceDetails}
             isEligibilityRequirementPartial={isEligibilityRequirementPartial}
+            accordionsDefaultExpanded={accordionsDefaultExpanded}
           />
         </div>
 

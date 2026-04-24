@@ -143,6 +143,14 @@ export const DematerializedFeasibility = () => {
       }`
     : "";
 
+  const isFeasibilityDecisionMade =
+    feasibility?.decision === "ADMISSIBLE" ||
+    feasibility?.decision === "REJECTED";
+
+  const dffSummaryAccordionsDefaultExpanded = !isFeasibilityDecisionMade;
+
+  console.log({ dffSummaryAccordionsDefaultExpanded });
+
   return (
     <div
       data-testid={`feasibility-page-dematerialized-${feasibility?.decision?.toLowerCase() || "pending"}`}
@@ -177,6 +185,7 @@ export const DematerializedFeasibility = () => {
           />
         }
         displayGiveYourDecisionSubtitle
+        accordionsDefaultExpanded={dffSummaryAccordionsDefaultExpanded}
       />
 
       {(feasibility?.certificationAuthority || organism) && (

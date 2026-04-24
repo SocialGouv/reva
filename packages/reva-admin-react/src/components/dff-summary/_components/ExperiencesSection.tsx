@@ -14,11 +14,13 @@ export default function ExperiencesSection({
   blocsDeCompetences,
   certificationCompetenceDetails,
   isEligibilityRequirementPartial,
+  accordionsDefaultExpanded = false,
 }: {
   experiences: Experience[];
   blocsDeCompetences: DffCertificationCompetenceBloc[];
   certificationCompetenceDetails: CertificationCompetenceDetails[];
   isEligibilityRequirementPartial: boolean;
+  accordionsDefaultExpanded?: boolean;
 }) {
   const durationLabel = {
     betweenOneAndThreeYears: "entre 1 et 3 ans",
@@ -37,7 +39,7 @@ export default function ExperiencesSection({
             <Accordion
               key={experience.id}
               label={`Expérience ${index + 1} - ${experience.title}`}
-              defaultExpanded={false}
+              defaultExpanded={accordionsDefaultExpanded}
               data-testid={`experience-accordion-${index}`}
             >
               <p className="mb-2">
@@ -60,7 +62,7 @@ export default function ExperiencesSection({
             {blocsDeCompetences.map((bc) => (
               <CertificationCompetenceAccordion
                 key={bc.certificationCompetenceBloc.id}
-                defaultExpanded={false}
+                defaultExpanded={accordionsDefaultExpanded}
                 competenceBloc={bc.certificationCompetenceBloc}
                 competenceBlocText={bc.text}
                 competenceDetails={certificationCompetenceDetails}
