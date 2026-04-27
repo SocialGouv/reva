@@ -10,3 +10,11 @@ export const BACKEND_BASE_URL = isDevelopment
 export const CANDIDATE_BASE_URL = isDevelopment
   ? "http://localhost:3004/candidat"
   : BASE_URL + "/candidat";
+
+export const ADMIN_BASE_URL = isDevelopment
+  ? "http://localhost:3003/admin2"
+  : BASE_URL + "/admin2";
+
+export const VAE_COLLECTIVE_BASE_URL = isDevelopment
+  ? "http://localhost:3005/vae-collective"
+  : BASE_URL + "/vae-collective";
