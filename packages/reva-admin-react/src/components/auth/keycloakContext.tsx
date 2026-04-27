@@ -48,7 +48,6 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
     if (!keycloakInstance || !keycloakInstance.authenticated) return;
 
     removeTokens();
-    setTokens(undefined);
 
     const postLogoutRedirectUri =
       redirectUri || window.location.origin + "/admin2/logout-confirmation";
@@ -172,11 +171,11 @@ const initKeycloak = async (params: InitKeycloakParams) => {
     const authenticated = await keycloakInstance.init(config);
     keycloakInstance.onAuthRefreshSuccess = async () => {
       const { token, refreshToken, idToken } = keycloakInstance;
-      if (token && refreshToken && idToken) {
+      if (token && refreshToken) {
         const tokens: Tokens = {
           accessToken: token,
           refreshToken,
-          idToken,
+          idToken: idToken ?? "",
         };
         onUpdateTokens?.(tokens);
       }
@@ -196,11 +195,11 @@ const initKeycloak = async (params: InitKeycloakParams) => {
       await keycloakInstance.updateToken(60);
 
       const { token, refreshToken, idToken } = keycloakInstance;
-      if (token && refreshToken && idToken) {
+      if (token && refreshToken) {
         const tokens: Tokens = {
           accessToken: token,
           refreshToken,
-          idToken,
+          idToken: idToken ?? "",
         };
         onUpdateTokens?.(tokens);
       }
