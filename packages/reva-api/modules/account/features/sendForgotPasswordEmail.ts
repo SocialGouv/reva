@@ -1,8 +1,17 @@
 import { generateJwt } from "@/modules/shared/auth/jwt.helper";
+import {
+  ADMIN_BASE_URL,
+  VAE_COLLECTIVE_BASE_URL,
+} from "@/modules/shared/config/config";
 import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
 import { prismaClient } from "@/prisma/client";
 
 import { ClientApp } from "../account.type";
+
+const RESET_PASSWORD_URL_PATH_BY_CLIENT_APP: Record<ClientApp, string> = {
+  REVA_ADMIN: `${ADMIN_BASE_URL}/reset-password`,
+  REVA_VAE_COLLECTIVE: `${VAE_COLLECTIVE_BASE_URL}/reset-password`,
+};
 
 export const sendForgotPasswordEmail = async ({
   email,
@@ -11,36 +20,23 @@ export const sendForgotPasswordEmail = async ({
   email: string;
   clientApp: ClientApp;
 }) => {
+  const resetPasswordUrlPath = RESET_PASSWORD_URL_PATH_BY_CLIENT_APP[clientApp];
+  if (!resetPasswordUrlPath) throw new Error("Application non reconnue");
+
   const accountExists = !!(await prismaClient.account.count({
-    where: {
-      email: email,
-    },
+    where: { email },
   }));
 
-  if (accountExists) {
-    const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
-    const token = generateJwt({ email, action: "reset-password" }, 4 * 60 * 60);
+  if (!accountExists) return;
 
-    let resetPasswordUrlPath = "";
-    switch (clientApp) {
-      case "REVA_VAE_COLLECTIVE":
-        resetPasswordUrlPath = "/vae-collective/reset-password";
-        break;
-      default:
-        throw new Error("Application non reconnue");
-    }
+  const token = generateJwt({ email, action: "reset-password" }, 4 * 60 * 60);
+  const resetPasswordUrl = `${resetPasswordUrlPath}?resetPasswordToken=${token}`;
 
-    const url = new URL(
-      `${resetPasswordUrlPath}?resetPasswordToken=${token}`,
-      baseUrl,
-    );
-
-    return sendEmailUsingTemplate({
-      to: { email },
-      templateId: 595,
-      params: {
-        resetPasswordUrl: url.toString(),
-      },
-    });
-  }
+  return sendEmailUsingTemplate({
+    to: { email },
+    templateId: 595,
+    params: {
+      resetPasswordUrl,
+    },
+  });
 };
