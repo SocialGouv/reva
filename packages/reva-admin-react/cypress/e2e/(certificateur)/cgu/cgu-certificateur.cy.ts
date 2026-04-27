@@ -270,7 +270,7 @@ describe("CGU Certificateur Page", () => {
         cy.get(SELECTORS.IGNORE_MODAL_IGNORE_BUTTON)
           .should("be.visible")
           .click();
-        cy.get(SELECTORS.CGU_FORM).should("be.visible");
+        cy.url().should("include", "/logout-confirmation");
       });
     });
   });
