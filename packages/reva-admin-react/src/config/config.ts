@@ -15,3 +15,6 @@ export const PRODUKTLY_CLIENT_TOKEN =
 export const MATOMO_URL = process.env.NEXT_PUBLIC_MATOMO_URL;
 export const MATOMO_CONTAINER_NAME =
   process.env.NEXT_PUBLIC_MATOMO_CONTAINER_NAME;
+
+export const WEBSITE_BASE_URL =
+  process.env.NEXT_PUBLIC_WEBSITE_BASE_URL || "https://vae.gouv.fr";
