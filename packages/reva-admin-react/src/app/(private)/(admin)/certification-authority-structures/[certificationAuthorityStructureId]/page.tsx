@@ -8,11 +8,10 @@ import { useParams, useRouter } from "next/navigation";
 import ResponsableReferentielCard from "@/app/(private)/(admin)/certification-authority-structures/[certificationAuthorityStructureId]/_components/responsable-referentiel-card/ResponsableReferentielCard";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SectionCard } from "@/components/card/section-card/SectionCard";
+import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
-
-import { CertificationsSummaryCard } from "../../../../../components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 
 const getCertificationAuthorityStructure = graphql(`
   query getCertificationAuthorityStructureForAdminPage($id: ID!) {
