@@ -1,5 +1,16 @@
-import _Keycloak, { KeycloakInitOptions } from "keycloak-js";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+"use client";
+
+import Keycloak, { KeycloakInitOptions } from "keycloak-js";
+import React, { useContext, useEffect, useState } from "react";
+
+import {
+  KEYCLOAK_CLIENT_ID,
+  KEYCLOAK_REALM,
+  KEYCLOAK_URL,
+} from "@/config/config";
+
+import { AuthLoader } from "./AuthLoader";
+import { Tokens, getTokens, removeTokens, saveTokens } from "./keycloak.utils";
 
 type KeycloakUser = {
   id: string;
@@ -9,121 +20,79 @@ type KeycloakUser = {
 const KeycloakContext = React.createContext<{
   authenticated: boolean;
   accessToken: string | undefined;
-  logout: () => void;
+  resetKeycloakInstance: (tokens: Tokens) => void;
   keycloakUser?: KeycloakUser;
-}>({ authenticated: false, accessToken: "", logout: () => null });
+  logout: ({ redirectUri }?: { redirectUri?: string }) => void;
+} | null>(null);
 
 interface KeycloakProviderProps {
-  keycloakInstance?: _Keycloak;
   children: React.ReactNode;
 }
 
-const ACCESS_TOKEN_EXPIRATION_IN_SECONDS = 60;
+export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
+  const [keycloakInstance, setKeycloakInstance] = useState<Keycloak>(
+    getKeycloakInstance(),
+  );
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
+  const [tokens, setTokens] = useState<Tokens | undefined>();
+  const [ready, setReady] = useState<boolean>(false);
 
-export const KeycloakProvider = ({
-  keycloakInstance,
-  children,
-}: KeycloakProviderProps) => {
-  const [authenticated, setAuthenticated] = useState(false);
-  const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
-  const [, setReady] = useState<boolean>(false);
+  const logout = async ({
+    redirectUri,
+  }: {
+    redirectUri?: string;
+  } = {}) => {
+    if (!keycloakInstance.authenticated) return;
 
-  const logout = () => {
-    setAuthenticated(false);
-    keycloakInstance?.logout({
-      redirectUri: window.location.origin + "/admin2/post-login",
-    });
+    removeTokens();
+    setTokens(undefined);
+
+    const postLogoutRedirectUri =
+      redirectUri || window.location.origin + "/admin2/logout-confirmation";
+
+    // Déconnexion via l'endpoint OpenID Connect avec id_token_hint (RFC 7009)
+    if (keycloakInstance.idToken) {
+      const logoutUrl = new URL(
+        `${keycloakInstance.authServerUrl}/realms/${keycloakInstance.realm}/protocol/openid-connect/logout`,
+      );
+      logoutUrl.searchParams.set("id_token_hint", keycloakInstance.idToken);
+      logoutUrl.searchParams.set(
+        "post_logout_redirect_uri",
+        postLogoutRedirectUri,
+      );
+      logoutUrl.searchParams.set("state", crypto.randomUUID());
+      window.location.href = logoutUrl.toString();
+    } else {
+      await keycloakInstance.logout({ redirectUri: postLogoutRedirectUri });
+    }
   };
 
-  const setTimeoutRefreshToken = useCallback(() => {
-    const delay = (ACCESS_TOKEN_EXPIRATION_IN_SECONDS * 1000) / 2;
+  const resetKeycloakInstance = (tokens: Tokens) => {
+    saveTokens(tokens);
+    setTokens(tokens);
 
-    return setTimeout(async () => {
-      console.log("[KEYCLOAK] Refresh token manually");
-      try {
-        await keycloakInstance?.updateToken(delay);
-      } catch (e) {
-        console.error(e);
-        console.log("error in setTimeoutRefreshToken function. Retrying");
-        await keycloakInstance?.updateToken(5);
-        setTimeoutRefreshToken();
-      }
-    }, delay);
-  }, [keycloakInstance]);
+    setKeycloakInstance(getKeycloakInstance());
+  };
 
   useEffect(() => {
-    const initKeycloak = async () => {
-      if (keycloakInstance) {
-        const config: KeycloakInitOptions = {
-          enableLogging: process.env.NODE_ENV !== "production",
-          onLoad: "check-sso",
-          silentCheckSsoRedirectUri: `${window.location.origin}/admin2/silent-check-sso.html`,
-          checkLoginIframe: true,
-          pkceMethod: "S256",
-        };
-
-        try {
-          const authenticated = await keycloakInstance.init(config);
-          keycloakInstance.onAuthSuccess = async () => {
-            console.log("Auth success");
-          };
-          keycloakInstance.onAuthError = async () => {
-            console.log("Auth error");
-          };
-          keycloakInstance.onAuthLogout = async () => {
-            console.log("Auth logout");
-            setAuthenticated(false);
-            setAccessToken("");
-            keycloakInstance.login({
-              redirectUri: window.location.href,
-            });
-          };
-          keycloakInstance.onAuthRefreshSuccess = async () => {
-            console.log("Token refresh success");
-            setAccessToken(keycloakInstance.token);
-            setTimeoutRefreshToken();
-          };
-          keycloakInstance.onAuthRefreshError = async () => {
-            console.log("Auth refresh error");
-            setAuthenticated(false);
-            setAccessToken("");
-            keycloakInstance.login({
-              redirectUri: window.location.href,
-            });
-          };
-          keycloakInstance.onTokenExpired = async () => {
-            console.log("Token expired");
-            await keycloakInstance.updateToken(
-              ACCESS_TOKEN_EXPIRATION_IN_SECONDS,
-            );
-          };
-
-          if (authenticated) {
-            await keycloakInstance.updateToken(
-              ACCESS_TOKEN_EXPIRATION_IN_SECONDS,
-            );
-            setAuthenticated(authenticated);
-            setAccessToken(keycloakInstance.token);
-            setTimeoutRefreshToken();
-          } else {
-            keycloakInstance.login({
-              redirectUri: window.location.href,
-            });
-          }
-
-          setReady(true);
-        } catch (e) {
-          console.log("Error keycloak", e);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          if ((e as any)?.error === "login_required") {
-            setReady(true);
-          }
-        }
-      }
-    };
-
-    initKeycloak();
-  }, [keycloakInstance, setTimeoutRefreshToken]);
+    initKeycloak({
+      keycloakInstance,
+      onInit: (authenticated) => {
+        setAuthenticated(authenticated);
+        setReady(true);
+      },
+      tokens: getTokens(),
+      onUpdateTokens: (tokens) => {
+        saveTokens(tokens);
+        setTokens(tokens);
+      },
+      onLogout: () => {
+        removeTokens();
+        setTokens(undefined);
+        setAuthenticated(false);
+      },
+    });
+  }, [keycloakInstance]);
 
   const getKeycloakUser = (): KeycloakUser | undefined => {
     if (keycloakInstance?.tokenParsed?.sub) {
@@ -141,12 +110,13 @@ export const KeycloakProvider = ({
     <KeycloakContext.Provider
       value={{
         authenticated,
-        accessToken,
+        accessToken: tokens?.accessToken,
+        resetKeycloakInstance,
         logout,
         keycloakUser: getKeycloakUser(),
       }}
     >
-      {children}
+      {ready ? children : <AuthLoader />}
     </KeycloakContext.Provider>
   );
 };
@@ -154,11 +124,97 @@ export const KeycloakProvider = ({
 export const useKeycloakContext = () => {
   const context = useContext(KeycloakContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error(
       `useKeycloakContext must be used within a KeycloakProvider`,
     );
   }
 
   return context;
+};
+
+const getKeycloakInstance = (): Keycloak => {
+  const keycloakInstance =
+    typeof window !== "undefined"
+      ? new Keycloak({
+          clientId: KEYCLOAK_CLIENT_ID || "",
+          realm: KEYCLOAK_REALM || "",
+          url: KEYCLOAK_URL || "",
+        })
+      : undefined;
+
+  return keycloakInstance!;
+};
+
+type InitKeycloakParams = {
+  keycloakInstance: Keycloak;
+  onInit: (authenticated: boolean) => void;
+  tokens?: Tokens;
+  onUpdateTokens?: (tokens: Tokens) => void;
+  onLogout?: () => void;
+};
+
+const initKeycloak = async (params: InitKeycloakParams) => {
+  const { keycloakInstance, onInit, tokens, onUpdateTokens, onLogout } = params;
+
+  let config: KeycloakInitOptions = {
+    enableLogging: process.env.NODE_ENV !== "production",
+    onLoad: "check-sso",
+    silentCheckSsoRedirectUri: `${window.location.origin}/admin2/silent-check-sso.html`,
+    checkLoginIframe: false,
+    pkceMethod: "S256",
+  };
+
+  if (tokens) {
+    config = {
+      ...config,
+      token: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      idToken: tokens.idToken,
+    };
+  }
+
+  try {
+    const authenticated = await keycloakInstance.init(config);
+    keycloakInstance.onAuthRefreshSuccess = async () => {
+      const { token, refreshToken, idToken } = keycloakInstance;
+      if (token && refreshToken && idToken) {
+        const tokens: Tokens = {
+          accessToken: token,
+          refreshToken,
+          idToken,
+        };
+        onUpdateTokens?.(tokens);
+      }
+    };
+    keycloakInstance.onAuthRefreshError = async () => {
+      onLogout?.();
+    };
+    keycloakInstance.onTokenExpired = async () => {
+      try {
+        await keycloakInstance.updateToken(60);
+      } catch {
+        onLogout?.();
+      }
+    };
+
+    if (authenticated) {
+      await keycloakInstance.updateToken(60);
+
+      const { token, refreshToken, idToken } = keycloakInstance;
+      if (token && refreshToken && idToken) {
+        const tokens: Tokens = {
+          accessToken: token,
+          refreshToken,
+          idToken,
+        };
+        onUpdateTokens?.(tokens);
+      }
+    }
+
+    onInit(authenticated);
+  } catch (e) {
+    console.error("Keycloak init error", e);
+    onInit(false);
+  }
 };
