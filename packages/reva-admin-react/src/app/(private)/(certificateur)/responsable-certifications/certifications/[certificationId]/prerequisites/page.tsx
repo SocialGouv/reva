@@ -4,13 +4,12 @@ import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useParams, useRouter } from "next/navigation";
 
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-
 import {
   PrerequisitesForm,
   PrerequisitesFormData,
-} from "../../../../../../../components/certifications/prerequisites-form/PrerequisitesForm";
+} from "@/components/certifications/prerequisites-form/PrerequisitesForm";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { useUpdatePrerequisitesPage } from "./updatePrerequisites.hook";
 

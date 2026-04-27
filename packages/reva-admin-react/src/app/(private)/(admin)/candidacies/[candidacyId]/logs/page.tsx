@@ -4,13 +4,9 @@ import { useParams } from "next/navigation";
 
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { DayLog, groupLogsByDay } from "@/components/logs/day-log/DayLog";
 
 import { graphql } from "@/graphql/generated";
-
-import {
-  DayLog,
-  groupLogsByDay,
-} from "../../../../../../components/logs/day-log/DayLog";
 
 const getCandidacyLogsQuery = graphql(`
   query getCandidacyLogs($candidacyId: ID!) {
