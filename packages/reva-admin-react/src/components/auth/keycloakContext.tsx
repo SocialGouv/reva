@@ -20,7 +20,6 @@ type KeycloakUser = {
 const KeycloakContext = React.createContext<{
   authenticated: boolean;
   accessToken: string | undefined;
-  resetKeycloakInstance: (tokens: Tokens) => void;
   keycloakUser?: KeycloakUser;
   logout: ({ redirectUri }?: { redirectUri?: string }) => void;
 } | null>(null);
@@ -30,19 +29,23 @@ interface KeycloakProviderProps {
 }
 
 export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
-  const [keycloakInstance, setKeycloakInstance] = useState<Keycloak>(
-    getKeycloakInstance(),
+  const [keycloakInstance, setKeycloakInstance] = useState<Keycloak | null>(
+    null,
   );
   const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [tokens, setTokens] = useState<Tokens | undefined>();
   const [ready, setReady] = useState<boolean>(false);
+
+  useEffect(() => {
+    setKeycloakInstance(getKeycloakInstance());
+  }, []);
 
   const logout = async ({
     redirectUri,
   }: {
     redirectUri?: string;
   } = {}) => {
-    if (!keycloakInstance.authenticated) return;
+    if (!keycloakInstance || !keycloakInstance.authenticated) return;
 
     removeTokens();
     setTokens(undefined);
@@ -67,14 +70,9 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
     }
   };
 
-  const resetKeycloakInstance = (tokens: Tokens) => {
-    saveTokens(tokens);
-    setTokens(tokens);
-
-    setKeycloakInstance(getKeycloakInstance());
-  };
-
   useEffect(() => {
+    if (!keycloakInstance) return;
+
     initKeycloak({
       keycloakInstance,
       onInit: (authenticated) => {
@@ -97,12 +95,8 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
   const getKeycloakUser = (): KeycloakUser | undefined => {
     if (keycloakInstance?.tokenParsed?.sub) {
       const { sub: id, email } = keycloakInstance.tokenParsed;
-      return {
-        id,
-        email,
-      };
+      return { id, email };
     }
-
     return undefined;
   };
 
@@ -111,7 +105,6 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
       value={{
         authenticated,
         accessToken: tokens?.accessToken,
-        resetKeycloakInstance,
         logout,
         keycloakUser: getKeycloakUser(),
       }}
@@ -134,16 +127,14 @@ export const useKeycloakContext = () => {
 };
 
 const getKeycloakInstance = (): Keycloak => {
-  const keycloakInstance =
-    typeof window !== "undefined"
-      ? new Keycloak({
-          clientId: KEYCLOAK_CLIENT_ID || "",
-          realm: KEYCLOAK_REALM || "",
-          url: KEYCLOAK_URL || "",
-        })
-      : undefined;
-
-  return keycloakInstance!;
+  if (typeof window === "undefined") {
+    throw new Error("getKeycloakInstance must be called in a browser context");
+  }
+  return new Keycloak({
+    clientId: KEYCLOAK_CLIENT_ID || "",
+    realm: KEYCLOAK_REALM || "",
+    url: KEYCLOAK_URL || "",
+  });
 };
 
 type InitKeycloakParams = {
@@ -161,6 +152,9 @@ const initKeycloak = async (params: InitKeycloakParams) => {
     enableLogging: process.env.NODE_ENV !== "production",
     onLoad: "check-sso",
     silentCheckSsoRedirectUri: `${window.location.origin}/admin2/silent-check-sso.html`,
+    // Disabled: Keycloak's iframe-based session check conflicts with Next.js
+    // navigation and CSP headers. Cross-tab logout detection is sacrificed
+    // in favour of reliable init. Users must log out explicitly per tab.
     checkLoginIframe: false,
     pkceMethod: "S256",
   };

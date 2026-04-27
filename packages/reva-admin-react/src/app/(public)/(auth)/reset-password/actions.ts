@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 
-import { client } from "@/helpers/graphql/urql-client/urqlClient";
+import { publicApiClient } from "@/helpers/graphql/public-api-client/publicApiClient";
 
 import { graphql } from "@/graphql/generated";
 
@@ -59,7 +59,7 @@ export const resetPassword = async (_state: FormState, formData: FormData) => {
     } as FormState;
   }
 
-  const result = await client.mutation(resetPasswordMutation, {
+  const result = await publicApiClient.mutation(resetPasswordMutation, {
     token: resetPasswordToken ?? "",
     password,
   });

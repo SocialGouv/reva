@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 
-import { client } from "@/helpers/graphql/urql-client/urqlClient";
+import { publicApiClient } from "@/helpers/graphql/public-api-client/publicApiClient";
 
 import { graphql } from "@/graphql/generated";
 
@@ -33,7 +33,7 @@ export const sendForgotPasswordEmail = async (
   // Anti-énumération : toujours rediriger vers la confirmation,
   // même si l'email n'existe pas ou si la mutation échoue.
   try {
-    await client.mutation(sendForgotPasswordEmailMutation, { email });
+    await publicApiClient.mutation(sendForgotPasswordEmailMutation, { email });
   } catch {
     // ignore
   }
