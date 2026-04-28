@@ -108,6 +108,8 @@ export const Header = () => {
         authenticated ? [<UserDropdown key="user-dropdown" />] : undefined
       }
       navigation={navigation}
+      serviceTitle="Le service public de la VAE"
+      serviceTagline="Espace Candidat de la VAE"
     />
   );
 };
