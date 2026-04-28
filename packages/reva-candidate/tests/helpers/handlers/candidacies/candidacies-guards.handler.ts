@@ -18,7 +18,7 @@ interface CandidaciesGuardsHandlersOptions {
 export function createCandidaciesGuardsHandlers({
   candidate,
   candidacies = [],
-  activeFeaturesForConnectedUser = ["MIDDLE_NAMES"],
+  activeFeaturesForConnectedUser = [],
 }: CandidaciesGuardsHandlersOptions) {
   return [
     fvae.query(
@@ -60,7 +60,10 @@ export function createCandidaciesGuardsHandlers({
     fvae.query(
       "activeFeaturesForConnectedUser",
       graphQLResolver({
-        activeFeaturesForConnectedUser,
+        activeFeaturesForConnectedUser: [
+          ...activeFeaturesForConnectedUser,
+          "MIDDLE_NAMES",
+        ],
       }),
     ),
   ];

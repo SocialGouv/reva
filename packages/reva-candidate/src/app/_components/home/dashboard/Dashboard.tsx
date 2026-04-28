@@ -3,6 +3,7 @@ import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { useMemo } from "react";
 
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCandidacyToAap.util";
 
 import { DashboardBanner } from "./banners/DashboardBanner";
@@ -18,6 +19,9 @@ const modalDistanceInfo = createModal({
 });
 
 const Dashboard = () => {
+  const { isFeatureActive } = useFeatureFlipping();
+  const isCandidateDropOutV2Enabled = isFeatureActive("CANDIDATE_DROP_OUT_V2");
+
   const { candidacy, candidacyAlreadySubmitted, archiveCandidacy } =
     useCandidacyForDashboard();
 
@@ -94,21 +98,46 @@ const Dashboard = () => {
           />
         )}
 
-        {!hasFeasibilitySent && (
-          <Tile
-            title="Abandonner cette candidature"
-            desc={
-              <div className="text-dsfr-light-text-mention-grey">
-                Voir les conséquences et valider la décision.
-              </div>
-            }
-            small
-            className="h-24"
-            orientation="horizontal"
-            buttonProps={{
-              onClick: modalDistanceInfo.open,
-            }}
-          />
+        {isCandidateDropOutV2Enabled ? (
+          <>
+            {!hasFeasibilitySent && (
+              <Tile
+                title="Suppression de la candidature"
+                desc={
+                  <div className="text-dsfr-light-text-mention-grey">
+                    Informations, conséquences et confirmation d’abandon.
+                  </div>
+                }
+                small
+                className="h-24"
+                orientation="horizontal"
+                buttonProps={{
+                  onClick: () => {
+                    console.log("Suppression de la candidature");
+                  },
+                }}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            {!hasFeasibilitySent && (
+              <Tile
+                title="Abandonner cette candidature"
+                desc={
+                  <div className="text-dsfr-light-text-mention-grey">
+                    Voir les conséquences et valider la décision.
+                  </div>
+                }
+                small
+                className="h-24"
+                orientation="horizontal"
+                buttonProps={{
+                  onClick: modalDistanceInfo.open,
+                }}
+              />
+            )}
+          </>
         )}
       </div>
       <DashboardSidebar candidacy={candidacy} className="basis-1/3" />
