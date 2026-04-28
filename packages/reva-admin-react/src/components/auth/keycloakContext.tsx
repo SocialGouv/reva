@@ -19,9 +19,11 @@ type KeycloakUser = {
 
 const KeycloakContext = React.createContext<{
   authenticated: boolean;
+  authenticating: boolean;
   accessToken: string | undefined;
   keycloakUser?: KeycloakUser;
   logout: ({ redirectUri }?: { redirectUri?: string }) => void;
+  refreshAuth: () => void;
 } | null>(null);
 
 interface KeycloakProviderProps {
@@ -33,12 +35,17 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
     null,
   );
   const [authenticated, setAuthenticated] = useState<boolean>(false);
+  const [authenticating, setAuthenticating] = useState<boolean>(true);
   const [tokens, setTokens] = useState<Tokens | undefined>();
   const [ready, setReady] = useState<boolean>(false);
 
   useEffect(() => {
     setKeycloakInstance(getKeycloakInstance());
   }, []);
+
+  const refreshAuth = () => {
+    setKeycloakInstance(getKeycloakInstance());
+  };
 
   const logout = async ({
     redirectUri,
@@ -71,10 +78,12 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
   useEffect(() => {
     if (!keycloakInstance) return;
 
+    setAuthenticating(true);
     initKeycloak({
       keycloakInstance,
       onInit: (authenticated) => {
         setAuthenticated(authenticated);
+        setAuthenticating(false);
         setReady(true);
       },
       tokens: getTokens(),
@@ -102,8 +111,10 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
     <KeycloakContext.Provider
       value={{
         authenticated,
+        authenticating,
         accessToken: tokens?.accessToken,
         logout,
+        refreshAuth,
         keycloakUser: getKeycloakUser(),
       }}
     >
