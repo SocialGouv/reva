@@ -100,7 +100,7 @@ const Dashboard = () => {
 
         {isCandidateDropOutV2Enabled ? (
           <>
-            {!hasFeasibilitySent && (
+            {candidacy.status === "PROJET" && (
               <Tile
                 title="Suppression de la candidature"
                 desc={

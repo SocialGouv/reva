@@ -157,27 +157,17 @@ test.describe("archive candidacy with candidate drop out v2 enabled", () => {
     ],
   });
 
-  test("when i access the page it shows one candidacy card, click on it and redirects to the candidacy page without archive button", async ({
+  test("when i access the page it shows the delete candidacy button if candidacy is in PROJET status", async ({
     page,
   }) => {
     await loginAndWaitForCandidaciesInitialLoad(page);
 
-    await page.goto(`candidates/${candidate.id}/candidacies/`);
+    await page.goto(`candidates/${candidate.id}/candidacies/${candidacy.id}/`);
 
-    const candidacyCard = page.getByText(
-      `RNCP ${certification.codeRncp} : ${certification.label}`,
-    );
-    await expect(candidacyCard).toBeVisible();
-    await candidacyCard.click();
-
-    await expect(page).toHaveURL(
-      `candidates/${candidate.id}/candidacies/${candidacy.id}/`,
-    );
-
-    const candidateDropOutButton = page.getByRole("button", {
+    const deleteCandidacyButton = page.getByRole("button", {
       name: "Suppression de la candidature",
     });
 
-    await expect(candidateDropOutButton).toBeVisible();
+    await expect(deleteCandidacyButton).toBeVisible();
   });
 });
