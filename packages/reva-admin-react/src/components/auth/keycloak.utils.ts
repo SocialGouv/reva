@@ -1,4 +1,4 @@
-import { setCookie, deleteCookie, getCookie } from "cookies-next";
+import { deleteCookie, getCookie, setCookie } from "cookies-next";
 
 const STORAGE_KEY = "REVA_ADMIN_AUTH_TOKENS";
 const ACCESS_TOKEN_STORAGE_KEY = STORAGE_KEY + "_ACCESS_TOKEN";
@@ -31,6 +31,7 @@ export const getTokens = (): Tokens | undefined => {
 const COOKIE_OPTIONS = {
   sameSite: "strict" as const,
   secure: process.env.NODE_ENV === "production",
+  path: "/",
 };
 
 export const saveTokens = (tokens: Tokens): void => {

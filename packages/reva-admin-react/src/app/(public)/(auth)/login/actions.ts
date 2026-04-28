@@ -40,11 +40,12 @@ export const login = async (_state: FormState, formData: FormData) => {
   });
 
   if (result.error || !result.data?.account_loginWithCredentials.tokens) {
+    const message = result.error?.networkError
+      ? "Service indisponible, merci de réessayer plus tard."
+      : "Adresse électronique ou mot de passe incorrect";
     return {
       errors: {
-        password: {
-          message: "Adresse électronique ou mot de passe incorrect",
-        },
+        password: { message },
       },
     } as FormState;
   }
