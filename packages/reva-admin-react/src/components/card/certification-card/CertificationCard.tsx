@@ -3,12 +3,14 @@ import Image from "next/image";
 
 export const CertificationCard = ({
   certification,
+  newTab = false,
 }: {
   certification?: {
     id: string;
     codeRncp: string;
     label: string;
   } | null;
+  newTab?: boolean;
 }) => {
   if (!certification) {
     return null;
@@ -31,6 +33,7 @@ export const CertificationCard = ({
       }
       linkProps={{
         href: `/certification-details/${certification.id}?candidacyId=${certification.id}`,
+        target: newTab ? "_blank" : undefined,
       }}
       enlargeLink
     />

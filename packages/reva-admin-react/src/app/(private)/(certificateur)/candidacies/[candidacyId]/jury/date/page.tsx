@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { CertificationCard } from "@/components/card/certification-card/CertificationCard";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { errorToast } from "@/components/toast/toast";
@@ -165,27 +166,17 @@ export default function JuryDatePage() {
       <FormOptionalFieldsDisclaimer />
       <div className="flex flex-col gap-10">
         {!jury && (
-          <p className="m-0 text-gray-600">
+          <p className="m-0 text-gray-600 text-xl">
             Vous devez désormais envoyer au candidat sa date de passage. Vous
             pouvez également lui faire parvenir une convocation officielle
             depuis cet espace ou par voie postale.
           </p>
         )}
-        <div className="flex flex-col gap-2">
-          <h6 className="m-0 font-normal">Certification concernée :</h6>
 
-          <div className="flex flex-col gap-3 p-6 border">
-            <div className="flex flex-row gap-2 items-center text-gray-600">
-              <span className="fr-icon fr-icon--sm fr-icon-award-line" />
-              <label className="text-gray-600 text-xs">
-                RNCP {candidacy?.certification?.codeRncp}
-              </label>
-            </div>
-            <label className="text-lg font-bold">
-              {candidacy?.certification?.label}
-            </label>
-          </div>
-        </div>
+        <CertificationCard
+          certification={candidacy?.certification}
+          newTab={true}
+        />
 
         {!getCandidacy.isLoading && jury && !editing && (
           <>
@@ -216,9 +207,10 @@ export default function JuryDatePage() {
 
         {!getCandidacy.isLoading && (!jury || editing) && (
           <form onSubmit={handleFormSubmit}>
-            <div className="flex flex-row items-start gap-4">
+            <div className="flex flex-col sm:flex-row items-start gap-4">
               <Input
                 label="Date"
+                className="w-full sm:basis-4/12"
                 nativeInputProps={{
                   ...register("date"),
                   type: "date",
@@ -227,7 +219,9 @@ export default function JuryDatePage() {
                 stateRelatedMessage={errors.date?.message}
               />
               <Input
-                label="Heure de convocation (Optionnel)"
+                label="Heure (optionnel)"
+                className="w-full sm:basis-3/12"
+                iconId="fr-icon-time-line"
                 nativeInputProps={{
                   type: "time",
                   ...register("time"),
@@ -237,8 +231,8 @@ export default function JuryDatePage() {
                 stateRelatedMessage={errors.time?.message}
               />
               <Input
-                className="flex-1"
-                label="Lieu (Optionnel)"
+                className="w-full sm:basis-5/12"
+                label="Lieu (optionnel)"
                 nativeInputProps={{
                   ...register("address"),
                   defaultValue: jury?.addressOfSession || "",
@@ -252,7 +246,7 @@ export default function JuryDatePage() {
               />
             </div>
             <Input
-              label="Information complémentaire liée à la session (Optionnel)"
+              label="Informations complémentaires liées à la session (optionnel)"
               nativeInputProps={{
                 ...register("information"),
                 defaultValue: jury?.informationOfSession || "",
