@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { publicApiClient } from "@/helpers/graphql/public-api-client/publicApiClient";
@@ -51,32 +50,11 @@ export const login = async (_state: FormState, formData: FormData) => {
   }
 
   const tokens = result.data.account_loginWithCredentials.tokens;
-  const cookieStore = await cookies();
-  const cookieOptions = {
-    sameSite: "strict" as const,
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-  };
-  cookieStore.set(
-    "REVA_ADMIN_AUTH_TOKENS_ACCESS_TOKEN",
-    tokens.accessToken,
-    cookieOptions,
-  );
-  cookieStore.set(
-    "REVA_ADMIN_AUTH_TOKENS_REFRESH_TOKEN",
-    tokens.refreshToken,
-    cookieOptions,
-  );
-  cookieStore.set(
-    "REVA_ADMIN_AUTH_TOKENS_ID_TOKEN",
-    tokens.idToken,
-    cookieOptions,
-  );
-
   const params = new URLSearchParams();
+  params.set("tokens", JSON.stringify(tokens));
   if (redirectAfterAuthUrl) {
     params.set("redirectAfterAuthUrl", redirectAfterAuthUrl);
   }
 
-  redirect(params.size ? `/post-login?${params.toString()}` : "/post-login");
+  redirect(`/post-login?${params.toString()}`);
 };

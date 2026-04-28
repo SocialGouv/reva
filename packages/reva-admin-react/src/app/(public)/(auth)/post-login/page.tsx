@@ -17,17 +17,29 @@ const PostLoginPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const { authenticated, authenticating, refreshAuth } = useKeycloakContext();
+  const { authenticated, resetKeycloakInstance } = useKeycloakContext();
   const { isCertificationAuthority, isCertificationRegistryManager } =
     useAuth();
 
-  const refreshTriggeredRef = useRef(false);
+  const initRef = useRef(false);
 
+  const tokensParam = searchParams.get("tokens");
   const redirectAfterAuthUrl = searchParams.get("redirectAfterAuthUrl");
 
+  // Hydrate Keycloak avec les tokens passes en URL par /login. Lecture
+  // synchrone depuis searchParams : pas de dependance au timing Set-Cookie
+  // serveur -> document.cookie qui posait probleme en production.
   useEffect(() => {
-    if (authenticating) return;
+    if (initRef.current || !tokensParam) return;
+    initRef.current = true;
+    try {
+      resetKeycloakInstance(JSON.parse(tokensParam));
+    } catch {
+      // Tokens invalides : on laisse le 2e useEffect rediriger vers /login
+    }
+  }, [tokensParam, resetKeycloakInstance]);
 
+  useEffect(() => {
     if (authenticated) {
       const safeRedirect = sanitizeRedirectUrl(redirectAfterAuthUrl);
       if (safeRedirect) {
@@ -45,25 +57,18 @@ const PostLoginPage = () => {
       return;
     }
 
-    // Cookies fraichement posés par /login (server action) : la nav soft de
-    // Next.js ne remonte pas KeycloakProvider. On déclenche une seule fois un
-    // re-init pour qu'il relise les cookies. Si l'init reste non-authentifié,
-    // on redirige vers /login au prochain passage de l'effect.
-    if (!refreshTriggeredRef.current) {
-      refreshTriggeredRef.current = true;
-      refreshAuth();
-      return;
+    // Pas de tokens en URL et pas authentifie via SSO/check-sso : kick.
+    if (!tokensParam) {
+      router.replace("/login");
     }
-
-    router.replace("/login");
+    // tokens en URL et pas encore authentifie : init en cours, on attend.
   }, [
     authenticated,
-    authenticating,
+    tokensParam,
     redirectAfterAuthUrl,
     isCertificationAuthority,
     isCertificationRegistryManager,
     router,
-    refreshAuth,
   ]);
 
   return null;
