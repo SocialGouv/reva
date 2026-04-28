@@ -394,8 +394,9 @@ export const Header = () => {
       serviceTitle={
         isCertificationRegistryManager
           ? "Espace Responsable des certifications"
-          : ""
+          : "Le service public de la VAE"
       }
+      serviceTagline="Espace professionnel de la VAE"
     />
   );
 };
