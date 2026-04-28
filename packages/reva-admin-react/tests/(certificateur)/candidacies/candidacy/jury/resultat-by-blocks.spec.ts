@@ -471,6 +471,7 @@ test.describe("jury result by blocks", () => {
     await openResultPage(page);
 
     await page
+      .getByTestId("result-radio-buttons")
       .getByText(
         "Voir les détails de la recevabilité du candidat sur cette certification",
       )

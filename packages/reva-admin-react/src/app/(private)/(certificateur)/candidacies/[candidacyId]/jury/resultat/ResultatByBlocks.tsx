@@ -406,6 +406,7 @@ export const ResultatByBlocks = () => {
           <form onSubmit={handleFormSubmit}>
             <RadioButtons
               legend="Quel est le résultat du jury pour ce candidat ?"
+              data-testid="result-radio-buttons"
               small
               hintText={
                 <div className="mb-4">
