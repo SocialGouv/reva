@@ -264,7 +264,7 @@ export const ResultatByBlocks = () => {
         resultSelected === "CANDIDATE_ABSENT") &&
       blocksTargetedForThisSession
     ) {
-      setValue("validatedBlocks", []);
+      setValue("validatedBlocks", [], { shouldValidate: true });
     }
   }, [resultSelected, setValue, blocksTargetedForThisSession]);
 
