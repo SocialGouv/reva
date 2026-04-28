@@ -109,7 +109,7 @@ export const Header = () => {
       }
       navigation={navigation}
       serviceTitle="Le service public de la VAE"
-      serviceTagline="Espace Candidat de la VAE"
+      serviceTagline="Espace candidat"
     />
   );
 };

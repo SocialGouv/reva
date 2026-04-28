@@ -20,6 +20,6 @@ export const PublicHeader = () => (
     }}
     classes={{ operator: "min-w-[128px] min-h-[72px]" }}
     serviceTitle="Le service public de la VAE"
-    serviceTagline="Espace professionnel de la VAE Collective"
+    serviceTagline="Espace porteur de projet VAE collective"
   />
 );
