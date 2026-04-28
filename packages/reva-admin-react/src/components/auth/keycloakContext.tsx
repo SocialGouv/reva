@@ -52,7 +52,6 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
     const postLogoutRedirectUri =
       redirectUri || window.location.origin + "/admin2/logout-confirmation";
 
-    // Déconnexion via l'endpoint OpenID Connect avec id_token_hint (RFC 7009)
     if (keycloakInstance.idToken) {
       const logoutUrl = new URL(
         `${keycloakInstance.authServerUrl}/realms/${keycloakInstance.realm}/protocol/openid-connect/logout`,
@@ -167,29 +166,30 @@ const initKeycloak = async (params: InitKeycloakParams) => {
     };
   }
 
+  keycloakInstance.onAuthRefreshSuccess = async () => {
+    const { token, refreshToken, idToken } = keycloakInstance;
+    if (token && refreshToken) {
+      const tokens: Tokens = {
+        accessToken: token,
+        refreshToken,
+        idToken: idToken ?? "",
+      };
+      onUpdateTokens?.(tokens);
+    }
+  };
+  keycloakInstance.onAuthRefreshError = async () => {
+    onLogout?.();
+  };
+  keycloakInstance.onTokenExpired = async () => {
+    try {
+      await keycloakInstance.updateToken(60);
+    } catch {
+      onLogout?.();
+    }
+  };
+
   try {
     const authenticated = await keycloakInstance.init(config);
-    keycloakInstance.onAuthRefreshSuccess = async () => {
-      const { token, refreshToken, idToken } = keycloakInstance;
-      if (token && refreshToken) {
-        const tokens: Tokens = {
-          accessToken: token,
-          refreshToken,
-          idToken: idToken ?? "",
-        };
-        onUpdateTokens?.(tokens);
-      }
-    };
-    keycloakInstance.onAuthRefreshError = async () => {
-      onLogout?.();
-    };
-    keycloakInstance.onTokenExpired = async () => {
-      try {
-        await keycloakInstance.updateToken(60);
-      } catch {
-        onLogout?.();
-      }
-    };
 
     if (authenticated) {
       await keycloakInstance.updateToken(60);

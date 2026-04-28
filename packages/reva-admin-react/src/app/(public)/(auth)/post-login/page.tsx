@@ -24,7 +24,10 @@ const PostLoginPage = () => {
   const redirectAfterAuthUrl = searchParams.get("redirectAfterAuthUrl");
 
   useEffect(() => {
-    if (!authenticated) return;
+    if (!authenticated) {
+      router.replace("/login");
+      return;
+    }
 
     const safeRedirect = sanitizeRedirectUrl(redirectAfterAuthUrl);
     if (safeRedirect) {
