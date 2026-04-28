@@ -10,10 +10,16 @@ export const PublicHeader = () => (
       </>
     }
     homeLinkProps={{
-      href: "/admin2/login",
+      href: "/",
       title: "Accueil - France VAE",
     }}
-    serviceTitle="France VAE"
-    serviceTagline="Espace professionnel"
+    operatorLogo={{
+      alt: "France VAE",
+      imgUrl: "/admin2/fvae_logo.svg",
+      orientation: "horizontal",
+    }}
+    classes={{ operator: "min-w-[128px] min-h-[72px]" }}
+    serviceTitle="Le service public de la VAE"
+    serviceTagline="Espace professionnel de la VAE"
   />
 );
