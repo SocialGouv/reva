@@ -14,16 +14,12 @@ export const GenerateCohorteCodeInscriptionButton = ({
   commanditaireId,
   cohorteVaeCollectiveId,
   nomCohorte,
-  certificationCodeRncp,
-  certificationlabel,
   aapLabel,
   disabled,
 }: {
   commanditaireId: string;
   cohorteVaeCollectiveId: string;
   nomCohorte: string;
-  certificationCodeRncp: string;
-  certificationlabel: string;
   aapLabel: string;
   disabled?: boolean;
 }) => {
@@ -53,21 +49,21 @@ export const GenerateCohorteCodeInscriptionButton = ({
         ]}
       >
         <div className="flex flex-col gap-4">
-          <p>
+          <p className="my-0">
             Vous allez générer le code pour la cohorte{" "}
-            <strong>{nomCohorte}</strong>. Elle concernera la certification :{" "}
-            <strong>{certificationCodeRncp}</strong>{" "}
-            <strong>{certificationlabel}</strong> suivie par l’Architecte
-            Accompagnateur de parcours suivant : <strong>{aapLabel}</strong>.
+            <strong>{nomCohorte}</strong> suivie par l’Architecte Accompagnateur
+            de parcours suivant : <strong>{aapLabel}</strong>.
           </p>
-          <p>
-            Une fois ce code créé{" "}
-            <strong>
-              vous ne pourrez plus modifier la certification et l’accompagnement
-            </strong>{" "}
-            liés à cette cohorte.
+          <p className="my-0">
+            Une fois ce code créé <strong>vous ne pourrez plus : </strong>
+            <ul className="font-bold mt-4">
+              <li>modifier, supprimer ou ajouter de certification</li>
+              <li>changer d'accompagnateur</li>
+            </ul>
           </p>
-          <p>Souhaitez-vous générer le code d’accès sur cette cohorte ?</p>
+          <p className="my-0">
+            Souhaitez-vous générer le code d’accès sur cette cohorte ?
+          </p>
         </div>
       </modal.Component>
       <Tile

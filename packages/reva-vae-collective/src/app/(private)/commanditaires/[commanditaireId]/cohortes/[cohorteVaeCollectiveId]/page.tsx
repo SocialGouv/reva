@@ -151,8 +151,6 @@ export default async function CohortePage({
             commanditaireId={commanditaireId}
             cohorteVaeCollectiveId={cohorteVaeCollectiveId}
             nomCohorte={cohorte.nom}
-            certificationCodeRncp={certifications?.[0]?.codeRncp ?? ""}
-            certificationlabel={certifications?.[0]?.label ?? ""}
             aapLabel={organism?.label ?? ""}
             disabled={!organismSelected}
           />
