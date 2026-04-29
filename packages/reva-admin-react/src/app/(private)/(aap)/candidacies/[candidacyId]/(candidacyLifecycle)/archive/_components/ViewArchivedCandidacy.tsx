@@ -1,7 +1,7 @@
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { format } from "date-fns";
 
-import { CandidacyForArchive, getArchivingReasonLabel } from "./useArchive";
+import { CandidacyForArchive, ARCHIVING_REASON_LABELS } from "./useArchive";
 
 export const ViewArchivedCandidacy = ({
   candidacy,
@@ -26,7 +26,9 @@ export const ViewArchivedCandidacy = ({
       <hr className="mt-2 pb-4" />
       <div className="flex justify-between">
         <span>Raison</span>
-        <span>{getArchivingReasonLabel(candidacy.archivingReason)}</span>
+        <span>
+          {ARCHIVING_REASON_LABELS[candidacy.archivingReason || "AUTRE"]}
+        </span>
       </div>
       <hr className="mt-2 pb-4" />
       <Alert

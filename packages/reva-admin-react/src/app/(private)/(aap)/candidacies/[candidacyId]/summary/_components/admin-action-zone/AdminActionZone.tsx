@@ -1,6 +1,7 @@
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { ComponentProps } from "react";
 
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast } from "@/components/toast/toast";
 
 import { useAdminActionZone } from "./adminActionZone.hooks";
@@ -30,6 +31,9 @@ export const AdminActionZone = ({
   isHorsPlateforme: boolean;
   className?: string;
 }) => {
+  const { isFeatureActive } = useFeatureflipping();
+  const isCandidateDropOutV2Enabled = isFeatureActive("CANDIDATE_DROP_OUT_V2");
+
   const {
     updateCandidacyFinanceModuleToHorsPlateforme,
     updateCandidacyTypeAccompagnementToAutonome,
@@ -144,7 +148,11 @@ export const AdminActionZone = ({
           data-testid="archive-candidacy-button"
           title="Archiver la candidature"
           description="Le candidat pourra refaire une candidature dans le cadre de France VAE (modification du diplôme, changement d’AAP, …)"
-          detail="Accessible jusqu’au dépôt du dossier de faisabilité."
+          detail={
+            isCandidateDropOutV2Enabled
+              ? "Accessible tant que la candidature est en projet."
+              : "Accessible jusqu’au dépôt du dossier de faisabilité."
+          }
           linkProps={{
             href: `/candidacies/${candidacyId}/archive`,
             target: "_self",

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 
 import { useAuth } from "@/components/auth/auth";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 
 import {
@@ -44,6 +45,9 @@ export type CandidacyForStatus = {
 export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
   const { isAdmin } = useAuth();
 
+  const { isFeatureActive } = useFeatureflipping();
+  const isCandidateDropOutV2Enabled = isFeatureActive("CANDIDATE_DROP_OUT_V2");
+
   const currentStatus = useMemo(() => {
     return candidacy.status;
   }, [candidacy]);
@@ -79,11 +83,12 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     !!candidacy.candidacyDropOut?.proofReceivedByAdmin;
 
   // Permissions d'archivage
-  const canBeArchived =
-    !isWaitingForFeasibilityDecision &&
-    currentStatus &&
-    !isArchivedAndNotReoriented &&
-    (!isFeasibilityIncompletOrLater || isAdmin);
+  const canBeArchived = isCandidateDropOutV2Enabled
+    ? currentStatus === "PROJET"
+    : !isWaitingForFeasibilityDecision &&
+      currentStatus &&
+      !isArchivedAndNotReoriented &&
+      (!isFeasibilityIncompletOrLater || isAdmin);
 
   const canBeRestored = isArchivedAndNotReoriented && isAdmin;
 

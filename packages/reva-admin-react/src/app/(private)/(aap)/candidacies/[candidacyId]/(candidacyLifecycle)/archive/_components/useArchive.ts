@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
 
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 
@@ -52,28 +53,38 @@ const archiveCandidacyByIdMutation = graphql(`
   }
 `);
 
-export const getArchivingReasonLabel = (
-  archivingReason?: CandidacyArchivingReason | null,
-) => {
-  switch (archivingReason) {
-    case "INACTIVITE_CANDIDAT":
-      return "Inactivité du candidat";
-    case "MULTI_CANDIDATURES":
-      return "Multi-candidatures";
-    case "PASSAGE_AUTONOME_A_ACCOMPAGNE":
-      return "Passage autonome à accompagné";
-    case "REORIENTATION_HORS_FRANCE_VAE":
-      return "Ré-orientation hors France VAE";
-    case "PROBLEME_FINANCEMENT":
-      return "Problème de financement";
-    case "AUTRE":
-      return "Autre";
-    default:
-      return "Inconnue";
-  }
-};
+export const ARCHIVING_REASON_LABELS: Record<CandidacyArchivingReason, string> =
+  {
+    INACTIVITE_CANDIDAT: "Inactivité du candidat",
+    MULTI_CANDIDATURES: "Multi-candidatures",
+    PASSAGE_AUTONOME_A_ACCOMPAGNE: "Passage autonome à accompagné",
+    PROBLEME_FINANCEMENT: "Problème de financement",
+    REPRISE_EMPLOI: "Reprise d'emploi",
+    ENTREE_EN_FORMATION: "Entrée en formation",
+    DECOURAGEMENT: "Découragement",
+    RAISONS_PERSONNELLES: "Raisons personnelles",
+    CHANGEMENT_DE_PROJET: "Changement de projet",
+    MANQUE_DE_TEMPS: "Manque de temps",
+    NON_INTERESSE: "Pas / plus intéressé",
+    REMUNERATION_NON_OBTENUE: "Remuneration non obtenue",
+    AVIS_DEFAVORABLE_AAP:
+      "Avis défavorable de l'Architecte accompagnateur de parcours",
+    PROBLEME_FINANCEMENT_PARCOURS:
+      "Problème pour financer le parcours (accompagnement, formation)",
+    PROBLEME_FINANCEMENT_CERTIFICATEUR:
+      "Problème pour financer les frais du certificateur (jury)",
+    DELAIS_TROP_LONG: "Délais trop longs (recevabilité, jury)",
+    REORIENTATION_HORS_FRANCE_VAE: "Réorientation hors France VAE",
+    NON_OBTENTION_PRE_REQUIS: "Non obtention d’un pré-requis",
+    CANDIDATURE_CREEE_PAR_ERREUR: "Candidature créée par erreur",
+    ARCHIVER_PAR_LE_CANDIDAT: "Archiver par le candidat",
+    AUTRE: "Autre",
+  };
 
 export const useArchive = () => {
+  const { isFeatureActive } = useFeatureflipping();
+  const isCandidateDropOutV2Enabled = isFeatureActive("CANDIDATE_DROP_OUT_V2");
+
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
@@ -113,6 +124,13 @@ export const useArchive = () => {
     value: CandidacyArchivingReason;
     label: string;
   }[] = useMemo(() => {
+    if (isCandidateDropOutV2Enabled) {
+      return Object.entries(ARCHIVING_REASON_LABELS).map(([value, label]) => ({
+        value: value as CandidacyArchivingReason,
+        label,
+      }));
+    }
+
     const feasibilityResultKnown =
       candidacy?.status &&
       (isCandidacyStatusEqualOrAbove(
@@ -128,30 +146,30 @@ export const useArchive = () => {
       ? [
           {
             value: "MULTI_CANDIDATURES",
-            label: getArchivingReasonLabel("MULTI_CANDIDATURES"),
+            label: ARCHIVING_REASON_LABELS.MULTI_CANDIDATURES,
           },
           {
             value: "PASSAGE_AUTONOME_A_ACCOMPAGNE",
-            label: getArchivingReasonLabel("PASSAGE_AUTONOME_A_ACCOMPAGNE"),
+            label: ARCHIVING_REASON_LABELS.PASSAGE_AUTONOME_A_ACCOMPAGNE,
           },
-          { value: "AUTRE", label: getArchivingReasonLabel("AUTRE") },
+          { value: "AUTRE", label: ARCHIVING_REASON_LABELS.AUTRE },
         ]
       : [
           {
             value: "INACTIVITE_CANDIDAT",
-            label: getArchivingReasonLabel("INACTIVITE_CANDIDAT"),
+            label: ARCHIVING_REASON_LABELS.INACTIVITE_CANDIDAT,
           },
           {
             value: "REORIENTATION_HORS_FRANCE_VAE",
-            label: getArchivingReasonLabel("REORIENTATION_HORS_FRANCE_VAE"),
+            label: ARCHIVING_REASON_LABELS.REORIENTATION_HORS_FRANCE_VAE,
           },
           {
             value: "PROBLEME_FINANCEMENT",
-            label: getArchivingReasonLabel("PROBLEME_FINANCEMENT"),
+            label: ARCHIVING_REASON_LABELS.PROBLEME_FINANCEMENT,
           },
-          { value: "AUTRE", label: getArchivingReasonLabel("AUTRE") },
+          { value: "AUTRE", label: ARCHIVING_REASON_LABELS.AUTRE },
         ];
-  }, [candidacy]);
+  }, [candidacy?.status, isCandidateDropOutV2Enabled]);
 
   return {
     candidacyId,

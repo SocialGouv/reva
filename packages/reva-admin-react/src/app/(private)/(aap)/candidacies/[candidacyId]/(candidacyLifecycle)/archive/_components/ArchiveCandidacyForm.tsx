@@ -2,12 +2,14 @@ import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
+import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
@@ -15,7 +17,11 @@ import { sanitizedOptionalTextAllowSpecialCharacters } from "@/utils/input-sanit
 
 import { useCandidacyStatus } from "../../../_components/candidacy.hook";
 
-import { CandidacyForArchive, useArchive } from "./useArchive";
+import {
+  ARCHIVING_REASON_LABELS,
+  CandidacyForArchive,
+  useArchive,
+} from "./useArchive";
 
 const modal = createModal({
   id: "confirm-candidacy-archiving",
@@ -29,8 +35,23 @@ const archiveSchema = z.object({
       "MULTI_CANDIDATURES",
       "PASSAGE_AUTONOME_A_ACCOMPAGNE",
       "PROBLEME_FINANCEMENT",
-      "REORIENTATION_HORS_FRANCE_VAE",
       "AUTRE",
+      "REPRISE_EMPLOI",
+      "ENTREE_EN_FORMATION",
+      "DECOURAGEMENT",
+      "RAISONS_PERSONNELLES",
+      "CHANGEMENT_DE_PROJET",
+      "MANQUE_DE_TEMPS",
+      "NON_INTERESSE",
+      "REMUNERATION_NON_OBTENUE",
+      "AVIS_DEFAVORABLE_AAP",
+      "PROBLEME_FINANCEMENT_PARCOURS",
+      "PROBLEME_FINANCEMENT_CERTIFICATEUR",
+      "DELAIS_TROP_LONG",
+      "REORIENTATION_HORS_FRANCE_VAE",
+      "NON_OBTENTION_PRE_REQUIS",
+      "CANDIDATURE_CREEE_PAR_ERREUR",
+      "ARCHIVER_PAR_LE_CANDIDAT",
     ],
     {
       message: "Merci de remplir ce champ",
@@ -47,6 +68,9 @@ export const ArchiveCandidacyForm = ({
 }: {
   candidacy: NonNullable<CandidacyForArchive>;
 }) => {
+  const { isFeatureActive } = useFeatureflipping();
+  const isCandidateDropOutV2Enabled = isFeatureActive("CANDIDATE_DROP_OUT_V2");
+
   const { canBeArchived } = useCandidacyStatus(candidacy);
 
   const router = useRouter();
@@ -159,19 +183,42 @@ export const ArchiveCandidacyForm = ({
         de ses coordonnées, …)
       </p>
       <form onSubmit={handleFormSubmit}>
-        <RadioButtons
-          data-testid="archiving-reason-radio-buttons"
-          options={availableArchivingReasons.map((r) => ({
-            label: r.label,
-            nativeInputProps: {
-              "data-testid": `archiving-reason-radio-button-${r.value}`,
-              value: r.value,
+        {isCandidateDropOutV2Enabled ? (
+          <Select
+            label="Motif de l'archivage :"
+            nativeSelectProps={{
               ...register("archivingReason"),
-            },
-          }))}
-          state={errors.archivingReason ? "error" : "default"}
-          stateRelatedMessage={errors.archivingReason?.message}
-        />
+              defaultValue: "",
+            }}
+            state={errors.archivingReason ? "error" : "default"}
+            stateRelatedMessage={errors.archivingReason?.message}
+          >
+            <option value="" disabled>
+              Sélectionner une option
+            </option>
+            {Object.entries(ARCHIVING_REASON_LABELS)
+              .filter(([value]) => value !== "PROBLEME_FINANCEMENT")
+              .map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+          </Select>
+        ) : (
+          <RadioButtons
+            data-testid="archiving-reason-radio-buttons"
+            options={availableArchivingReasons.map((r) => ({
+              label: r.label,
+              nativeInputProps: {
+                "data-testid": `archiving-reason-radio-button-${r.value}`,
+                value: r.value,
+                ...register("archivingReason"),
+              },
+            }))}
+            state={errors.archivingReason ? "error" : "default"}
+            stateRelatedMessage={errors.archivingReason?.message}
+          />
+        )}
         {archivingReason === "AUTRE" && (
           <Input
             label="S’il s’agit d’une autre raison, merci de l’indiquer ici :"
