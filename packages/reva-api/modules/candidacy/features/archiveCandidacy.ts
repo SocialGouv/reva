@@ -36,13 +36,31 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
     );
   }
 
-  const isWaitingForFeasibilityDecision =
-    candidacy.status === "DOSSIER_FAISABILITE_ENVOYE";
+  const candidateDropOutV2Feature = await prismaClient.feature.findFirst({
+    where: {
+      key: "CANDIDATE_DROP_OUT_V2",
+    },
+  });
+  const isCandidateDropOutV2FeatureEnabled =
+    candidateDropOutV2Feature?.isActive ?? false;
 
-  if (isWaitingForFeasibilityDecision) {
-    throw new Error(
-      `La candidature ${params.candidacyId} ne peut pas être archivée car le dossier de faisabilité est envoyé et une décision du certificateur est en attente`,
-    );
+  if (isCandidateDropOutV2FeatureEnabled) {
+    const isNotInProjectStatus = candidacy.status !== "PROJET";
+
+    if (isNotInProjectStatus) {
+      throw new Error(
+        `La candidature ${params.candidacyId} ne peut pas être archivée car elle n'est plus au statut projet`,
+      );
+    }
+  } else {
+    const isWaitingForFeasibilityDecision =
+      candidacy.status === "DOSSIER_FAISABILITE_ENVOYE";
+
+    if (isWaitingForFeasibilityDecision) {
+      throw new Error(
+        `La candidature ${params.candidacyId} ne peut pas être archivée car le dossier de faisabilité est envoyé et une décision du certificateur est en attente`,
+      );
+    }
   }
 
   try {

@@ -1,6 +1,7 @@
 import { Card } from "@codegouvfr/react-dsfr/Card";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
@@ -21,6 +22,7 @@ const modalDistanceInfo = createModal({
 const Dashboard = () => {
   const { isFeatureActive } = useFeatureFlipping();
   const isCandidateDropOutV2Enabled = isFeatureActive("CANDIDATE_DROP_OUT_V2");
+  const router = useRouter();
 
   const { candidacy, candidacyAlreadySubmitted, archiveCandidacy } =
     useCandidacyForDashboard();
@@ -113,7 +115,7 @@ const Dashboard = () => {
                 orientation="horizontal"
                 buttonProps={{
                   onClick: () => {
-                    console.log("Suppression de la candidature");
+                    router.push(`./archive`);
                   },
                 }}
               />

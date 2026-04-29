@@ -38,6 +38,20 @@ function createCandidaciesHandlers(args?: {
         archiveCandidacyById: { id: args?.candidacy?.id ?? null },
       }),
     ),
+    fvae.query(
+      "getCandidacyByIdWithCandidateForArchive",
+      graphQLResolver({
+        getCandidacyById: {
+          ...args?.candidacy,
+        },
+      }),
+    ),
+    fvae.mutation(
+      "candidacy_archiveById",
+      graphQLResolver({
+        candidacy_archiveById: { id: args?.candidacy?.id ?? null },
+      }),
+    ),
   ];
 }
 
@@ -157,7 +171,7 @@ test.describe("archive candidacy with candidate drop out v2 enabled", () => {
     ],
   });
 
-  test("when i access the page it shows the delete candidacy button if candidacy is in PROJET status", async ({
+  test("test the archive candidacy flow when candidacy is in PROJET status", async ({
     page,
   }) => {
     await loginAndWaitForCandidaciesInitialLoad(page);
@@ -169,5 +183,33 @@ test.describe("archive candidacy with candidate drop out v2 enabled", () => {
     });
 
     await expect(deleteCandidacyButton).toBeVisible();
+
+    await deleteCandidacyButton.click();
+
+    await expect(page).toHaveURL(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/archive/`,
+    );
+
+    const confirmArchiveCandidacyButton = page.getByRole("button", {
+      name: "Confirmer",
+    });
+
+    await expect(confirmArchiveCandidacyButton).toBeVisible();
+
+    await confirmArchiveCandidacyButton.click();
+
+    await expect(page).toHaveURL(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/archive/`,
+    );
+
+    const selectArchivingReason = page.getByLabel("Motif de la suppression :");
+
+    await expect(selectArchivingReason).toBeVisible();
+
+    await selectArchivingReason.selectOption("REPRISE_EMPLOI");
+
+    await confirmArchiveCandidacyButton.click();
+
+    await expect(page).toHaveURL(`candidates/${candidate.id}/candidacies/`);
   });
 });

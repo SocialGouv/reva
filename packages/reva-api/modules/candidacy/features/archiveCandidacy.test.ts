@@ -2,6 +2,7 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { FunctionalCodeError } from "@/modules/shared/error/functionalError";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createFeatureHelper } from "@/test/helpers/entities/create-feature-helper";
 
 import { archiveCandidacy } from "./archiveCandidacy";
 
@@ -75,6 +76,52 @@ describe("archive candidacy", () => {
       });
     }).rejects.toThrow(
       `La candidature ${candidacy.id} ne peut pas être archivée car le dossier de faisabilité est envoyé et une décision du certificateur est en attente`,
+    );
+  });
+
+  // CANDIDATE_DROP_OUT_V2 feature flag is enabled
+  test("should return the correct archiving reason when candidacy status is PROJECT", async () => {
+    await createFeatureHelper({
+      args: {
+        key: "CANDIDATE_DROP_OUT_V2",
+        isActive: true,
+      },
+    });
+
+    const candidacy = await createCandidacyHelper({
+      candidacyActiveStatus: CandidacyStatusStep.PROJET,
+    });
+
+    const archivedCandidacy = await archiveCandidacy({
+      candidacyId: candidacy.id,
+      archivingReason: "AUTRE",
+      archivingReasonAdditionalInformation: "additional information",
+    });
+
+    expect(archivedCandidacy.archivingReason).not.toBeNull();
+    expect(archivedCandidacy.archivingReason).toEqual("AUTRE");
+  });
+
+  test("should fail when candidacy status is not PROJECT", async () => {
+    await createFeatureHelper({
+      args: {
+        key: "CANDIDATE_DROP_OUT_V2",
+        isActive: true,
+      },
+    });
+
+    const candidacy = await createCandidacyHelper({
+      candidacyActiveStatus: CandidacyStatusStep.PARCOURS_CONFIRME,
+    });
+
+    await expect(async () => {
+      await archiveCandidacy({
+        candidacyId: candidacy.id,
+        archivingReason: "AUTRE",
+        archivingReasonAdditionalInformation: "additional information",
+      });
+    }).rejects.toThrow(
+      `La candidature ${candidacy.id} ne peut pas être archivée car elle n'est plus au statut projet`,
     );
   });
 });
