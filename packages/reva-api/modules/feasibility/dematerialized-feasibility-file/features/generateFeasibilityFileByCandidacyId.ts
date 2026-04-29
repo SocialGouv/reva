@@ -264,6 +264,7 @@ export const generateFeasibilityFileByCandidacyId = async (
         birthdate: candidate.birthdate
           ? formatDateWithoutTimestamp(candidate.birthdate)
           : "",
+        givenName: candidate.givenName ?? "",
         birthcity: candidate.birthCity ?? "",
         birthcountry: candidate.country?.label ?? "",
         nationality: candidate.nationality ?? "",
@@ -696,6 +697,7 @@ const addProfilCandidatSection = ({
     courtesyTitle,
     firstAndMiddleNames,
     lastname,
+    givenName,
     birthdate,
     birthcity,
     birthcountry,
@@ -717,6 +719,7 @@ const addProfilCandidatSection = ({
     courtesyTitle: string;
     firstAndMiddleNames: string;
     lastname: string;
+    givenName: string;
     birthdate: string;
     birthcity: string;
     birthcountry: string;
@@ -762,15 +765,13 @@ const addProfilCandidatSection = ({
             data: [
               { title: "Civilité :", value: courtesyTitle },
               { title: "Nom de naissance :", value: lastname },
+              givenName ? { title: "Nom d'usage :", value: givenName } : null,
               { title: "Prénoms :", value: firstAndMiddleNames },
-              {
-                title: "Date de naissance :",
-                value: birthdate,
-              },
+              { title: "Date de naissance :", value: birthdate },
               { title: "Ville de naissance :", value: birthcity },
               { title: "Pays de naissance :", value: birthcountry },
               { title: "Nationalité :", value: nationality },
-            ],
+            ].filter((item) => item !== null),
             doc,
           });
         },
@@ -1115,7 +1116,9 @@ const addContactsSection = ({
             widthInPt: pxToPt(1200),
             data: [
               { title: "Nom :", value: aapContactInfo.label },
-              { title: "Adresse :", value: aapContactInfo.address },
+              aapContactInfo.address
+                ? { title: "Adresse :", value: aapContactInfo.address }
+                : null,
               {
                 title: "Adresse électronique :",
                 value: aapContactInfo.email,
@@ -1124,7 +1127,7 @@ const addContactsSection = ({
                 title: "Téléphone :",
                 value: aapContactInfo.phone,
               },
-            ],
+            ].filter((item) => item !== null),
             doc,
           });
         },
