@@ -213,3 +213,39 @@ test.describe("archive candidacy with candidate drop out v2 enabled", () => {
     await expect(page).toHaveURL(`candidates/${candidate.id}/candidacies/`);
   });
 });
+
+test.describe("drop out candidacy with candidate drop out v2 enabled", () => {
+  const certification = createCertificationEntity({
+    label: "Certification 1",
+    codeRncp: "RNCP0001",
+  });
+  const candidacy = createCandidacyEntity({
+    candidate,
+    certification,
+    status: "PRISE_EN_CHARGE",
+  });
+
+  test.use({
+    mswHandlers: [
+      createCandidaciesHandlers({
+        candidacy,
+        activeFeaturesForConnectedUser: ["CANDIDATE_DROP_OUT_V2"],
+      }),
+      { scope: "test" },
+    ],
+  });
+
+  test("test the drop out candidacy flow when candidacy is not in PROJET status and has no feasibility file sent", async ({
+    page,
+  }) => {
+    await loginAndWaitForCandidaciesInitialLoad(page);
+
+    await page.goto(`candidates/${candidate.id}/candidacies/${candidacy.id}/`);
+
+    const dropOutCandidacyButton = page.getByRole("button", {
+      name: "Abandon de la candidature",
+    });
+
+    await expect(dropOutCandidacyButton).toBeVisible();
+  });
+});
