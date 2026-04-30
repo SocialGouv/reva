@@ -14,6 +14,9 @@ const getCandidacyByIdForTypeAccompagnementPage = graphql(`
         isAapAvailable
       }
       typeAccompagnement
+      candidacyDropOut {
+        createdAt
+      }
     }
   }
 `);
@@ -65,11 +68,13 @@ export const useTypeAccompagnementPage = () => {
   const candidacy = getCandidateResponse?.getCandidacyById;
   const typeAccompagnement = candidacy?.typeAccompagnement;
   const isAapAvailable = candidacy?.certification?.isAapAvailable;
+  const isDropOut = !!candidacy?.candidacyDropOut;
 
   return {
     typeAccompagnement,
     queryStatus,
     updateTypeAccompagnement,
     isAapAvailable,
+    isDropOut,
   };
 };

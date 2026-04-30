@@ -20,11 +20,17 @@ export const updateCandidacyTypeAccompagnement = async ({
 }): Promise<Candidacy> => {
   const candidacy = await getCandidacyById({
     candidacyId,
-    includes: { candidate: true },
+    includes: { candidate: true, candidacyDropOut: true },
   });
 
   if (!candidacy) {
     throw new Error("Candidature non trouvée");
+  }
+
+  if (candidacy.candidacyDropOut) {
+    throw new Error(
+      "Impossible de modifier le type d'accompagnement une fois la candidature abandonnée",
+    );
   }
 
   if (

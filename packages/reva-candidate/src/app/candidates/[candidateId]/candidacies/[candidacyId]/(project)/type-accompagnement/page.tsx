@@ -28,6 +28,7 @@ export default function ChooseTypeAccompagnementPage() {
     queryStatus,
     updateTypeAccompagnement,
     isAapAvailable,
+    isDropOut,
   } = useTypeAccompagnementPage();
 
   const openTypeAccompagnementWarningModal = () =>
@@ -75,6 +76,7 @@ export default function ChooseTypeAccompagnementPage() {
             openTypeAccompagnementWarningModal
           }
           isAapAvailable={isAapAvailable}
+          isDropOut={isDropOut}
         />
       )}
     </div>
@@ -86,11 +88,13 @@ const Form = ({
   onSubmit,
   openTypeAccompagnementWarningModal,
   isAapAvailable,
+  isDropOut,
 }: {
   defaultValues: { typeAccompagnement: TypeAccompagnement };
   onSubmit: (data: { typeAccompagnement: TypeAccompagnement }) => Promise<void>;
   openTypeAccompagnementWarningModal: () => void;
   isAapAvailable?: boolean;
+  isDropOut?: boolean;
 }) => {
   const [typeAccompagnement, setTypeAccompagnement] = useState(
     defaultValues.typeAccompagnement,
@@ -111,6 +115,7 @@ const Form = ({
           <fieldset>
             <RadioButtons
               legend="Que souhaitez-vous faire pour ce parcours ? "
+              disabled={isDropOut}
               options={[
                 {
                   label: "Je souhaite réaliser ma VAE avec un accompagnateur",
@@ -196,6 +201,7 @@ const Form = ({
           <Button
             className="md:ml-auto"
             data-testid="submit-type-accompagnement-form-button"
+            disabled={isDropOut}
             onClick={() => {
               if (typeAccompagnement == defaultValues.typeAccompagnement) {
                 router.push("../");
