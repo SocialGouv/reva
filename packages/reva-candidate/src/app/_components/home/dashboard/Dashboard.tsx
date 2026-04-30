@@ -121,26 +121,24 @@ const Dashboard = () => {
               />
             )}
 
-            {candidacy.status !== "PROJET" &&
-              !hasFeasibilitySent &&
-              !candidacy.candidacyDropOut && (
-                <Tile
-                  title="Abandon de la candidature"
-                  desc={
-                    <div className="text-dsfr-light-text-mention-grey">
-                      Informations, conséquences et confirmation d’abandon.
-                    </div>
-                  }
-                  small
-                  className="h-24"
-                  orientation="horizontal"
-                  buttonProps={{
-                    onClick: () => {
-                      router.push(`./dropout`);
-                    },
-                  }}
-                />
-              )}
+            {candidacy.status !== "PROJET" && !candidacy.candidacyDropOut && (
+              <Tile
+                title="Abandon de la candidature"
+                desc={
+                  <div className="text-dsfr-light-text-mention-grey">
+                    Informations, conséquences et confirmation d’abandon.
+                  </div>
+                }
+                small
+                className="h-24"
+                orientation="horizontal"
+                buttonProps={{
+                  onClick: () => {
+                    router.push(`./dropout`);
+                  },
+                }}
+              />
+            )}
           </>
         ) : (
           <>

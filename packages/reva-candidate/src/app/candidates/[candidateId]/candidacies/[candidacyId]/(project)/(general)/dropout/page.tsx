@@ -4,6 +4,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { Highlight } from "@codegouvfr/react-dsfr/Highlight";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format, toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -71,6 +72,65 @@ export default function DropoutCandidacyPage() {
 
   const certificationLabel = `RNCP ${candidacy.certification?.codeRncp} : ${candidacy.certification?.label}`;
 
+  const isFeasibilityDecisionPending =
+    candidacy.feasibility?.decision === "PENDING";
+
+  if (isFeasibilityDecisionPending) {
+    return (
+      <Panel>
+        <Breadcrumb
+          currentPageLabel="Abandon de la candidature"
+          className="mb-0"
+          segments={[
+            {
+              label: "Mes candidatures",
+              linkProps: {
+                href: "../../",
+              },
+            },
+            {
+              label: certificationLabel,
+              linkProps: {
+                href: "../",
+              },
+            },
+          ]}
+        />
+
+        <div className="pr-[30%]">
+          <h1 className="mt-6 mb-2">Abandon de la candidature</h1>
+          <p className="mt-12 mb-6">
+            Une dossier de faisabilité a été envoyé{" "}
+            {candidacy.feasibility?.feasibilityFileSentAt ? (
+              <strong>
+                {format(
+                  toDate(candidacy.feasibility.feasibilityFileSentAt),
+                  "dd/MM/yyyy",
+                )}
+              </strong>
+            ) : (
+              ""
+            )}{" "}
+            sur cette candidature.
+          </p>
+
+          <p className="mb-6 text-lg font-bold">
+            Vous ne pouvez pas abandonner à cette étape.
+          </p>
+
+          <Highlight className="mb-12">
+            Vous pourrez abandonner dès que le certificateur aura donné sa
+            décision.
+          </Highlight>
+
+          <div className="flex justify-between">
+            <BackButton navigateBack={() => router.push("../")} />
+          </div>
+        </div>
+      </Panel>
+    );
+  }
+
   return (
     <Panel>
       <Breadcrumb
@@ -106,7 +166,7 @@ export default function DropoutCandidacyPage() {
         <p className="mb-6 text-lg font-bold">
           Quelles sont les conséquences d’un abandon à cette étape ?
         </p>
-        <Highlight>
+        <Highlight className="mb-6">
           <ul>
             <li>
               une nouvelle candidature sur la même certification pourra être
@@ -120,6 +180,7 @@ export default function DropoutCandidacyPage() {
           </ul>
         </Highlight>
       </div>
+
       <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
         <div className="pr-[30%]">
           <Select

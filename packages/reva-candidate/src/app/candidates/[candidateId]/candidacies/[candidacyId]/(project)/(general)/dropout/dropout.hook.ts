@@ -13,6 +13,10 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_DROPOUT = graphql(`
         codeRncp
         label
       }
+      feasibility {
+        decision
+        feasibilityFileSentAt
+      }
     }
   }
 `);

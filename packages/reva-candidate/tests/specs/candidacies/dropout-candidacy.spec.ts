@@ -10,6 +10,7 @@ import {
 } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
+import { createFeasibilityEntity } from "@tests/helpers/entities/create-feasibility.entity";
 import {
   createCandidacyGuardsAndDashboardHandlers,
   createCandidaciesGuardsHandlers,
@@ -70,7 +71,7 @@ function createCandidaciesHandlers(args?: {
 }
 
 // 107d95ee-6384-45da-9b1a-f9361cc60741	Reprise d’emploi	2022-12-29 13:03:13.58+00	NULL	true
-test.describe("drop out candidacy", () => {
+test.describe("drop out candidacy before feasibility file sent", () => {
   const certification = createCertificationEntity({
     label: "Certification 1",
     codeRncp: "RNCP0001",
@@ -133,5 +134,57 @@ test.describe("drop out candidacy", () => {
     await expect(page).toHaveURL(
       `candidates/${candidate.id}/candidacies/${candidacy.id}/`,
     );
+  });
+});
+
+test.describe("drop out candidacy after feasibility file sent", () => {
+  const certification = createCertificationEntity({
+    label: "Certification 1",
+    codeRncp: "RNCP0001",
+  });
+  const candidacy = createCandidacyEntity({
+    candidate,
+    certification,
+    status: "DOSSIER_FAISABILITE_ENVOYE",
+    feasibility: createFeasibilityEntity({
+      decision: "PENDING",
+      feasibilityFileSentAt: Date.now(),
+    }),
+  });
+
+  test.use({
+    mswHandlers: [
+      createCandidaciesHandlers({
+        candidacy,
+        activeFeaturesForConnectedUser: ["CANDIDATE_DROP_OUT_V2"],
+      }),
+      { scope: "test" },
+    ],
+  });
+
+  test("test the drop out candidacy flow when candidacy is in DOSSIER_FAISABILITE_ENVOYE status and has feasibility file sent", async ({
+    page,
+  }) => {
+    await loginAndWaitForCandidaciesInitialLoad(page);
+
+    await page.goto(`candidates/${candidate.id}/candidacies/${candidacy.id}/`);
+
+    const dropOutCandidacyButton = page.getByRole("button", {
+      name: "Abandon de la candidature",
+    });
+
+    await expect(dropOutCandidacyButton).toBeVisible();
+
+    await dropOutCandidacyButton.click();
+
+    await expect(page).toHaveURL(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/dropout/`,
+    );
+
+    const dropOutCandidacyWarning = page.getByText(
+      "Vous ne pouvez pas abandonner à cette étape.",
+    );
+
+    await expect(dropOutCandidacyWarning).toBeVisible();
   });
 });
