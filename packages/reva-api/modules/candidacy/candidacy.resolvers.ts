@@ -507,7 +507,6 @@ const unsafeResolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
-
     candidacy_dropOut: async (
       _: unknown,
       payload: {
@@ -549,6 +548,44 @@ const unsafeResolvers = {
         userEmail: context.auth.userInfo?.email,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
+      return candidacy;
+    },
+    candidacy_candidateDropOutCandidacy: async (
+      _: unknown,
+      payload: {
+        candidacyId: string;
+        dropOut: {
+          dropOutReasonId: string;
+          otherReasonContent?: string;
+        };
+      },
+      context: GraphqlContext,
+    ) => {
+      const candidacy = await dropOutCandidacy({
+        candidacyId: payload.candidacyId,
+        dropOutReasonId: payload.dropOut.dropOutReasonId,
+        otherReasonContent: payload.dropOut.otherReasonContent,
+        dropOutByCandidate: true,
+        dropOutConfirmedByCandidate: true,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      });
+
+      logCandidacyEvent({
+        candidacyId: payload.candidacyId,
+        eventType: CandidacyBusinessEvent.DROPPED_OUT_CANDIDACY_BY_CANDIDATE,
+        extraInfo: { ...payload.dropOut },
+        context,
+        result: candidacy,
+      });
+
+      await logCandidacyAuditEvent({
+        candidacyId: payload.candidacyId,
+        eventType: "CANDIDACY_DROPPED_OUT_BY_CANDIDATE",
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      });
+
       return candidacy;
     },
     candidacy_validateDropOut: async (

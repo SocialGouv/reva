@@ -110,6 +110,7 @@ type CandidacyDropOut {
   status: CandidacyStatusStep!
   validatedAt: Timestamp
   dropOutConfirmedByCandidate: Boolean!
+  dropOutByCandidate: Boolean!
 }
 
 type CandidacyConventionCollective {
@@ -394,6 +395,10 @@ type Mutation {
     typology: CandidateTypology!
     additionalInformation: String
     ccnId: ID
+  ): Candidacy!
+  candidacy_candidateDropOutCandidacy(
+    candidacyId: UUID!
+    dropOut: DropOutInput!
   ): Candidacy!
   candidacy_dropOut(candidacyId: UUID!, dropOut: DropOutInput!): Candidacy!
   candidacy_validateDropOut(candidacyId: UUID!): Candidacy!

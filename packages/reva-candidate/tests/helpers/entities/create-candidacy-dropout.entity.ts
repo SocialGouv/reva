@@ -4,14 +4,17 @@ export const createCandidacyDropOutEntity = ({
   createdAt = Date.now(),
   proofReceivedByAdmin = false,
   dropOutConfirmedByCandidate = false,
+  dropOutByCandidate = false,
 }: {
   createdAt?: number;
   proofReceivedByAdmin?: boolean;
   dropOutConfirmedByCandidate?: boolean;
+  dropOutByCandidate?: boolean;
 } = {}): CandidacyDropOut => ({
   createdAt,
   proofReceivedByAdmin,
   dropOutConfirmedByCandidate,
+  dropOutByCandidate,
   dropOutReason: {
     id: "reason-1",
     label: "Motif d'abandon",

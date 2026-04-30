@@ -15,6 +15,23 @@ interface CandidacyDropOutBannerProps {
 export const CandidacyDropOutBanner = ({
   candidacyDropOut,
 }: CandidacyDropOutBannerProps) => {
+  const isDropOutByCandidate = candidacyDropOut.dropOutByCandidate;
+
+  if (isDropOutByCandidate) {
+    return (
+      <BaseBanner
+        content={
+          <div className="font-bold" data-testid="drop-out-warning">
+            Cette candidature a été abandonnée le{" "}
+            {format(toDate(candidacyDropOut.createdAt), "dd/MM/yyyy")}.{" "}
+          </div>
+        }
+        imageSrc={WARNING_IMAGE}
+        imageAlt={WARNING_IMAGE_ALT}
+      />
+    );
+  }
+
   const dropOutConfirmed = isDropOutConfirmed({
     dropOutConfirmedByCandidate: candidacyDropOut.dropOutConfirmedByCandidate,
     proofReceivedByAdmin: candidacyDropOut.proofReceivedByAdmin,

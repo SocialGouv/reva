@@ -1,0 +1,137 @@
+import {
+  expect,
+  graphql,
+  test,
+} from "next/experimental/testmode/playwright/msw";
+
+import {
+  CandidacyEntity,
+  createCandidacyEntity,
+} from "@tests/helpers/entities/create-candidacy.entity";
+import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
+import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
+import {
+  createCandidacyGuardsAndDashboardHandlers,
+  createCandidaciesGuardsHandlers,
+  loginAndWaitForCandidaciesInitialLoad,
+} from "@tests/helpers/handlers/candidacies/candidacies-guards.handler";
+import { graphQLResolver } from "@tests/helpers/network/msw";
+
+const fvae = graphql.link("https://reva-api/api/graphql");
+
+const candidate = createCandidateEntity();
+
+function createCandidaciesHandlers(args?: {
+  candidacy: CandidacyEntity;
+  activeFeaturesForConnectedUser?: string[];
+}) {
+  return [
+    ...createCandidaciesGuardsHandlers({
+      candidate,
+      candidacies: args?.candidacy ? [args.candidacy] : [],
+      activeFeaturesForConnectedUser: args?.activeFeaturesForConnectedUser,
+    }),
+    ...createCandidacyGuardsAndDashboardHandlers(args?.candidacy ?? null),
+    fvae.mutation(
+      "dropOutCandidacyById",
+      graphQLResolver({
+        dropOutCandidacyById: { id: args?.candidacy?.id ?? null },
+      }),
+    ),
+    fvae.query(
+      "getCandidacyByIdWithCandidateForDropout",
+      graphQLResolver({
+        getCandidacyById: {
+          ...args?.candidacy,
+        },
+      }),
+    ),
+    fvae.query(
+      "getDropOutReasons",
+      graphQLResolver({
+        getDropOutReasons: [
+          {
+            id: "reason-1",
+            label: "Motif d'abandon",
+            isActive: true,
+          },
+        ],
+      }),
+    ),
+    fvae.mutation(
+      "candidacy_candidateDropOutCandidacy",
+      graphQLResolver({
+        candidacy_candidateDropOutCandidacy: {
+          id: args?.candidacy?.id ?? null,
+        },
+      }),
+    ),
+  ];
+}
+
+// 107d95ee-6384-45da-9b1a-f9361cc60741	Reprise d’emploi	2022-12-29 13:03:13.58+00	NULL	true
+test.describe("drop out candidacy", () => {
+  const certification = createCertificationEntity({
+    label: "Certification 1",
+    codeRncp: "RNCP0001",
+  });
+  const candidacy = createCandidacyEntity({
+    candidate,
+    certification,
+    status: "PRISE_EN_CHARGE",
+  });
+
+  test.use({
+    mswHandlers: [
+      createCandidaciesHandlers({
+        candidacy,
+        activeFeaturesForConnectedUser: ["CANDIDATE_DROP_OUT_V2"],
+      }),
+      { scope: "test" },
+    ],
+  });
+
+  test("test the drop out candidacy flow when candidacy is not in PROJET status and has no feasibility file sent", async ({
+    page,
+  }) => {
+    await loginAndWaitForCandidaciesInitialLoad(page);
+
+    await page.goto(`candidates/${candidate.id}/candidacies/${candidacy.id}/`);
+
+    const dropOutCandidacyButton = page.getByRole("button", {
+      name: "Abandon de la candidature",
+    });
+
+    await expect(dropOutCandidacyButton).toBeVisible();
+
+    await dropOutCandidacyButton.click();
+
+    await expect(page).toHaveURL(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/dropout/`,
+    );
+
+    const confirmDropOutCandidacyButton = page.getByRole("button", {
+      name: "Confirmer",
+    });
+
+    await expect(confirmDropOutCandidacyButton).toBeVisible();
+
+    await confirmDropOutCandidacyButton.click();
+
+    await expect(page).toHaveURL(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/dropout/`,
+    );
+
+    const selectDropOutReason = page.getByLabel("Motif de l'abandon :");
+
+    await expect(selectDropOutReason).toBeVisible();
+
+    await selectDropOutReason.selectOption("reason-1");
+
+    await confirmDropOutCandidacyButton.click();
+
+    await expect(page).toHaveURL(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/`,
+    );
+  });
+});

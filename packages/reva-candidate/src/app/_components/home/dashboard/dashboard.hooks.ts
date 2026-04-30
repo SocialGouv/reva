@@ -41,6 +41,7 @@ const GET_CANDIDACY_BY_ID_FOR_DASHBOARD = graphql(`
         proofReceivedByAdmin
         createdAt
         dropOutConfirmedByCandidate
+        dropOutByCandidate
       }
       certification {
         id

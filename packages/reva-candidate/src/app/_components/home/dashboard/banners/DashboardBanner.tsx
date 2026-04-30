@@ -15,7 +15,6 @@ type BannerProps = {
 
 export const DashboardBanner = (props: BannerProps) => {
   if (!props.candidacy) {
-    console.log("candidacy is null");
     return null;
   }
 

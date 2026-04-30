@@ -12,6 +12,7 @@ interface DropOutCandidacyParams {
   dropOutReasonId: string;
   otherReasonContent?: string;
   dropOutConfirmedByCandidate?: boolean;
+  dropOutByCandidate?: boolean;
 }
 
 export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
@@ -78,17 +79,34 @@ export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
   }
 
   if (!params.userRoles.includes("admin")) {
-    const isFeasibilitySent = isCandidacyStatusEqualOrAboveGivenStatus(
-      candidacyStatus,
-    )("DOSSIER_FAISABILITE_ENVOYE");
+    const candidateDropOutV2Feature = await prismaClient.feature.findFirst({
+      where: {
+        key: "CANDIDATE_DROP_OUT_V2",
+      },
+    });
+    const isCandidateDropOutV2FeatureEnabled =
+      candidateDropOutV2Feature?.isActive ?? false;
 
-    const isFeasibilityIncomplete =
-      candidacyStatus === "DOSSIER_FAISABILITE_INCOMPLET";
+    if (isCandidateDropOutV2FeatureEnabled) {
+      const isInProjectStatus = candidacyStatus === "PROJET";
+      if (isInProjectStatus) {
+        throw new Error(
+          `La candidature ${params.candidacyId} ne peut pas être abandonnée car elle est au statut projet. Vous pouvez cepandant la supprimer`,
+        );
+      }
+    } else {
+      const isFeasibilitySent = isCandidacyStatusEqualOrAboveGivenStatus(
+        candidacyStatus,
+      )("DOSSIER_FAISABILITE_ENVOYE");
 
-    if (!isFeasibilitySent && !isFeasibilityIncomplete) {
-      throw new Error(
-        "La candidature ne peut être abandonnée car le dossier de faisabilité n'a pas été envoyé",
-      );
+      const isFeasibilityIncomplete =
+        candidacyStatus === "DOSSIER_FAISABILITE_INCOMPLET";
+
+      if (!isFeasibilitySent && !isFeasibilityIncomplete) {
+        throw new Error(
+          "La candidature ne peut être abandonnée car le dossier de faisabilité n'a pas été envoyé",
+        );
+      }
     }
   }
 
@@ -101,6 +119,7 @@ export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
         otherReasonContent: params.otherReasonContent || null,
         dropOutConfirmedByCandidate:
           params.dropOutConfirmedByCandidate || false,
+        dropOutByCandidate: params.dropOutByCandidate || false,
       },
     });
     return candidacy;

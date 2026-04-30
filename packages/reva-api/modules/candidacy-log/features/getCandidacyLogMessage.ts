@@ -123,6 +123,9 @@ export const getCandidacyLogMessage = ({
     case "CANDIDACY_DROPPED_OUT":
       return log("Candidature abandonnée");
 
+    case "CANDIDACY_DROPPED_OUT_BY_CANDIDATE":
+      return log("Candidature abandonnée par le candidat");
+
     case "CANDIDACY_DROP_OUT_VALIDATED":
       return log("Validation de l'abandon de la candidature");
 
