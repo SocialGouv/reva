@@ -3,6 +3,7 @@ import { prismaClient } from "@/prisma/client";
 
 import { ExperienceInput } from "../candidacy.types";
 
+import { canAAPEditExperiences } from "./canAAPEditExperiences";
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 
 export const updateExperienceOfCandidacy = async ({
@@ -38,6 +39,15 @@ export const updateExperienceOfCandidacy = async ({
   ) {
     throw new Error(
       "Impossible de mettre à jour les experiences après avoir confirmé le parcours",
+    );
+  }
+
+  if (
+    userRoles.includes("manage_candidacy") &&
+    !canAAPEditExperiences(candidacy.status)
+  ) {
+    throw new Error(
+      "Impossible de modifier les expériences après l'envoi du dossier de faisabilité",
     );
   }
 

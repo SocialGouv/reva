@@ -1,6 +1,8 @@
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { prismaClient } from "@/prisma/client";
 
+import { canAAPEditExperiences } from "./canAAPEditExperiences";
+
 export const deleteExperienceFromCandidacy = async ({
   candidacyId,
   experienceId,
@@ -25,9 +27,18 @@ export const deleteExperienceFromCandidacy = async ({
     throw new Error("Aucune candidature n'a été trouvée");
   }
 
-  if (candidacy.status !== "PROJET") {
+  if (userRoles.includes("candidate") && candidacy.status !== "PROJET") {
     throw new Error(
       "Impossible de supprimer les expériences après avoir envoyé la candidature à l'AAP",
+    );
+  }
+
+  if (
+    userRoles.includes("manage_candidacy") &&
+    !canAAPEditExperiences(candidacy.status)
+  ) {
+    throw new Error(
+      "Impossible de modifier les expériences après l'envoi du dossier de faisabilité",
     );
   }
 
