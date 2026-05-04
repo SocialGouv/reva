@@ -69,28 +69,30 @@ const CandidacyDropoutComponent = ({
   if (candidacy.candidacyDropOut?.dropOutReason) {
     return (
       <>
-        <p className="flex flex-col gap-6 p-8 bg-dsfr-light-neutral-grey-1000 m-0">
-          <span>
-            Candidature mise en abandon le :{" "}
-            <strong>
+        <div className="flex flex-col m-0">
+          <div className="flex items-center gap-6 border-t border-b border-neutral-300 py-2 px-4 text-dsfrGray-labelGrey">
+            <div>Date de la mise en abandon</div>
+            <div className="font-bold flex-1 text-right">
               {format(candidacy.candidacyDropOut.createdAt, "d/MM/yyyy")}
-            </strong>
-          </span>
+            </div>
+          </div>
 
-          <span>
-            Raison :{" "}
-            <strong>{candidacy.candidacyDropOut.dropOutReason.label}</strong>
-          </span>
+          <div className="flex items-center gap-6 border-b border-neutral-300 py-2 px-4 text-dsfrGray-labelGrey">
+            <div>Raison de l'abandon</div>
+            <div className="font-bold flex-1 text-right">
+              {candidacy.candidacyDropOut.dropOutReason.label}
+            </div>
+          </div>
 
           {isAdmin && candidacy.candidacyDropOut.validatedAt && (
-            <span>
-              Confirmation par France VAE :{" "}
-              <strong>
+            <div className="flex items-center gap-6 border-b border-neutral-300 py-2 px-4 text-dsfrGray-labelGrey">
+              <div>Confirmation par France VAE</div>
+              <div className="font-bold flex-1 text-right">
                 {format(candidacy.candidacyDropOut.validatedAt, "d/MM/yyyy")}
-              </strong>
-            </span>
+              </div>
+            </div>
           )}
-        </p>
+        </div>
         {isAdmin &&
           candidacy.candidacyDropOut.proofReceivedByAdmin &&
           !candidacy.candidacyDropOut.dropOutConfirmedByCandidate && (

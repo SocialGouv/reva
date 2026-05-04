@@ -6,8 +6,10 @@ export const CancelDropOutForm = ({
   handleCancelDropoutCandidacy: (e: React.FormEvent<HTMLFormElement>) => void;
 }) => (
   <>
-    <hr className="pb-0.5" />
-    <form className="flex flex-col" onSubmit={handleCancelDropoutCandidacy}>
+    <form
+      className="mt-6 flex flex-col"
+      onSubmit={handleCancelDropoutCandidacy}
+    >
       <h2>Annuler l'abandon du candidat</h2>
       <p>
         En annulant l'abandon du candidat, il pourra reprendre son parcours là

@@ -6,9 +6,10 @@ export const ConfirmDropOutForm = ({
   handleConfirmDropoutCandidacy: (e: React.FormEvent<HTMLFormElement>) => void;
 }) => (
   <>
-    <hr className="pb-0.5" />
-
-    <form className="flex flex-col" onSubmit={handleConfirmDropoutCandidacy}>
+    <form
+      className="mt-6 flex flex-col"
+      onSubmit={handleConfirmDropoutCandidacy}
+    >
       <h2>Confirmer l'abandon du candidat</h2>
       <p>
         En confirmant que le candidat souhaite abandonner sa candidature, vous
