@@ -17,6 +17,8 @@ import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { sanitizedText } from "@/utils/input-sanitization";
 
+import { CandidacyStatusStep } from "@/graphql/generated/graphql";
+
 import { useDropout } from "./dropout.hook";
 
 const schema = z.object({
@@ -73,7 +75,8 @@ export default function DropoutCandidacyPage() {
   const certificationLabel = `RNCP ${candidacy.certification?.codeRncp} : ${candidacy.certification?.label}`;
 
   const isFeasibilityDecisionPending =
-    candidacy.feasibility?.decision === "PENDING";
+    candidacy.status === "DOSSIER_FAISABILITE_ENVOYE" ||
+    candidacy.status === "DOSSIER_FAISABILITE_COMPLET";
 
   if (isFeasibilityDecisionPending) {
     return (
@@ -131,6 +134,10 @@ export default function DropoutCandidacyPage() {
     );
   }
 
+  const isFeasibilityDecisionHasBeenMade = isFeasibilityDecisionMade(
+    candidacy.status,
+  );
+
   return (
     <Panel>
       <Breadcrumb
@@ -158,26 +165,65 @@ export default function DropoutCandidacyPage() {
         <p className="mb-6">
           Vous êtes sur le point d'abandonner votre candidature sur la
           certification <strong>{candidateCertification}</strong>.
-          <br />
-          <br />
-          Votre dossier de faisabilité n'a pas encore été envoyé au
-          certificateur.
+          {isFeasibilityDecisionHasBeenMade ? (
+            <>
+              <br />
+              <br />
+              {candidacy.status == "DOSSIER_FAISABILITE_RECEVABLE" && (
+                <span>
+                  Une <strong>recevabilité favorable</strong> a été attribuée le{" "}
+                  {candidacy.feasibility?.decisionSentAt ? (
+                    <strong>
+                      {format(
+                        toDate(candidacy.feasibility.decisionSentAt),
+                        "dd/MM/yyyy",
+                      )}
+                    </strong>
+                  ) : (
+                    ""
+                  )}{" "}
+                  sur cette candidature.{" "}
+                </span>
+              )}
+            </>
+          ) : (
+            <>
+              <br />
+              <br />
+              Votre dossier de faisabilité n'a pas encore été envoyé au
+              certificateur.
+            </>
+          )}
         </p>
         <p className="mb-6 text-lg font-bold">
           Quelles sont les conséquences d’un abandon à cette étape ?
         </p>
         <Highlight className="mb-6">
-          <ul>
-            <li>
-              une nouvelle candidature sur la même certification pourra être
-              créée
-            </li>
-            <li>
-              si un financement a été validé, tournez-vous vers votre
-              accompagnateur. La gestion du financement se fait hors plateforme
-              France VAE.
-            </li>
-          </ul>
+          {isFeasibilityDecisionHasBeenMade ? (
+            <ul>
+              <li>
+                Vous ne pourrez pas continuer votre parcours, déposer votre
+                dossier de validation et passer devant le jury
+              </li>
+              <li>
+                Si un financement a été validé, tournez-vous vers votre
+                accompagnateur. La gestion du financement se fait hors
+                plateforme France VAE.
+              </li>
+            </ul>
+          ) : (
+            <ul>
+              <li>
+                Une nouvelle candidature sur la même certification pourra être
+                créée
+              </li>
+              <li>
+                Si un financement a été validé, tournez-vous vers votre
+                accompagnateur. La gestion du financement se fait hors
+                plateforme France VAE.
+              </li>
+            </ul>
+          )}
         </Highlight>
       </div>
 
@@ -223,3 +269,16 @@ export default function DropoutCandidacyPage() {
     </Panel>
   );
 }
+
+const isFeasibilityDecisionMade = (status: CandidacyStatusStep): boolean => {
+  switch (status) {
+    case "DOSSIER_FAISABILITE_INCOMPLET":
+    case "DOSSIER_FAISABILITE_RECEVABLE":
+    case "DOSSIER_FAISABILITE_NON_RECEVABLE":
+    case "DOSSIER_DE_VALIDATION_ENVOYE":
+    case "DOSSIER_DE_VALIDATION_SIGNALE":
+      return true;
+    default:
+      return false;
+  }
+};

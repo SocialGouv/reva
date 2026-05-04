@@ -94,6 +94,19 @@ export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
           `La candidature ${params.candidacyId} ne peut pas être abandonnée car elle est au statut projet. Vous pouvez cepandant la supprimer`,
         );
       }
+
+      const isFeasibilitySent = isCandidacyStatusEqualOrAboveGivenStatus(
+        candidacyStatus,
+      )("DOSSIER_FAISABILITE_ENVOYE");
+
+      const isFeasibilityIncomplete =
+        candidacyStatus === "DOSSIER_FAISABILITE_INCOMPLET";
+
+      if (!isFeasibilitySent && !isFeasibilityIncomplete) {
+        throw new Error(
+          "La candidature ne peut être abandonnée car le dossier de faisabilité n'a pas été envoyé",
+        );
+      }
     } else {
       const isFeasibilitySent = isCandidacyStatusEqualOrAboveGivenStatus(
         candidacyStatus,

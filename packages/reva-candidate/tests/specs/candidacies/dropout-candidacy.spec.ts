@@ -18,6 +18,8 @@ import {
 } from "@tests/helpers/handlers/candidacies/candidacies-guards.handler";
 import { graphQLResolver } from "@tests/helpers/network/msw";
 
+import { CandidacyStatusStep } from "@/graphql/generated/graphql";
+
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 const candidate = createCandidateEntity();
@@ -188,3 +190,80 @@ test.describe("drop out candidacy after feasibility file sent", () => {
     await expect(dropOutCandidacyWarning).toBeVisible();
   });
 });
+
+const FEASIBILITY_DECISION_MADE_STATUSES = [
+  "DOSSIER_FAISABILITE_INCOMPLET",
+  "DOSSIER_FAISABILITE_RECEVABLE",
+  "DOSSIER_FAISABILITE_NON_RECEVABLE",
+  "DOSSIER_DE_VALIDATION_ENVOYE",
+  "DOSSIER_DE_VALIDATION_SIGNALE",
+];
+
+for (const status of FEASIBILITY_DECISION_MADE_STATUSES) {
+  test.describe(`drop out candidacy after ${status} status`, () => {
+    const certification = createCertificationEntity({
+      label: "Certification 1",
+      codeRncp: "RNCP0001",
+    });
+    const candidacy = createCandidacyEntity({
+      candidate,
+      certification,
+      status: status as CandidacyStatusStep,
+    });
+
+    test.use({
+      mswHandlers: [
+        createCandidaciesHandlers({
+          candidacy,
+          activeFeaturesForConnectedUser: ["CANDIDATE_DROP_OUT_V2"],
+        }),
+        { scope: "test" },
+      ],
+    });
+
+    test(`test the drop out candidacy flow when candidacy is in ${status} status`, async ({
+      page,
+    }) => {
+      await loginAndWaitForCandidaciesInitialLoad(page);
+
+      await page.goto(
+        `candidates/${candidate.id}/candidacies/${candidacy.id}/`,
+      );
+      const dropOutCandidacyButton = page.getByRole("button", {
+        name: "Abandon de la candidature",
+      });
+
+      await expect(dropOutCandidacyButton).toBeVisible();
+
+      await dropOutCandidacyButton.click();
+
+      await expect(page).toHaveURL(
+        `candidates/${candidate.id}/candidacies/${candidacy.id}/dropout/`,
+      );
+
+      const confirmDropOutCandidacyButton = page.getByRole("button", {
+        name: "Confirmer",
+      });
+
+      await expect(confirmDropOutCandidacyButton).toBeVisible();
+
+      await confirmDropOutCandidacyButton.click();
+
+      await expect(page).toHaveURL(
+        `candidates/${candidate.id}/candidacies/${candidacy.id}/dropout/`,
+      );
+
+      const selectDropOutReason = page.getByLabel("Motif de l'abandon :");
+
+      await expect(selectDropOutReason).toBeVisible();
+
+      await selectDropOutReason.selectOption("reason-1");
+
+      await confirmDropOutCandidacyButton.click();
+
+      await expect(page).toHaveURL(
+        `candidates/${candidate.id}/candidacies/${candidacy.id}/`,
+      );
+    });
+  });
+}

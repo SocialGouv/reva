@@ -9,13 +9,14 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_DROPOUT = graphql(`
   query getCandidacyByIdWithCandidateForDropout($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
+      status
       certification {
         codeRncp
         label
       }
       feasibility {
-        decision
         feasibilityFileSentAt
+        decisionSentAt
       }
     }
   }
