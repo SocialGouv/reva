@@ -26,6 +26,9 @@ const getCandidacyQuery = graphql(`
       jury {
         dateOfSession
       }
+      candidacyDropOut {
+        createdAt
+      }
     }
   }
 `);
@@ -54,6 +57,7 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
   const candidate = candidacy?.candidate;
   const juryDateOfSession = candidacy?.jury?.dateOfSession;
   const typeAccompagnement = candidacy?.typeAccompagnement;
+  const isDroppedOut = !!candidacy?.candidacyDropOut;
 
   const { canAccess } = useCanAccessCandidacy(candidacyId);
 
@@ -93,6 +97,15 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
   }
 
   const footerItems = [];
+
+  if (isDroppedOut) {
+    footerItems.push(
+      menuItem(
+        "Abandon du candidat",
+        `/candidacies/${candidacyId}/candidacy-drop-out`,
+      ),
+    );
+  }
 
   if (!juryDateOfSession) {
     footerItems.push(

@@ -89,7 +89,8 @@ const createTab = ({
 });
 
 const isAAPCandidaciesPath = (pathname: string) => {
-  const exclusionPattern = /\/candidacies\/(?!annuaire\/).*/;
+  const exclusionPattern =
+    /\/candidacies\/(?!annuaire\/)(candidacy-drop-out\/).*/;
   const subPathPattern =
     /\/candidacies\/.*\/(feasibility\/)|(dossier-de-validation\/)|(jury\/)|(transfer.*\/)/;
 
@@ -102,7 +103,7 @@ const isAAPVaeCollectivesPath = (pathname: string) =>
 const isCertificationAuthorityCandidaciesPath = (pathname: string) => {
   const mainPattern = /\/candidacies\/annuaire/;
   const subPathPattern =
-    /\/candidacies\/.*\/(feasibility\/)|(dossier-de-validation\/)|(jury\/)|(transfer.*\/)/;
+    /\/candidacies\/.*\/(feasibility\/)|(dossier-de-validation\/)|(jury\/)|(transfer.*\/)|(candidacy-drop-out\/)/;
 
   return !!(pathname.match(mainPattern) || pathname.match(subPathPattern));
 };
