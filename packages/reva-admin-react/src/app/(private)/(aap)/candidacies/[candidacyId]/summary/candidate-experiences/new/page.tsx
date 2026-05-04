@@ -1,5 +1,5 @@
 "use client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { parseISO } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 
@@ -9,9 +9,19 @@ import {
 } from "@/app/(private)/(aap)/candidacies/[candidacyId]/summary/candidate-experiences/_components/CandidateExperienceForm";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { canAAPEditExperiences } from "@/utils/canAAPEditExperiences";
 
 import { graphql } from "@/graphql/generated";
 import { ExperienceInput } from "@/graphql/generated/graphql";
+
+const getCandidacyStatusForExperienceQuery = graphql(`
+  query getCandidacyStatusForExperienceQuery($candidacyId: ID!) {
+    getCandidacyById(id: $candidacyId) {
+      id
+      status
+    }
+  }
+`);
 
 const addCandidacyExperienceMutation = graphql(`
   mutation addCandidacyExperienceMutation(
@@ -32,6 +42,7 @@ const NewCandidateExperiencePage = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
+
   const { graphqlClient } = useGraphQlClient();
 
   const addCandidacyExperience = useMutation({
@@ -41,6 +52,18 @@ const NewCandidateExperiencePage = () => {
         experience,
       }),
   });
+
+  const { data } = useQuery({
+    queryKey: [candidacyId, "getCandidacyStatusForExperienceQuery"],
+    queryFn: () =>
+      graphqlClient.request(getCandidacyStatusForExperienceQuery, {
+        candidacyId,
+      }),
+  });
+
+  const candidacyStatus = data?.getCandidacyById?.status;
+
+  const canEditExperiences = canAAPEditExperiences(candidacyStatus);
 
   const handleSubmit = async (formData: CandidateExperienceFormData) => {
     try {
@@ -57,7 +80,12 @@ const NewCandidateExperiencePage = () => {
     }
   };
 
-  return <CandidateExperienceForm onSubmit={handleSubmit} />;
+  return (
+    <CandidateExperienceForm
+      onSubmit={handleSubmit}
+      disabled={!canEditExperiences}
+    />
+  );
 };
 
 export default NewCandidateExperiencePage;

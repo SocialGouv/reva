@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { canAAPEditExperiences } from "@/utils/canAAPEditExperiences";
 
 import { graphql } from "@/graphql/generated";
 
@@ -172,11 +173,14 @@ const useCandidateSummary = (candidacyId: string) => {
       ?.getCandidacyById?.feasibility?.certificationAuthority
       ?.certificationAuthorityStructures[0];
 
+  const canEditExperiences = canAAPEditExperiences(candidacy?.status);
+
   return {
     candidacy,
     getCandidacyIsLoading,
     certificationAuthorityStructure,
     getCandidacyFeasibilityCertificationAuthorityStructuresIsLoading,
+    canEditExperiences,
   };
 };
 

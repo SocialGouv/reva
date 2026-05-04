@@ -9,6 +9,7 @@ import {
 } from "@/app/(private)/(aap)/candidacies/[candidacyId]/summary/candidate-experiences/_components/CandidateExperienceForm";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { canAAPEditExperiences } from "@/utils/canAAPEditExperiences";
 
 import { graphql } from "@/graphql/generated";
 import { ExperienceInput } from "@/graphql/generated/graphql";
@@ -16,6 +17,7 @@ import { ExperienceInput } from "@/graphql/generated/graphql";
 const getCandidadateExperiencesQuery = graphql(`
   query getCandidadateExperiencesQuery($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
+      status
       experiences {
         id
         title
@@ -57,6 +59,10 @@ const EditCandidateExperiencePage = () => {
       graphqlClient.request(getCandidadateExperiencesQuery, { candidacyId }),
   });
 
+  const canEditExperiences = canAAPEditExperiences(
+    getCandidadateExperiencesResponse?.getCandidacyById?.status,
+  );
+
   const updateCandidacyExperience = useMutation({
     mutationFn: (experience: ExperienceInput) =>
       graphqlClient.request(updateCandidacyExperienceMutation, {
@@ -94,6 +100,7 @@ const EditCandidateExperiencePage = () => {
           ...experience,
           startedAt: format(toDate(experience.startedAt), "yyyy-MM-dd"),
         }}
+        disabled={!canEditExperiences}
       />
     )
   );

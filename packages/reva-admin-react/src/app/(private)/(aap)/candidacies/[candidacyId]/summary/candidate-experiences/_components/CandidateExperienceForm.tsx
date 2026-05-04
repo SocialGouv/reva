@@ -57,9 +57,11 @@ export type CandidateExperienceFormData = z.infer<typeof schema>;
 export const CandidateExperienceForm = ({
   onSubmit,
   editedExperience,
+  disabled = false,
 }: {
   onSubmit(data: CandidateExperienceFormData): Promise<void>;
   editedExperience?: CandidateExperienceFormData;
+  disabled?: boolean;
 }) => {
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -123,6 +125,7 @@ export const CandidateExperienceForm = ({
             nativeInputProps={{ ...register("title") }}
             state={errors.title ? "error" : "default"}
             stateRelatedMessage={errors.title?.message}
+            disabled={disabled}
           />
           <Input
             label="Date de début"
@@ -133,6 +136,7 @@ export const CandidateExperienceForm = ({
             }}
             state={errors.startedAt ? "error" : "default"}
             stateRelatedMessage={errors.startedAt?.message}
+            disabled={disabled}
           />
           <Select
             label="Durée"
@@ -141,6 +145,7 @@ export const CandidateExperienceForm = ({
             }}
             state={errors.duration ? "error" : "default"}
             stateRelatedMessage={errors.duration?.message}
+            disabled={disabled}
           >
             {durationValues.map((d) => (
               <option key={d} value={d}>
@@ -157,11 +162,13 @@ export const CandidateExperienceForm = ({
             nativeTextAreaProps={{ ...register("description") }}
             state={errors.description ? "error" : "default"}
             stateRelatedMessage={errors.description?.message}
+            disabled={disabled}
           />
         </div>
         <FormButtons
           backUrl={`/candidacies/${candidacyId}/summary`}
           formState={{ isDirty, isSubmitting }}
+          disabled={disabled}
         />
       </form>
     </div>

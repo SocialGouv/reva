@@ -25,7 +25,7 @@ const CandidacySummaryPage = () => {
     candidacyId: string;
   }>();
 
-  const { candidacy, certificationAuthorityStructure } =
+  const { candidacy, certificationAuthorityStructure, canEditExperiences } =
     useCandidateSummary(candidacyId);
 
   const { takeOverCandidacy } = useTakeOverCandidacy();
@@ -324,7 +324,10 @@ const CandidacySummaryPage = () => {
             )}
             <CandidateExperiencesSectionCard
               candidacyId={candidacyId}
-              isEditable={candidacy.feasibilityFormat === "DEMATERIALIZED"}
+              isEditable={
+                candidacy.feasibilityFormat === "DEMATERIALIZED" &&
+                canEditExperiences
+              }
               experiences={candidacy.experiences.map((e) => ({
                 id: e.id,
                 title: e.title,
