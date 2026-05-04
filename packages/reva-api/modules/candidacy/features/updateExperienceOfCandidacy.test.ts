@@ -25,7 +25,7 @@ const updateExperienceMutation = graphql(`
   }
 `);
 
-describe("update experience of candidacy", () => {
+describe("mise à jour d'une expérience de candidature", () => {
   const createExperienceForCandidacy = async (
     candidacyId: string,
     title: string,
@@ -60,7 +60,7 @@ describe("update experience of candidacy", () => {
       },
     });
 
-  test("should update an experience attached to the authorized candidacy", async () => {
+  test("doit mettre à jour une expérience rattachée à la candidature autorisée", async () => {
     const candidacy = await createCandidacyHelper({
       candidacyActiveStatus: CandidacyStatusStep.PROJET,
     });
@@ -92,7 +92,7 @@ describe("update experience of candidacy", () => {
     });
   });
 
-  test("should reject updating an experience that is not attached to the authorized candidacy", async () => {
+  test("doit rejeter la mise à jour d'une expérience qui n'est pas rattachée à la candidature autorisée", async () => {
     const ownedCandidacy = await createCandidacyHelper({
       candidacyActiveStatus: CandidacyStatusStep.PROJET,
     });
@@ -123,7 +123,7 @@ describe("update experience of candidacy", () => {
     ).rejects.toThrow();
   });
 
-  test("should prevent a candidate from updating an experience after confirming the parcours", async () => {
+  test("doit empêcher un candidat de mettre à jour une expérience après avoir confirmé le parcours", async () => {
     const candidacy = await createCandidacyHelper({
       candidacyActiveStatus: CandidacyStatusStep.PARCOURS_CONFIRME,
     });
@@ -153,7 +153,7 @@ describe("update experience of candidacy", () => {
     );
   });
 
-  test("should let an AAP update an experience attached to a candidacy it owns", async () => {
+  test("doit permettre à un AAP de mettre à jour une expérience rattachée à une candidature qu'il possède", async () => {
     const candidacy = await createCandidacyHelper({
       candidacyActiveStatus: CandidacyStatusStep.PROJET,
     });
@@ -185,7 +185,7 @@ describe("update experience of candidacy", () => {
     });
   });
 
-  test("should reject an AAP updating an experience that is not attached to a candidacy it owns", async () => {
+  test("doit rejeter un AAP qui met à jour une expérience non rattachée à une candidature qu'il possède", async () => {
     const ownedCandidacy = await createCandidacyHelper({
       candidacyActiveStatus: CandidacyStatusStep.PROJET,
     });
@@ -215,4 +215,78 @@ describe("update experience of candidacy", () => {
       }),
     ).rejects.toThrow();
   });
+
+  test("doit permettre à un AAP de mettre à jour une expérience lorsque le statut est DOSSIER_FAISABILITE_INCOMPLET", async () => {
+    const candidacy = await createCandidacyHelper({
+      candidacyActiveStatus: CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
+    });
+
+    const experience = await createExperienceForCandidacy(
+      candidacy.id,
+      "Experience 1",
+    );
+
+    const graphqlClient = getGraphQLClientForAap(
+      candidacy.organism?.organismOnAccounts[0].account.keycloakId,
+    );
+
+    const result = await graphqlClient.request(updateExperienceMutation, {
+      candidacyId: candidacy.id,
+      experienceId: experience.id,
+      experience: {
+        title: "Updated experience",
+        description: "Updated description",
+        duration: ExperienceDuration.moreThanThreeYears,
+        startedAt: Date.parse("2021-01-01T00:00:00.000Z"),
+      },
+    });
+
+    expect(result.candidacy_updateExperience).toMatchObject({
+      id: experience.id,
+      title: "Updated experience",
+      description: "Updated description",
+    });
+  });
+
+  test.each<CandidacyStatusStep>([
+    "DOSSIER_FAISABILITE_ENVOYE",
+    "DOSSIER_FAISABILITE_COMPLET",
+    "DOSSIER_FAISABILITE_RECEVABLE",
+    "DOSSIER_FAISABILITE_NON_RECEVABLE",
+    "DOSSIER_DE_VALIDATION_ENVOYE",
+    "DOSSIER_DE_VALIDATION_SIGNALE",
+    "DOSSIER_PRO",
+    "CERTIFICATION",
+  ])(
+    "doit empêcher un AAP de mettre à jour une expérience lorsque le statut de la candidature est %s",
+    async (status: CandidacyStatusStep) => {
+      const candidacy = await createCandidacyHelper({
+        candidacyActiveStatus: status,
+      });
+
+      const experience = await createExperienceForCandidacy(
+        candidacy.id,
+        "Experience 1",
+      );
+
+      const graphqlClient = getGraphQLClientForAap(
+        candidacy.organism?.organismOnAccounts[0].account.keycloakId,
+      );
+
+      await expect(
+        graphqlClient.request(updateExperienceMutation, {
+          candidacyId: candidacy.id,
+          experienceId: experience.id,
+          experience: {
+            title: "Updated experience",
+            description: "Updated description",
+            duration: ExperienceDuration.moreThanThreeYears,
+            startedAt: Date.parse("2021-01-01T00:00:00.000Z"),
+          },
+        }),
+      ).rejects.toThrow(
+        "Impossible de modifier les expériences après l'envoi du dossier de faisabilité",
+      );
+    },
+  );
 });

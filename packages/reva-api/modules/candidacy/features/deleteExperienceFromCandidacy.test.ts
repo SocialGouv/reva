@@ -16,7 +16,7 @@ const deleteExperienceMutation = graphql(`
   }
 `);
 
-describe("delete experience from candidacy", () => {
+describe("suppression d'une expérience de candidature", () => {
   const createExperienceForCandidacy = async (
     candidacyId: string,
     title: string,
@@ -51,7 +51,7 @@ describe("delete experience from candidacy", () => {
       },
     });
 
-  test("should successfully delete one experience and keep the other", async () => {
+  test("doit supprimer une expérience avec succès et conserver l'autre", async () => {
     const candidacy = await createCandidacyHelper({
       candidacyActiveStatus: CandidacyStatusStep.PROJET,
     });
@@ -88,7 +88,7 @@ describe("delete experience from candidacy", () => {
     expect(remainingExperience?.title).toBe("Experience 2");
   });
 
-  test("should reject deleting an experience that is not attached to the authorized candidacy", async () => {
+  test("doit rejeter la suppression d'une expérience qui n'est pas rattachée à la candidature autorisée", async () => {
     const ownedCandidacy = await createCandidacyHelper({
       candidacyActiveStatus: CandidacyStatusStep.PROJET,
     });
@@ -113,7 +113,7 @@ describe("delete experience from candidacy", () => {
     ).rejects.toThrow();
   });
 
-  test("should let an AAP delete an experience attached to a candidacy it owns", async () => {
+  test("doit permettre à un AAP de supprimer une expérience rattachée à une candidature qu'il possède", async () => {
     const candidacy = await createCandidacyHelper({
       candidacyActiveStatus: CandidacyStatusStep.PROJET,
     });
@@ -141,7 +141,7 @@ describe("delete experience from candidacy", () => {
     expect(deletedExperience).toBeNull();
   });
 
-  test("should reject an AAP deleting an experience that is not attached to a candidacy it owns", async () => {
+  test("doit rejeter un AAP qui supprime une expérience non rattachée à une candidature qu'il possède", async () => {
     const ownedCandidacy = await createCandidacyHelper({
       candidacyActiveStatus: CandidacyStatusStep.PROJET,
     });
@@ -180,7 +180,7 @@ describe("delete experience from candidacy", () => {
     "DOSSIER_DE_VALIDATION_SIGNALE",
     "ARCHIVE",
   ])(
-    "should prevent deletion when candidacy status is %s",
+    "doit empêcher la suppression lorsque le statut de la candidature est %s",
     async (status: CandidacyStatusStep) => {
       const candidacy = await createCandidacyHelper({
         candidacyActiveStatus: status,
@@ -202,6 +202,64 @@ describe("delete experience from candidacy", () => {
         }),
       ).rejects.toThrow(
         "Impossible de supprimer les expériences après avoir envoyé la candidature à l'AAP",
+      );
+    },
+  );
+
+  test("doit permettre à un AAP de supprimer une expérience lorsque le statut est DOSSIER_FAISABILITE_INCOMPLET", async () => {
+    const candidacy = await createCandidacyHelper({
+      candidacyActiveStatus: CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
+    });
+
+    const experience = await createExperienceForCandidacy(
+      candidacy.id,
+      "Experience to delete",
+    );
+
+    const graphqlClient = getGraphQLClientForAap(
+      candidacy.organism?.organismOnAccounts[0].account.keycloakId,
+    );
+
+    const result = await graphqlClient.request(deleteExperienceMutation, {
+      candidacyId: candidacy.id,
+      experienceId: experience.id,
+    });
+
+    expect(result.candidacy_deleteExperience).toBe(true);
+  });
+
+  test.each<CandidacyStatusStep>([
+    "DOSSIER_FAISABILITE_ENVOYE",
+    "DOSSIER_FAISABILITE_COMPLET",
+    "DOSSIER_FAISABILITE_RECEVABLE",
+    "DOSSIER_FAISABILITE_NON_RECEVABLE",
+    "DOSSIER_DE_VALIDATION_ENVOYE",
+    "DOSSIER_DE_VALIDATION_SIGNALE",
+    "DOSSIER_PRO",
+    "CERTIFICATION",
+  ])(
+    "doit empêcher un AAP de supprimer une expérience lorsque le statut de la candidature est %s",
+    async (status: CandidacyStatusStep) => {
+      const candidacy = await createCandidacyHelper({
+        candidacyActiveStatus: status,
+      });
+
+      const experience = await createExperienceForCandidacy(
+        candidacy.id,
+        "Test Experience",
+      );
+
+      const graphqlClient = getGraphQLClientForAap(
+        candidacy.organism?.organismOnAccounts[0].account.keycloakId,
+      );
+
+      await expect(
+        graphqlClient.request(deleteExperienceMutation, {
+          candidacyId: candidacy.id,
+          experienceId: experience.id,
+        }),
+      ).rejects.toThrow(
+        "Impossible de modifier les expériences après l'envoi du dossier de faisabilité",
       );
     },
   );
