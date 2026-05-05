@@ -79,9 +79,6 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     candidacy.endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
     candidacy.endAccompagnementStatus === "CONFIRMED_BY_ADMIN";
 
-  const hasDropoutProofReceived =
-    !!candidacy.candidacyDropOut?.proofReceivedByAdmin;
-
   // Permissions d'archivage
   const canBeArchived = isCandidateDropOutV2Enabled
     ? currentStatus === "PROJET"
@@ -111,10 +108,7 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
   const canDropout = isAdmin ? canDropoutAsAdmin : canDropoutAsAap;
 
   const canCancelDropout =
-    isCandidacyDroppedOut &&
-    !hasDropoutProofReceived &&
-    !isArchivedAndNotReoriented &&
-    !!isAdmin;
+    isCandidacyDroppedOut && !isArchivedAndNotReoriented && !!isAdmin;
 
   // Permissions de financement et accompagnement
   const canSwitchFinanceModuleToHorsPlateforme =
