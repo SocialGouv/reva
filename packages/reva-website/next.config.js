@@ -1,3 +1,7 @@
+const path = require("path");
+
+const isTest = process.env.APP_ENV === "test";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
@@ -12,6 +16,9 @@ const nextConfig = {
         port: "",
       },
     ],
+  },
+  turbopack: {
+    root: path.resolve(__dirname, "../.."),
   },
   async rewrites() {
     return [
@@ -31,19 +38,12 @@ const nextConfig = {
       },
     ];
   },
-  webpack: (config) => {
-    config.module.rules.push({
-      test: /\.woff2$/,
-      type: "asset/resource",
-    });
-
-    return config;
-  },
-  eslint: {
-    dirs: ["app", "components", "lib", "src", "tests"],
-  },
+  distDir: isTest ? ".next-test" : ".next",
   experimental: {
-    testProxy: process.env.APP_ENV === "test",
+    testProxy: isTest,
+  },
+  logging: {
+    browserToTerminal: "error",
   },
 };
 

@@ -47,7 +47,7 @@ export default async function CertificationPage({
             src="/candidate-space/unions-background/union-background1.svg"
             width={3000}
             height={1074}
-            style={{ width: "100%" }}
+            style={{ width: "100%", height: "auto" }}
             alt="rayon rose en fond d'écran"
           />
         </div>

@@ -49,6 +49,7 @@ const HelpArticle = ({
           width={340}
           height={150}
           className="object-cover w-full rounded-t-[32px] max-w-[340px] max-h-[150px]"
+          style={{ height: "auto" }}
         />
       </div>
       <div className="flex flex-col p-4 sm:p-6 h-auto justify-center lg:justify-start">

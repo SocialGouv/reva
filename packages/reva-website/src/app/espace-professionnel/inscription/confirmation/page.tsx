@@ -40,13 +40,16 @@ const ProfessionalSpaceInscriptionConfirmationPage = () => {
               </Link>
             </div>
           </div>
-          <Image
-            src="/professional-space/submitted-successfully.png"
-            alt="Inscription réussie"
-            width={282}
-            height={319}
-            className="hidden md:block max-h-[319px]"
-          />
+          <div className="hidden md:block">
+            <Image
+              src="/professional-space/submitted-successfully.png"
+              alt="Inscription réussie"
+              width={282}
+              height={319}
+              className="max-h-[319px]"
+              style={{ height: "auto" }}
+            />
+          </div>
         </div>
       </OrganismBackground>
     </MainLayout>

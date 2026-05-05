@@ -1,9 +1,15 @@
 "use client";
 
-import { BlocksRenderer } from "@strapi/blocks-react-renderer";
-import { RootNode } from "@strapi/blocks-react-renderer/dist/BlocksRenderer";
+import {
+  BlocksRenderer,
+  type BlocksContent,
+} from "@strapi/blocks-react-renderer";
 
-export const StrapiBlocksRenderer = ({ content }: { content: RootNode[] }) => {
+export const StrapiBlocksRenderer = ({
+  content,
+}: {
+  content: BlocksContent;
+}) => {
   return (
     <BlocksRenderer
       content={content}

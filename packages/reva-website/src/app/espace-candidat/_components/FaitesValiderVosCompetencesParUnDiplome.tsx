@@ -15,13 +15,14 @@ const FaitesValiderVosCompetencesParUnDiplome = () => {
         <h1 className="text-[32px] leading-10 lg:text-[40px] lg:leading-[48px] font-bold mb-10 lg:mb-0 max-w-screen-md">
           Avec la VAE, faites valider vos compétences par un diplôme
         </h1>
-        <Image
-          className="hidden lg:block"
-          src="/candidate-space/image-home-character-blue-hoodie.png"
-          width={200}
-          height={200}
-          alt="un personnage masculin avec un sweet bleu"
-        />
+        <div className="hidden lg:block">
+          <Image
+            src="/candidate-space/image-home-character-blue-hoodie.png"
+            width={200}
+            height={200}
+            alt="un personnage masculin avec un sweet bleu"
+          />
+        </div>
       </div>
 
       <div className="bg-white z-10 px-6 lg:px-10 pt-8 lg:pt-10 pb-12 border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
