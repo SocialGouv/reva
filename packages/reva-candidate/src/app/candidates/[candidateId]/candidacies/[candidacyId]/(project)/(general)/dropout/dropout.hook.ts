@@ -16,7 +16,17 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_DROPOUT = graphql(`
       }
       feasibility {
         feasibilityFileSentAt
+        decision
         decisionSentAt
+      }
+      activeDossierDeValidation {
+        createdAt
+        decision
+        decisionSentAt
+      }
+      jury {
+        dateOfSession
+        dateOfResult
       }
     }
   }
@@ -108,3 +118,7 @@ export const useDropout = () => {
     dropoutCandidacyById,
   };
 };
+
+export type CandidacyTypeForDropout = NonNullable<
+  ReturnType<typeof useDropout>["candidacy"]
+>;

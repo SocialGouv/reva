@@ -19,7 +19,7 @@ import { sanitizedText } from "@/utils/input-sanitization";
 
 import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 
-import { useDropout } from "./dropout.hook";
+import { useDropout, CandidacyTypeForDropout } from "./dropout.hook";
 
 const schema = z.object({
   dropOutReasonId: sanitizedText(),
@@ -103,7 +103,7 @@ export default function DropoutCandidacyPage() {
         <div className="pr-[30%]">
           <h1 className="mt-6 mb-2">Abandon de la candidature</h1>
           <p className="mt-12 mb-6">
-            Une dossier de faisabilité a été envoyé{" "}
+            Un <strong>dossier de faisabilité</strong> a été envoyé le{" "}
             {candidacy.feasibility?.feasibilityFileSentAt ? (
               <strong>
                 {format(
@@ -169,22 +169,7 @@ export default function DropoutCandidacyPage() {
             <>
               <br />
               <br />
-              {candidacy.status == "DOSSIER_FAISABILITE_RECEVABLE" && (
-                <span>
-                  Une <strong>recevabilité favorable</strong> a été attribuée le{" "}
-                  {candidacy.feasibility?.decisionSentAt ? (
-                    <strong>
-                      {format(
-                        toDate(candidacy.feasibility.decisionSentAt),
-                        "dd/MM/yyyy",
-                      )}
-                    </strong>
-                  ) : (
-                    ""
-                  )}{" "}
-                  sur cette candidature.{" "}
-                </span>
-              )}
+              {getCandidacyStatusDescription(candidacy)}
             </>
           ) : (
             <>
@@ -269,6 +254,86 @@ export default function DropoutCandidacyPage() {
     </Panel>
   );
 }
+
+const getCandidacyStatusDescription = (candidacy: CandidacyTypeForDropout) => {
+  const { feasibility, activeDossierDeValidation, jury } = candidacy;
+
+  if (jury?.dateOfResult) {
+    return (
+      <span>
+        Un <strong>jury</strong> a été passé le{" "}
+        <strong>{format(toDate(jury.dateOfResult), "dd/MM/yyyy")}</strong> pour
+        cette candidature.
+      </span>
+    );
+  }
+
+  if (jury?.dateOfSession) {
+    return (
+      <span>
+        Un <strong>jury</strong> est programmé le{" "}
+        <strong>{format(toDate(jury.dateOfSession), "dd/MM/yyyy")}</strong> pour
+        cette candidature.
+      </span>
+    );
+  }
+
+  if (
+    activeDossierDeValidation?.decision === "INCOMPLETE" &&
+    activeDossierDeValidation?.decisionSentAt
+  ) {
+    return (
+      <span>
+        Un <strong>dossier de validation</strong> a été signalé le{" "}
+        <strong>
+          {format(
+            toDate(activeDossierDeValidation.decisionSentAt),
+            "dd/MM/yyyy",
+          )}
+        </strong>{" "}
+        pour cette candidature.
+      </span>
+    );
+  }
+
+  if (activeDossierDeValidation?.decision === "PENDING") {
+    return (
+      <span>
+        Un <strong>dossier de validation</strong> a été envoyé le{" "}
+        <strong>
+          {format(toDate(activeDossierDeValidation.createdAt), "dd/MM/yyyy")}
+        </strong>{" "}
+        pour cette candidature.
+      </span>
+    );
+  }
+
+  if (feasibility?.decision === "ADMISSIBLE" && feasibility?.decisionSentAt) {
+    return (
+      <span>
+        Une <strong>recevabilité favorable</strong> a été attribuée le{" "}
+        <strong>
+          {format(toDate(feasibility.decisionSentAt), "dd/MM/yyyy")}
+        </strong>{" "}
+        pour cette candidature.
+      </span>
+    );
+  }
+
+  if (feasibility?.decision === "INCOMPLETE" && feasibility?.decisionSentAt) {
+    return (
+      <span>
+        Un <strong>dossier de faisabilité incomplet</strong> a été retourné le{" "}
+        <strong>
+          {format(toDate(feasibility.decisionSentAt), "dd/MM/yyyy")}
+        </strong>{" "}
+        pour cette candidature.
+      </span>
+    );
+  }
+
+  return null;
+};
 
 const isFeasibilityDecisionMade = (status: CandidacyStatusStep): boolean => {
   switch (status) {
