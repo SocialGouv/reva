@@ -171,7 +171,7 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
           className="mt-6 mb-12"
           severity="error"
           title="Une demande de recevabilité existe déjà pour ce diplôme"
-          description={`${candidate?.firstname} ${candidate?.lastname} a déjà transmis une demande de recevabilité pour la certification ${certification?.label}, visée en totalité, en ${new Date().getFullYear()}. Vous pouvez reprendre la candidature existante si elle a été abandonnée, ou soumettre une nouvelle demande à partir de Janvier ${new Date().getFullYear() + 1}.`}
+          description={`${candidate?.lastname} ${candidate?.firstname} a déjà transmis une demande de recevabilité pour la certification ${certification?.label}, visée en totalité, en ${new Date().getFullYear()}. Vous pouvez reprendre la candidature existante si elle a été abandonnée, ou soumettre une nouvelle demande à partir de Janvier ${new Date().getFullYear() + 1}.`}
         />
       )}
 
@@ -181,7 +181,7 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
           className="mt-6 mb-12"
           severity="error"
           title="Nombre maximum de demandes de recevabilité atteintes"
-          description={`${candidate?.firstname} ${candidate?.lastname} a déjà transmis 3 demandes de recevabilité sur des certifications visées en totalité pour l’année ${new Date().getFullYear()}. Vous pourrez soumettre le dossier de faisabilité pour la certification ${certification?.label}, visée en totalité, à partir de Janvier ${new Date().getFullYear() + 1}.`}
+          description={`${candidate?.lastname} ${candidate?.firstname} a déjà transmis 3 demandes de recevabilité sur des certifications visées en totalité pour l’année ${new Date().getFullYear()}. Vous pourrez soumettre le dossier de faisabilité pour la certification ${certification?.label}, visée en totalité, à partir de Janvier ${new Date().getFullYear() + 1}.`}
         />
       )}
 

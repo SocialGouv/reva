@@ -154,7 +154,7 @@ const AapFeasibilityPage = () => {
           className="mt-6 mb-12"
           severity="error"
           title="Une demande de recevabilité existe déjà pour ce diplôme"
-          description={`${candidacy.candidate.firstname} ${candidacy.candidate.lastname} a déjà transmis une demande de recevabilité pour la certification ${certification?.label}, visée en totalité, en ${new Date().getFullYear()}. Vous pouvez reprendre la candidature existante si elle a été abandonnée, ou soumettre une nouvelle demande à partir de Janvier ${new Date().getFullYear() + 1}.`}
+          description={`${candidacy.candidate.lastname} ${candidacy.candidate.firstname} a déjà transmis une demande de recevabilité pour la certification ${certification?.label}, visée en totalité, en ${new Date().getFullYear()}. Vous pouvez reprendre la candidature existante si elle a été abandonnée, ou soumettre une nouvelle demande à partir de Janvier ${new Date().getFullYear() + 1}.`}
         />
       )}
 
@@ -164,7 +164,7 @@ const AapFeasibilityPage = () => {
           className="mt-6 mb-12"
           severity="error"
           title="Nombre maximum de demandes de recevabilité atteintes"
-          description={`${candidacy.candidate.firstname} ${candidacy.candidate.lastname} a déjà transmis 3 demandes de recevabilité sur des certifications visées en totalité pour l’année ${new Date().getFullYear()}. Vous pourrez soumettre le dossier de faisabilité pour la certification ${certification?.label}, visée en totalité, à partir de Janvier ${new Date().getFullYear() + 1}.`}
+          description={`${candidacy.candidate.lastname} ${candidacy.candidate.firstname} a déjà transmis 3 demandes de recevabilité sur des certifications visées en totalité pour l’année ${new Date().getFullYear()}. Vous pourrez soumettre le dossier de faisabilité pour la certification ${certification?.label}, visée en totalité, à partir de Janvier ${new Date().getFullYear() + 1}.`}
         />
       )}
 
