@@ -4,6 +4,7 @@ import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
 
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
+import { WEBSITE_BASE_URL } from "@/config/config";
 
 import { UserDropdown } from "./UserDropdown";
 
@@ -95,8 +96,9 @@ export const Header = () => {
         </>
       }
       homeLinkProps={{
-        href: "/../",
+        href: WEBSITE_BASE_URL,
         title: "Accueil - France VAE",
+        target: "_self",
       }}
       operatorLogo={{
         alt: "France VAE",

@@ -1,13 +1,10 @@
-"use client";
-
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 import { Panel } from "@/components/layout/Panel";
-export default function LogoutConfirmation() {
-  const router = useRouter();
+import { WEBSITE_BASE_URL } from "@/config/config";
 
+export default function LogoutConfirmation() {
   return (
     <div data-testid="logout-confirmation" className="flex-1">
       <Panel>
@@ -20,19 +17,15 @@ export default function LogoutConfirmation() {
               <Button
                 data-testid="logout-confirmation-back-to-home"
                 className="mt-6"
-                onClick={() => {
-                  router.push(process.env.NEXT_PUBLIC_WEBSITE_BASE_URL || "/");
-                }}
+                linkProps={{ href: WEBSITE_BASE_URL }}
               >
-                Retourner à laccueil
+                Retourner à l'accueil
               </Button>
               <Button
                 data-testid="logout-confirmation-reconnect"
                 className="mt-6"
                 priority="secondary"
-                onClick={() => {
-                  router.push("/login");
-                }}
+                linkProps={{ href: "/candidat/login" }}
               >
                 Se reconnecter
               </Button>
