@@ -221,10 +221,9 @@ export default function JuryDatePage() {
               <Input
                 label="Heure (optionnel)"
                 className="w-full sm:basis-3/12"
-                iconId="fr-icon-time-line"
                 nativeInputProps={{
-                  type: "time",
                   ...register("time"),
+                  type: "time",
                   defaultValue: jury?.timeOfSession || "",
                 }}
                 state={errors.time ? "error" : "default"}
