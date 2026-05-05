@@ -6,3 +6,6 @@ export const KEYCLOAK_REALM =
 export const KEYCLOAK_URL =
   process.env.NEXT_PUBLIC_APP_VAE_COLLECTIVE_KEYCLOAK_URL ||
   "http://localhost:8888/auth";
+
+export const WEBSITE_BASE_URL =
+  process.env.NEXT_PUBLIC_WEBSITE_BASE_URL || "https://vae.gouv.fr";

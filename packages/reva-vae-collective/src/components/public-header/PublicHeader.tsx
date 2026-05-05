@@ -1,5 +1,7 @@
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 
+import { WEBSITE_BASE_URL } from "@/config/config";
+
 export const PublicHeader = () => (
   <DsfrHeader
     brandTop={
@@ -10,8 +12,9 @@ export const PublicHeader = () => (
       </>
     }
     homeLinkProps={{
-      href: "/../",
+      href: WEBSITE_BASE_URL,
       title: "Accueil - France VAE",
+      target: "_self",
     }}
     operatorLogo={{
       alt: "France VAE",
