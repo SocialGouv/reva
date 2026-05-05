@@ -1,5 +1,6 @@
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import { useQueryClient } from "@tanstack/react-query";
-import { toDate } from "date-fns";
+import { format, toDate } from "date-fns";
 import { useParams } from "next/navigation";
 
 import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
@@ -174,15 +175,27 @@ export const DematerializedFeasibility = () => {
         }
         candidacy={candidacy as Candidacy}
         FeasibilityBanner={
-          <DecisionSentComponent
-            decisionSentAt={feasibilityDecisionSentAt}
-            decision={feasibility?.decision as FeasibilityDecision}
-            decisionComment={feasibility?.decisionComment}
-            history={feasibility?.history as FeasibilityHistory[]}
-            onRevokeDecision={() => revokeDecisionModal.open()}
-            isAdmin={isAdmin}
-            candidacyStatus={candidacy.status}
-          />
+          <>
+            {candidacy.candidacyDropOut?.createdAt && (
+              <Alert
+                title={`Candidature abandonnée le ${format(
+                  toDate(candidacy.candidacyDropOut?.createdAt),
+                  "dd/MM/yyyy",
+                )}`}
+                severity="warning"
+                className="mt-4 mb-12"
+              />
+            )}
+            <DecisionSentComponent
+              decisionSentAt={feasibilityDecisionSentAt}
+              decision={feasibility?.decision as FeasibilityDecision}
+              decisionComment={feasibility?.decisionComment}
+              history={feasibility?.history as FeasibilityHistory[]}
+              onRevokeDecision={() => revokeDecisionModal.open()}
+              isAdmin={isAdmin}
+              candidacyStatus={candidacy.status}
+            />
+          </>
         }
         displayGiveYourDecisionSubtitle
         accordionsDefaultExpanded={dffSummaryAccordionsDefaultExpanded}

@@ -90,7 +90,7 @@ const createTab = ({
 
 const isAAPCandidaciesPath = (pathname: string) => {
   const exclusionPattern =
-    /\/candidacies\/(?!annuaire\/)(candidacy-drop-out\/).*/;
+    /\/candidacies\/(?!(annuaire|.*\/candidacy-drop-out)\/).*/;
   const subPathPattern =
     /\/candidacies\/.*\/(feasibility\/)|(dossier-de-validation\/)|(jury\/)|(transfer.*\/)/;
 

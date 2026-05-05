@@ -75,10 +75,27 @@ describe("drop out candidacy", () => {
     },
   );
 
-  test.each<CandidacyStatusStep>([
-    "DOSSIER_FAISABILITE_INCOMPLET",
-    "DOSSIER_FAISABILITE_COMPLET",
-  ])(
+  test.each<CandidacyStatusStep>(["DOSSIER_FAISABILITE_COMPLET"])(
+    "should not allow AAP to drop out candidacy at %s status",
+    async (status: CandidacyStatusStep) => {
+      const dropoutReason = await createDropOutReasonHelper();
+      const candidacy = await createCandidacyHelper({
+        candidacyActiveStatus: status,
+      });
+
+      await expect(async () => {
+        await dropOutCandidacy({
+          candidacyId: candidacy.id,
+          dropOutReasonId: dropoutReason.id,
+          userRoles: ["manage_candidacy"],
+        });
+      }).rejects.toThrow(
+        `La candidature ${candidacy.id} ne peut pas être abandonnée car le dossier de faisabilité est envoyé et une décision du certificateur est en attente`,
+      );
+    },
+  );
+
+  test.each<CandidacyStatusStep>(["DOSSIER_FAISABILITE_INCOMPLET"])(
     "should allow AAP to drop out candidacy at %s status",
     async (status: CandidacyStatusStep) => {
       const dropoutReason = await createDropOutReasonHelper();
