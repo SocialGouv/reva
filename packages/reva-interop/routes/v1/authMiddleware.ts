@@ -47,10 +47,12 @@ export const validateJwt = async (
 
   const session = await findSessionById(sessionId);
   if (!session) {
+    console.error(`Session not found for sessionId: ${sessionId}`);
     throw new Error(ERROR_UNAUTHORIZED);
   }
 
   if (session.endedAt) {
+    console.error(`Session ended for sessionId: ${sessionId}`);
     throw new Error(ERROR_UNAUTHORIZED);
   }
 
@@ -58,6 +60,7 @@ export const validateJwt = async (
     keycloakId: session.keycloakId,
   });
   if (!keycloakJwt) {
+    console.error(`Could not get Keycloak JWT for sessionId: ${sessionId}`);
     throw new Error(ERROR_UNAUTHORIZED);
   }
 
@@ -78,6 +81,8 @@ const getTokenFromRequest = (request: FastifyRequest) => {
   if (token) {
     return token;
   }
+
+  console.error(`No token found in request: ${request.url}`);
 
   throw new Error(ERROR_UNAUTHORIZED);
 };

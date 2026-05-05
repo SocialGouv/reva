@@ -17,10 +17,23 @@ const fastify = Fastify({
   trustProxy: process.env.TRUSTED_PROXIES || false,
   logger: {
     serializers: {
+      req(req) {
+        return {
+          host: req.host,
+          remoteAddress: req.ip,
+          remotePort: req.port || undefined,
+          url: req.url,
+          method: req.method,
+          keycloakId: req.keycloakId,
+        };
+      },
       res(reply) {
         return {
           statusCode: reply.statusCode,
           keycloakId: reply.keycloakId,
+          url: reply.request?.url,
+          method: reply.request?.method,
+          host: reply.request?.host,
         };
       },
     },
