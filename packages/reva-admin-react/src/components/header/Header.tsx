@@ -7,6 +7,7 @@ import { useAuth } from "@/components/auth/auth";
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { WEBSITE_BASE_URL } from "@/config/config";
+
 import { graphql } from "@/graphql/generated";
 
 const getCertificationAuthorityForHeaderQuery = graphql(`
@@ -207,12 +208,12 @@ const getNavigationTabs = ({
     }),
     ...(showAAPVaeCollectivesTab
       ? [
-        createTab({
-          text: LABELS.VAE_COLLECTIVES,
-          href: PATHS.VAE_COLLECTIVES,
-          isActive: isAAPVaeCollectivesPath(currentPathname),
-        }),
-      ]
+          createTab({
+            text: LABELS.VAE_COLLECTIVES,
+            href: PATHS.VAE_COLLECTIVES,
+            isActive: isAAPVaeCollectivesPath(currentPathname),
+          }),
+        ]
       : []),
     createTab({
       text: LABELS.PARAMETRES,
@@ -259,12 +260,12 @@ const getNavigationTabs = ({
     }),
     ...(metabaseDashboardIframeUrl
       ? [
-        createTab({
-          text: LABELS.STATISTIQUES,
-          href: PATHS.STATISTIQUES,
-          isActive: currentPathname.startsWith(PATHS.STATISTIQUES),
-        }),
-      ]
+          createTab({
+            text: LABELS.STATISTIQUES,
+            href: PATHS.STATISTIQUES,
+            isActive: currentPathname.startsWith(PATHS.STATISTIQUES),
+          }),
+        ]
       : []),
   ];
 
