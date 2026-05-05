@@ -1,7 +1,9 @@
 "use client";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
@@ -14,6 +16,48 @@ import {
   OTHER_FINANCING_METHOD_ID,
   useTrainingPage,
 } from "./trainingPage.hook";
+
+const feasibilityResetWarningModal = createModal({
+  id: "feasibility-reset-training-warning",
+  isOpenedByDefault: false,
+});
+
+const FeasibilityResetWarningModal = ({
+  onConfirm,
+}: {
+  onConfirm: () => void;
+}) => (
+  <feasibilityResetWarningModal.Component
+    size="large"
+    title="Vous allez perdre des données dans le dossier de faisabilité"
+    iconId="fr-icon-warning-fill"
+    titleProps={{
+      className: "flex gap-2",
+    }}
+    buttons={[
+      {
+        children: "Annuler",
+        priority: "secondary",
+        type: "button",
+      },
+      {
+        children: "Confirmer",
+        priority: "primary",
+        type: "button",
+        nativeButtonProps: {
+          onClick: onConfirm,
+        },
+      },
+    ]}
+  >
+    <p>
+      Vous êtes sur le point d’envoyer une nouvelle version du parcours au
+      candidat. Cependant, si vous avez commencé à remplir le dossier de
+      faisabilité, les informations renseignées seront perdues.
+    </p>
+    <p>Confirmez-vous la remise à zéro du dossier de faisabilité ?</p>
+  </feasibilityResetWarningModal.Component>
+);
 
 const TrainingPage = () => {
   const {
@@ -35,8 +79,11 @@ const TrainingPage = () => {
     )?.additionalInformation;
 
   const router = useRouter();
+  const pendingTrainingResendValuesRef = useRef<TrainingFormValues | null>(
+    null,
+  );
 
-  const handleFormSubmit = async (values: TrainingFormValues) => {
+  const sendTrainingForm = async (values: TrainingFormValues) => {
     try {
       const {
         certificationScope,
@@ -74,6 +121,26 @@ const TrainingPage = () => {
     }
   };
 
+  const handleFormSubmit = async (values: TrainingFormValues) => {
+    if (candidacy?.status === "PARCOURS_CONFIRME") {
+      pendingTrainingResendValuesRef.current = values;
+      feasibilityResetWarningModal.open();
+      return;
+    }
+
+    await sendTrainingForm(values);
+  };
+
+  const handleConfirmFeasibilityReset = async () => {
+    const values = pendingTrainingResendValuesRef.current;
+
+    if (values) {
+      feasibilityResetWarningModal.close();
+      pendingTrainingResendValuesRef.current = null;
+      await sendTrainingForm(values);
+    }
+  };
+
   const isTypologyAndConventionCollectiveEditable =
     !candidacy?.feasibility ||
     candidacy.feasibility.decision === "DRAFT" ||
@@ -81,6 +148,7 @@ const TrainingPage = () => {
 
   return (
     <>
+      <FeasibilityResetWarningModal onConfirm={handleConfirmFeasibilityReset} />
       <CandidacyBackButton candidacyId={candidacy?.id as string} />
       <h1>Définition du parcours</h1>
       <FormOptionalFieldsDisclaimer />
