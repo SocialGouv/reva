@@ -9,7 +9,6 @@ import {
 import { prismaClient } from "@/prisma/client";
 
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
-import { updateAllCandidaciesDerniereDateActiviteByCandidateId } from "./updateAllCandidaciesDerniereDateActiviteByCandidateId";
 
 export const candidateLoginWithCredentials = async ({
   email,
@@ -42,10 +41,6 @@ export const candidateLoginWithCredentials = async ({
   await prismaClient.candidate.update({
     where: { id: candidate.id },
     data: { lastLoginViaPasswordAt: new Date() },
-  });
-
-  await updateAllCandidaciesDerniereDateActiviteByCandidateId({
-    candidateId: candidate.id,
   });
 
   const tokens = generateIAMTokenWithPassword(

@@ -5,7 +5,6 @@ import { z } from "zod";
 
 import { getActiveCandidaciesByCandidateId } from "@/modules/candidacy/features/getActiveCandidaciesByCandidateId";
 import { getCandidateByKeycloakId } from "@/modules/candidate/features/getCandidateByKeycloakId";
-import { updateAllCandidaciesDerniereDateActiviteByCandidateId } from "@/modules/candidate/features/updateAllCandidaciesDerniereDateActiviteByCandidateId";
 import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { CANDIDATE_BASE_URL } from "@/modules/shared/config/config";
 import { logger } from "@/modules/shared/logger/logger";
@@ -146,10 +145,6 @@ export const handleFranceConnectCallback = async (
     await prismaClient.candidate.update({
       where: { id: candidate.id },
       data: { lastLoginViaFranceConnectAt: new Date() },
-    });
-
-    await updateAllCandidaciesDerniereDateActiviteByCandidateId({
-      candidateId: candidate.id,
     });
 
     return redirectPath;

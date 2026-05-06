@@ -28,8 +28,6 @@
           "basicSkills": [],
           "mandatoryTrainings": [],
           "feasibilityFormat": "UPLOADED_PDF",
-          "activite": "ACTIF",
-          "derniereDateActivite": "2025-01-01",
           "candidate": {
             "id": "12345678-1234-1234-1234-123456789abc",
             "firstname": "John",

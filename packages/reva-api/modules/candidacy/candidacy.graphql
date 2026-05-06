@@ -75,9 +75,6 @@ type Candidacy {
   typeAccompagnement: TypeAccompagnement!
   hasMoreThanOneCertificationAvailable: Boolean!
   archivingReason: CandidacyArchivingReason
-  activite: ActiviteStatut!
-  derniereDateActivite: Timestamp
-  dateInactifEnAttente: Timestamp
   lastOpenedAt: Timestamp
   sentAt: Timestamp
   endAccompagnementDate: Timestamp
@@ -90,12 +87,6 @@ type CandidacyCandidateInfo {
   city: String
   zip: String
   addressComplement: String
-}
-
-enum ActiviteStatut {
-  ACTIF
-  INACTIF_EN_ATTENTE
-  INACTIF_CONFIRME
 }
 
 enum TypeAccompagnement {
