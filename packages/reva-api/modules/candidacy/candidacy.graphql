@@ -78,6 +78,7 @@ type Candidacy {
   activite: ActiviteStatut!
   derniereDateActivite: Timestamp
   dateInactifEnAttente: Timestamp
+  lastOpenedAt: Timestamp
   sentAt: Timestamp
   endAccompagnementDate: Timestamp
   endAccompagnementStatus: EndAccompagnementStatus
