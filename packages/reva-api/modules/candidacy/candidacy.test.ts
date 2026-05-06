@@ -51,6 +51,79 @@ test("get existing Candidacy with admin user", async () => {
   });
 });
 
+test("get existing Candidacy with candidate user updates the last opening date", async () => {
+  const candidacy = await createCandidacyHelper({
+    candidacyArgs: { lastOpenedAt: null },
+  });
+
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "candidate",
+        keycloakId: candidacy.candidate?.keycloakId,
+      }),
+    },
+  });
+
+  const getCandidacyById = graphql(`
+    query getCandidacyById_tracks_last_opening($id: ID!) {
+      getCandidacyById(id: $id) {
+        id
+        lastOpenedAt
+      }
+    }
+  `);
+
+  const beforeOpening = new Date();
+
+  await graphqlClient.request(getCandidacyById, {
+    id: candidacy.id,
+  });
+
+  const updatedCandidacy = await prismaClient.candidacy.findUniqueOrThrow({
+    where: { id: candidacy.id },
+  });
+
+  expect(updatedCandidacy.lastOpenedAt).not.toBeNull();
+  expect(updatedCandidacy.lastOpenedAt!.getTime()).toBeGreaterThanOrEqual(
+    beforeOpening.getTime(),
+  );
+});
+
+test("get existing Candidacy with admin user does not update the last opening date", async () => {
+  const candidacy = await createCandidacyHelper({
+    candidacyArgs: { lastOpenedAt: null },
+  });
+
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: "whatever",
+      }),
+    },
+  });
+
+  const getCandidacyById = graphql(`
+    query getCandidacyById_admin_does_not_track_last_opening($id: ID!) {
+      getCandidacyById(id: $id) {
+        id
+        lastOpenedAt
+      }
+    }
+  `);
+
+  await graphqlClient.request(getCandidacyById, {
+    id: candidacy.id,
+  });
+
+  const updatedCandidacy = await prismaClient.candidacy.findUniqueOrThrow({
+    where: { id: candidacy.id },
+  });
+
+  expect(updatedCandidacy.lastOpenedAt).toBeNull();
+});
+
 test("get non existing candidacy should yield errors", async () => {
   const graphqlClient = getGraphQLClient({
     headers: {

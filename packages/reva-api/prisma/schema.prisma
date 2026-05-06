@@ -260,6 +260,7 @@ model Candidacy {
   derniereDateActivite                          DateTime                                        @default(now()) @map("derniere_date_activite") @db.Timestamptz(6)
   dateInactifEnAttente                          DateTime?                                       @map("date_inactif_en_attente") @db.Timestamptz(6)
   lastActivityDate                              DateTime?                                       @map("last_activity_date") @db.Timestamptz(6)
+  lastOpenedAt                                  DateTime?                                       @map("last_opened_at") @db.Timestamptz(6)
   candidacyContestationCaducite                 CandidacyContestationCaducite[]
   CandidacyEmail                                CandidacyEmail[]
   cohorteVaeCollectiveId                        String?                                         @map("cohorte_vae_collective_id") @db.Uuid

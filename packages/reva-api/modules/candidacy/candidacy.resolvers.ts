@@ -113,8 +113,16 @@ const unsafeResolvers = {
       getDropOutReasonById({ dropOutReasonId }),
   },
   Query: {
-    getCandidacyById: async (_: unknown, { id }: { id: string }) =>
-      getCandidacy({ candidacyId: id }),
+    getCandidacyById: async (
+      _: unknown,
+      { id }: { id: string },
+      context: GraphqlContext,
+    ) =>
+      getCandidacy({
+        candidacyId: id,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      }),
     getCandidacies: async (
       _parent: unknown,
       _params: {
