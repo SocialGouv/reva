@@ -11,7 +11,6 @@ import { prismaClient } from "@/prisma/client";
 import { CandidateAuthenticationInput } from "../candidate.types";
 
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
-import { updateAllCandidaciesDerniereDateActiviteByCandidateId } from "./updateAllCandidaciesDerniereDateActiviteByCandidateId";
 
 const CANDIDATE_IMPERSONATE_TOKEN_TTL_SECONDS = 60;
 
@@ -57,10 +56,6 @@ const loginCandidate = async ({ email }: { email: string }) => {
   await prismaClient.candidate.update({
     where: { id: candidate.id },
     data: { lastLoginViaMagicLinkAt: new Date() },
-  });
-
-  await updateAllCandidaciesDerniereDateActiviteByCandidateId({
-    candidateId: candidate.id,
   });
 
   const url = getImpersonateUrl({

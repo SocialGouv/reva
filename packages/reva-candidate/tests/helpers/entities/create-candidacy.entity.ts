@@ -109,7 +109,6 @@ export const createCandidacyEntity = (
     typeAccompagnement: typeAccompagnement || "AUTONOME",
     status: status || "PROJET",
     readyForJuryEstimatedAt: readyForJuryEstimatedAt || null,
-    activite: "ACTIF",
     appointments: {
       rows: [],
       info: {
@@ -132,7 +131,6 @@ export const createCandidacyEntity = (
     mandatoryTrainings: mandatoryTrainings ?? [],
     feasibilityFormat: feasibilityFormat || "DEMATERIALIZED",
     certificationAuthorities: certificationAuthorities || [],
-    derniereDateActivite: new Date().getTime(),
     createdAt: new Date().getTime(),
     feasibility,
     jury: jury || null,

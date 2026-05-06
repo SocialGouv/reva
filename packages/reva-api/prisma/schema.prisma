@@ -256,12 +256,7 @@ model Candidacy {
   status                                        CandidacyStatusStep                             @default(PROJET)
   typeAccompagnement                            CandidacyTypeAccompagnement                     @default(ACCOMPAGNE) @map("type_accompagnement")
   candidacyOnCandidacyFinancingMethod           CandidacyOnCandidacyFinancingMethod[]
-  activite                                      ActiviteStatut                                  @default(ACTIF)
-  derniereDateActivite                          DateTime                                        @default(now()) @map("derniere_date_activite") @db.Timestamptz(6)
-  dateInactifEnAttente                          DateTime?                                       @map("date_inactif_en_attente") @db.Timestamptz(6)
-  lastActivityDate                              DateTime?                                       @map("last_activity_date") @db.Timestamptz(6)
   lastOpenedAt                                  DateTime?                                       @map("last_opened_at") @db.Timestamptz(6)
-  candidacyContestationCaducite                 CandidacyContestationCaducite[]
   CandidacyEmail                                CandidacyEmail[]
   cohorteVaeCollectiveId                        String?                                         @map("cohorte_vae_collective_id") @db.Uuid
   cohorteVaeCollective                          CohorteVaeCollective?                           @relation(fields: [cohorteVaeCollectiveId], references: [id], onDelete: NoAction)
@@ -316,12 +311,6 @@ enum EndAccompagnementStatus {
   PENDING
   CONFIRMED_BY_CANDIDATE
   CONFIRMED_BY_ADMIN
-}
-
-enum ActiviteStatut {
-  ACTIF
-  INACTIF_EN_ATTENTE
-  INACTIF_CONFIRME
 }
 
 enum CandidacyTypeAccompagnement {
@@ -1983,31 +1972,10 @@ model CandidacyOnCandidacyFinancingMethod {
   @@map("candidacy_on_candidacy_financing_method")
 }
 
-model CandidacyContestationCaducite {
-  id                                         String                                     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacyId                                String                                     @map("candidacy_id") @db.Uuid
-  candidacy                                  Candidacy                                  @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
-  contestationReason                         String                                     @map("contestation_reason")
-  certificationAuthorityContestationDecision CertificationAuthorityContestationDecision @default(DECISION_PENDING) @map("certification_authority_contestation_decision")
-  contestationSentAt                         DateTime                                   @default(now()) @map("contestation_sent_at") @db.Timestamptz(6)
-  updatedAt                                  DateTime?                                  @map("updated_at") @db.Timestamptz(6)
-
-  @@index([candidacyId])
-  @@map("candidacy_contestation_caducite")
-}
-
-enum CertificationAuthorityContestationDecision {
-  DECISION_PENDING
-  CADUCITE_INVALIDATED // When contestation is accepted - "invalidation de la caducité"
-  CADUCITE_CONFIRMED // When contestation is rejected - "confirmation de la caducité"
-}
-
 enum CandidacyEmailType {
   CANDIDACY_IS_CADUQUE_SOON_WARNING_TO_AAP
   CANDIDACY_IS_CADUQUE_SOON_WARNING_TO_CANDIDATE
   CANDIDACY_IS_CADUQUE_NOTICE_TO_AAP
-  INACTIF_EN_ATTENTE_BEFORE_FEASIBILITY_ADMISSIBLE_TO_CANDIDATE
-  INACTIF_EN_ATTENTE_AFTER_FEASIBILITY_ADMISSIBLE_TO_CANDIDATE
   REMINDER_TO_AAP_FOR_MISSING_SWORN_STATEMENT
 }
 
