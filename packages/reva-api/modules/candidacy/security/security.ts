@@ -9,7 +9,6 @@ import {
   isAdminOrManager,
   isAnyone,
   isCandidacyCompanion,
-  isOwnerOfCandidacy,
   isAdminOrOwnerOfCandidate,
   isOwnerOrCanManageCandidacy,
   isOwnerOrCanManageExperienceOfCandidacy,
@@ -76,7 +75,6 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_updateCandidateCandidacyDropoutDecision":
     isAdminOrOwnerOfCandidacy,
   "Mutation.candidacy_updateFinanceModule": isAdmin,
-  "Mutation.candidacy_updateCandidacyInactifDecision": isOwnerOfCandidacy,
   "Mutation.candidacy_submitEndAccompagnement": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_updateCandidacyEndAccompagnementDecision":
     isAdminOrOwnerOfCandidacy,

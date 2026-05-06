@@ -424,10 +424,6 @@ type Mutation {
     financeModule: FinanceModule!
     reason: String
   ): Candidacy!
-  candidacy_updateCandidacyInactifDecision(
-    candidacyId: UUID!
-    continueCandidacy: Boolean!
-  ): Candidacy!
   candidacy_submitEndAccompagnement(
     candidacyId: UUID!
     endAccompagnementDate: Timestamp!

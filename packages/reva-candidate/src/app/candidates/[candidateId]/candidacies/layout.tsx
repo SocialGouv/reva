@@ -10,14 +10,12 @@ import { isDropOutConfirmed } from "@/utils/dropOutHelper";
 
 import { useCandidacies } from "./candidacies.hook";
 
-const INACTIF_PATHS = ["/candidacy-inactif", "/candidacy-deleted"];
 const END_ACCOMPAGNEMENT_PATHS = ["/end-accompagnement"];
 const DROP_OUT_DECISION_PATHS = [
   "/candidacy-dropout-decision",
   "/dropout-confirmation",
 ];
 const INGNORED_PATHS = [
-  ...INACTIF_PATHS,
   ...END_ACCOMPAGNEMENT_PATHS,
   ...DROP_OUT_DECISION_PATHS,
 ];
@@ -41,12 +39,6 @@ export default function CandidaciesLayout({
   const candidacies = useMemo(() => candidate?.candidacies || [], [candidate]);
 
   const { status } = useFeatureFlipping();
-
-  const inactifEnAttenteCandidacy = useMemo(() => {
-    return candidacies.find(
-      (candidacy) => candidacy.activite === "INACTIF_EN_ATTENTE",
-    );
-  }, [candidacies]);
 
   const endAccompagnementPendingCandidacy = useMemo(() => {
     return candidacies.find(
@@ -76,13 +68,7 @@ export default function CandidaciesLayout({
       return;
     }
 
-    if (inactifEnAttenteCandidacy) {
-      router.push(
-        `/candidates/${candidateId}/candidacies/${inactifEnAttenteCandidacy.id}/candidacy-inactif`,
-      );
-
-      return;
-    } else if (endAccompagnementPendingCandidacy) {
+    if (endAccompagnementPendingCandidacy) {
       router.push(
         `/candidates/${candidateId}/candidacies/${endAccompagnementPendingCandidacy.id}/end-accompagnement`,
       );
@@ -101,7 +87,6 @@ export default function CandidaciesLayout({
     candidacies,
     endAccompagnementPendingCandidacy,
     dropOutPendingCandidacy,
-    inactifEnAttenteCandidacy,
     pathname,
     router,
     status,
@@ -113,9 +98,7 @@ export default function CandidaciesLayout({
 
   if (
     !candidacyId &&
-    (inactifEnAttenteCandidacy ||
-      endAccompagnementPendingCandidacy ||
-      dropOutPendingCandidacy)
+    (endAccompagnementPendingCandidacy || dropOutPendingCandidacy)
   ) {
     return <LoaderWithLayout />;
   }

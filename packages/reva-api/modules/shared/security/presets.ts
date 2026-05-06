@@ -73,8 +73,6 @@ export const isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate = [
   whenHasRole("candidate", isCandidateOwnerOfCandidacy),
 ];
 
-export const isOwnerOfCandidacy = [isCandidateOwnerOfCandidacy];
-
 export const isAdminOrOwnerOfCandidacy = [
   hasRole(["admin", "candidate"]),
   whenHasRole("candidate", isCandidateOwnerOfCandidacy),
