@@ -125,12 +125,6 @@ export interface ArchiveCandidacyParams {
   archivingReasonAdditionalInformation?: string | null;
 }
 
-export interface ArchiveCandidaciesParams {
-  candidacyIds: string[];
-  archivingReason: CandidacyArchivingReason;
-  archivingReasonAdditionalInformation?: string | null;
-}
-
 export interface CreateCandidacyInput {
   certificationId?: string;
   typeAccompagnement?: TypeAccompagnement;
