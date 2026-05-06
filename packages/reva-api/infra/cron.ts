@@ -10,7 +10,6 @@ import { sendReminderToAAPForMissingSwornStatement } from "@/modules/feasibility
 import { overwriteOutscaleBackupBucket } from "@/scripts/overwriteOutscaleBackupBucket";
 import { syncOutscaleBucketToBackup } from "@/scripts/syncOutcsaleBucketToBackup";
 
-import { deleteExpiredCandidacies } from "../modules/candidacy/features/deleteExpiredCandidacies";
 import { sendAutoCandidacyDropOutConfirmationEmails } from "../modules/candidacy/features/sendAutoCandidacyDropOutConfirmationEmails";
 import { sendEmailsForCertificationExpiration } from "../modules/certification-authority/features/sendEmailsForCertificationExpiration";
 import { batchAapListUnifvae } from "../modules/finance/unifvae/batches/aapListUnifvae.batch";
@@ -146,21 +145,6 @@ CronJob.from({
       batchCallback: async () => {
         logger.info("Running send-reminder-to-fill-jury-results batch");
         await sendReminderToCertificationAuthorityFillJuryResults();
-      },
-    }),
-  start: true,
-  timeZone: "Europe/Paris",
-});
-
-// Delete expired candidacies
-CronJob.from({
-  cronTime: process.env.BATCH_DELETE_EXPIRED_CANDIDACIES || EVERY_DAY_AT_2_AM,
-  onTick: () =>
-    runBatchIfActive({
-      batchKey: "batch.delete-expired-candidacies",
-      batchCallback: async () => {
-        logger.info("Running batch.delete-expired-candidacies batch");
-        await deleteExpiredCandidacies();
       },
     }),
   start: true,
