@@ -8,7 +8,7 @@ addons:
 config_vars:
   PATH: "/app/bin:/app/keycloak/bin:/app/java/bin:/usr/local/bin:/usr/bin:/bin"
 default_process_types:
-  web: /app/keycloak/bin/kc.sh --verbose start --hostname-strict-https=false --features=preview
+  web: /app/keycloak/bin/kc.sh --verbose start --features=preview
 EOF
 else
 cat << EOF
@@ -18,6 +18,6 @@ addons:
 config_vars:
   PATH: "/app/bin:/app/keycloak/bin:/app/java/bin:/usr/local/bin:/usr/bin:/bin"
 default_process_types:
-  web: /app/keycloak/bin/kc.sh --verbose start --hostname-strict-https=false
+  web: /app/keycloak/bin/kc.sh --verbose start
 EOF
 fi

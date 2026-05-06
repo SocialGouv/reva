@@ -16,7 +16,7 @@ services:
     restart: always
   keycloak:
     restart: always
-    image: quay.io/keycloak/keycloak:24.0.2
+    image: quay.io/keycloak/keycloak:26.6.1
     volumes:
       - ./themes/francevae:/opt/keycloak/themes/francevae
       - ./themes/francevae-candidate:/opt/keycloak/themes/francevae-candidate
@@ -28,7 +28,7 @@ services:
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: password
       KC_HOSTNAME: localhost
-      KC_PROXY: edge
+      # KC_PROXY: edge
       # KC_HOSTNAME_STRICT: false
       # KC_HOSTNAME_STRICT_BACKCHANNEL: true
       KEYCLOAK_ADMIN: admin
@@ -38,7 +38,7 @@ services:
       REVA_BASE_URL: http://localhost:3000
       KC_HTTP_RELATIVE_PATH: auth
       KC_HTTP_ENABLED: true
-      KC_HOSTNAME_STRICT_HTTPS: false
+      # KC_HOSTNAME_STRICT_HTTPS: false
       REVA_URL_CREATE_AAP_ACCOUNT: http://localhost:3002/espace-professionnel/inscription/
       CANDIDATE_BASE_URL: http://localhost:3004/candidat
       # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
@@ -46,7 +46,7 @@ services:
     command:
       - start
       # - --optimized
-      - --hostname-port=8888
+      # - --hostname-port=8888
       - --features=preview
     ports:
       - 8888:8080

@@ -31,7 +31,7 @@
     "date-fns": "^4.1.0",
     "graphql": "^16.11.0",
     "graphql-request": "^7.2.0",
-    "keycloak-js": "^24.0.3",
+    "keycloak-js": "^26.2.4",
     "lodash": "^4.17.23",
     "next": "^16.1.7",
     "react": "^19.1.0",

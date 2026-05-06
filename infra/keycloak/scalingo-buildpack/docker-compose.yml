@@ -1,35 +1,35 @@
-version: "3.8"
+version: '3.8'
 
-services:
-    postgres:
-        image: postgres:16.11
-        networks:
+services: 
+    postgres: 
+        image: postgres
+        networks: 
             - keycloak_network
         env_file: .env
-        restart: "always"
+        restart: 'always'
         volumes:
             - db_volume:/var/lib/postgresql/data
             - ./postgresql/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh:ro
     keycloak:
         build: .
-        networks:
+        networks: 
             - keycloak_network
-        volumes:
+        volumes: 
             - .:/buildpack
             - cache:/cache
             - build:/build
             - env:/env
             - app:/app
         env_file: .env
-        ports:
+        ports: 
             - 8080:8080
         depends_on:
             - postgres
-volumes:
+volumes: 
     db_volume:
     cache:
     build:
     env:
     app:
-networks:
+networks: 
     keycloak_network:

@@ -135,7 +135,7 @@ const getKeycloakInstance = (): Keycloak => {
       ? new Keycloak({
           clientId: KEYCLOAK_CLIENT_ID || "",
           realm: KEYCLOAK_REALM || "",
-          url: KEYCLOAK_URL,
+          url: KEYCLOAK_URL || "",
         })
       : undefined;
 
