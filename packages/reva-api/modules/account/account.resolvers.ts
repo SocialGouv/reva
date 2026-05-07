@@ -16,6 +16,7 @@ import { resetAccountPassword } from "./features/resetAccountPassword";
 import { sendForgotPasswordEmail } from "./features/sendForgotPasswordEmail";
 import { updateAccountById } from "./features/updateAccount";
 import { verifyOtpChallenge } from "./features/verifyOtpChallenge";
+import { KeycloakUnavailableError } from "./utils/keycloak.utils";
 
 export const resolvers = {
   Mutation: {
@@ -85,12 +86,23 @@ export const resolvers = {
         password: string;
         clientApp: ClientApp;
       },
-    ) =>
-      loginWithCredentials({
-        email: params.email,
-        password: params.password,
-        clientApp: params.clientApp,
-      }),
+    ) => {
+      try {
+        return await loginWithCredentials({
+          email: params.email,
+          password: params.password,
+          clientApp: params.clientApp,
+        });
+      } catch (e) {
+        if (e instanceof KeycloakUnavailableError) {
+          throw new mercurius.ErrorWithProps(
+            "Service d'authentification indisponible, merci de réessayer plus tard.",
+            { code: "KEYCLOAK_UNAVAILABLE" },
+          );
+        }
+        throw e;
+      }
+    },
     account_verifyOtpChallenge: async (
       _parent: unknown,
       params: { challengeToken: string; totp: string },

@@ -26,8 +26,14 @@ export const loginWithCredentials = async ({
   // On valide d'abord le mot de passe via le client password-check (sans OTP)
   // pour distinguer un MDP incorrect d'un OTP incorrect, puis on demande
   // l'étape OTP si l'utilisateur en a un configuré.
-  const passwordOk = await validatePasswordOnly(account.keycloakId, password);
-  if (!passwordOk) {
+  // Les erreurs d'indisponibilité Keycloak (KeycloakUnavailableError) sont
+  // laissées remonter telles quelles : le résolveur les transformera en
+  // ErrorWithProps avec le code "KEYCLOAK_UNAVAILABLE".
+  const passwordResult = await validatePasswordOnly(
+    account.keycloakId,
+    password,
+  );
+  if (!passwordResult.ok) {
     throw new Error("Adresse électronique ou mot de passe incorrect");
   }
 

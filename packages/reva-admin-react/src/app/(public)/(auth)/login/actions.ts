@@ -150,7 +150,12 @@ export const login = async (
   });
 
   if (result.error) {
-    const message = result.error.networkError
+    const isKeycloakUnavailable =
+      !!result.error.networkError ||
+      result.error.graphQLErrors?.some(
+        (e) => e.extensions?.code === "KEYCLOAK_UNAVAILABLE",
+      );
+    const message = isKeycloakUnavailable
       ? "Service indisponible, merci de réessayer plus tard."
       : "Adresse électronique ou mot de passe incorrect";
     return {
