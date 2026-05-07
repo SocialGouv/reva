@@ -155,6 +155,9 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
 
       await expect(page.getByTestId("eligibility-section")).toBeVisible();
       await expect(page.getByTestId("certification-section")).toBeVisible();
+      await expect(page.getByTestId("certification-section")).not.toContainText(
+        "La certification dans sa totalité",
+      );
       await expect(
         page.getByTestId("competencies-blocks-section"),
       ).toBeVisible();
@@ -336,6 +339,9 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
       await expect(
         certificationSection.getByTestId("completed-badge"),
       ).toBeVisible();
+      await expect(certificationSection).toContainText(
+        "La certification dans sa totalité",
+      );
 
       const competenciesBlocksSection = page.getByTestId(
         "competencies-blocks-section",

@@ -37,7 +37,7 @@ export const CertificationSection = ({
       </p>
       {dematerializedFeasibilityFile?.option && (
         <p>
-          Option du parcours :{" "}
+          Option ou parcours :{" "}
           <span className="block font-medium">
             {dematerializedFeasibilityFile?.option}
           </span>
@@ -61,11 +61,13 @@ export const CertificationSection = ({
           </p>
         )}
       </div>
-      <p className="mb-0">
-        {isCertificationPartial
-          ? "Un ou plusieurs bloc(s) de compétences visé(s)"
-          : "La certification dans sa totalité"}
-      </p>
+      {dematerializedFeasibilityFile?.certificationPartComplete && (
+        <p className="mb-0">
+          {isCertificationPartial
+            ? "Un ou plusieurs bloc(s) de compétences visé(s)"
+            : "La certification dans sa totalité"}
+        </p>
+      )}
     </EnhancedSectionCard>
   );
 };
