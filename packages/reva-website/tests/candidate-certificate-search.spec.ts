@@ -13,8 +13,30 @@ import candidateCertificateSearchEmptyData from "./fixtures/espace-candidat/cand
 import searchCertificationsEmptyResult from "./fixtures/espace-candidat/recherche/searchCertificationsEmptyResult.json";
 import articlesForCertificationPageUsefulResources from "./fixtures/strapi/articlesForCertificationPageUsefulResources.json";
 
+import type { Page } from "@playwright/test";
+
 const strapi = graphql.link("https://strapi.vae.gouv.fr/graphql");
 const fvae = graphql.link("https://reva-api/api/graphql");
+
+const hydratedSearchInput = async (page: Page) => {
+  const searchInput = page.locator('[data-testid="autocomplete-input"]');
+  await expect(searchInput).toBeVisible();
+  // React attaches this tracker once the controlled input is hydrated.
+  await expect
+    .poll(() =>
+      searchInput.evaluate((element) => {
+        if (!(element instanceof HTMLInputElement)) {
+          return false;
+        }
+        if (!("_valueTracker" in element)) {
+          return false;
+        }
+        return Boolean(element._valueTracker);
+      }),
+    )
+    .toBe(true);
+  return searchInput;
+};
 
 test.describe("with search results", () => {
   test.beforeEach(async ({ page }) => {
@@ -47,7 +69,7 @@ test.describe("with search results", () => {
   test("should show the relevant certificates when typing text in the search bar", async ({
     page,
   }) => {
-    const searchInput = page.locator('[data-testid="autocomplete-input"]');
+    const searchInput = await hydratedSearchInput(page);
     await searchInput.fill("chaudronnier");
 
     const firstOption = page
@@ -60,10 +82,13 @@ test.describe("with search results", () => {
   test("should go to the next page when a certificate is found and clicked on", async ({
     page,
   }) => {
-    const searchInput = page.locator('[data-testid="autocomplete-input"]');
+    const searchInput = await hydratedSearchInput(page);
     await searchInput.fill("chaudronnier");
 
-    page.locator('[data-testid="autocomplete-options"] > div').first().click();
+    const firstOption = page
+      .locator('[data-testid="autocomplete-options"] > div')
+      .first();
+    await firstOption.click();
 
     await expect(page).toHaveURL(
       "/certifications/7ad608c2-5a4b-40eb-8ef9-7a85421b40f0/",
@@ -99,7 +124,7 @@ test.describe("with no search results", () => {
   test("should go to the next page when no certificate is found and the search button is clicked on", async ({
     page,
   }) => {
-    const searchInput = page.locator('[data-testid="autocomplete-input"]');
+    const searchInput = await hydratedSearchInput(page);
     await searchInput.fill("chaudronnier");
     await searchInput.press("Enter");
 
