@@ -78,6 +78,25 @@ test("should throw if session date is before dossier de validation sent date", a
   );
 });
 
+test("should schedule successfully when session date is the same day as dossier de validation sent date", async () => {
+  const dossierDeValidationSentAt = new Date("2026-05-06T14:30:00.000Z");
+  const { candidacy } = await createTestSetup({
+    dossierDeValidationSentAt,
+  });
+
+  const jury = await scheduleSessionOfJury({
+    candidacyId: candidacy.id,
+    date: toTimestampString(new Date("2026-05-06T00:00:00.000Z")),
+    timeSpecified: false,
+    userEmail,
+    userKeycloakId,
+    userRoles,
+  });
+
+  expect(jury).toBeDefined();
+  expect(jury.candidacyId).toEqual(candidacy.id);
+});
+
 test("should throw if session date is more than 2 years in the future", async () => {
   const { candidacy } = await createTestSetup({
     dossierDeValidationSentAt: sub(new Date(), { months: 2 }),

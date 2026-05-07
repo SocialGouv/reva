@@ -99,7 +99,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     dossierDeValidation.dossierDeValidationSentAt;
   if (
     !dossierDeValidationSentAt ||
-    isBefore(dateOfSession, dossierDeValidationSentAt)
+    isBefore(dateOfSession, startOfDay(dossierDeValidationSentAt))
   ) {
     throw new Error(
       "La date du jury doit être après la date d'envoi du dossier de validation",
