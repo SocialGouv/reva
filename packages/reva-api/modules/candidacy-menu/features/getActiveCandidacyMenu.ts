@@ -1,5 +1,6 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
+import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { prismaClient } from "@/prisma/client";
 
 import {
@@ -284,6 +285,38 @@ export const getActiveCandidacyMenu = async ({
     };
   };
 
+  const isJuryResultByBlocksFeatureActive = await isFeatureActiveForUser({
+    feature: "JURY_RESULTS_BY_BLOCK",
+  });
+
+  const getJuryMenuEntriesByBlocks = (): CandidacyMenuEntry[] => {
+    const showNewJuryMenu =
+      candidacy.financeModule == "unifvae" ||
+      candidacy.financeModule === "hors_plateforme";
+
+    const minumumStatusToShowJuryMenu = "DOSSIER_FAISABILITE_RECEVABLE";
+
+    const menuEntryStatus: CandidacyMenuEntryStatus = isStatusEqualOrAbove(
+      minumumStatusToShowJuryMenu,
+    )
+      ? "ACTIVE_WITHOUT_HINT"
+      : "INACTIVE";
+    return [
+      {
+        label: "Passage devant le jury",
+        url: buildUrl({ suffix: "jury-aap/date" }),
+        status: menuEntryStatus,
+      },
+      {
+        label: "Résultat de jury",
+        url: showNewJuryMenu
+          ? buildUrl({ suffix: "jury-aap/resultat" })
+          : buildUrl({ suffix: "exam-info" }),
+        status: menuEntryStatus,
+      },
+    ];
+  };
+
   const getJuryMenuEntry = (): CandidacyMenuEntry => {
     const showNewJuryMenu =
       candidacy.financeModule == "unifvae" ||
@@ -321,6 +354,8 @@ export const getActiveCandidacyMenu = async ({
     await getFundingRequestMenuEntry(),
     getDossierDeValidationMenuEntry(),
     await getPaymentRequestMenuEntry(),
-    getJuryMenuEntry(),
+    ...(isJuryResultByBlocksFeatureActive
+      ? getJuryMenuEntriesByBlocks()
+      : [getJuryMenuEntry()]),
   ].filter((e) => e) as CandidacyMenuEntry[];
 };
