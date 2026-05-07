@@ -13,7 +13,6 @@ export const createCohorteVaeCollectiveHelper = async (
   return prismaClient.cohorteVaeCollective.create({
     data: {
       nom: faker.lorem.sentence(),
-      codeInscription: faker.lorem.word(),
 
       commanditaireVaeCollective: {
         create: {
