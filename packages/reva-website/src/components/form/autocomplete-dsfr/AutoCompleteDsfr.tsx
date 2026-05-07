@@ -37,6 +37,7 @@ export const AutocompleteDsfr = ({
   >("IDLE");
   const [displayOptions, setDisplayOptions] = useState(true);
   const [searchText, setSearchText] = useState("");
+  const [isHydrated, setIsHydrated] = useState(false);
   const [debouncedSearchText] = useDebounce(searchText, 500);
 
   const updateSearchText = async (newSearchText: string) => {
@@ -78,6 +79,15 @@ export const AutocompleteDsfr = ({
     onOptionSelection?.(newSelectedOption);
     setSearchText("");
   };
+
+  // Playwright, ou un utilisateur sur un appareil lent, peut saisir avant
+  // l'hydratation. Cet input contrôlé est ensuite réhydraté avec searchText
+  // vide, ce qui écrase la saisie DOM. Voir
+  // https://github.com/microsoft/playwright/issues/27759
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsHydrated(true);
+  }, []);
 
   //search and update autocomplete options based on debounced search text
   useEffect(() => {
@@ -133,6 +143,7 @@ export const AutocompleteDsfr = ({
                   onChange={(event) => updateSearchText(event.target.value)}
                   placeholder={placeholder}
                   value={searchText || defaultValue}
+                  readOnly={!isHydrated}
                   onBlur={() => {
                     setDisplayOptions(false);
                     setSelectedOption(null);
