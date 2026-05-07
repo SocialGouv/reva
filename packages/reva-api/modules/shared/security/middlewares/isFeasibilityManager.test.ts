@@ -3,8 +3,8 @@ import { faker } from "@faker-js/faker";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
-import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
+import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
@@ -54,20 +54,14 @@ describe("isFeasibilityManager", () => {
         throw new Error("Required IDs are undefined");
       }
 
-      await prismaClient.certificationAuthorityLocalAccount.create({
-        data: {
-          certificationAuthorityId: certificationAuthority.id,
-          accountId: certificationAuthority.Account[0].id,
-          certificationAuthorityLocalAccountOnCertification: {
-            create: {
-              certificationId: certification.id,
-            },
-          },
-          certificationAuthorityLocalAccountOnDepartment: {
-            create: {
-              departmentId: candidacy.candidate.departmentId,
-            },
-          },
+      await createCertificationAuthorityLocalAccountHelper({
+        certificationAuthorityId: certificationAuthority.id,
+        accountId: certificationAuthority.Account[0].id,
+        certificationAuthorityLocalAccountOnCertification: {
+          create: { certificationId: certification.id },
+        },
+        certificationAuthorityLocalAccountOnDepartment: {
+          create: { departmentId: candidacy.candidate.departmentId },
         },
       });
 
@@ -122,20 +116,14 @@ describe("isFeasibilityManager", () => {
         throw new Error("Candidate department ID is undefined");
       }
 
-      await prismaClient.certificationAuthorityLocalAccount.create({
-        data: {
-          certificationAuthorityId: certificationAuthority.id,
-          accountId: certificationAuthority.Account[0].id,
-          certificationAuthorityLocalAccountOnCertification: {
-            create: {
-              certificationId: certification.id,
-            },
-          },
-          certificationAuthorityLocalAccountOnDepartment: {
-            create: {
-              departmentId: candidacy.candidate.departmentId,
-            },
-          },
+      await createCertificationAuthorityLocalAccountHelper({
+        certificationAuthorityId: certificationAuthority.id,
+        accountId: certificationAuthority.Account[0].id,
+        certificationAuthorityLocalAccountOnCertification: {
+          create: { certificationId: certification.id },
+        },
+        certificationAuthorityLocalAccountOnDepartment: {
+          create: { departmentId: candidacy.candidate.departmentId },
         },
       });
 
@@ -203,20 +191,14 @@ describe("isFeasibilityManager", () => {
         throw new Error("Required IDs are undefined");
       }
 
-      await prismaClient.certificationAuthorityLocalAccount.create({
-        data: {
-          certificationAuthorityId: certificationAuthority.id,
-          accountId: certificationAuthority.Account[0].id,
-          certificationAuthorityLocalAccountOnCertification: {
-            create: {
-              certificationId: certification.id,
-            },
-          },
-          certificationAuthorityLocalAccountOnDepartment: {
-            create: {
-              departmentId: candidacy.candidate.departmentId,
-            },
-          },
+      await createCertificationAuthorityLocalAccountHelper({
+        certificationAuthorityId: certificationAuthority.id,
+        accountId: certificationAuthority.Account[0].id,
+        certificationAuthorityLocalAccountOnCertification: {
+          create: { certificationId: certification.id },
+        },
+        certificationAuthorityLocalAccountOnDepartment: {
+          create: { departmentId: candidacy.candidate.departmentId },
         },
       });
 
@@ -248,39 +230,37 @@ describe("isFeasibilityManager", () => {
     });
 
     test("should deny access when department does not match", async () => {
-      const department = await prismaClient.department.create({
-        data: {
-          code: faker.string.numeric(3),
-          label: faker.lorem.sentence(),
-          timezone: faker.location.timeZone(),
-          elligibleVAE: true,
-          region: {
-            create: {
-              code: faker.string.numeric(3),
-              label: faker.lorem.sentence(),
-            },
-          },
+      const certification = await createCertificationHelper();
+      const certificationAuthority = await createCertificationAuthorityHelper();
+      const managedDepartment = await prismaClient.department.findUniqueOrThrow(
+        {
+          where: { code: "971" },
+        },
+      );
+      const candidacy = await createCandidacyHelper({
+        candidacyArgs: {
+          certificationId: certification.id,
         },
       });
 
-      const differentDepartmentCandidate = await createCandidateHelper({
-        departmentId: department.id,
-      });
-
-      const differentDepartmentCandidacy = await createCandidacyHelper({
-        candidacyArgs: {
-          candidateId: differentDepartmentCandidate.id,
+      await createCertificationAuthorityLocalAccountHelper({
+        certificationAuthorityId: certificationAuthority.id,
+        accountId: certificationAuthority.Account[0].id,
+        certificationAuthorityLocalAccountOnCertification: {
+          create: { certificationId: certification.id },
+        },
+        certificationAuthorityLocalAccountOnDepartment: {
+          create: { departmentId: managedDepartment.id },
         },
       });
 
       await createFeasibilityUploadedPdfHelper({
-        candidacyId: differentDepartmentCandidacy.id,
+        certificationAuthorityId: certificationAuthority.id,
+        candidacyId: candidacy.id,
       });
 
-      const certificationAuthority = await createCertificationAuthorityHelper();
-
       const resp = await getActiveFeasibilityByCandidacyId({
-        candidacyId: differentDepartmentCandidacy.id,
+        candidacyId: candidacy.id,
         keycloakId: certificationAuthority.Account[0].keycloakId,
       });
 
@@ -312,29 +292,11 @@ describe("isFeasibilityManager", () => {
 
     test("should deny access when only certification authority matches", async () => {
       const certificationAuthority = await createCertificationAuthorityHelper();
-      const differentDepartment = await prismaClient.department.create({
-        data: {
-          code: faker.string.numeric(3),
-          label: faker.lorem.sentence(),
-          timezone: faker.location.timeZone(),
-          elligibleVAE: true,
-          region: {
-            create: {
-              code: faker.string.numeric(3),
-              label: faker.lorem.sentence(),
-            },
-          },
-        },
-      });
+      const candidacy = await createCandidacyHelper();
 
-      const candidate = await createCandidateHelper({
-        departmentId: differentDepartment.id,
-      });
-
-      const candidacy = await createCandidacyHelper({
-        candidacyArgs: {
-          candidateId: candidate.id,
-        },
+      await createCertificationAuthorityLocalAccountHelper({
+        certificationAuthorityId: certificationAuthority.id,
+        accountId: certificationAuthority.Account[0].id,
       });
 
       await createFeasibilityUploadedPdfHelper({
