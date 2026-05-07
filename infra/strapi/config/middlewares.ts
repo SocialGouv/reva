@@ -9,8 +9,10 @@ export default [
         useDefaults: true,
         directives: {
           "script-src": [
+            "'self'",
             "https://cdn.ckeditor.com",
             "https://grateful-event-39c5178d33.strapiapp.com",
+            "https://healing-nature-bb0384846f.media.strapiapp.com",
             "https://strapi.vae.gouv.fr",
           ],
         },
