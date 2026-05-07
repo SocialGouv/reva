@@ -1,5 +1,10 @@
 import { ClientApp } from "../account.type";
-import { generateIAMTokenWithPassword } from "../utils/keycloak.utils";
+import {
+  generateIAMTokenWithPassword,
+  userHasTotpConfigured,
+  validatePasswordOnly,
+} from "../utils/keycloak.utils";
+import { encodeOtpChallengeToken } from "../utils/otp-challenge.utils";
 
 import { getAccountByEmail } from "./getAccountByEmail";
 
@@ -18,14 +23,40 @@ export const loginWithCredentials = async ({
     throw new Error("Compte non trouvé");
   }
 
+  // On valide d'abord le mot de passe via le client password-check (sans OTP)
+  // pour distinguer un MDP incorrect d'un OTP incorrect, puis on demande
+  // l'étape OTP si l'utilisateur en a un configuré.
+  const passwordOk = await validatePasswordOnly(account.keycloakId, password);
+  if (!passwordOk) {
+    throw new Error("Adresse électronique ou mot de passe incorrect");
+  }
+
+  const isUserHasTotpConfigured = await userHasTotpConfigured(
+    account.keycloakId,
+  );
+
+  if (isUserHasTotpConfigured) {
+    // On retourne un token de challenge chiffré porté par un cookie côté Next.js,
+    // afin de ne pas faire transiter le mot de passe par le navigateur entre
+    // les deux étapes de l'authentification.
+    const otpChallengeToken = encodeOtpChallengeToken({
+      keycloakId: account.keycloakId,
+      clientApp,
+      password,
+    });
+    return {
+      tokens: null,
+      account,
+      requiresOtp: true,
+      otpChallengeToken,
+    };
+  }
+
   const tokens = await generateIAMTokenWithPassword(
     account.keycloakId,
     password,
     clientApp,
   );
 
-  return {
-    tokens,
-    account,
-  };
+  return { tokens, account, requiresOtp: false, otpChallengeToken: null };
 };

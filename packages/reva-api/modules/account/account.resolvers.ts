@@ -15,6 +15,7 @@ import { loginWithCredentials } from "./features/loginWithCredentials";
 import { resetAccountPassword } from "./features/resetAccountPassword";
 import { sendForgotPasswordEmail } from "./features/sendForgotPasswordEmail";
 import { updateAccountById } from "./features/updateAccount";
+import { verifyOtpChallenge } from "./features/verifyOtpChallenge";
 
 export const resolvers = {
   Mutation: {
@@ -84,7 +85,20 @@ export const resolvers = {
         password: string;
         clientApp: ClientApp;
       },
-    ) => loginWithCredentials(params),
+    ) =>
+      loginWithCredentials({
+        email: params.email,
+        password: params.password,
+        clientApp: params.clientApp,
+      }),
+    account_verifyOtpChallenge: async (
+      _parent: unknown,
+      params: { challengeToken: string; totp: string },
+    ) =>
+      verifyOtpChallenge({
+        challengeToken: params.challengeToken,
+        totp: params.totp,
+      }),
     account_sendForgotPasswordEmail: async (
       _parent: unknown,
       { email, clientApp }: { email: string; clientApp: ClientApp },

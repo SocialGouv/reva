@@ -17,33 +17,74 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const redirectAfterAuthUrl = searchParams.get("redirectAfterAuthUrl") || "";
 
+  const isOtpStep = state.step === "otp";
+
   return (
     <div className="fr-container">
       <h1 className="mb-12">Connexion à votre espace professionnel</h1>
       <div className="flex flex-col items-center lg:flex-row lg:justify-between gap-20 lg:gap-6">
         <div className="flex flex-col w-full basis-1/2 max-w-xl shadow-lifted">
           <Form className="flex flex-col gap-6 p-6" action={action}>
-            <Input
-              className="mb-0"
-              hintText="Format attendu : nom@domaine.fr"
-              nativeInputProps={{
-                id: "email",
-                name: "email",
-                required: true,
-                type: "email",
-                autoComplete: "username",
-                spellCheck: "false",
-              }}
-              label="Identifiant"
-            />
+            {isOtpStep ? (
+              <>
+                <input type="hidden" name="email" value={state.email ?? ""} />
+                <Input
+                  className="mb-0"
+                  state={state.errors?.totp ? "error" : "default"}
+                  stateRelatedMessage={state.errors?.totp?.message}
+                  hintText="Saisissez le code à 6 chiffres généré par votre application d'authentification."
+                  nativeInputProps={{
+                    id: "totp",
+                    name: "totp",
+                    required: true,
+                    inputMode: "numeric",
+                    autoComplete: "one-time-code",
+                    pattern: "[0-9]{6}",
+                    maxLength: 6,
+                    autoFocus: true,
+                  }}
+                  label="Code de vérification"
+                />
+                <Button
+                  className="mr-auto"
+                  priority="tertiary no outline"
+                  nativeButtonProps={{
+                    type: "submit",
+                    name: "intent",
+                    value: "cancel-otp",
+                    formNoValidate: true,
+                    disabled: pending,
+                  }}
+                >
+                  Retour à la connexion
+                </Button>
+              </>
+            ) : (
+              <>
+                <Input
+                  className="mb-0"
+                  hintText="Format attendu : nom@domaine.fr"
+                  nativeInputProps={{
+                    id: "email",
+                    name: "email",
+                    required: true,
+                    type: "email",
+                    autoComplete: "username",
+                    spellCheck: "false",
+                    defaultValue: state.email ?? "",
+                  }}
+                  label="Identifiant"
+                />
 
-            <PasswordInput
-              state={state.errors?.password ? "error" : "default"}
-              stateRelatedMessage={state.errors?.password?.message}
-            />
-            <Link href="/forgot-password" className="fr-link mr-auto">
-              Mot de passe oublié ?
-            </Link>
+                <PasswordInput
+                  state={state.errors?.password ? "error" : "default"}
+                  stateRelatedMessage={state.errors?.password?.message}
+                />
+                <Link href="/forgot-password" className="fr-link mr-auto">
+                  Mot de passe oublié ?
+                </Link>
+              </>
+            )}
 
             <input
               type="hidden"
@@ -55,7 +96,7 @@ export default function LoginPage() {
               className="w-full justify-center self-end mt-auto"
               disabled={pending}
             >
-              Se connecter
+              {isOtpStep ? "Valider le code" : "Se connecter"}
             </Button>
           </Form>
         </div>
