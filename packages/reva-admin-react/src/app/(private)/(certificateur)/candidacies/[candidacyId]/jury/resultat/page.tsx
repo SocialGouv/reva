@@ -29,6 +29,7 @@ export default function ResultatPage() {
   }
 
   return candidacy?.typeAccompagnement === "ACCOMPAGNE" &&
+    candidacy?.feasibility?.dematerializedFeasibilityFile &&
     isJuryResultsByBlockFeatureActive ? (
     <ResultatByBlocks />
   ) : (
