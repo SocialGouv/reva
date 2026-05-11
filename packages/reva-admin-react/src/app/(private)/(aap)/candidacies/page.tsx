@@ -3,7 +3,7 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import { toDate } from "date-fns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 
 import { useAuth } from "@/components/auth/auth";
 import { CandidacyCard } from "@/components/card/candidacy-card/CandidacyCard";
@@ -36,11 +36,6 @@ export default function CandidaciesPage() {
     | string
     | undefined;
 
-  const params = useMemo(
-    () => new URLSearchParams(searchParams),
-    [searchParams],
-  );
-
   const {
     candidaciesByStatusCount,
     candidaciesByStatus,
@@ -58,18 +53,21 @@ export default function CandidaciesPage() {
   const { isAdmin } = useAuth();
 
   useEffect(() => {
+    if (status && sortByFilter && page) {
+      return;
+    }
+    const nextParams = new URLSearchParams(searchParams);
     if (!status) {
-      params.set("status", "ACTIVE_HORS_ABANDON");
+      nextParams.set("status", "ACTIVE_HORS_ABANDON");
     }
     if (!sortByFilter) {
-      params.set("sortBy", "DATE_CREATION_DESC");
+      nextParams.set("sortBy", "DATE_CREATION_DESC");
     }
     if (!page) {
-      params.set("page", "1");
+      nextParams.set("page", "1");
     }
-
-    replace(`${pathname}?${params.toString()}`);
-  }, [status, params, pathname, replace, page, sortByFilter]);
+    replace(`${pathname}?${nextParams.toString()}`);
+  }, [status, sortByFilter, page, searchParams, pathname, replace]);
 
   const getPathnameWithoutMaisonMereAAPId = (): string => {
     const currentParams = new URLSearchParams(searchParams);
