@@ -1,3 +1,5 @@
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+
 import { CandidacyUseCandidateForDashboard } from "../dashboard.hooks";
 
 import { AppointmentsBanner } from "./AppointmentsBanner";
@@ -6,6 +8,7 @@ import { CandidacySubmissionBanner } from "./CandidacySubmissionBanner";
 import { DossierDeValidationBanner } from "./DossierDeValidationBanner";
 import { FeasibilityBanner } from "./FeasibilityBanner";
 import { JuryBanner } from "./JuryBanner";
+import { JuryWithBlocksBanner } from "./JuryWithBlocksBanner";
 
 type BannerProps = {
   candidacy: CandidacyUseCandidateForDashboard;
@@ -14,6 +17,11 @@ type BannerProps = {
 };
 
 export const DashboardBanner = (props: BannerProps) => {
+  const { isFeatureActive } = useFeatureFlipping();
+  const isResultByBlocksFeatureActive = isFeatureActive(
+    "JURY_RESULTS_BY_BLOCK",
+  );
+
   if (!props.candidacy) {
     return null;
   }
@@ -53,8 +61,20 @@ export const DashboardBanner = (props: BannerProps) => {
     return <CandidacyDropOutBanner candidacyDropOut={candidacyDropOut} />;
   }
 
-  if (jury) {
+  if (
+    jury &&
+    (!isResultByBlocksFeatureActive ||
+      !jury?.juryResultByCompetenceBlocs?.length)
+  ) {
     return <JuryBanner jury={jury} />;
+  }
+
+  if (
+    jury &&
+    isResultByBlocksFeatureActive &&
+    jury?.juryResultByCompetenceBlocs?.length
+  ) {
+    return <JuryWithBlocksBanner jury={jury} />;
   }
 
   if (displayDossierDeValidationBanner) {

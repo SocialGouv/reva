@@ -1,5 +1,11 @@
-export const CustomErrorBadge = ({ label }: { label: string }) => (
-  <div>
+export const CustomErrorBadge = ({
+  label,
+  dataTestId,
+}: {
+  label: string;
+  dataTestId?: string;
+}) => (
+  <div data-testid={dataTestId}>
     <div
       className={`text-[#6E445A] bg-[#FEE7FC] inline-flex items-center gap-1 rounded px-1 h-6`}
     >
