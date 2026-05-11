@@ -1,19 +1,13 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-
-import { fixupConfigRules } from "@eslint/compat";
-import { FlatCompat } from "@eslint/eslintrc";
 import { defineConfig } from "eslint/config";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
 import noOnlyTestsPlugin from "eslint-plugin-no-only-tests";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 
 export default defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  eslintPluginPrettierRecommended,
   {
     settings: {
       "import/resolver": {
@@ -23,16 +17,14 @@ export default defineConfig([
         },
       },
     },
-    extends: fixupConfigRules(
-      compat.extends(
-        "next/core-web-vitals",
-        "next/typescript",
-        "plugin:prettier/recommended",
-      ),
-    ),
 
     rules: {
       "react/no-unescaped-entities": "off",
+      "react-hooks/static-components": "warn",
+      "react-hooks/refs": "warn",
+      "react-hooks/purity": "warn",
+      "react-hooks/set-state-in-effect": "warn",
+      "react-hooks/preserve-manual-memoization": "warn",
       "import/no-unused-modules": [
         2,
         {

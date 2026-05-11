@@ -73,7 +73,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: "npm run dev -- -p 4003",
+    command: "npm run dev -- -p 4003 --webpack",
     url: "http://localhost:4003/admin2/",
     stdout: "ignore",
     env: {
