@@ -2,7 +2,6 @@ import {
   Candidacy,
   CandidacyStatusStep,
   Certification,
-  Jury,
   Organism,
 } from "@/graphql/generated/graphql";
 
@@ -20,7 +19,7 @@ export type CandidacyEntity = Partial<
   >
 > & {
   candidate?: CandidateEntity | null;
-  jury?: Partial<Jury> | null;
+  jury?: JuryEntity | null;
   feasibility?: FeasibilityEntity | null;
   activeDossierDeValidation?: DossierDeValidationEntity | null;
   id: Candidacy["id"];

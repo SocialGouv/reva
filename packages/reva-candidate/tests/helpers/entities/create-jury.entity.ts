@@ -1,6 +1,19 @@
-import { Jury, JuryResult } from "@/graphql/generated/graphql";
+import {
+  CertificationCompetenceBloc,
+  Jury,
+  JuryResult,
+  JuryResultByCompetenceBloc,
+} from "@/graphql/generated/graphql";
 
-export type JuryEntity = Partial<Jury>;
+export type JuryEntity = Partial<Omit<Jury, "juryResultByCompetenceBlocs">> & {
+  juryResultByCompetenceBlocs?:
+    | Partial<
+        Omit<JuryResultByCompetenceBloc, "competenceBloc"> & {
+          competenceBloc: Partial<CertificationCompetenceBloc>;
+        }
+      >[]
+    | null;
+};
 
 type CreateJuryEntityOptions = {
   result?: JuryResult;
