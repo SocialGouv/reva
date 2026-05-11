@@ -47,7 +47,7 @@ services:
       - start
       # - --optimized
       # - --hostname-port=8888
-      - --features=preview
+      # - --features=preview
     ports:
       - 8888:8080
     depends_on:
