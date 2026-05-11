@@ -1,16 +1,13 @@
+import path from "path";
+
 import type { NextConfig } from "next";
 
 const isTest = process.env.APP_ENV === "test";
 
 const nextConfig: NextConfig = {
   basePath: "/vae-collective",
-  /* config options here */
-  webpack: (config) => {
-    config.module.rules.push({
-      test: /\.woff2$/,
-      type: "asset/resource",
-    });
-    return config;
+  turbopack: {
+    root: path.resolve(__dirname, "../.."),
   },
   distDir: isTest ? ".next-test" : ".next",
   experimental: {

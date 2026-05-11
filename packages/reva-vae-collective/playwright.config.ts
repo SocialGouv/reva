@@ -115,7 +115,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run dev -- -p 4005",
+    command: "npm run dev -- -p 4005 --webpack",
     url: "http://localhost:4005/vae-collective/",
     stdout: "ignore",
     env: {
