@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
@@ -332,27 +331,6 @@ const NoResult = () => {
         Si le candidat souhaite cette certification, il peut modifier son choix
         depuis son espace personnel avant son rendez-vous pédagogique.
       </p>
-
-      <div className="flex flex-col gap-4 p-8 border-2 border-gray-100 rounded-2xl">
-        <div className="flex flex-row items-center gap-2">
-          <span className="fr-icon-info-line" aria-hidden="true"></span>
-          <h6 className="m-0">En savoir plus</h6>
-        </div>
-        <CallOut>
-          Du fait de son déploiement progressif, tous les diplômes ne sont pas
-          encore couverts par France VAE. De nouvelles certifications seront
-          ajoutées en 2025.
-          <br />
-          <br />
-          <a
-            href={`${process.env.NEXT_PUBLIC_METABASE_BASE_URL}/public/dashboard/31ce8d3e-1347-4aad-8a82-79a06de6b8a0`}
-            target="_blank"
-            className="fr-link text-2l font-semibold break-words text-black"
-          >
-            Lire les détails de la fiche diplôme
-          </a>
-        </CallOut>
-      </div>
     </div>
   );
 };
