@@ -21,6 +21,7 @@ export const Footer = () => (
               height="138"
               src="/vae-collective/images/fvae_logo.svg"
               alt="France VAE"
+              style={{ height: "auto" }}
             />
           </Link>
         </div>
