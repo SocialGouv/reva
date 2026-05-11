@@ -5,6 +5,8 @@ import { Account } from "../account.types";
 import { notifyNewEmailAddress } from "../mail/notify-new-email";
 import { notifyPreviousEmailAddress } from "../mail/notify-previous-email";
 
+import { getAccountByEmail } from "./getAccountByEmail";
+
 export const updateAccountById = async (params: {
   accountId: string;
   accountData: {
@@ -15,6 +17,10 @@ export const updateAccountById = async (params: {
 }): Promise<Account> => {
   const { accountId, accountData } = params;
 
+  // Normalisation en minuscules : évite les doublons de casse en base et
+  // s'aligne sur Keycloak (case-insensitive).
+  const newEmail = accountData.email.toLowerCase();
+
   // Check if accountToUpdate with accountId exsits
   const accountToUpdate = await prismaClient.account.findUnique({
     where: { id: accountId },
@@ -24,16 +30,11 @@ export const updateAccountById = async (params: {
     throw new Error(`Compte utilisateur pour l'id ${accountId} non trouvé`);
   }
 
-  // Check if account with accountData.email exsits
-  const accountWithEmail = await prismaClient.account.findUnique({
-    where: { email: accountData.email },
-  });
+  const accountWithEmail = await getAccountByEmail(newEmail);
 
   // If accountWithEmail exists and accountWithEmail.id != accountToUpdate.id throw error email already used
   if (accountWithEmail && accountWithEmail.id != accountToUpdate.id) {
-    throw new Error(
-      `L'adresse électronique ${accountData.email} est déjà utilisée`,
-    );
+    throw new Error(`L'adresse électronique ${newEmail} est déjà utilisée`);
   }
 
   const keycloakAdmin = await getKeycloakAdmin();
@@ -66,11 +67,10 @@ export const updateAccountById = async (params: {
     );
   }
 
-  const prevEmail = accountToUpdate.email;
-  const nextEmail = accountData.email;
+  const prevEmail = accountToUpdate.email.toLowerCase();
 
   // Update accountToUpdate to return it
-  accountToUpdate.email = accountData.email;
+  accountToUpdate.email = newEmail;
   accountToUpdate.firstname = accountData.firstname;
   accountToUpdate.lastname = accountData.lastname;
 
@@ -78,7 +78,7 @@ export const updateAccountById = async (params: {
   await prismaClient.account.update({
     where: { id: accountToUpdate.id },
     data: {
-      email: accountData.email,
+      email: newEmail,
       firstname: accountData.firstname,
       lastname: accountData.lastname,
     },
@@ -93,14 +93,14 @@ export const updateAccountById = async (params: {
     {
       firstName: accountData.firstname,
       lastName: accountData.lastname,
-      username: accountData.email,
-      email: accountData.email,
+      username: newEmail,
+      email: newEmail,
     },
   );
 
-  if (prevEmail != nextEmail) {
-    notifyPreviousEmailAddress({ email: prevEmail, newEmail: nextEmail });
-    notifyNewEmailAddress({ email: nextEmail });
+  if (prevEmail != newEmail) {
+    notifyPreviousEmailAddress({ email: prevEmail, newEmail });
+    notifyNewEmailAddress({ email: newEmail });
   }
 
   return accountToUpdate;

@@ -34,6 +34,10 @@ export const createAccount = async (params: {
     );
   }
 
+  // Normalisation en minuscules : évite les doublons de casse en base et
+  // s'aligne sur Keycloak (case-insensitive).
+  const email = params.email.toLowerCase();
+
   //assertions depending on user group
   switch (params.group) {
     case "admin":
@@ -62,7 +66,7 @@ export const createAccount = async (params: {
 
   //check if account already exist in keycloak and throw an error if that's the case.
   const maybeExistingAccount = await IAM.getAccount({
-    email: params.email,
+    email,
     username: params.username,
   });
 
@@ -76,6 +80,7 @@ export const createAccount = async (params: {
   // create the account in keycloak
   const keycloakId = await IAM.createAccount({
     ...params,
+    email,
     dontSendKeycloakEmail,
   });
 
@@ -83,7 +88,7 @@ export const createAccount = async (params: {
   return prismaClient.account.create({
     data: {
       keycloakId: keycloakId,
-      email: params.email,
+      email,
       firstname: params.firstname,
       lastname: params.lastname,
       organismId: params.organismId,

@@ -4,9 +4,10 @@ import {
   VAE_COLLECTIVE_BASE_URL,
 } from "@/modules/shared/config/config";
 import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
-import { prismaClient } from "@/prisma/client";
 
 import { ClientApp } from "../account.type";
+
+import { getAccountByEmail } from "./getAccountByEmail";
 
 const RESET_PASSWORD_URL_PATH_BY_CLIENT_APP: Record<ClientApp, string> = {
   REVA_ADMIN: `${ADMIN_BASE_URL}/reset-password`,
@@ -23,11 +24,9 @@ export const sendForgotPasswordEmail = async ({
   const resetPasswordUrlPath = RESET_PASSWORD_URL_PATH_BY_CLIENT_APP[clientApp];
   if (!resetPasswordUrlPath) throw new Error("Application non reconnue");
 
-  const accountExists = !!(await prismaClient.account.count({
-    where: { email },
-  }));
+  const account = await getAccountByEmail(email);
 
-  if (!accountExists) return;
+  if (!account) return;
 
   const token = generateJwt({ email, action: "reset-password" }, 4 * 60 * 60);
   const resetPasswordUrl = `${resetPasswordUrlPath}?resetPasswordToken=${token}`;
