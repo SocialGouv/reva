@@ -22,6 +22,7 @@ const PostLoginPage = () => {
     useAuth();
 
   const initRef = useRef(false);
+  const redirectedRef = useRef(false);
 
   const tokensParam = searchParams.get("tokens");
   const redirectAfterAuthUrl = searchParams.get("redirectAfterAuthUrl");
@@ -40,7 +41,10 @@ const PostLoginPage = () => {
   }, [tokensParam, resetKeycloakInstance]);
 
   useEffect(() => {
+    if (redirectedRef.current) return;
+
     if (authenticated) {
+      redirectedRef.current = true;
       const safeRedirect = sanitizeRedirectUrl(redirectAfterAuthUrl);
       if (safeRedirect) {
         router.replace(safeRedirect);
@@ -59,6 +63,7 @@ const PostLoginPage = () => {
 
     // Pas de tokens en URL et pas authentifie via SSO/check-sso : kick.
     if (!tokensParam) {
+      redirectedRef.current = true;
       router.replace("/login");
     }
     // tokens en URL et pas encore authentifie : init en cours, on attend.

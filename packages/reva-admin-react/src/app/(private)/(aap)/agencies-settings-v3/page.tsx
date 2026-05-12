@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import { SettingsSummaryForGestionnaire } from "@/app/(private)/(aap)/agencies-settings-v3/_components/agencies-settings-summary/SettingsSummaryForGestionnaire";
 import { useAuth } from "@/components/auth/auth";
@@ -15,12 +16,14 @@ const AgenciesSettingsPage = () => {
   const router = useRouter();
   const { account } = useAgenciesSettingsPage();
 
-  if (!account) {
-    return null;
-  }
+  useEffect(() => {
+    if (account && !isGestionnaireMaisonMereAAP) {
+      router.push(`/agencies-settings-v3/collaborateurs/${account.id}`);
+    }
+  }, [account, isGestionnaireMaisonMereAAP, router]);
 
-  if (!isGestionnaireMaisonMereAAP) {
-    router.push(`/agencies-settings-v3/collaborateurs/${account.id}`);
+  if (!account || !isGestionnaireMaisonMereAAP) {
+    return null;
   }
 
   return (

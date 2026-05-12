@@ -159,12 +159,19 @@ const FundingPage = () => {
 
   useEffect(resetForm, [resetForm]);
 
-  if (candidacyIsLoading) {
-    return null;
-  }
+  useEffect(() => {
+    if (!candidacyIsLoading && !isEligibleToViewFundingRequest) {
+      router.push(candidacySummaryUrl);
+    }
+  }, [
+    candidacyIsLoading,
+    isEligibleToViewFundingRequest,
+    candidacySummaryUrl,
+    router,
+  ]);
 
-  if (!isEligibleToViewFundingRequest) {
-    router.push(candidacySummaryUrl);
+  if (candidacyIsLoading || !isEligibleToViewFundingRequest) {
+    return null;
   }
 
   return !isReadOnly ? (

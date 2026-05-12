@@ -3,8 +3,7 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import Image from "next/image";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { redirect, usePathname, useSearchParams } from "next/navigation";
 
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
 import { SearchList } from "@/components/search/search-list/SearchList";
@@ -129,17 +128,16 @@ export default function RegistryManagerHomepage() {
   const visible =
     stringParam === "true" ? true : stringParam === "false" ? false : undefined;
 
-  const { replace } = useRouter();
-
-  useEffect(() => {
-    const params = new URLSearchParams();
-    params.set("status", status || "A_VALIDER_PAR_CERTIFICATEUR");
-    params.set("page", page || "1");
-
-    if (!page || !status) {
-      replace(`${currentPathname}?${params.toString()}`);
+  if (!status || !page) {
+    const nextParams = new URLSearchParams(searchParams);
+    if (!status) {
+      nextParams.set("status", "A_VALIDER_PAR_CERTIFICATEUR");
     }
-  }, [replace, page, status, currentPathname]);
+    if (!page) {
+      nextParams.set("page", "1");
+    }
+    redirect(`${currentPathname}?${nextParams.toString()}`);
+  }
 
   const { certificationPage, getCertificationsQueryStatus } = useCertifications(
     {
