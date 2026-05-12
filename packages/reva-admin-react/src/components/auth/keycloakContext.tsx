@@ -190,7 +190,7 @@ const initKeycloak = async (params: InitKeycloakParams) => {
   };
   keycloakInstance.onTokenExpired = async () => {
     try {
-      await keycloakInstance.updateToken(10);
+      await keycloakInstance.updateToken(60);
     } catch {
       onLogout?.();
     }
@@ -200,7 +200,7 @@ const initKeycloak = async (params: InitKeycloakParams) => {
     const authenticated = await keycloakInstance.init(config);
 
     if (authenticated) {
-      await keycloakInstance.updateToken(10);
+      await keycloakInstance.updateToken(60);
 
       const { token, refreshToken, idToken } = keycloakInstance;
       if (token && refreshToken) {
