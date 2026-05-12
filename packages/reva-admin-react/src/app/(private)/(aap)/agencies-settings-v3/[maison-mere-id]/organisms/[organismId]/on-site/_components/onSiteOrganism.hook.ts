@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 import { useAuth } from "@/components/auth/auth";
@@ -48,6 +48,15 @@ const getOrganismQuery = graphql(`
   }
 `);
 
+const deleteLieuAccueilMutation = graphql(`
+  mutation deleteLieuAccueil($maisonMereAAPId: ID!, $organismId: ID!) {
+    organism_deleteLieuAccueil(
+      maisonMereAAPId: $maisonMereAAPId
+      organismId: $organismId
+    )
+  }
+`);
+
 export const useOnSiteOrganism = () => {
   const { isAdmin } = useAuth();
   const { organismId, "maison-mere-id": maisonMereAAPId } = useParams<{
@@ -55,6 +64,7 @@ export const useOnSiteOrganism = () => {
     "maison-mere-id": string;
   }>();
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const { data: getOrganismResponse } = useQuery({
     queryKey: [organismId, "organism"],
@@ -62,9 +72,27 @@ export const useOnSiteOrganism = () => {
     enabled: !!organismId,
   });
 
+  const deleteLieuAccueil = useMutation({
+    mutationFn: (organismId: string) =>
+      graphqlClient.request(deleteLieuAccueilMutation, {
+        maisonMereAAPId,
+        organismId,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [organismId, "organism"] });
+    },
+  });
+
   const organism = getOrganismResponse?.organism_getOrganism;
 
   const organismName = organism?.nomPublic || organism?.label;
 
-  return { organism, organismId, organismName, maisonMereAAPId, isAdmin };
+  return {
+    organism,
+    organismId,
+    organismName,
+    maisonMereAAPId,
+    isAdmin,
+    deleteLieuAccueil,
+  };
 };

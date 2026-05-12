@@ -6,17 +6,29 @@ import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Highlight } from "@codegouvfr/react-dsfr/Highlight";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+import { graphqlErrorToast } from "@/components/toast/toast";
 
 import { OrganismDisponiblePourVaeCollectiveToggle } from "../_components/organism-disponible-pour-vae-collective-toggle/OrganismDisponiblePourVaeCollectiveToggle";
 import { OrganismVisibilityToggle } from "../_components/organism-visibility-toggle/OrganismVisibilityToggle";
 
+import { DeleteLieuAccueilTile } from "./_components/delete-lieu-accueil-tile/DeleteLieuAccueilTile";
 import { useOnSiteOrganism } from "./_components/onSiteOrganism.hook";
 
 export default function OnSitePage() {
-  const { organism, organismId, organismName, maisonMereAAPId, isAdmin } =
-    useOnSiteOrganism();
+  const {
+    organism,
+    organismId,
+    organismName,
+    maisonMereAAPId,
+    isAdmin,
+    deleteLieuAccueil,
+  } = useOnSiteOrganism();
+
+  const router = useRouter();
+
   if (!organism) return null;
 
   const isFormacodesAndLevelsComplete =
@@ -30,6 +42,20 @@ export default function OnSitePage() {
     organism.adresseCodePostal &&
     organism.telephone &&
     organism.emailContact;
+
+  const handleDeleteLieuAccueilConfirmation = async () => {
+    try {
+      await deleteLieuAccueil.mutateAsync(organismId);
+      if (isAdmin) {
+        router.push(`/agencies-settings-v3/${maisonMereAAPId}/organisms`);
+      } else {
+        router.push(`/agencies-settings-v3/`);
+      }
+    } catch (error) {
+      console.error(error);
+      graphqlErrorToast(error);
+    }
+  };
 
   return (
     <div className="flex flex-col w-full">
@@ -173,6 +199,10 @@ export default function OnSitePage() {
         />
 
         <OrganismVisibilityToggle organismId={organismId} />
+        <DeleteLieuAccueilTile
+          lieuAccueilLabel={organism.nomPublic || organism.label}
+          onDeleteLieuAccueilConfirmation={handleDeleteLieuAccueilConfirmation}
+        />
       </div>
     </div>
   );
