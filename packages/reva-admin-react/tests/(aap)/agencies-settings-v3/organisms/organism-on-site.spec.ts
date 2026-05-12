@@ -84,6 +84,15 @@ function createUpdateVaeCollectiveMutationHandler() {
   );
 }
 
+function createDeleteLieuAccueilMutationHandler() {
+  return fvae.mutation(
+    "deleteLieuAccueil",
+    graphQLResolver({
+      organism_deleteLieuAccueil: true,
+    }),
+  );
+}
+
 const { aapCommonHandlers } = getAAPCommonHandlers();
 
 async function waitForPageQueries(page: Page) {
@@ -257,6 +266,99 @@ test.describe("organism on-site page", () => {
           page.getByText("Disponibilité pour la VAE collective mise à jour"),
         ).toBeVisible();
       });
+    });
+  });
+
+  test.describe("delete lieu d'accueil", () => {
+    test.use({
+      mswHandlers: [
+        [
+          ...aapCommonHandlers,
+          ...createOrganismHandlers(),
+          createDeleteLieuAccueilMutationHandler(),
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("displays the delete tile", async ({ page }) => {
+      await login({ role: "aap", page });
+
+      await page.goto(
+        `/admin2/agencies-settings-v3/${MAISON_MERE_ID}/organisms/${ORGANISM_ID}/on-site/`,
+      );
+      await waitForPageQueries(page);
+
+      await expect(
+        page.getByRole("button", { name: "Supprimer le lieu d’accueil" }),
+      ).toBeVisible();
+    });
+
+    test("opens confirmation modal when clicking the delete tile", async ({
+      page,
+    }) => {
+      await login({ role: "aap", page });
+
+      await page.goto(
+        `/admin2/agencies-settings-v3/${MAISON_MERE_ID}/organisms/${ORGANISM_ID}/on-site/`,
+      );
+      await waitForPageQueries(page);
+
+      await page
+        .getByRole("button", { name: "Supprimer le lieu d’accueil" })
+        .click();
+
+      await expect(
+        page.getByRole("heading", { name: "Supprimer un lieu d’accueil" }),
+      ).toBeVisible();
+    });
+
+    test("closes the modal when clicking cancel", async ({ page }) => {
+      await login({ role: "aap", page });
+
+      await page.goto(
+        `/admin2/agencies-settings-v3/${MAISON_MERE_ID}/organisms/${ORGANISM_ID}/on-site/`,
+      );
+      await waitForPageQueries(page);
+
+      await page
+        .getByRole("button", { name: "Supprimer le lieu d’accueil" })
+        .click();
+
+      await expect(
+        page.getByRole("heading", { name: "Supprimer un lieu d’accueil" }),
+      ).toBeVisible();
+
+      await page.getByRole("button", { name: "Annuler" }).click();
+
+      await expect(
+        page.getByRole("heading", { name: "Supprimer un lieu d’accueil" }),
+      ).not.toBeVisible();
+    });
+
+    test("calls mutation and redirects after confirming deletion", async ({
+      page,
+    }) => {
+      await login({ role: "aap", page });
+
+      await page.goto(
+        `/admin2/agencies-settings-v3/${MAISON_MERE_ID}/organisms/${ORGANISM_ID}/on-site/`,
+      );
+      await waitForPageQueries(page);
+
+      await page
+        .getByRole("button", { name: "Supprimer le lieu d’accueil" })
+        .click();
+
+      const mutationPromise = waitGraphQL(page, "deleteLieuAccueil");
+
+      await page
+        .getByRole("button", { name: "Supprimer", exact: true })
+        .click();
+
+      await mutationPromise;
+
+      await expect(page).toHaveURL(/\/agencies-settings-v3\//);
     });
   });
 });
