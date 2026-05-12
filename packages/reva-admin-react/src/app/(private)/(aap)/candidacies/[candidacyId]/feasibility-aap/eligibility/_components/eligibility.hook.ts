@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
@@ -9,6 +9,13 @@ import { DematerializedFeasibilityFileCreateOrUpdateEligibilityRequirementInput 
 const getCandidacyById = graphql(`
   query getCandidacyByIdForAapFeasibilityEligibilityPage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
+      feasibility {
+        dematerializedFeasibilityFile {
+          eligibilityRequirement
+          eligibilityValidUntil
+          eligibilityCandidateSituation
+        }
+      }
       certification {
         label
         codeRncp
@@ -34,12 +41,10 @@ const createOrUpdateEligibilityRequirementMutation = graphql(`
 export const useEligibility = () => {
   const { candidacyId } = useParams<{ candidacyId: string }>();
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const { data: getCandidacyByIdResponse } = useQuery({
-    queryKey: [
-      candidacyId,
-      "getCandidacyByIdForAapFeasibilityCertificationPage",
-    ],
+    queryKey: [candidacyId, "getCandidacyByIdForAapFeasibilityEligibilityPage"],
     queryFn: () =>
       graphqlClient.request(getCandidacyById, {
         candidacyId,
@@ -54,9 +59,19 @@ export const useEligibility = () => {
         candidacyId,
         input,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          candidacyId,
+          "getCandidacyByIdForAapFeasibilityEligibilityPage",
+        ],
+      });
+    },
   });
 
   const candidacy = getCandidacyByIdResponse?.getCandidacyById;
   const certification = candidacy?.certification;
-  return { certification, createOrUpdateEligibilityRequirement };
+  const feasibility = candidacy?.feasibility;
+
+  return { certification, createOrUpdateEligibilityRequirement, feasibility };
 };

@@ -5,7 +5,7 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isBefore, parseISO, toDate } from "date-fns";
+import { format, isBefore, parseISO, toDate } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -93,16 +93,28 @@ export default function EligibilityPage() {
   const { candidacyId } = useParams<{ candidacyId: string }>();
   const router = useRouter();
   const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
-  const { certification, createOrUpdateEligibilityRequirement } =
+  const { certification, createOrUpdateEligibilityRequirement, feasibility } =
     useEligibility();
-  const defaultValues = useMemo(
-    () => ({
-      eligibility: "" as const,
-      eligibilityValidUntil: undefined,
-      timeEnough: "" as const,
-    }),
-    [],
-  );
+
+  const defaultValues = useMemo(() => {
+    return {
+      eligibility:
+        feasibility?.dematerializedFeasibilityFile
+          ?.eligibilityCandidateSituation || ("" as const),
+      eligibilityValidUntil: feasibility?.dematerializedFeasibilityFile
+        ?.eligibilityValidUntil
+        ? format(
+            feasibility?.dematerializedFeasibilityFile?.eligibilityValidUntil,
+            "yyyy-MM-dd",
+          )
+        : undefined,
+      timeEnough: feasibility?.dematerializedFeasibilityFile
+        ?.eligibilityValidUntil
+        ? ("true" as const)
+        : ("" as const),
+    };
+  }, [feasibility]);
+
   const {
     register,
     handleSubmit,
