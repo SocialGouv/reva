@@ -377,4 +377,6 @@ type Mutation {
     maisonMereAAPId: ID!
     accountId: ID!
   ): Void
+
+  organism_delete_lieu_accueil(maisonMereAAPId: ID!, organismId: ID!): Void
 }

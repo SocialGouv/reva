@@ -4,6 +4,7 @@ import { attachOrganismToAllConventionCollectiveHelper } from "@/test/helpers/at
 import { attachOrganismToAllDegreesHelper } from "@/test/helpers/attach-organism-to-all-degrees-helper";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createAccountHelper } from "@/test/helpers/entities/create-account-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import {
   attachCollaborateurAccountToMaisonMereAAP,
@@ -61,6 +62,15 @@ const paginatedOrganismsQuery = graphql(`
         }
       }
     }
+  }
+`);
+
+const deleteLieuAccueilMutation = graphql(`
+  mutation deleteLieuAccueil($maisonMereAAPId: ID!, $organismId: ID!) {
+    organism_delete_lieu_accueil(
+      maisonMereAAPId: $maisonMereAAPId
+      organismId: $organismId
+    )
   }
 `);
 
@@ -775,5 +785,154 @@ describe("Search organisms", () => {
       certificationIds: [certification.id, certification2.id],
     });
     expect(resp.organism_searchOrganisms.rows.length).toBe(0);
+  });
+});
+
+describe("Delete lieu accueil", () => {
+  it("should delete a lieu accueil as admin", async () => {
+    const lieuAccueil = await createOrganismHelper({
+      modaliteAccompagnement: "LIEU_ACCUEIL",
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "admin",
+        }),
+      },
+    });
+
+    await graphqlClient.request(deleteLieuAccueilMutation, {
+      maisonMereAAPId: lieuAccueil.maisonMereAAP!.id,
+      organismId: lieuAccueil.id,
+    });
+
+    const deletedLieuAccueil = await prismaClient.organism.findUnique({
+      where: { id: lieuAccueil.id },
+    });
+
+    expect(deletedLieuAccueil).toBeNull();
+  });
+
+  it("should delete a lieu accueil as gestionnaire of the maison mere aap", async () => {
+    const lieuAccueil = await createOrganismHelper({
+      modaliteAccompagnement: "LIEU_ACCUEIL",
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "gestion_maison_mere_aap",
+          keycloakId: lieuAccueil.maisonMereAAP!.gestionnaire.keycloakId,
+        }),
+      },
+    });
+
+    await graphqlClient.request(deleteLieuAccueilMutation, {
+      maisonMereAAPId: lieuAccueil.maisonMereAAP!.id,
+      organismId: lieuAccueil.id,
+    });
+
+    const deletedLieuAccueil = await prismaClient.organism.findUnique({
+      where: { id: lieuAccueil.id },
+    });
+
+    expect(deletedLieuAccueil).toBeNull();
+  });
+
+  it("should throw an error when the user is neither an admin nor a gestionnaire of the maison mere aap of the lieu accueil", async () => {
+    const lieuAccueil = await createOrganismHelper({
+      modaliteAccompagnement: "LIEU_ACCUEIL",
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "manage_candidacy",
+        }),
+      },
+    });
+
+    await expect(
+      graphqlClient.request(deleteLieuAccueilMutation, {
+        maisonMereAAPId: lieuAccueil.maisonMereAAP!.id,
+        organismId: lieuAccueil.id,
+      }),
+    ).rejects.toThrowError("You are not authorized!");
+  });
+
+  it("should throw an error if the maisonMereAAPId in params does not match the organism's maison mere", async () => {
+    const lieuAccueil = await createOrganismHelper({
+      modaliteAccompagnement: "LIEU_ACCUEIL",
+    });
+
+    const lieuAccueilOfOtherMaisonMere = await createOrganismHelper({
+      modaliteAccompagnement: "LIEU_ACCUEIL",
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "gestion_maison_mere_aap",
+          keycloakId:
+            lieuAccueilOfOtherMaisonMere.maisonMereAAP!.gestionnaire.keycloakId,
+        }),
+      },
+    });
+
+    await expect(
+      graphqlClient.request(deleteLieuAccueilMutation, {
+        maisonMereAAPId: lieuAccueilOfOtherMaisonMere.maisonMereAAP!.id,
+        organismId: lieuAccueil.id,
+      }),
+    ).rejects.toThrowError("L'organisme n'appartient pas à la maison mère");
+  });
+
+  it("should throw an error when the organism is not a lieu d'accueil", async () => {
+    const organism = await createOrganismHelper({
+      modaliteAccompagnement: "A_DISTANCE",
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "admin",
+        }),
+      },
+    });
+
+    await expect(
+      graphqlClient.request(deleteLieuAccueilMutation, {
+        maisonMereAAPId: organism.maisonMereAAP!.id,
+        organismId: organism.id,
+      }),
+    ).rejects.toThrowError("L'organisme n'est pas un lieu d'accueil");
+  });
+
+  it("should throw an error when the lieu accueil has candidacies", async () => {
+    const lieuAccueil = await createOrganismHelper({
+      modaliteAccompagnement: "LIEU_ACCUEIL",
+    });
+
+    await createCandidacyHelper({
+      candidacyArgs: { organismId: lieuAccueil.id },
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "admin",
+        }),
+      },
+    });
+
+    await expect(
+      graphqlClient.request(deleteLieuAccueilMutation, {
+        maisonMereAAPId: lieuAccueil.maisonMereAAP!.id,
+        organismId: lieuAccueil.id,
+      }),
+    ).rejects.toThrowError(
+      "Impossible de supprimer le lieu d'accueil car il a des candidatures",
+    );
   });
 });
