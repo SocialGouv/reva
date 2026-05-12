@@ -570,7 +570,7 @@ const unsafeResolvers = {
       _parent: unknown,
       params: { maisonMereAAPId: string; accountId: string },
     ) => disableCompteCollaborateur(params),
-    organism_delete_lieu_accueil: async (
+    organism_deleteLieuAccueil: async (
       _parent: unknown,
       params: { maisonMereAAPId: string; organismId: string },
     ) => deleteLieuAccueil(params),

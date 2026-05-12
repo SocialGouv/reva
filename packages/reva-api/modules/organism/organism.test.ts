@@ -67,7 +67,7 @@ const paginatedOrganismsQuery = graphql(`
 
 const deleteLieuAccueilMutation = graphql(`
   mutation deleteLieuAccueil($maisonMereAAPId: ID!, $organismId: ID!) {
-    organism_delete_lieu_accueil(
+    organism_deleteLieuAccueil(
       maisonMereAAPId: $maisonMereAAPId
       organismId: $organismId
     )

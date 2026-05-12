@@ -110,5 +110,5 @@ export const resolversSecurityMap = {
   "Mutation.organism_disableCompteCollaborateur":
     isAdminOrGestionnaireOfMaisonMereAAP,
 
-  "Mutation.organism_delete_lieu_accueil": isAdminOrGestionnaireOfMaisonMereAAP,
+  "Mutation.organism_deleteLieuAccueil": isAdminOrGestionnaireOfMaisonMereAAP,
 };

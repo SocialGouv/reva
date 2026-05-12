@@ -378,5 +378,5 @@ type Mutation {
     accountId: ID!
   ): Void
 
-  organism_delete_lieu_accueil(maisonMereAAPId: ID!, organismId: ID!): Void
+  organism_deleteLieuAccueil(maisonMereAAPId: ID!, organismId: ID!): Void
 }
