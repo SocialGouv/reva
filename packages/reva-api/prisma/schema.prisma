@@ -266,6 +266,9 @@ model Candidacy {
   archivingReasonAdditionalInformation          String?                                         @map("archiving_reason_additional_information")
   endAccompagnementDate                         DateTime?                                       @map("end_accompagnement_date") @db.Timestamptz(6)
   endAccompagnementStatus                       EndAccompagnementStatus                         @default(NOT_REQUESTED) @map("end_accompagnement_status")
+  endAccompagnementReason                       EndAccompagnementReason?                        @map("end_accompagnement_reason")
+  endAccompagnementCandidateDropOutReason       DropOutReason?                                  @relation(fields: [endAccompagnementCandidateDropOutReasonId], references: [id], name: "end_accompagnement_candidate_drop_out_reason")
+  endAccompagnementCandidateDropOutReasonId     String?                                         @map("end_accompagnement_candidate_drop_out_reason_id") @db.Uuid
   appointments                                  Appointment[]
   // indique si une candidature pouvant initialement bénéficier d'une demande de paiment a été bloquée parce que le délai de la convention uniformation est passé
   paymentRequestDeadlinePassed                  Boolean                                         @default(false) @map("payment_request_deadline_passed")
@@ -277,6 +280,14 @@ model Candidacy {
   @@index([certificationId])
   @@index([status, createdAt(sort: Desc)])
   @@map("candidacy")
+}
+
+enum EndAccompagnementReason {
+  CONTRAT_ACCOMPAGNEMENT_TERMINE
+  CHOIX_CANDIDAT
+  CHOIX_AAP
+  ABANDON_OU_NON_REPONSE_CANDIDAT
+  FERMETURE_STRUCTURE
 }
 
 model CandidacyCandidateInfo {
@@ -822,12 +833,13 @@ model FundingRequestBatch {
 }
 
 model DropOutReason {
-  id          String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label       String             @unique @db.VarChar(255)
-  candidacies CandidacyDropOut[] @relation()
-  isActive    Boolean            @default(true) @map("is_active")
-  createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime?          @map("updated_at") @db.Timestamptz(6)
+  id                           String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                        String             @unique @db.VarChar(255)
+  candidacies                  CandidacyDropOut[] @relation()
+  isActive                     Boolean            @default(true) @map("is_active")
+  createdAt                    DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                    DateTime?          @map("updated_at") @db.Timestamptz(6)
+  endAccompagnementCandidacies Candidacy[]        @relation("end_accompagnement_candidate_drop_out_reason")
 
   @@map("drop_out_reason")
 }

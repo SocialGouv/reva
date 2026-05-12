@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
+import { EndAccompagnementReason } from "@/graphql/generated/graphql";
 
 const getCandidacyEndAccompagnementById = graphql(`
   query getCandidacyEndAccompagnementById($candidacyId: ID!) {
@@ -22,14 +23,28 @@ const getCandidacyEndAccompagnementById = graphql(`
   }
 `);
 
+const getDropoutReasons = graphql(`
+  query getDropOutReasons {
+    getDropOutReasons {
+      id
+      label
+      isActive
+    }
+  }
+`);
+
 const submitEndAccompagnementMutation = graphql(`
   mutation submitEndAccompagnement(
     $candidacyId: UUID!
     $endAccompagnementDate: Timestamp!
+    $endAccompagnementReason: EndAccompagnementReason!
+    $endAccompagnementCandidateDropOutReasonId: UUID
   ) {
     candidacy_submitEndAccompagnement(
       candidacyId: $candidacyId
       endAccompagnementDate: $endAccompagnementDate
+      endAccompagnementReason: $endAccompagnementReason
+      endAccompagnementCandidateDropOutReasonId: $endAccompagnementCandidateDropOutReasonId
     ) {
       id
     }
@@ -54,11 +69,24 @@ export const useEndAccompagnement = () => {
   const candidate = candidacy?.candidate;
   const certification = candidacy?.certification;
 
+  const { data: getDropoutReasonsData } = useQuery({
+    queryKey: ["getDropoutReasons"],
+    queryFn: () => graphqlClient.request(getDropoutReasons),
+  });
+  const activeDropoutReasons =
+    getDropoutReasonsData?.getDropOutReasons.filter(
+      (reason) => reason.isActive,
+    ) || [];
+
   const { mutateAsync: submitEndAccompagnement } = useMutation({
-    mutationFn: (endAccompagnementDate: number) =>
+    mutationFn: (data: {
+      endAccompagnementDate: number;
+      endAccompagnementReason: EndAccompagnementReason;
+      endAccompagnementCandidateDropOutReasonId?: string;
+    }) =>
       graphqlClient.request(submitEndAccompagnementMutation, {
         candidacyId,
-        endAccompagnementDate,
+        ...data,
       }),
   });
 
@@ -68,6 +96,7 @@ export const useEndAccompagnement = () => {
     candidate,
     certification,
     getCandidacyIsLoading,
+    activeDropoutReasons,
     submitEndAccompagnement,
   };
 };

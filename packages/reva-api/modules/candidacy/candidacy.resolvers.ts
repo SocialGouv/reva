@@ -2,6 +2,7 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import {
   CandidacyTypeAccompagnement,
   CandidateTypology,
+  EndAccompagnementReason,
   FinanceModule,
 } from "@prisma/client";
 import mercurius from "mercurius";
@@ -766,6 +767,8 @@ const unsafeResolvers = {
       input: {
         candidacyId: string;
         endAccompagnementDate: Date;
+        endAccompagnementReason: EndAccompagnementReason;
+        endAccompagnementCandidateDropOutReasonId?: string;
       },
       context: GraphqlContext,
     ) =>

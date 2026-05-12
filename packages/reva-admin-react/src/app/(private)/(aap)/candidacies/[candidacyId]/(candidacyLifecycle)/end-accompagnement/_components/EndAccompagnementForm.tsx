@@ -1,6 +1,8 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, isAfter, toDate } from "date-fns";
 import { useRouter } from "next/navigation";
@@ -12,23 +14,61 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { successToast } from "@/components/toast/toast";
 import { sanitizedText } from "@/utils/input-sanitization";
 
+import { EndAccompagnementReason } from "@/graphql/generated/graphql";
+
 import { useEndAccompagnement } from "../end-accompagnement.hook";
 
 const schema = z
   .object({
     endAccompagnementDate: sanitizedText(),
+    endAccompagnementReason: z.enum([
+      "",
+      "CONTRAT_ACCOMPAGNEMENT_TERMINE",
+      "CHOIX_CANDIDAT",
+      "CHOIX_AAP",
+      "ABANDON_OU_NON_REPONSE_CANDIDAT",
+      "FERMETURE_STRUCTURE",
+    ]),
+    isCandidateDropOut: z.boolean(),
+    endAccompagnementCandidateDropOutReasonId: sanitizedText({ minLength: 0 }),
   })
-  .superRefine(({ endAccompagnementDate }, ctx) => {
-    const dateIsInFuture = isAfter(endAccompagnementDate, new Date());
-    if (dateIsInFuture) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message:
-          "La date de fin d'accompagnement ne peut pas être dans le futur",
-        path: ["endAccompagnementDate"],
-      });
-    }
-  });
+  .superRefine(
+    (
+      {
+        endAccompagnementDate,
+        endAccompagnementReason,
+        isCandidateDropOut,
+        endAccompagnementCandidateDropOutReasonId,
+      },
+      ctx,
+    ) => {
+      const dateIsInFuture = isAfter(endAccompagnementDate, new Date());
+      if (dateIsInFuture) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "La date de fin d'accompagnement ne peut pas être dans le futur",
+          path: ["endAccompagnementDate"],
+        });
+      }
+
+      if (!endAccompagnementReason) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Veuillez sélectionner un motif",
+          path: ["endAccompagnementReason"],
+        });
+      }
+
+      if (isCandidateDropOut && !endAccompagnementCandidateDropOutReasonId) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Veuillez sélectionner un motif",
+          path: ["endAccompagnementCandidateDropOutReasonId"],
+        });
+      }
+    },
+  );
 
 const confirmationModal = createModal({
   id: "confirmation-modal",
@@ -42,6 +82,7 @@ export const EndAccompagnementForm = () => {
     candidacyId,
     candidate,
     certification,
+    activeDropoutReasons,
     submitEndAccompagnement,
   } = useEndAccompagnement();
 
@@ -52,12 +93,16 @@ export const EndAccompagnementForm = () => {
     watch,
     formState: { errors },
     reset,
+    getValues,
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
       endAccompagnementDate: candidacy?.endAccompagnementDate
         ? format(candidacy?.endAccompagnementDate, "yyyy-MM-dd")
         : undefined,
+      endAccompagnementReason: undefined,
+      isCandidateDropOut: false,
+      endAccompagnementCandidateDropOutReasonId: undefined,
     },
   });
 
@@ -67,16 +112,29 @@ export const EndAccompagnementForm = () => {
     confirmationModal.open();
   });
 
+  const candidacyFullName = `${candidate?.lastname} ${candidate?.firstname}`;
+  const endAccompagnementDate = watch("endAccompagnementDate");
+  const isCandidateDropOut = watch("isCandidateDropOut");
+
   const handleConfirmButtonClick = async () => {
-    const endAccompagnementTimestamp = toDate(endAccompagnementDate).getTime();
-    await submitEndAccompagnement(endAccompagnementTimestamp);
+    const data = getValues();
+
+    const endAccompagnementTimestamp = toDate(
+      data.endAccompagnementDate,
+    ).getTime();
+    const endAccompagnementReasonId = data.isCandidateDropOut
+      ? data.endAccompagnementCandidateDropOutReasonId
+      : undefined;
+
+    await submitEndAccompagnement({
+      endAccompagnementDate: endAccompagnementTimestamp,
+      endAccompagnementReason:
+        data.endAccompagnementReason as EndAccompagnementReason,
+      endAccompagnementCandidateDropOutReasonId: endAccompagnementReasonId,
+    });
     successToast("La demande de fin d'accompagnement a bien été enregistrée");
     router.push(backUrl);
   };
-
-  const candidacyFullName = `${candidate?.lastname} ${candidate?.firstname}`;
-  const endAccompagnementDate = watch("endAccompagnementDate");
-  const submitButtonDisabled = !endAccompagnementDate;
 
   const handleReset = useCallback(() => {
     reset({
@@ -89,9 +147,11 @@ export const EndAccompagnementForm = () => {
   useEffect(() => {
     handleReset();
   }, [handleReset]);
+
   return (
     <>
       <form
+        className="flex flex-col gap-6"
         onSubmit={handleFormSubmit}
         onReset={(e) => {
           e.preventDefault();
@@ -104,23 +164,97 @@ export const EndAccompagnementForm = () => {
             type: "date",
             ...register("endAccompagnementDate"),
           }}
-          className="max-w-64"
+          className="m-0 max-w-64"
           state={errors.endAccompagnementDate ? "error" : "default"}
           stateRelatedMessage={errors.endAccompagnementDate?.message}
         />
+        <Select
+          className="m-0"
+          state={errors.endAccompagnementReason ? "error" : "default"}
+          stateRelatedMessage={errors.endAccompagnementReason?.message}
+          label="Motif de la fin d'accompagnement"
+          nativeSelectProps={{
+            ...register("endAccompagnementReason"),
+            defaultValue: "",
+          }}
+          data-testid="end-accompagnement-reason-select"
+        >
+          <option value="" disabled>
+            Sélectionner une option
+          </option>
+          <option value="CONTRAT_ACCOMPAGNEMENT_TERMINE">
+            Le contrat d’accompagnement est terminé
+          </option>
+          <option value="CHOIX_CANDIDAT">
+            Choix du candidat de mettre fin à l’accompagnement (ex : nouvel
+            accompagnateur, parcours en autonomie)
+          </option>
+          <option value="CHOIX_AAP">
+            Décision de l’AAP de mettre fin à l’accompagnement (ex : non respect
+            des CGV par le candidat)
+          </option>
+          <option value="ABANDON_OU_NON_REPONSE_CANDIDAT">
+            Abandon du candidat ou non-réponse du candidat après 3 relances
+          </option>
+          <option value="FERMETURE_STRUCTURE">
+            Fermeture de la structure (ex : liquidation)
+          </option>
+        </Select>
+
+        <div className="border border-neutral-300 p-4 flex flex-col gap-4">
+          <Checkbox
+            small
+            options={[
+              {
+                label:
+                  "La fin de l’accompagnement est liée à un abandon de la candidature signalé par le candidat",
+                hintText:
+                  "Cette information est collectée à des fins statistiques : elle n'a pas d'impact sur le parcours du candidat",
+                nativeInputProps: {
+                  ...register("isCandidateDropOut"),
+                },
+              },
+            ]}
+          />
+          <Select
+            className="m-0"
+            state={
+              errors.endAccompagnementCandidateDropOutReasonId
+                ? "error"
+                : "default"
+            }
+            stateRelatedMessage={
+              errors.endAccompagnementCandidateDropOutReasonId?.message
+            }
+            label="Motif de l'abandon"
+            nativeSelectProps={{
+              ...register("endAccompagnementCandidateDropOutReasonId"),
+            }}
+            disabled={!isCandidateDropOut}
+          >
+            <option value="" hidden>
+              Sélectionner une option
+            </option>
+            {activeDropoutReasons.map((reason) => (
+              <option key={reason.id} value={reason.id}>
+                {reason.label}
+              </option>
+            ))}
+          </Select>
+        </div>
+
         <Alert
           severity="info"
           title=""
           description="Le candidat devra valider cette action depuis son espace, dès sa prochaine connexion."
           small
-          className="mb-12"
+          className="m-0"
         />
         <FormButtons
           formState={formState}
           backButtonLabel="Annuler"
           backUrl={backUrl}
           submitButtonLabel="Valider"
-          disabled={submitButtonDisabled}
         />
       </form>
       <confirmationModal.Component

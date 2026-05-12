@@ -17,8 +17,8 @@ export default function EndAccompagnementPage() {
       <h1>Fin d'accompagnement</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="mb-12 text-xl">
-        Le candidat aura toujours accès à son espace pour finaliser sa
-        candidature de façon autonome.
+        Le candidat aura toujours accès à sa candidature pour la finaliser mais
+        vous ne pourrez plus l’accompagner.
       </p>
       {endAccompagnementNotRequested ? (
         <EndAccompagnementForm />

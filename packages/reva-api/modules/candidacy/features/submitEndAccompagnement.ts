@@ -1,3 +1,5 @@
+import { EndAccompagnementReason } from "@prisma/client";
+
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { getCandidateLoginUrl } from "@/modules/candidate/utils/candidate.url.helpers";
 import { prismaClient } from "@/prisma/client";
@@ -14,12 +16,16 @@ const JURY_FULL_SUCCESS_RESULT = [
 export const submitEndAccompagnement = async ({
   candidacyId,
   endAccompagnementDate,
+  endAccompagnementReason,
+  endAccompagnementCandidateDropOutReasonId,
   userKeycloakId,
   userEmail,
   userRoles,
 }: {
   candidacyId: string;
   endAccompagnementDate: Date;
+  endAccompagnementReason: EndAccompagnementReason;
+  endAccompagnementCandidateDropOutReasonId?: string;
   userKeycloakId: string;
   userEmail: string;
   userRoles: KeyCloakUserRole[];
@@ -44,6 +50,8 @@ export const submitEndAccompagnement = async ({
       endAccompagnementStatus: juryHasFullSuccess
         ? "CONFIRMED_BY_ADMIN"
         : "PENDING",
+      endAccompagnementReason,
+      endAccompagnementCandidateDropOutReasonId,
     },
   });
 
