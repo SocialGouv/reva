@@ -81,8 +81,19 @@ export const accountRoute: FastifyPluginAsync = async (server) => {
       if (data) {
         const { headers, redirect } = data;
 
+        // Fastify : reply.header("set-cookie", val) ecrase la valeur
+        // precedente si rappele. Pour poser plusieurs Set-Cookie il faut
+        // passer un array en un seul appel.
+        const setCookies: string[] = [];
         for (const header of headers) {
-          reply.header(header[0], header[1]);
+          if (header[0].toLowerCase() === "set-cookie") {
+            setCookies.push(header[1]);
+          } else {
+            reply.header(header[0], header[1]);
+          }
+        }
+        if (setCookies.length > 0) {
+          reply.header("set-cookie", setCookies);
         }
 
         return reply.redirect(redirect);

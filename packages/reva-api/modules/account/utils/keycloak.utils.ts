@@ -4,6 +4,22 @@ import { logger } from "@/modules/shared/logger/logger";
 
 import { ClientApp } from "../account.type";
 
+// Effaces pendant l'impersonation pour que la cible ne reutilise pas
+// les tokens persistants de la session courante.
+// A sync avec les utils des apps front.
+const ADMIN_TOKEN_COOKIES = [
+  "REVA_ADMIN_AUTH_TOKENS_ACCESS_TOKEN",
+  "REVA_ADMIN_AUTH_TOKENS_REFRESH_TOKEN",
+  "REVA_ADMIN_AUTH_TOKENS_ID_TOKEN",
+];
+const CANDIDATE_TOKEN_COOKIES = ["tokens"];
+
+// Cookie identifie par name+path (pas de Domain cote front).
+const buildClearCookieHeader = (
+  name: string,
+  path: string,
+): [string, string] => ["set-cookie", `${name}=; Path=${path}; Max-Age=0`];
+
 export const impersonateAccount = async (
   keycloakId: string,
 ): Promise<
@@ -22,8 +38,12 @@ export const impersonateAccount = async (
   if (data) {
     const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
+    const clearAdminTokens = ADMIN_TOKEN_COOKIES.map((name) =>
+      buildClearCookieHeader(name, "/admin2"),
+    );
+
     return {
-      headers: data.headers,
+      headers: [...data.headers, ...clearAdminTokens],
       redirect: `${baseUrl}/admin2`,
     };
   }
@@ -60,8 +80,12 @@ export const impersonateCandidate = async ({
       redirect += `/candidacies/${candidacyId}`;
     }
 
+    const clearCandidateTokens = CANDIDATE_TOKEN_COOKIES.map((name) =>
+      buildClearCookieHeader(name, "/candidat"),
+    );
+
     return {
-      headers: data.headers,
+      headers: [...data.headers, ...clearCandidateTokens],
       redirect,
     };
   }
