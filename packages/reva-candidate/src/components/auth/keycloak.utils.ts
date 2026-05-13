@@ -1,4 +1,4 @@
-import { setCookie, deleteCookie, getCookie } from "cookies-next";
+import { deleteCookie, getCookie, setCookie } from "cookies-next";
 
 import { errorToast } from "../toast/toast";
 
@@ -9,6 +9,13 @@ export interface Tokens {
   refreshToken: string;
   idToken: string;
 }
+
+const COOKIE_OPTIONS = {
+  sameSite: "strict" as const,
+  secure: process.env.NODE_ENV === "production",
+  // Scope au basePath : cookie absent des requetes des autres apps Next.
+  path: "/candidat",
+};
 
 export const getTokens = (): Tokens | undefined => {
   try {
@@ -26,7 +33,7 @@ export const getTokens = (): Tokens | undefined => {
 
 export const saveTokens = (tokens: Tokens): void => {
   try {
-    setCookie(storageKey, JSON.stringify(tokens));
+    setCookie(storageKey, JSON.stringify(tokens), COOKIE_OPTIONS);
   } catch (error) {
     errorToast(`Impossible de sauvegarder les jetons : ${error}`);
   }
@@ -34,8 +41,18 @@ export const saveTokens = (tokens: Tokens): void => {
 
 export const removeTokens = (): void => {
   try {
-    deleteCookie(storageKey);
+    deleteCookie(storageKey, COOKIE_OPTIONS);
   } catch (error) {
     errorToast(`Impossible de supprimer les jetons : ${error}`);
+  }
+};
+
+// Cookie legacy pose avec path:"/" avant le scoping au basePath.
+// A retirer ~30j apres deploy.
+export const removeLegacyTokens = (): void => {
+  try {
+    deleteCookie(storageKey, { path: "/" });
+  } catch (error) {
+    errorToast(`Impossible de supprimer les jetons legacy : ${error}`);
   }
 };

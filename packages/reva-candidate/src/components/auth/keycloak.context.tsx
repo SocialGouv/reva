@@ -9,7 +9,13 @@ import {
   KEYCLOAK_URL,
 } from "@/config/config";
 
-import { Tokens, getTokens, removeTokens, saveTokens } from "./keycloak.utils";
+import {
+  Tokens,
+  getTokens,
+  removeLegacyTokens,
+  removeTokens,
+  saveTokens,
+} from "./keycloak.utils";
 
 type KeycloakUser = {
   id: string;
@@ -29,6 +35,12 @@ interface KeycloakProviderProps {
 }
 
 export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
+  // Cookie legacy pose avec path:"/" avant le scoping au basePath.
+  // A retirer ~30j apres deploy.
+  useEffect(() => {
+    removeLegacyTokens();
+  }, []);
+
   const [keycloakInstance, setKeycloakInstance] = useState<Keycloak>(
     getKeycloakInstance(),
   );
