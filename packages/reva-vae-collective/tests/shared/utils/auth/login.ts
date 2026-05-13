@@ -63,18 +63,37 @@ export const login = async ({
       },
     );
 
-    const tokensForPostLoginUrl = {
-      accessToken: tokens.access_token,
-      refreshToken: tokens.refresh_token,
-      idToken: tokens.access_token,
-    };
-
-    await page.goto(
-      `http://localhost:4005/vae-collective/post-login?tokens=${encodeURIComponent(
-        JSON.stringify(tokensForPostLoginUrl),
-      )}`,
-    );
-
-    await page.waitForTimeout(500); //wait for the post-login page to be loaded and keycloak to be initialized
+    // Authentification simulee via les cookies persistants lus par
+    // KeycloakProvider au mount : /post-login exige un cookie httpOnly
+    // pose par l'action serveur, inaccessible cote test.
+    await page.context().addCookies([
+      {
+        name: "VAE_COLLECTIVE_AUTH_TOKENS_ACCESS_TOKEN",
+        value: tokens.access_token,
+        path: "/vae-collective",
+        domain: "localhost",
+        sameSite: "Strict",
+        secure: false,
+        httpOnly: false,
+      },
+      {
+        name: "VAE_COLLECTIVE_AUTH_TOKENS_REFRESH_TOKEN",
+        value: tokens.refresh_token,
+        path: "/vae-collective",
+        domain: "localhost",
+        sameSite: "Strict",
+        secure: false,
+        httpOnly: false,
+      },
+      {
+        name: "VAE_COLLECTIVE_AUTH_TOKENS_ID_TOKEN",
+        value: tokens.access_token,
+        path: "/vae-collective",
+        domain: "localhost",
+        sameSite: "Strict",
+        secure: false,
+        httpOnly: false,
+      },
+    ]);
   }
 };
