@@ -79,6 +79,8 @@ type Candidacy {
   sentAt: Timestamp
   endAccompagnementDate: Timestamp
   endAccompagnementStatus: EndAccompagnementStatus
+  endAccompagnementReason: EndAccompagnementReason
+  endAccompagnementCandidateDropOutReason: DropOutReason
   candidateInfo: CandidacyCandidateInfo
 }
 

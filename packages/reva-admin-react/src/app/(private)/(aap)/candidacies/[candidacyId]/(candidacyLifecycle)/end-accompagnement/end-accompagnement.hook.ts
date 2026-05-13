@@ -15,6 +15,10 @@ const getCandidacyEndAccompagnementById = graphql(`
       }
       endAccompagnementDate
       endAccompagnementStatus
+      endAccompagnementReason
+      endAccompagnementCandidateDropOutReason {
+        label
+      }
       certification {
         codeRncp
         label

@@ -18,6 +18,7 @@ export interface Candidacy {
   departmentId?: string | null;
   createdAt: Date;
   financeModule: FinanceModule;
+  endAccompagnementCandidateDropOutReasonId?: string | null;
 }
 
 type FinanceModule = "unireva" | "unifvae" | "hors_plateforme";

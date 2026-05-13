@@ -101,6 +101,9 @@ const unsafeResolvers = {
       getCandidacyOnCandidacyFinancingMethodsByCandidacyId({ candidacyId }),
     candidateInfo: ({ id: candidacyId }: Candidacy) =>
       getCandidacyCandidateInfoByCandidacyId({ candidacyId }),
+    endAccompagnementCandidateDropOutReason: ({
+      endAccompagnementCandidateDropOutReasonId: dropOutReasonId,
+    }: Candidacy) => getDropOutReasonById({ dropOutReasonId }),
   },
   CandidacyOnCandidacyFinancingMethod: {
     candidacyFinancingMethod: ({
