@@ -31,7 +31,8 @@ export const getTokens = (): Tokens | undefined => {
 const COOKIE_OPTIONS = {
   sameSite: "strict" as const,
   secure: process.env.NODE_ENV === "production",
-  path: "/",
+  // Scope au basePath : cookies absents des requetes des autres apps Next.
+  path: "/admin2",
 };
 
 export const saveTokens = (tokens: Tokens): void => {
@@ -46,10 +47,22 @@ export const saveTokens = (tokens: Tokens): void => {
 
 export const removeTokens = (): void => {
   try {
-    deleteCookie(ACCESS_TOKEN_STORAGE_KEY);
-    deleteCookie(REFRESH_TOKEN_STORAGE_KEY);
-    deleteCookie(ID_TOKEN_STORAGE_KEY);
+    deleteCookie(ACCESS_TOKEN_STORAGE_KEY, COOKIE_OPTIONS);
+    deleteCookie(REFRESH_TOKEN_STORAGE_KEY, COOKIE_OPTIONS);
+    deleteCookie(ID_TOKEN_STORAGE_KEY, COOKIE_OPTIONS);
   } catch (error) {
     console.error(`Impossible de supprimer les jetons : ${error}`);
+  }
+};
+
+// Cookies legacy poses avec path:"/" avant le scoping au basePath.
+// A retirer ~30j apres deploy.
+export const removeLegacyTokens = (): void => {
+  try {
+    deleteCookie(ACCESS_TOKEN_STORAGE_KEY, { path: "/" });
+    deleteCookie(REFRESH_TOKEN_STORAGE_KEY, { path: "/" });
+    deleteCookie(ID_TOKEN_STORAGE_KEY, { path: "/" });
+  } catch (error) {
+    console.error(`Impossible de supprimer les jetons legacy : ${error}`);
   }
 };
