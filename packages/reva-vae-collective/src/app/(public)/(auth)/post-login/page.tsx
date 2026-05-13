@@ -1,52 +1,46 @@
-"use client";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-import { redirect, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { POST_LOGIN_TOKENS_COOKIE } from "../_lib/post-login-cookie";
 
-import { useAuth } from "@/components/auth/auth";
-import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import PostLoginClient from "./_components/PostLoginClient";
 
-export default function PostLoginPage() {
-  const searchParams = useSearchParams();
-  const tokens = searchParams.get("tokens");
-  const commanditaireVaeCollectiveId = searchParams.get(
-    "commanditaireVaeCollectiveId",
+import type { Tokens } from "@/components/auth/keycloak.utils";
+
+export default async function PostLoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    commanditaireVaeCollectiveId?: string;
+    redirectAfterLogin?: string;
+  }>;
+}) {
+  const cookieStore = await cookies();
+  const cookieValue = cookieStore.get(POST_LOGIN_TOKENS_COOKIE)?.value;
+
+  if (!cookieValue) {
+    redirect("/login");
+  }
+
+  // Pas de cookieStore.delete() : interdit en server component (Next 15.5+).
+  // Le passer via server action declenche une revalidation qui re-execute
+  // ce composant sans le cookie -> redirect /login. maxAge sur le cookie suffit.
+
+  let tokens: Tokens;
+  try {
+    tokens = JSON.parse(cookieValue);
+  } catch {
+    redirect("/login");
+  }
+
+  const { commanditaireVaeCollectiveId, redirectAfterLogin } =
+    await searchParams;
+
+  return (
+    <PostLoginClient
+      tokens={tokens}
+      commanditaireVaeCollectiveId={commanditaireVaeCollectiveId}
+      redirectAfterLogin={redirectAfterLogin}
+    />
   );
-  const redirectAfterLogin = searchParams.get("redirectAfterLogin");
-
-  const { resetKeycloakInstance, authenticated } = useKeycloakContext();
-  const [ready, setReady] = useState(false);
-  const { isVAECollectiveManager, isAdmin } = useAuth();
-
-  const decodedToken: {
-    accessToken: string;
-    refreshToken: string;
-    idToken: string;
-  } = JSON.parse(tokens || "{}");
-
-  useEffect(() => {
-    if (!ready) {
-      resetKeycloakInstance(decodedToken);
-      setReady(true);
-    }
-  }, [resetKeycloakInstance, decodedToken, ready]);
-
-  useEffect(() => {
-    if (ready && authenticated && redirectAfterLogin) {
-      if (isVAECollectiveManager) {
-        redirect(`/commanditaires/${commanditaireVaeCollectiveId}/cohortes`);
-      }
-
-      if (isAdmin) {
-        redirect("/commanditaires");
-      }
-    }
-  }, [
-    ready,
-    authenticated,
-    isVAECollectiveManager,
-    isAdmin,
-    commanditaireVaeCollectiveId,
-    redirectAfterLogin,
-  ]);
 }
