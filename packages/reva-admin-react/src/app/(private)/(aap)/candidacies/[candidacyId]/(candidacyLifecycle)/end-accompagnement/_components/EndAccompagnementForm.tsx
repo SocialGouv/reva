@@ -82,6 +82,7 @@ export const EndAccompagnementForm = () => {
     candidacyId,
     candidate,
     certification,
+    feasibility,
     activeDropoutReasons,
     submitEndAccompagnement,
   } = useEndAccompagnement();
@@ -286,10 +287,35 @@ export const EndAccompagnementForm = () => {
             RNCP {certification?.codeRncp}: {certification?.label}.
           </strong>
         </p>
-        <p>
-          Le candidat devra valider cette décision, il pourra ensuite continuer
-          sa candidature en toute autonomie.
+        <p className="font-bold">
+          Quelles sont les conséquences d’une fin d’accompagnement à cette étape
+          ?
         </p>
+        {feasibility?.feasibilityFileSentAt ? (
+          <p>
+            <ul>
+              <li>
+                Le candidat aura toujours accès à sa candidature pour la
+                finaliser
+              </li>
+              <li>Vous ne pourrez plus l’accompagner</li>
+            </ul>
+          </p>
+        ) : (
+          <p>
+            <ul>
+              <li>
+                Le candidat aura toujours accès à sa candidature pour la
+                finaliser
+              </li>
+              <li>Vous ne pourrez plus l’accompagner</li>
+              <li>
+                Les informations renseignées dans le parcours pédagogique et
+                dans le dossier de faisabilité seront supprimées.
+              </li>
+            </ul>
+          </p>
+        )}
         <p>Confirmez-vous cette action ?</p>
       </confirmationModal.Component>
     </>

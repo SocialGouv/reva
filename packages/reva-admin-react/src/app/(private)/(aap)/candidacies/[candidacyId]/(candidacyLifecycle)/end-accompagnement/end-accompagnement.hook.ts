@@ -19,6 +19,9 @@ const getCandidacyEndAccompagnementById = graphql(`
         codeRncp
         label
       }
+      feasibility {
+        feasibilityFileSentAt
+      }
     }
   }
 `);
@@ -68,6 +71,7 @@ export const useEndAccompagnement = () => {
   const candidacy = getCandidacyData?.getCandidacyById;
   const candidate = candidacy?.candidate;
   const certification = candidacy?.certification;
+  const feasibility = candidacy?.feasibility;
 
   const { data: getDropoutReasonsData } = useQuery({
     queryKey: ["getDropoutReasons"],
@@ -95,6 +99,7 @@ export const useEndAccompagnement = () => {
     candidacy,
     candidate,
     certification,
+    feasibility,
     getCandidacyIsLoading,
     activeDropoutReasons,
     submitEndAccompagnement,
