@@ -35,7 +35,7 @@ async function setupAuthenticated(page: Page) {
         }),
       ),
       domain: "localhost",
-      path: "/",
+      path: "/candidat",
     },
   ]);
   await page.goto("login?token=abc");
