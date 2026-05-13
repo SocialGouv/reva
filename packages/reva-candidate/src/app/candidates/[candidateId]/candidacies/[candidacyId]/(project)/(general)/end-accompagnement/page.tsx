@@ -135,10 +135,10 @@ export default function EndAccompagnementPage() {
           imageComponent={null}
           title={candidateFullName}
           desc={
-            <div className="flex flex-col">
+            <span className="flex flex-col">
               <span>{candidateCertification}</span>
               <span>{candidacy.organism?.label}</span>
-            </div>
+            </span>
           }
           detail={<span className="mt-2">{candidateDepartment}</span>}
           titleAs="h6"
