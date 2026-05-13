@@ -1,82 +1,43 @@
-"use client";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { POST_LOGIN_TOKENS_COOKIE } from "../_lib/post-login-cookie";
 
-import { useAuth } from "@/components/auth/auth";
-import { useKeycloakContext } from "@/components/auth/keycloakContext";
-import { sanitizeRedirectUrl } from "@/utils/url";
+import PostLoginClient from "./_components/PostLoginClient";
 
-const DEFAULT_REDIRECT_BY_ROLE = {
-  certificationAuthority: "/candidacies/annuaire",
-  certificationRegistryManager: "/responsable-certifications",
-  default: "/candidacies",
-} as const;
+import type { Tokens } from "@/components/auth/keycloak.utils";
 
-const PostLoginPage = () => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+const PostLoginPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ redirectAfterAuthUrl?: string }>;
+}) => {
+  const cookieStore = await cookies();
+  const cookieValue = cookieStore.get(POST_LOGIN_TOKENS_COOKIE)?.value;
 
-  const { authenticated, resetKeycloakInstance } = useKeycloakContext();
-  const { isCertificationAuthority, isCertificationRegistryManager } =
-    useAuth();
+  if (!cookieValue) {
+    redirect("/login");
+  }
 
-  const initRef = useRef(false);
-  const redirectedRef = useRef(false);
+  // Pas de cookieStore.delete() : interdit en server component (Next 15.5+).
+  // Le passer via server action declenche une revalidation qui re-execute
+  // ce composant sans le cookie -> redirect /login. maxAge sur le cookie suffit.
 
-  const tokensParam = searchParams.get("tokens");
-  const redirectAfterAuthUrl = searchParams.get("redirectAfterAuthUrl");
+  let tokens: Tokens;
+  try {
+    tokens = JSON.parse(cookieValue);
+  } catch {
+    redirect("/login");
+  }
 
-  // Hydrate Keycloak avec les tokens passes en URL par /login. Lecture
-  // synchrone depuis searchParams : pas de dependance au timing Set-Cookie
-  // serveur -> document.cookie qui posait probleme en production.
-  useEffect(() => {
-    if (initRef.current || !tokensParam) return;
-    initRef.current = true;
-    try {
-      resetKeycloakInstance(JSON.parse(tokensParam));
-    } catch {
-      // Tokens invalides : on laisse le 2e useEffect rediriger vers /login
-    }
-  }, [tokensParam, resetKeycloakInstance]);
+  const { redirectAfterAuthUrl } = await searchParams;
 
-  useEffect(() => {
-    if (redirectedRef.current) return;
-
-    if (authenticated) {
-      redirectedRef.current = true;
-      const safeRedirect = sanitizeRedirectUrl(redirectAfterAuthUrl);
-      if (safeRedirect) {
-        router.replace(safeRedirect);
-        return;
-      }
-
-      if (isCertificationAuthority) {
-        router.replace(DEFAULT_REDIRECT_BY_ROLE.certificationAuthority);
-      } else if (isCertificationRegistryManager) {
-        router.replace(DEFAULT_REDIRECT_BY_ROLE.certificationRegistryManager);
-      } else {
-        router.replace(DEFAULT_REDIRECT_BY_ROLE.default);
-      }
-      return;
-    }
-
-    // Pas de tokens en URL et pas authentifie via SSO/check-sso : kick.
-    if (!tokensParam) {
-      redirectedRef.current = true;
-      router.replace("/login");
-    }
-    // tokens en URL et pas encore authentifie : init en cours, on attend.
-  }, [
-    authenticated,
-    tokensParam,
-    redirectAfterAuthUrl,
-    isCertificationAuthority,
-    isCertificationRegistryManager,
-    router,
-  ]);
-
-  return null;
+  return (
+    <PostLoginClient
+      tokens={tokens}
+      redirectAfterAuthUrl={redirectAfterAuthUrl}
+    />
+  );
 };
 
 export default PostLoginPage;

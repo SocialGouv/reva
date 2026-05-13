@@ -7,6 +7,12 @@ import { publicApiClient } from "@/helpers/graphql/public-api-client/publicApiCl
 
 import { graphql } from "@/graphql/generated";
 
+import {
+  POST_LOGIN_TOKENS_COOKIE,
+  POST_LOGIN_TOKENS_COOKIE_MAX_AGE,
+  POST_LOGIN_TOKENS_COOKIE_PATH,
+} from "../_lib/post-login-cookie";
+
 type FormState = {
   step?: "credentials" | "otp";
   email?: string;
@@ -53,7 +59,7 @@ const verifyOtpChallengeMutation = graphql(`
   }
 `);
 
-const buildPostLoginRedirectUrl = (
+const buildPostLoginRedirectUrl = async (
   tokens: {
     accessToken: string;
     refreshToken: string;
@@ -61,12 +67,24 @@ const buildPostLoginRedirectUrl = (
   },
   redirectAfterAuthUrl?: string,
 ) => {
-  const params = new URLSearchParams();
-  params.set("tokens", JSON.stringify(tokens));
+  // Tokens hors URL : evite fuite historique/logs/Referer + risque HTTP 431.
+  const cookieStore = await cookies();
+  cookieStore.set(POST_LOGIN_TOKENS_COOKIE, JSON.stringify(tokens), {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    // "lax" obligatoire : "strict" bloque l'envoi sur le GET /post-login
+    // declenche par le redirect (navigation issue d'un POST, pas un click).
+    sameSite: "lax",
+    path: POST_LOGIN_TOKENS_COOKIE_PATH,
+    maxAge: POST_LOGIN_TOKENS_COOKIE_MAX_AGE,
+  });
+
   if (redirectAfterAuthUrl) {
+    const params = new URLSearchParams();
     params.set("redirectAfterAuthUrl", redirectAfterAuthUrl);
+    return `/post-login?${params.toString()}`;
   }
-  return `/post-login?${params.toString()}`;
+  return "/post-login";
 };
 
 export const login = async (
@@ -138,7 +156,7 @@ export const login = async (
       path: OTP_CHALLENGE_COOKIE_PATH,
     });
 
-    redirect(buildPostLoginRedirectUrl(tokens, redirectAfterAuthUrl));
+    redirect(await buildPostLoginRedirectUrl(tokens, redirectAfterAuthUrl));
   }
 
   // Étape 1 : credentials.
@@ -199,5 +217,7 @@ export const login = async (
     };
   }
 
-  redirect(buildPostLoginRedirectUrl(payload.tokens, redirectAfterAuthUrl));
+  redirect(
+    await buildPostLoginRedirectUrl(payload.tokens, redirectAfterAuthUrl),
+  );
 };
