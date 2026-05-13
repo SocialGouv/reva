@@ -24,6 +24,7 @@ const getCandidacyEndAccompagnementById = graphql(`
         label
       }
       feasibility {
+        decision
         feasibilityFileSentAt
       }
     }
