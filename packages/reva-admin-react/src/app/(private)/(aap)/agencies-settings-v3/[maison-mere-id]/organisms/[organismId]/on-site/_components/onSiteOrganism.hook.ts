@@ -44,6 +44,7 @@ const getOrganismQuery = graphql(`
         codeRncp
         label
       }
+      hasCandidacies
     }
   }
 `);

@@ -202,6 +202,7 @@ export default function OnSitePage() {
         <DeleteLieuAccueilTile
           lieuAccueilLabel={organism.nomPublic || organism.label}
           onDeleteLieuAccueilConfirmation={handleDeleteLieuAccueilConfirmation}
+          lieuAccueilHasCandidacies={organism.hasCandidacies}
         />
       </div>
     </div>

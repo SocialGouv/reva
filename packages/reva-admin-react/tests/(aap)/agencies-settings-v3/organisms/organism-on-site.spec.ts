@@ -21,10 +21,12 @@ const VAE_COLLECTIVE_TOGGLE_TITLE =
 function createOrganismHandlers(args?: {
   disponiblePourVaeCollective?: boolean;
   fermePourAbsenceOuConges?: boolean;
+  hasCandidacies?: boolean;
 }) {
   const disponiblePourVaeCollective =
     args?.disponiblePourVaeCollective ?? false;
   const fermePourAbsenceOuConges = args?.fermePourAbsenceOuConges ?? false;
+  const hasCandidacies = args?.hasCandidacies ?? false;
 
   return [
     fvae.query(
@@ -49,6 +51,7 @@ function createOrganismHandlers(args?: {
           formacodes: [],
           conventionCollectives: [],
           certifications: [],
+          hasCandidacies,
         },
       }),
     ),
@@ -269,96 +272,135 @@ test.describe("organism on-site page", () => {
     });
   });
 
-  test.describe("delete lieu d'accueil", () => {
-    test.use({
-      mswHandlers: [
-        [
-          ...aapCommonHandlers,
-          ...createOrganismHandlers(),
-          createDeleteLieuAccueilMutationHandler(),
+  test.describe("delete lieu d’accueil", () => {
+    test.describe("when the organism has no candidacies", () => {
+      test.use({
+        mswHandlers: [
+          [
+            ...aapCommonHandlers,
+            ...createOrganismHandlers({ hasCandidacies: false }),
+            createDeleteLieuAccueilMutationHandler(),
+          ],
+          { scope: "test" },
         ],
-        { scope: "test" },
-      ],
+      });
+
+      test("displays the delete tile", async ({ page }) => {
+        await login({ role: "aap", page });
+
+        await page.goto(
+          `/admin2/agencies-settings-v3/${MAISON_MERE_ID}/organisms/${ORGANISM_ID}/on-site/`,
+        );
+        await waitForPageQueries(page);
+
+        await expect(
+          page.getByRole("button", { name: "Supprimer le lieu d’accueil" }),
+        ).toBeVisible();
+      });
+
+      test("opens confirmation modal when clicking the delete tile", async ({
+        page,
+      }) => {
+        await login({ role: "aap", page });
+
+        await page.goto(
+          `/admin2/agencies-settings-v3/${MAISON_MERE_ID}/organisms/${ORGANISM_ID}/on-site/`,
+        );
+        await waitForPageQueries(page);
+
+        await page
+          .getByRole("button", { name: "Supprimer le lieu d’accueil" })
+          .click();
+
+        await expect(
+          page.getByRole("heading", { name: "Supprimer un lieu d’accueil" }),
+        ).toBeVisible();
+      });
+
+      test("closes the modal when clicking cancel", async ({ page }) => {
+        await login({ role: "aap", page });
+
+        await page.goto(
+          `/admin2/agencies-settings-v3/${MAISON_MERE_ID}/organisms/${ORGANISM_ID}/on-site/`,
+        );
+        await waitForPageQueries(page);
+
+        await page
+          .getByRole("button", { name: "Supprimer le lieu d’accueil" })
+          .click();
+
+        await expect(
+          page.getByRole("heading", { name: "Supprimer un lieu d’accueil" }),
+        ).toBeVisible();
+
+        await page.getByRole("button", { name: "Annuler" }).click();
+
+        await expect(
+          page.getByRole("heading", { name: "Supprimer un lieu d’accueil" }),
+        ).not.toBeVisible();
+      });
+
+      test("calls mutation and redirects after confirming deletion", async ({
+        page,
+      }) => {
+        await login({ role: "aap", page });
+
+        await page.goto(
+          `/admin2/agencies-settings-v3/${MAISON_MERE_ID}/organisms/${ORGANISM_ID}/on-site/`,
+        );
+        await waitForPageQueries(page);
+
+        await page
+          .getByRole("button", { name: "Supprimer le lieu d’accueil" })
+          .click();
+
+        const mutationPromise = waitGraphQL(page, "deleteLieuAccueil");
+
+        await page
+          .getByRole("button", { name: "Supprimer", exact: true })
+          .click();
+
+        await mutationPromise;
+
+        await expect(page).toHaveURL(/\/agencies-settings-v3\//);
+      });
     });
 
-    test("displays the delete tile", async ({ page }) => {
-      await login({ role: "aap", page });
+    test.describe("when the organism has candidacies", () => {
+      test.use({
+        mswHandlers: [
+          [
+            ...aapCommonHandlers,
+            ...createOrganismHandlers({ hasCandidacies: true }),
+          ],
+          { scope: "test" },
+        ],
+      });
 
-      await page.goto(
-        `/admin2/agencies-settings-v3/${MAISON_MERE_ID}/organisms/${ORGANISM_ID}/on-site/`,
-      );
-      await waitForPageQueries(page);
+      test("opens the has-candidacies modal when clicking the delete tile", async ({
+        page,
+      }) => {
+        await login({ role: "aap", page });
 
-      await expect(
-        page.getByRole("button", { name: "Supprimer le lieu d’accueil" }),
-      ).toBeVisible();
-    });
+        await page.goto(
+          `/admin2/agencies-settings-v3/${MAISON_MERE_ID}/organisms/${ORGANISM_ID}/on-site/`,
+        );
+        await waitForPageQueries(page);
 
-    test("opens confirmation modal when clicking the delete tile", async ({
-      page,
-    }) => {
-      await login({ role: "aap", page });
+        await page
+          .getByRole("button", { name: "Supprimer le lieu d’accueil" })
+          .click();
 
-      await page.goto(
-        `/admin2/agencies-settings-v3/${MAISON_MERE_ID}/organisms/${ORGANISM_ID}/on-site/`,
-      );
-      await waitForPageQueries(page);
+        await expect(
+          page.getByRole("heading", { name: "Supprimer un lieu d’accueil" }),
+        ).toBeVisible();
 
-      await page
-        .getByRole("button", { name: "Supprimer le lieu d’accueil" })
-        .click();
-
-      await expect(
-        page.getByRole("heading", { name: "Supprimer un lieu d’accueil" }),
-      ).toBeVisible();
-    });
-
-    test("closes the modal when clicking cancel", async ({ page }) => {
-      await login({ role: "aap", page });
-
-      await page.goto(
-        `/admin2/agencies-settings-v3/${MAISON_MERE_ID}/organisms/${ORGANISM_ID}/on-site/`,
-      );
-      await waitForPageQueries(page);
-
-      await page
-        .getByRole("button", { name: "Supprimer le lieu d’accueil" })
-        .click();
-
-      await expect(
-        page.getByRole("heading", { name: "Supprimer un lieu d’accueil" }),
-      ).toBeVisible();
-
-      await page.getByRole("button", { name: "Annuler" }).click();
-
-      await expect(
-        page.getByRole("heading", { name: "Supprimer un lieu d’accueil" }),
-      ).not.toBeVisible();
-    });
-
-    test("calls mutation and redirects after confirming deletion", async ({
-      page,
-    }) => {
-      await login({ role: "aap", page });
-
-      await page.goto(
-        `/admin2/agencies-settings-v3/${MAISON_MERE_ID}/organisms/${ORGANISM_ID}/on-site/`,
-      );
-      await waitForPageQueries(page);
-
-      await page
-        .getByRole("button", { name: "Supprimer le lieu d’accueil" })
-        .click();
-
-      const mutationPromise = waitGraphQL(page, "deleteLieuAccueil");
-
-      await page
-        .getByRole("button", { name: "Supprimer", exact: true })
-        .click();
-
-      await mutationPromise;
-
-      await expect(page).toHaveURL(/\/agencies-settings-v3\//);
+        await expect(
+          page.getByText(
+            "Ce lieu d’accueil a des candidatures associées. Vous ne pouvez donc pas le supprimer.",
+          ),
+        ).toBeVisible();
+      });
     });
   });
 });
