@@ -49,6 +49,14 @@ export type AAPLogEventTypeAndDetails =
       };
     }
   | {
+      eventType: "LIEU_ACCUEIL_DELETED";
+      details: {
+        organismId: string;
+        organismLabel: string;
+        organismNomPublic?: string;
+      };
+    }
+  | {
       eventType: "ORGANISM_ONSITE_GENERAL_INFORMATION_UPDATED";
       details: {
         organismId: string;

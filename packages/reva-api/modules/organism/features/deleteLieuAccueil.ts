@@ -1,11 +1,17 @@
+import {
+  AAPAuditLogUserInfo,
+  logAAPAuditEvent,
+} from "@/modules/aap-log/features/logAAPAuditEvent";
 import { prismaClient } from "@/prisma/client";
 
 export const deleteLieuAccueil = async ({
   maisonMereAAPId,
   organismId,
+  userInfo,
 }: {
   maisonMereAAPId: string;
   organismId: string;
+  userInfo: AAPAuditLogUserInfo;
 }) => {
   const organism = await prismaClient.organism.findUnique({
     where: { id: organismId },
@@ -35,5 +41,18 @@ export const deleteLieuAccueil = async ({
     );
   }
 
-  await prismaClient.organism.delete({ where: { id: organismId } });
+  await prismaClient.$transaction(async (tx) => {
+    await tx.organism.delete({ where: { id: organismId } });
+    await logAAPAuditEvent({
+      eventType: "LIEU_ACCUEIL_DELETED",
+      maisonMereAAPId,
+      userInfo: userInfo,
+      details: {
+        organismId,
+        organismLabel: organism.label,
+        organismNomPublic: organism.nomPublic || "",
+      },
+      tx,
+    });
+  });
 };

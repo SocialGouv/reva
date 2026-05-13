@@ -61,6 +61,11 @@ export const getAAPLogMessage = ({
       );
     case "LIEU_ACCUEIL_CREATED":
       return log("Lieu d'accueil créé", `nom: ${details.organismLabel}`);
+    case "LIEU_ACCUEIL_DELETED":
+      return log(
+        "Lieu d'accueil supprimé",
+        `nom public: ${details.organismNomPublic}`,
+      );
     case "ORGANISM_ACCOUNT_CREATED":
       return log(
         "Compte collaborateur créé",

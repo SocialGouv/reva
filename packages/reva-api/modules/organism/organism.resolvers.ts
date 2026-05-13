@@ -573,7 +573,12 @@ const unsafeResolvers = {
     organism_deleteLieuAccueil: async (
       _parent: unknown,
       params: { maisonMereAAPId: string; organismId: string },
-    ) => deleteLieuAccueil(params),
+      context: GraphqlContext,
+    ) =>
+      deleteLieuAccueil({
+        ...params,
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
+      }),
   },
   Query: {
     organism_getOrganism: async (

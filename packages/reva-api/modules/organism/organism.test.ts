@@ -798,6 +798,7 @@ describe("Delete lieu accueil", () => {
       headers: {
         authorization: authorizationHeaderForUser({
           role: "admin",
+          keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
         }),
       },
     });
@@ -896,7 +897,8 @@ describe("Delete lieu accueil", () => {
     const graphqlClient = getGraphQLClient({
       headers: {
         authorization: authorizationHeaderForUser({
-          role: "admin",
+          role: "gestion_maison_mere_aap",
+          keycloakId: organism.maisonMereAAP!.gestionnaire.keycloakId,
         }),
       },
     });
@@ -934,5 +936,39 @@ describe("Delete lieu accueil", () => {
     ).rejects.toThrowError(
       "Impossible de supprimer le lieu d'accueil car il a des candidatures",
     );
+  });
+
+  it("should add a LIEU_ACCUEIL_DELETED log entry when deleting a lieu d'accueil", async () => {
+    const lieuAccueil = await createOrganismHelper({
+      modaliteAccompagnement: "LIEU_ACCUEIL",
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "gestion_maison_mere_aap",
+          keycloakId: lieuAccueil.maisonMereAAP!.gestionnaire.keycloakId,
+        }),
+      },
+    });
+
+    await graphqlClient.request(deleteLieuAccueilMutation, {
+      maisonMereAAPId: lieuAccueil.maisonMereAAP!.id,
+      organismId: lieuAccueil.id,
+    });
+
+    const log = await prismaClient.aAPLog.findFirst({
+      where: {
+        eventType: "LIEU_ACCUEIL_DELETED",
+        maisonMereAAPId: lieuAccueil.maisonMereAAP!.id,
+      },
+    });
+
+    expect(log).not.toBeNull();
+    expect(log?.details).toMatchObject({
+      organismId: lieuAccueil.id,
+      organismLabel: lieuAccueil.label,
+      organismNomPublic: lieuAccueil.nomPublic,
+    });
   });
 });
