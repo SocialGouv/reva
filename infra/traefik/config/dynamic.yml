@@ -377,8 +377,8 @@ http:
         burst: 50
     productionInteropRateLimit:
       rateLimit:
-        average: 20
-        burst: 50
+        average: 35
+        burst: 60
 
   services:
     # --- BEGIN STAGING ---
