@@ -28,6 +28,7 @@ export const createOrganismEntity = (
     llToEarth: null,
     typology: "expertBrancheEtFiliere",
     disponiblePourVaeCollective: false,
+    hasCandidacies: false,
     ...options,
   };
 };

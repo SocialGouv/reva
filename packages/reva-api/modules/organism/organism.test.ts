@@ -972,3 +972,95 @@ describe("Delete lieu accueil", () => {
     });
   });
 });
+
+describe("Organism hasCandidacies", () => {
+  const getOrganismHasCandidaciesQuery = graphql(`
+    query getOrganismHasCandidacies($id: ID!) {
+      organism_getOrganism(id: $id) {
+        id
+        hasCandidacies
+      }
+    }
+  `);
+
+  it("should return false when the organism has no candidacies", async () => {
+    const organism = await createOrganismHelper();
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "gestion_maison_mere_aap",
+          keycloakId: organism.maisonMereAAP!.gestionnaire.keycloakId,
+        }),
+      },
+    });
+
+    const result = await graphqlClient.request(getOrganismHasCandidaciesQuery, {
+      id: organism.id,
+    });
+
+    expect(result.organism_getOrganism?.hasCandidacies).toBe(false);
+  });
+
+  it("should return true when the organism has at least one candidacy", async () => {
+    const organism = await createOrganismHelper();
+
+    await createCandidacyHelper({
+      candidacyArgs: { organismId: organism.id },
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "gestion_maison_mere_aap",
+          keycloakId: organism.maisonMereAAP!.gestionnaire.keycloakId,
+        }),
+      },
+    });
+
+    const result = await graphqlClient.request(getOrganismHasCandidaciesQuery, {
+      id: organism.id,
+    });
+
+    expect(result.organism_getOrganism?.hasCandidacies).toBe(true);
+  });
+
+  it("should return hasCandidacies for the admin", async () => {
+    const maisonMereAAP = await createMaisonMereAapHelper();
+    const organism = await createOrganismHelper({
+      maisonMereAAPId: maisonMereAAP.id,
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "admin",
+        }),
+      },
+    });
+
+    const result = await graphqlClient.request(getOrganismHasCandidaciesQuery, {
+      id: organism.id,
+    });
+
+    expect(result.organism_getOrganism?.hasCandidacies).toBe(false);
+  });
+
+  it("should throw an error when the user has no authorized role", async () => {
+    const organism = await createOrganismHelper();
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "candidate",
+        }),
+      },
+    });
+
+    await expect(
+      graphqlClient.request(getOrganismHasCandidaciesQuery, {
+        id: organism.id,
+      }),
+    ).rejects.toThrowError("Utilisateur non autorisé");
+  });
+});

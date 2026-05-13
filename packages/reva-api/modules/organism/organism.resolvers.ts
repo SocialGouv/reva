@@ -58,6 +58,7 @@ import { isOrganismAttachedToCertifications } from "./features/isOrganismAttache
 import { isOrganismVisibleInCandidateSearchResults } from "./features/isOrganismVisibleInCandidateSearchResults";
 import { isUserGestionnaireMaisonMereAAPOfOrganism } from "./features/isUserGestionnaireMaisonMereAAPOfOrganism";
 import { isUserOwnerOfOrganism } from "./features/isUserOwnerOfOrganism";
+import { organismHasCandidacies } from "./features/organismHasCandidacies";
 import { searchOrganisms } from "./features/searchOrganisms";
 import { updateFermePourAbsenceOuConges } from "./features/updateFermePourAbsenceOuConges";
 import { updateMaisonMereAAPFinancingMethods } from "./features/updateMaisonMereAAPFinancingMethods";
@@ -135,6 +136,8 @@ const unsafeResolvers = {
           id: maisonMereAAPId || "",
         })
       )?.isMCFCompatible,
+    hasCandidacies: async ({ id: organismId }: Organism) =>
+      organismHasCandidacies({ organismId }),
   },
   OrganismOnDegree: {
     degree: (organismOnDegree: { degreeId: string }) =>
