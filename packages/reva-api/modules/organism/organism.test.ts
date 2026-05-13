@@ -65,15 +65,6 @@ const paginatedOrganismsQuery = graphql(`
   }
 `);
 
-const deleteLieuAccueilMutation = graphql(`
-  mutation deleteLieuAccueil($maisonMereAAPId: ID!, $organismId: ID!) {
-    organism_deleteLieuAccueil(
-      maisonMereAAPId: $maisonMereAAPId
-      organismId: $organismId
-    )
-  }
-`);
-
 describe("MaisonMereAAP resolvers", () => {
   describe("comptesCollaborateurs", () => {
     it("should return the comptes collaborateurs for the maisonMereAAP", async () => {
@@ -789,6 +780,14 @@ describe("Search organisms", () => {
 });
 
 describe("Delete lieu accueil", () => {
+  const deleteLieuAccueilMutation = graphql(`
+    mutation deleteLieuAccueil($maisonMereAAPId: ID!, $organismId: ID!) {
+      organism_deleteLieuAccueil(
+        maisonMereAAPId: $maisonMereAAPId
+        organismId: $organismId
+      )
+    }
+  `);
   it("should delete a lieu accueil as admin", async () => {
     const lieuAccueil = await createOrganismHelper({
       modaliteAccompagnement: "LIEU_ACCUEIL",
