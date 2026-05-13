@@ -200,6 +200,7 @@ export default function OnSitePage() {
 
         <OrganismVisibilityToggle organismId={organismId} />
         <DeleteLieuAccueilTile
+          classname="mt-2"
           lieuAccueilLabel={organism.nomPublic || organism.label}
           onDeleteLieuAccueilConfirmation={handleDeleteLieuAccueilConfirmation}
           lieuAccueilHasCandidacies={organism.hasCandidacies}

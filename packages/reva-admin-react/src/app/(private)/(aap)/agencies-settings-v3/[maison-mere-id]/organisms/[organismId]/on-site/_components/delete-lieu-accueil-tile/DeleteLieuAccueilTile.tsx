@@ -12,16 +12,19 @@ const lieuAccueilHasCandidaciesModal = createModal({
 });
 
 export const DeleteLieuAccueilTile = ({
+  classname,
   lieuAccueilLabel,
   onDeleteLieuAccueilConfirmation,
   lieuAccueilHasCandidacies,
 }: {
+  classname?: string;
   lieuAccueilLabel: string;
   onDeleteLieuAccueilConfirmation: () => void;
   lieuAccueilHasCandidacies?: boolean;
 }) => (
   <>
     <Tile
+      className={classname || ""}
       title="Supprimer le lieu d’accueil"
       desc="Ce lieu sera totalement supprimé de votre espace. Si vous souhaitez simplement le masquer dans les recherches, utilisez l'option de disponibilité ci-dessus."
       detail={
