@@ -5,7 +5,9 @@ import {
   JuryResultByCompetenceBloc,
 } from "@/graphql/generated/graphql";
 
-export type JuryEntity = Partial<Omit<Jury, "juryResultByCompetenceBlocs">> & {
+export type JuryEntity = Partial<
+  Omit<Jury, "juryResultByCompetenceBlocs" | "previouslyValidatedBlocks">
+> & {
   juryResultByCompetenceBlocs?:
     | Partial<
         Omit<JuryResultByCompetenceBloc, "competenceBloc"> & {
@@ -13,9 +15,13 @@ export type JuryEntity = Partial<Omit<Jury, "juryResultByCompetenceBlocs">> & {
         }
       >[]
     | null;
+  previouslyValidatedBlocks?: Partial<
+    Omit<CertificationCompetenceBloc, "certification" | "competences">
+  >[];
 };
 
 type CreateJuryEntityOptions = {
+  id?: string;
   result?: JuryResult;
   dateOfSession?: number;
   dateOfResult?: number | null;
@@ -23,12 +29,15 @@ type CreateJuryEntityOptions = {
   isResultTemporary?: boolean | null;
   timeOfSession?: string | null;
   timeSpecified?: boolean | null;
+  previouslyValidatedBlocks?: JuryEntity["previouslyValidatedBlocks"];
+  juryResultByCompetenceBlocs?: JuryEntity["juryResultByCompetenceBlocs"];
 };
 
 export const createJuryEntity = (
   options?: CreateJuryEntityOptions,
 ): JuryEntity => {
   const {
+    id = "jury-current",
     result = "FAILURE",
     dateOfSession = Date.now(),
     dateOfResult = null,
@@ -36,9 +45,12 @@ export const createJuryEntity = (
     isResultTemporary = null,
     timeOfSession = null,
     timeSpecified = null,
+    previouslyValidatedBlocks,
+    juryResultByCompetenceBlocs,
   } = options || {};
 
   return {
+    id,
     result,
     dateOfSession,
     dateOfResult,
@@ -46,5 +58,7 @@ export const createJuryEntity = (
     isResultTemporary,
     timeOfSession,
     timeSpecified,
+    previouslyValidatedBlocks,
+    juryResultByCompetenceBlocs,
   };
 };

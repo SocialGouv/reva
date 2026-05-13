@@ -10,12 +10,18 @@ import type { DossierDeValidationEntity } from "./create-dossier-de-validation.e
 import type { FeasibilityEntity } from "./create-feasibility.entity";
 import type { JuryEntity } from "./create-jury.entity";
 
+type HistoryJuryEntity = JuryEntity & { id: string };
+
 // Allow partials for nested fields
 // But make "id" and "appointments" fields required to avoid undefined checks in tests
 export type CandidacyEntity = Partial<
   Omit<
     Candidacy,
-    "candidate" | "jury" | "feasibility" | "activeDossierDeValidation"
+    | "candidate"
+    | "jury"
+    | "feasibility"
+    | "activeDossierDeValidation"
+    | "historyJury"
   >
 > & {
   candidate?: CandidateEntity | null;
@@ -24,6 +30,7 @@ export type CandidacyEntity = Partial<
   activeDossierDeValidation?: DossierDeValidationEntity | null;
   id: Candidacy["id"];
   appointments: Candidacy["appointments"];
+  historyJury?: HistoryJuryEntity[];
 };
 
 export type CreateCandidacyEntityOptions = {
@@ -40,6 +47,7 @@ export type CreateCandidacyEntityOptions = {
   endAccompagnementDate?: CandidacyEntity["endAccompagnementDate"];
   appointments?: Candidacy["appointments"];
   jury?: JuryEntity | null;
+  historyJury?: HistoryJuryEntity[];
   goalsCount?: number;
   experiencesCount?: number;
   candidacyAlreadySubmitted?: boolean;
@@ -78,6 +86,7 @@ export const createCandidacyEntity = (
     readyForJuryEstimatedAt,
     firstAppointmentOccuredAt,
     jury,
+    historyJury,
     activeDossierDeValidation,
     goalsCount,
     experiencesCount,
@@ -133,6 +142,7 @@ export const createCandidacyEntity = (
     createdAt: new Date().getTime(),
     feasibility,
     jury: jury || null,
+    historyJury: historyJury ?? [],
     activeDossierDeValidation,
     goals: [],
     experiences: [],

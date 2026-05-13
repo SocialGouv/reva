@@ -1,15 +1,28 @@
-import { Certification } from "@/graphql/generated/graphql";
+import {
+  Certification,
+  CertificationCompetence,
+  CertificationCompetenceBloc,
+} from "@/graphql/generated/graphql";
+
+type CertificationEntity = Partial<
+  Omit<Certification, "competenceBlocs" | "competences">
+> & {
+  competenceBlocs?: Partial<
+    Omit<CertificationCompetenceBloc, "certification" | "competences">
+  >[];
+  competences?: Partial<CertificationCompetence>[];
+};
 
 export const createCertificationEntity = (
-  options: Partial<Certification> = {},
+  options: CertificationEntity = {},
 ) => {
-  const certification: Certification = {
+  const certification: CertificationEntity = {
     id: options.id || "cert-1",
     label: options.label || "Certification Label",
     codeRncp: options.codeRncp || "RNCP0000",
     availableAt: new Date().getTime(),
     certificationAuthorities: [],
-    competenceBlocs: [],
+    competenceBlocs: options.competenceBlocs || [],
     conventionsCollectives: [],
     status: "VALIDE_PAR_CERTIFICATEUR",
     visible: true,

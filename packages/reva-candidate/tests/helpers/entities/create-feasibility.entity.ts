@@ -1,5 +1,7 @@
 import {
+  CertificationCompetenceBloc,
   DematerializedFeasibilityFile,
+  DffCertificationCompetenceBloc,
   Feasibility,
   FeasibilityUploadedPdf,
   File,
@@ -8,7 +10,18 @@ import {
 export type FeasibilityEntity = Partial<
   Omit<Feasibility, "dematerializedFeasibilityFile" | "feasibilityUploadedPdf">
 > & {
-  dematerializedFeasibilityFile?: Partial<DematerializedFeasibilityFile> | null;
+  dematerializedFeasibilityFile?: Partial<
+    Omit<DematerializedFeasibilityFile, "blocsDeCompetences"> & {
+      blocsDeCompetences?: Partial<
+        Omit<DffCertificationCompetenceBloc, "certificationCompetenceBloc">
+      > &
+        {
+          certificationCompetenceBloc: Partial<
+            Omit<CertificationCompetenceBloc, "certification" | "competences">
+          >;
+        }[];
+    }
+  > | null;
   feasibilityUploadedPdf?: Partial<FeasibilityUploadedPdf> | null;
 };
 
