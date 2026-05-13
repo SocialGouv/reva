@@ -17,7 +17,7 @@ export default function EndAccompagnementPage() {
     candidacy?.endAccompagnementStatus === "NOT_REQUESTED";
 
   return (
-    <div>
+    <div data-testid="end-accompagnement-page">
       <h1>Fin d'accompagnement</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="mb-12 text-xl">

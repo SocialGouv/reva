@@ -205,6 +205,7 @@ export const EndAccompagnementForm = () => {
         <div className="border border-neutral-300 p-4 flex flex-col gap-4">
           <Checkbox
             small
+            data-testid="is-candidate-drop-out-checkbox"
             options={[
               {
                 label:
@@ -292,31 +293,25 @@ export const EndAccompagnementForm = () => {
           ?
         </p>
         {feasibility?.feasibilityFileSentAt ? (
-          <p>
-            <ul>
-              <li>
-                Le candidat aura toujours accès à sa candidature pour la
-                finaliser
-              </li>
-              <li>Vous ne pourrez plus l’accompagner</li>
-            </ul>
-          </p>
+          <ul>
+            <li>
+              Le candidat aura toujours accès à sa candidature pour la finaliser
+            </li>
+            <li>Vous ne pourrez plus l’accompagner</li>
+          </ul>
         ) : (
-          <p>
-            <ul>
-              <li>
-                Le candidat aura toujours accès à sa candidature pour la
-                finaliser
-              </li>
-              <li>Vous ne pourrez plus l’accompagner</li>
-              <li>
-                Les informations renseignées dans le parcours pédagogique et
-                dans le dossier de faisabilité seront supprimées.
-              </li>
-            </ul>
-          </p>
+          <ul>
+            <li>
+              Le candidat aura toujours accès à sa candidature pour la finaliser
+            </li>
+            <li>Vous ne pourrez plus l’accompagner</li>
+            <li>
+              Les informations renseignées dans le parcours pédagogique et dans
+              le dossier de faisabilité seront supprimées.
+            </li>
+          </ul>
         )}
-        <p>Confirmez-vous cette action ?</p>
+        <p className="mt-6">Confirmez-vous cette action ?</p>
       </confirmationModal.Component>
     </>
   );
