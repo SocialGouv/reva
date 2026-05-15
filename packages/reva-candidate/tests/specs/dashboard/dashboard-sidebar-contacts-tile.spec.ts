@@ -1,4 +1,8 @@
-import { expect, test } from "next/experimental/testmode/playwright/msw";
+import {
+  expect,
+  graphql,
+  test,
+} from "next/experimental/testmode/playwright/msw";
 
 import { login } from "@tests/helpers/auth/auth";
 import {
@@ -11,9 +15,13 @@ import { createCertificationAuthorityEntity } from "@tests/helpers/entities/crea
 import { createFeasibilityEntity } from "@tests/helpers/entities/create-feasibility.entity";
 import { createOrganismEntity } from "@tests/helpers/entities/create-organism.entity";
 import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
+import { graphQLResolver } from "@tests/helpers/network/msw";
 
 import type { CandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
-import type { MswFixture } from "next/experimental/testmode/playwright/msw";
+import type {
+  GraphQLHandler,
+  MswFixture,
+} from "next/experimental/testmode/playwright/msw";
 import type { Page } from "playwright";
 
 function createDashboardCandidacy(
@@ -36,13 +44,14 @@ async function setupDashboard(
   page: Page,
   msw: MswFixture,
   candidacy: CandidacyEntity,
+  additionalHandlers: GraphQLHandler[] = [],
 ) {
   const { handlers, dashboardWait } = dashboardHandlers({
     candidacy,
     activeFeaturesForConnectedUser: [],
   });
 
-  msw.use(...handlers);
+  msw.use(...handlers, ...additionalHandlers);
   await login(page);
   await dashboardWait(page);
 }
@@ -221,7 +230,19 @@ test.describe("CertificationAuthorityContactTile", () => {
       }),
     });
 
-    await setupDashboard(page, msw, candidacy);
+    const fvae = graphql.link("https://reva-api/api/graphql");
+
+    const getCandidacyByIdForCertificationAuthorityContactInfoPageHandler =
+      fvae.query(
+        "getCandidacyByIdForCertificationAuthorityContactInfoPage",
+        graphQLResolver({
+          getCandidacyById: {},
+        }),
+      );
+
+    await setupDashboard(page, msw, candidacy, [
+      getCandidacyByIdForCertificationAuthorityContactInfoPageHandler,
+    ]);
 
     await page.getByTestId("certification-authority-contact-tile").click();
 
