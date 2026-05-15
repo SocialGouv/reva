@@ -47,24 +47,9 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
   // Cookies legacy poses avec path:"/" avant le scoping au basePath.
   // A retirer ~30j apres deploy.
   useEffect(() => {
-    const impersonate = isImpersonationLanding();
-    const hasAdminCookiesBefore =
-      typeof document !== "undefined" &&
-      document.cookie.includes("REVA_ADMIN_AUTH_TOKENS_ACCESS_TOKEN=");
-    console.warn("[imp] KeycloakProvider Effect1 mount", {
-      url: typeof window !== "undefined" ? window.location.href : "ssr",
-      impersonate,
-      hasAdminCookiesBefore,
-    });
     removeLegacyTokens();
-    if (impersonate) {
+    if (isImpersonationLanding()) {
       removeTokens();
-      const hasAdminCookiesAfter =
-        typeof document !== "undefined" &&
-        document.cookie.includes("REVA_ADMIN_AUTH_TOKENS_ACCESS_TOKEN=");
-      console.warn("[imp] KeycloakProvider Effect1 after removeTokens", {
-        hasAdminCookiesAfter,
-      });
     }
   }, []);
 
@@ -119,14 +104,7 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
     // Bypass tokens persistants si on arrive d'une impersonation (cf
     // isImpersonationLanding ci-dessus). Apres init, saveTokens ecrasera
     // les anciens cookies admin avec les tokens de la cible.
-    const impersonate = isImpersonationLanding();
-    const fromCookies = getTokens();
-    const initialTokens = impersonate ? undefined : fromCookies;
-    console.warn("[imp] KeycloakProvider Effect3 initKeycloak", {
-      impersonate,
-      hasFromCookies: !!fromCookies,
-      hasInitialTokens: !!initialTokens,
-    });
+    const initialTokens = isImpersonationLanding() ? undefined : getTokens();
 
     initKeycloak({
       keycloakInstance,
