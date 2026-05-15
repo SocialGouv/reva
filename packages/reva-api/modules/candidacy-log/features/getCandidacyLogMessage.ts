@@ -282,10 +282,16 @@ export const getCandidacyLogMessage = ({
       );
 
     case "CANDIDATE_REFUSED_END_ACCOMPAGNEMENT":
-      return log("Fin d'accompagnement refusée");
+      return log(
+        "Fin d'accompagnement refusée",
+        details?.organism ? `avec ${details.organism.label}` : undefined,
+      );
 
     case "CANDIDATE_CONFIRMED_END_ACCOMPAGNEMENT":
-      return log("Fin d'accompagnement confirmée");
+      return log(
+        "Fin d'accompagnement confirmée",
+        details?.organism ? `avec ${details.organism.label}` : undefined,
+      );
 
     case "SWORN_STATEMENT_UPDATED":
       return log("Attestation sur l'honneur envoyée");

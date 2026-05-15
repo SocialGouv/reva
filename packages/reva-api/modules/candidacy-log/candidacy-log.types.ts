@@ -49,9 +49,7 @@ export type CandidacyLogEventTypeAndDetails =
         | "CANDIDACY_DROPOUT_CONFIRMED_BY_CANDIDATE"
         | "CANDIDACY_DROPOUT_CANCELED_BY_CANDIDATE"
         | "CANDIDACY_CONTESTATION_CADADUCITE_DECISION_CONFIRMED"
-        | "CANDIDACY_CONTESTATION_CADADUCITE_DECISION_INVALIDATED"
-        | "CANDIDATE_REFUSED_END_ACCOMPAGNEMENT"
-        | "CANDIDATE_CONFIRMED_END_ACCOMPAGNEMENT";
+        | "CANDIDACY_CONTESTATION_CADADUCITE_DECISION_INVALIDATED";
       details?: undefined;
     }
   | {
@@ -184,6 +182,12 @@ export type CandidacyLogEventTypeAndDetails =
   | {
       eventType: "END_ACCOMPAGNEMENT_SUBMITTED";
       details: { endAccompagnementDate: Date };
+    }
+  | {
+      eventType:
+        | "CANDIDATE_REFUSED_END_ACCOMPAGNEMENT"
+        | "CANDIDATE_CONFIRMED_END_ACCOMPAGNEMENT";
+      details?: { organism?: { id: string; label: string } };
     }
   | {
       eventType: "SWORN_STATEMENT_UPDATED";

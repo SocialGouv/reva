@@ -9,6 +9,7 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_END_ACCOMPAGNEMENT = graphql(`
   query getCandidacyByIdWithCandidateForEndAccompagnement($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
+      createdAt
       endAccompagnementStatus
       endAccompagnementDate
       candidate {

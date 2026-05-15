@@ -25,6 +25,7 @@ export const updateCandidacyEndAccompagnementDecision = async ({
     include: {
       candidate: true,
       organism: true,
+      Feasibility: { where: { isActive: true } },
     },
   });
 
@@ -32,17 +33,49 @@ export const updateCandidacyEndAccompagnementDecision = async ({
     throw new Error("Candidature non trouvée");
   }
 
-  await prismaClient.candidacy.update({
-    where: { id: candidacyId },
-    data: {
-      endAccompagnementStatus: endAccompagnement
-        ? "CONFIRMED_BY_CANDIDATE"
-        : "NOT_REQUESTED",
-      endAccompagnementDate: endAccompagnement
-        ? candidacy.endAccompagnementDate
-        : null,
-    },
-  });
+  const endAccompagnementDate = candidacy.endAccompagnementDate!;
+  if (!endAccompagnementDate) {
+    throw new Error("Date de fin d'accompagnement non trouvée");
+  }
+
+  if (candidacy.endAccompagnementStatus !== "PENDING") {
+    throw new Error("Aucune fin d'accompagnement en attente de confirmation");
+  }
+
+  const feasibility = candidacy.Feasibility[0];
+
+  if (!feasibility || feasibility?.decision === "DRAFT") {
+    await prismaClient.candidacy.update({
+      where: { id: candidacyId },
+      data: {
+        endAccompagnementStatus: "NOT_REQUESTED",
+        endAccompagnementDate: null,
+        endAccompagnementCandidateDropOutReasonId: null,
+        organismId: null,
+        sentAt: null,
+        status: "PROJET",
+      },
+    });
+
+    await prismaClient.candidaciesStatus.deleteMany({
+      where: {
+        candidacyId,
+        status: { not: "PROJET" },
+      },
+    });
+  } else {
+    await prismaClient.candidacy.update({
+      where: { id: candidacyId },
+      data: {
+        endAccompagnementStatus: endAccompagnement
+          ? "CONFIRMED_BY_CANDIDATE"
+          : "NOT_REQUESTED",
+        endAccompagnementDate: endAccompagnement
+          ? candidacy.endAccompagnementDate
+          : null,
+      },
+    });
+  }
 
   const candidateFullName = `${candidacy.candidate?.firstname} ${candidacy.candidate?.lastname}`;
   const aapLabel = candidacy.organism?.label;
@@ -52,9 +85,8 @@ export const updateCandidacyEndAccompagnementDecision = async ({
   const organismEmail =
     candidacy.organism?.emailContact ||
     candidacy.organism?.contactAdministrativeEmail;
-  const endAccompagnementDate = candidacy.endAccompagnementDate;
 
-  if (organismEmail && aapLabel && endAccompagnementDate) {
+  if (organismEmail && aapLabel) {
     const endAccompagnementDateFormatted = format(
       endAccompagnementDate,
       "dd/MM/yyyy",
@@ -86,6 +118,11 @@ export const updateCandidacyEndAccompagnementDecision = async ({
     eventType: endAccompagnement
       ? "CANDIDATE_CONFIRMED_END_ACCOMPAGNEMENT"
       : "CANDIDATE_REFUSED_END_ACCOMPAGNEMENT",
+    details: {
+      organism: candidacy.organism
+        ? { id: candidacy.organism.id, label: candidacy.organism.label }
+        : undefined,
+    },
     userKeycloakId,
     userEmail,
     userRoles,

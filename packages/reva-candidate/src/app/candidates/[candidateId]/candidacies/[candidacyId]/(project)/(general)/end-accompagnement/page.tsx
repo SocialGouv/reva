@@ -145,7 +145,7 @@ export default function EndAccompagnementPage() {
           endDetail={
             admissibleDate
               ? `Recevable le ${format(new Date(admissibleDate), "dd/MM/yyyy")}`
-              : null
+              : `Créée le ${format(new Date(candidacy.createdAt), "dd/MM/yyyy")}`
           }
         />
       </div>
