@@ -26,11 +26,6 @@ const GET_CANDIDACY_BY_ID_FOR_DASHBOARD = graphql(`
       activeDossierDeValidation {
         decision
       }
-      certificationAuthorityLocalAccounts {
-        contactFullName
-        contactEmail
-        contactPhone
-      }
       status
       typeAccompagnement
       firstAppointmentOccuredAt

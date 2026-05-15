@@ -7,21 +7,11 @@ type CertificationAuthorityContactProps = {
     contactEmail?: string | null;
     contactPhone?: string | null;
   };
-  certificationAuthorityLocalAccounts?: Array<{
-    contactFullName?: string | null;
-    contactEmail?: string | null;
-    contactPhone?: string | null;
-  } | null> | null;
 };
 
 export const CertificationAuthorityContactTile = ({
   certificationAuthority,
-  certificationAuthorityLocalAccounts,
 }: CertificationAuthorityContactProps) => {
-  const filteredAccounts = certificationAuthorityLocalAccounts?.filter(
-    (account) =>
-      account?.contactEmail !== null && account?.contactFullName !== null,
-  );
   return (
     <Tile
       data-testid="certification-authority-contact-tile"
@@ -36,25 +26,6 @@ export const CertificationAuthorityContactTile = ({
       desc={
         <div data-testid="certification-authority-contact-info-tile">
           {certificationAuthority?.label}
-          {filteredAccounts && filteredAccounts.length > 0 ? (
-            filteredAccounts.map((account, i) => (
-              <div
-                key={i}
-                className="[&:not(:last-child)]:border-b-2 [&:not(:last-child)]:mb-4 [&:not(:last-child)]:pb-4"
-                data-testid={`certification-authority-local-account-${i}`}
-              >
-                {account?.contactFullName} <br />
-                {account?.contactEmail} <br />
-                {account?.contactPhone}
-              </div>
-            ))
-          ) : (
-            <div data-testid="certification-authority-contact-info-tile">
-              <div>{certificationAuthority?.contactFullName}</div>
-              <div>{certificationAuthority?.contactEmail}</div>
-              <div>{certificationAuthority?.contactPhone}</div>
-            </div>
-          )}
         </div>
       }
     />

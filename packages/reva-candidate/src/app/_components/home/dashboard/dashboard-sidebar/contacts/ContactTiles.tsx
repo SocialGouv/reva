@@ -28,9 +28,6 @@ export const ContactTiles = ({
       {candidacy.feasibility?.certificationAuthority && (
         <CertificationAuthorityContactTile
           certificationAuthority={candidacy.feasibility.certificationAuthority}
-          certificationAuthorityLocalAccounts={
-            candidacy.certificationAuthorityLocalAccounts
-          }
         />
       )}
     </TileGroup>
