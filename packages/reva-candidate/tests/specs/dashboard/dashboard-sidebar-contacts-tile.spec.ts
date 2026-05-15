@@ -208,6 +208,27 @@ test.describe("CertificationAuthorityContactTile", () => {
       "Test Certification Authority",
     );
   });
+
+  test("should lead me to the certification authority contact info page when i click on the tile", async ({
+    page,
+    msw,
+  }) => {
+    const candidacy = createDashboardCandidacy({
+      feasibility: createFeasibilityEntity({
+        certificationAuthority: createCertificationAuthorityEntity({
+          label: "Test Certification Authority",
+        }),
+      }),
+    });
+
+    await setupDashboard(page, msw, candidacy);
+
+    await page.getByTestId("certification-authority-contact-tile").click();
+
+    await expect(page).toHaveURL(
+      "/candidat/candidates/1/candidacies/1/certification-authority-contact-info/",
+    );
+  });
 });
 
 test.describe("Multiple Contact Tiles", () => {

@@ -18,16 +18,13 @@ export const CertificationAuthorityContactTile = ({
       title="Mon certificateur"
       small
       orientation="horizontal"
-      classes={{
-        content: "pb-0",
-        body: "w-full",
-        desc: "w-full text-wrap",
-      }}
       desc={
         <div data-testid="certification-authority-contact-info-tile">
           {certificationAuthority?.label}
         </div>
       }
+      detail="Consulter le(s) contact(s) référent(s)"
+      linkProps={{ href: "./certification-authority-contact-info" }}
     />
   );
 };
