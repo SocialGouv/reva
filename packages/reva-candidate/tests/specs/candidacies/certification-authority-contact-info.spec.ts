@@ -43,6 +43,20 @@ function createCertificationAuthorityContactInfoHandlers(
             codeRncp: certification.codeRncp,
             label: certification.label,
           },
+          certificationAuthorityLocalAccounts: [
+            {
+              contactFullName: "Jean Dupont",
+              contactEmail: "jean.dupont@example.com",
+              contactPhone: "0123456789",
+            },
+          ],
+          feasibility: {
+            certificationAuthority: {
+              label: "Autorité Certificatrice",
+              contactEmail: "contact@autorite.fr",
+              contactPhone: "0987654321",
+            },
+          },
         },
       }),
     ),
@@ -108,5 +122,42 @@ test.describe("certification authority contact info page", () => {
     );
 
     await expect(page.getByRole("button", { name: "Retour" })).toBeVisible();
+  });
+
+  test("shows the certification authority card", async ({ page }) => {
+    await loginAndWaitForCandidaciesInitialLoad(page);
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-contact-info/`,
+    );
+
+    const card = page.getByTestId("certification-authority-card");
+
+    await expect(card).toBeVisible();
+    await expect(card.getByText("Gestionnaire de candidatures")).toBeVisible();
+    await expect(
+      card.getByRole("heading", { name: "Autorité Certificatrice" }),
+    ).toBeVisible();
+    await expect(card.getByText("contact@autorite.fr")).toBeVisible();
+    await expect(card.getByText("0987654321")).toBeVisible();
+  });
+
+  test("shows the certification authority local account card", async ({
+    page,
+  }) => {
+    await loginAndWaitForCandidaciesInitialLoad(page);
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-contact-info/`,
+    );
+
+    const card = page.getByTestId("certification-authority-local-account-card");
+
+    await expect(card).toBeVisible();
+    await expect(card.getByText("Compte local")).toBeVisible();
+    await expect(card.getByText("Autorité Certificatrice")).toBeVisible();
+    await expect(
+      card.getByRole("heading", { name: "Jean Dupont" }),
+    ).toBeVisible();
+    await expect(card.getByText("jean.dupont@example.com")).toBeVisible();
+    await expect(card.getByText("0123456789")).toBeVisible();
   });
 });

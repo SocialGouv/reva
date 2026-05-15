@@ -15,6 +15,18 @@ const getCandidacyByIdForCertificationAuthorityContactInfoPage = graphql(`
         codeRncp
         label
       }
+      certificationAuthorityLocalAccounts {
+        contactFullName
+        contactEmail
+        contactPhone
+      }
+      feasibility {
+        certificationAuthority {
+          label
+          contactEmail
+          contactPhone
+        }
+      }
     }
   }
 `);
@@ -45,8 +57,15 @@ export const useCertificationAuthorityContactInfoPage = () => {
 
   const certification = candidacy?.certification;
 
+  const certificationAuthority = candidacy?.feasibility?.certificationAuthority;
+
+  const certificationAuthorityLocalAccounts =
+    candidacy?.certificationAuthorityLocalAccounts;
+
   return {
     candidacy,
     certification,
+    certificationAuthority,
+    certificationAuthorityLocalAccounts,
   };
 };
