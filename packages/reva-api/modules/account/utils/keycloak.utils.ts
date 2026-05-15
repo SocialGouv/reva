@@ -141,8 +141,11 @@ const impersonate = async (
     // En dev (localhost) on laisse le cookie host-only : reva-api et Keycloak
     // partagent le host "localhost", et Chrome >= 99 rejette `Domain=localhost`.
     // En prod multi-subdomain, on force `Domain=<root>` pour que le cookie
-    // atteigne aussi bien admin que Keycloak.
-    const domainAttr = domain === "localhost" ? "" : ` Domain=${domain};`;
+    // atteigne aussi bien admin que Keycloak. Prefixe par "; " obligatoire :
+    // le cookie de Keycloak ne se termine pas forcement par ";" et sans
+    // separateur le browser parse `SameSite=None Domain=...` comme une seule
+    // valeur invalide → cookie stocke en host-only au lieu de cross-subdomain.
+    const domainAttr = domain === "localhost" ? "" : `; Domain=${domain}`;
 
     for (const header of response.headers) {
       if (
