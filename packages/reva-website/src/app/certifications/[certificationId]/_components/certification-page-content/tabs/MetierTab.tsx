@@ -33,7 +33,7 @@ export const MetierTab = ({
         target="_blank"
         href={`https://www.francecompetences.fr/recherche/rncp/${codeRncp}`}
       >
-        Consulter les activités ce diplôme sur le RNCP
+        Consulter les activités de ce diplôme sur le RNCP
       </Link>
     </p>
   </div>
