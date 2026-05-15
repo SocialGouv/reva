@@ -15,19 +15,19 @@ const PostLoginPage = async ({
   const cookieStore = await cookies();
   const cookieValue = cookieStore.get(POST_LOGIN_TOKENS_COOKIE)?.value;
 
-  if (!cookieValue) {
-    redirect("/login");
-  }
-
   // Pas de cookieStore.delete() : interdit en server component (Next 15.5+).
   // Le passer via server action declenche une revalidation qui re-execute
-  // ce composant sans le cookie -> redirect /login. maxAge sur le cookie suffit.
+  // ce composant sans le cookie. maxAge sur le cookie suffit.
+  // Cookie absent = flow d'impersonation : on laisse PostLoginClient gerer
+  // via le check-sso de KeycloakProvider.
 
-  let tokens: Tokens;
-  try {
-    tokens = JSON.parse(cookieValue);
-  } catch {
-    redirect("/login");
+  let tokens: Tokens | undefined;
+  if (cookieValue) {
+    try {
+      tokens = JSON.parse(cookieValue);
+    } catch {
+      redirect("/login");
+    }
   }
 
   const { redirectAfterAuthUrl } = await searchParams;

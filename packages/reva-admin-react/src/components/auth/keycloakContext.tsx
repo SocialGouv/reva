@@ -18,6 +18,14 @@ import {
   saveTokens,
 } from "./keycloak.utils";
 
+// Flag pose par reva-api sur le redirect post-impersonation. Utilise pour
+// bypasser les tokens admin caches et forcer keycloak-js a refaire un
+// check-sso qui ramassera la session de la cible.
+const isImpersonationLanding = (): boolean => {
+  if (typeof window === "undefined") return false;
+  return new URLSearchParams(window.location.search).get("impersonate") === "1";
+};
+
 type KeycloakUser = {
   id: string;
   email: string | null;
@@ -40,6 +48,9 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
   // A retirer ~30j apres deploy.
   useEffect(() => {
     removeLegacyTokens();
+    if (isImpersonationLanding()) {
+      removeTokens();
+    }
   }, []);
 
   const [keycloakInstance, setKeycloakInstance] = useState<Keycloak | null>(
@@ -90,13 +101,18 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
   useEffect(() => {
     if (!keycloakInstance) return;
 
+    // Bypass tokens persistants si on arrive d'une impersonation (cf
+    // isImpersonationLanding ci-dessus). Apres init, saveTokens ecrasera
+    // les anciens cookies admin avec les tokens de la cible.
+    const initialTokens = isImpersonationLanding() ? undefined : getTokens();
+
     initKeycloak({
       keycloakInstance,
       onInit: (authenticated) => {
         setAuthenticated(authenticated);
         setReady(true);
       },
-      tokens: getTokens(),
+      tokens: initialTokens,
       onUpdateTokens: (tokens) => {
         saveTokens(tokens);
         setTokens(tokens);

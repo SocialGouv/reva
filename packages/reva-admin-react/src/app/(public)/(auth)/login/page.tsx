@@ -2,8 +2,10 @@
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Form from "next/form";
-import { useSearchParams } from "next/navigation";
-import { useActionState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useActionState, useEffect, useRef } from "react";
+
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
 
 import { CredentialsStep } from "./_components/CredentialsStep";
 import { OtpStep } from "./_components/OtpStep";
@@ -13,7 +15,27 @@ import { login } from "./actions";
 export default function LoginPage() {
   const [state, action, pending] = useActionState(login, {});
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const { authenticated } = useKeycloakContext();
   const redirectAfterAuthUrl = searchParams.get("redirectAfterAuthUrl") || "";
+
+  // Si l'utilisateur est deja authentifie (cookies persistants ou session SSO
+  // ramassee par check-sso), on le renvoie sur /post-login qui se charge du
+  // routage par role.
+  const redirectedRef = useRef(false);
+  useEffect(() => {
+    if (redirectedRef.current) return;
+    if (authenticated) {
+      redirectedRef.current = true;
+      const target = redirectAfterAuthUrl
+        ? `/post-login?redirectAfterAuthUrl=${encodeURIComponent(redirectAfterAuthUrl)}`
+        : "/post-login";
+      router.replace(target);
+    }
+  }, [authenticated, redirectAfterAuthUrl, router]);
+
+  // Evite le flash du formulaire avant que le useEffect ci-dessus ne navigue.
+  if (authenticated) return null;
 
   const isOtpStep = state.step === "otp";
 

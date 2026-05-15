@@ -16,7 +16,9 @@ const DEFAULT_REDIRECT_BY_ROLE = {
 } as const;
 
 type PostLoginClientProps = {
-  tokens: Tokens;
+  // Absents en cas d'impersonation : on s'appuie alors sur le check-sso de
+  // KeycloakProvider.
+  tokens?: Tokens;
   redirectAfterAuthUrl?: string;
 };
 
@@ -35,7 +37,9 @@ const PostLoginClient = ({
   useEffect(() => {
     if (initRef.current) return;
     initRef.current = true;
-    resetKeycloakInstance(tokens);
+    if (tokens) {
+      resetKeycloakInstance(tokens);
+    }
   }, [tokens, resetKeycloakInstance]);
 
   useEffect(() => {
@@ -56,9 +60,14 @@ const PostLoginClient = ({
       } else {
         router.replace(DEFAULT_REDIRECT_BY_ROLE.default);
       }
+    } else if (!tokens) {
+      // Pas de tokens injectes ni de session SSO recuperable : fallback login.
+      redirectedRef.current = true;
+      router.replace("/login");
     }
   }, [
     authenticated,
+    tokens,
     redirectAfterAuthUrl,
     isCertificationAuthority,
     isCertificationRegistryManager,

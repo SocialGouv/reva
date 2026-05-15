@@ -1,5 +1,8 @@
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
-import { CANDIDATE_BASE_URL } from "@/modules/shared/config/config";
+import {
+  ADMIN_BASE_URL,
+  CANDIDATE_BASE_URL,
+} from "@/modules/shared/config/config";
 import { logger } from "@/modules/shared/logger/logger";
 
 import { ClientApp } from "../account.type";
@@ -36,15 +39,21 @@ export const impersonateAccount = async (
 
   const data = await impersonate(keycloakId, KEYCLOAK_ADMIN_REALM_REVA);
   if (data) {
-    const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
+    const baseUrl = ADMIN_BASE_URL || "https://vae.gouv.fr/admin2";
 
     const clearAdminTokens = ADMIN_TOKEN_COOKIES.map((name) =>
       buildClearCookieHeader(name, "/admin2"),
     );
 
+    // Redirige vers une entree neutre : le routing par role est fait cote
+    // client apres que keycloak ait ramasse la session impersonnee via
+    // check-sso. Le flag `?impersonate=1` indique au KeycloakProvider de
+    // ne pas reutiliser les tokens admin persistants (qui auraient
+    // court-circuite le check-sso). Le clear server-side ci-dessus est
+    // best-effort : Chrome ne l'applique pas systematiquement.
     return {
       headers: [...data.headers, ...clearAdminTokens],
-      redirect: `${baseUrl}/admin2`,
+      redirect: `${baseUrl}/post-login?impersonate=1`,
     };
   }
 
@@ -126,19 +135,25 @@ const impersonate = async (
 
     const { redirect } = (await response.json()) as any;
 
-    const headers = [];
+    const headers: [string, string][] = [];
 
     const domain = process.env.FRANCE_VAE_DOMAIN || "gouv.fr";
+    // En dev (localhost) on laisse le cookie host-only : reva-api et Keycloak
+    // partagent le host "localhost", et Chrome >= 99 rejette `Domain=localhost`.
+    // En prod multi-subdomain, on force `Domain=<root>` pour que le cookie
+    // atteigne aussi bien admin que Keycloak.
+    const domainAttr = domain === "localhost" ? "" : ` Domain=${domain};`;
 
     for (const header of response.headers) {
       if (
         header[0] == "set-cookie" &&
         header[1].indexOf("KEYCLOAK_IDENTITY") != -1
       ) {
-        const key = "set-cookie";
-        const value = `${cleanCookieValue(header[1])} Domain=${domain};`;
-        const cleanedHeader: [string, string] = [key, value];
-        headers.push(cleanedHeader);
+        // Cookie forwarde tel quel : Chrome refuse de remplacer un cookie
+        // `Secure` existant via un Set-Cookie non-Secure ("Strict Secure
+        // Cookies" / RFC 6265bis 5.5). localhost est "potentially trustworthy"
+        // donc `Secure` est accepte en HTTP en dev.
+        headers.push(["set-cookie", `${header[1]}${domainAttr}`]);
       }
     }
 
@@ -150,15 +165,6 @@ const impersonate = async (
   }
 
   return undefined;
-};
-
-const cleanCookieValue = (value: string) => {
-  return value
-    .replace("SameSite=None", "")
-    .replace("Secure", ";")
-    .replace("HttpOnly", "")
-    .replace(";;;", "")
-    .replace(";;", "");
 };
 
 const getKeycloakAccessToken = async (): Promise<string | undefined> => {
