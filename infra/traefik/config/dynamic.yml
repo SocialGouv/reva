@@ -110,6 +110,13 @@ http:
       middlewares:
         - removeHeader
 
+    auth-vae-gouv-fr-admin:
+      rule: "Host(`auth.vae.gouv.fr`) && PathPrefix(`/admin`)"
+      service: auth-vae-gouv-fr
+      middlewares:
+        - removeHeader
+        - productionAuthIpWhitelist
+
     metabase-vae-gouv-fr:
       rule: "Host(`metabase.vae.gouv.fr`)"
       service: metabase-production
@@ -335,6 +342,7 @@ http:
       basicAuth:
         users:
           - '{{ env "BASIC_AUTH_USER_PASSWORD" }}' # htpasswd format  BASIC_AUTH_USER_PASSWORD="test:TODEFINED"
+
     sandboxInteropIpWhitelist:
       ipWhiteList:
         sourceRange:
@@ -345,6 +353,7 @@ http:
         ipStrategy:
           excludedIPs:
             - "10.0.0.1/24"
+
     preprodInteropIpWhitelist:
       ipWhiteList:
         sourceRange:
@@ -355,6 +364,7 @@ http:
         ipStrategy:
           excludedIPs:
             - "10.0.0.1/24"
+
     productionInteropIpWhitelist:
       ipWhiteList:
         sourceRange:
@@ -365,6 +375,16 @@ http:
         ipStrategy:
           excludedIPs:
             - "10.0.0.1/24"
+
+    productionAuthIpWhitelist:
+      ipWhiteList:
+        sourceRange:
+        {{- $whitelist := splitList "," (env "PRODUCTION_AUTH_IP_WHITELIST") }}
+        {{- range $ip := $whitelist }}
+          - {{ $ip | quote }}
+        {{- end }}
+        ipStrategy:
+          depth: 1
 
     sandboxInteropRateLimit:
       rateLimit:
