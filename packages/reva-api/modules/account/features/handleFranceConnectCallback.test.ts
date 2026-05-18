@@ -240,7 +240,7 @@ describe("getOrCreateCandidate - réconciliation FranceConnect", () => {
     expect(dbCandidate?.birthDepartmentId).toBe(existingDepartmentId);
   });
 
-  test("écrase birthDepartmentId avec null quand le candidat existant est France et que FC renvoie désormais un pays étranger", async () => {
+  test("aligne countryId, birthDepartmentId et birthCity sur le nouveau pays étranger quand le candidat existant est France et que FC renvoie désormais un pays étranger", async () => {
     mockKeycloakAdmin();
 
     const parisDepartment = await prismaClient.department.findFirst({
@@ -268,10 +268,49 @@ describe("getOrCreateCandidate - réconciliation FranceConnect", () => {
     const dbCandidate = await prismaClient.candidate.findUnique({
       where: { id: existing.id },
     });
-    // Le département français obsolète a été nettoyé, cohérent avec le nouveau pays étranger
+    const allemagne = await prismaClient.country.findUnique({
+      where: { inseeCode: "99109" },
+    });
+    expect(dbCandidate?.countryId).toBe(allemagne?.id);
     expect(dbCandidate?.birthDepartmentId).toBeNull();
-    // birthCity n'est pas envoyé par FC pour un pays étranger, il est donc conservé tel quel
-    expect(dbCandidate?.birthCity).toBe("Paris");
+    expect(dbCandidate?.birthCity).toBeNull();
+  });
+
+  test("préserve countryId, birthDepartmentId et birthCity quand FC ne renvoie pas de birthcountry (claim absent)", async () => {
+    mockKeycloakAdmin();
+
+    const france = await prismaClient.country.findFirst({
+      where: { label: "France" },
+    });
+    const marseilleDepartment = await prismaClient.department.findFirst({
+      where: { code: "13" },
+    });
+    const existingDepartmentId = marseilleDepartment?.id ?? null;
+
+    const existing = await createCandidateHelper({
+      keycloakId: FC_KEYCLOAK_ID,
+      firstname: MATCHING_PIVOTS.firstname,
+      lastname: MATCHING_PIVOTS.lastname,
+      birthdate: MATCHING_PIVOTS.birthdate,
+      countryId: france?.id,
+      birthCity: "Marseille",
+      birthDepartmentId: existingDepartmentId,
+    });
+
+    const claims = buildFranceConnectClaims({
+      sub: FC_KEYCLOAK_ID,
+      birthcountry: undefined,
+      birthplace: undefined,
+    });
+
+    await getOrCreateCandidate(FC_KEYCLOAK_ID, claims as never);
+
+    const dbCandidate = await prismaClient.candidate.findUnique({
+      where: { id: existing.id },
+    });
+    expect(dbCandidate?.countryId).toBe(france?.id);
+    expect(dbCandidate?.birthCity).toBe("Marseille");
+    expect(dbCandidate?.birthDepartmentId).toBe(existingDepartmentId);
   });
 
   test("remplit birthCity et birthDepartmentId lorsque le candidat existant les a null (backfill)", async () => {

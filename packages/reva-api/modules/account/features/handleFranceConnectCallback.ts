@@ -223,6 +223,13 @@ const buildCandidateDataFromFCClaims = async ({
 
   const countryIsFrance = country?.label === "France";
 
+  // Spread piloté par la présence du `country` (et non `countryIsFrance`) : un claim
+  // `birthcountry` absent ne doit pas écraser les valeurs existantes, alors qu'un pays
+  // étranger affirmé doit aligner les trois champs (countryId écrasé, birth* forcés à null).
+  const placeOfBirth = country
+    ? { countryId: country.id, birthDepartmentId, birthCity }
+    : {};
+
   return {
     data: {
       firstname,
@@ -231,11 +238,9 @@ const buildCandidateDataFromFCClaims = async ({
       middleNames,
       lastname: userInfo.family_name,
       birthdate: parseFranceConnectDate(userInfo.birthdate),
-      countryId: country?.id ?? null,
       nationality,
       franceConnectLinked: true,
-      birthDepartmentId,
-      ...(countryIsFrance ? { birthCity } : {}),
+      ...placeOfBirth,
     },
     countryIsFrance,
   };
