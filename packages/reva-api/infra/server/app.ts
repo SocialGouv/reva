@@ -40,8 +40,6 @@ type BuilAppOptions = FastifyServerOptions & {
 const validateRequiredEnvVars = () => {
   if (isTestEnv) {
     // Provide default test values for required environment variables
-    process.env.COOKIE_SECRET =
-      process.env.COOKIE_SECRET || "test-cookie-secret";
     process.env.DATA_ENCRYPT_PRIVATE_KEY =
       process.env.DATA_ENCRYPT_PRIVATE_KEY || "test-data-encrypt-private-key";
     process.env.JWT_PRIVATE_KEY =
@@ -53,7 +51,6 @@ const validateRequiredEnvVars = () => {
     return;
   }
   const required = [
-    "COOKIE_SECRET",
     "DATA_ENCRYPT_PRIVATE_KEY",
     "JWT_PRIVATE_KEY",
     "KEYCLOAK_APP_ADMIN_CLIENT_SECRET",
@@ -85,9 +82,7 @@ export const buildApp = async (
 
   const app = await fastify(opts);
 
-  app.register(cookie, {
-    secret: process.env.COOKIE_SECRET,
-  });
+  app.register(cookie);
 
   if (process.env.NODE_ENV === "production") {
     app.register(cors, {
