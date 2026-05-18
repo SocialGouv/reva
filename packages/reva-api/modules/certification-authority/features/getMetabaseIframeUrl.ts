@@ -25,7 +25,7 @@ const ALLOWED_CERTIFICATION_AUTHORITY_STRUCTURES: Record<
       dashboardId: 200,
     },
   "CPNEFP de la Métallurgie": {
-    filter: "gestionnaire_de_candidatures",
+    filter: "id_gestionnaire_de_candidatures",
     dashboardId: 209,
   },
 };
@@ -33,11 +33,32 @@ const ALLOWED_CERTIFICATION_AUTHORITY_STRUCTURES: Record<
 export const getMetabaseIframeUrl = async (
   certificationAuthority: CertificationAuthority,
 ) => {
+  const isFeatureActiveForAllCertificationAuthorities =
+    await isFeatureActiveForUser({
+      feature: "SHOW_METABASE_DASHBOARD_FOR_ALL_CERTIFICATION_AUTHORITIES",
+    });
+
+  if (isFeatureActiveForAllCertificationAuthorities) {
+    return getMetabaseIframeUrlForAllCertificationAuthorities(
+      certificationAuthority,
+    );
+  }
+
   const isFeatureActive = await isFeatureActiveForUser({
     feature: "SHOW_METABASE_DASHBOARD",
   });
 
   if (!isFeatureActive) {
+    return null;
+  }
+
+  const METABASE_SITE_URL = process.env.METABASE_SITE_URL;
+  const METABASE_SECRET_KEY = process.env.METABASE_SECRET_KEY;
+
+  if (!METABASE_SITE_URL || !METABASE_SECRET_KEY) {
+    console.error(
+      "Missing METABASE_SITE_URL or METABASE_SECRET_KEY environment variables",
+    );
     return null;
   }
 
@@ -54,16 +75,6 @@ export const getMetabaseIframeUrl = async (
     return null;
   }
 
-  const METABASE_SITE_URL = process.env.METABASE_SITE_URL;
-  const METABASE_SECRET_KEY = process.env.METABASE_SECRET_KEY;
-
-  if (!METABASE_SITE_URL || !METABASE_SECRET_KEY) {
-    console.error(
-      "Missing METABASE_SITE_URL or METABASE_SECRET_KEY environment variables",
-    );
-    return null;
-  }
-
   const certificationAuthorityStructureParams =
     ALLOWED_CERTIFICATION_AUTHORITY_STRUCTURES[
       certificationAuthorityStructures[0].label
@@ -77,6 +88,48 @@ export const getMetabaseIframeUrl = async (
       [certificationAuthorityStructureParams.filter]: [
         certificationAuthority.label,
       ],
+    },
+    exp: Math.round(Date.now() / 1000) + 30 * 60, // 30 minute expiration
+  };
+  const token = jwt.sign(payload, METABASE_SECRET_KEY);
+
+  return (
+    METABASE_SITE_URL +
+    "/embed/dashboard/" +
+    token +
+    "#bordered=true&titled=true"
+  );
+};
+
+const getMetabaseIframeUrlForAllCertificationAuthorities = async (
+  certificationAuthority: CertificationAuthority,
+) => {
+  const METABASE_SITE_URL = process.env.METABASE_SITE_URL;
+  const METABASE_SECRET_KEY = process.env.METABASE_SECRET_KEY;
+
+  if (!METABASE_SITE_URL || !METABASE_SECRET_KEY) {
+    console.error(
+      "Missing METABASE_SITE_URL or METABASE_SECRET_KEY environment variables",
+    );
+    return null;
+  }
+
+  const certificationAuthorityStructures =
+    await getCertificationAuthorityStructuresByCertificationAuthorityId({
+      certificationAuthorityId: certificationAuthority.id,
+    });
+
+  const isCertificationAuthorityMinistry =
+    certificationAuthorityStructures[0].label
+      .toLowerCase()
+      .includes("ministère");
+
+  const payload = {
+    resource: {
+      dashboard: isCertificationAuthorityMinistry ? 208 : 209,
+    },
+    params: {
+      id_gestionnaire_de_candidatures: certificationAuthority.id,
     },
     exp: Math.round(Date.now() / 1000) + 30 * 60, // 30 minute expiration
   };
