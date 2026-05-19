@@ -135,6 +135,7 @@ type MaisonMereAAP {
   isActive: Boolean!
   isSignalized: Boolean!
   isMCFCompatible: Boolean
+  metabaseDashboardIframeUrl: String
 }
 
 enum StatutValidationInformationsJuridiquesMaisonMereAAP {

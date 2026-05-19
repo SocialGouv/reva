@@ -104,6 +104,8 @@ export const resolversSecurityMap = {
 
   "MaisonMereAAPLegalInformationDocumentsDecision.internalComment": isAdmin,
 
+  "MaisonMereAAP.metabaseDashboardIframeUrl": isGestionnaireOfMaisonMereAAP,
+
   "Mutation.organism_updateDisponiblePourVaeCollective":
     isOwnerOrCanManageOrganism,
 

@@ -47,6 +47,7 @@ import { getMaisonMereAAPLegalInformationDocuments } from "./features/getMaisonM
 import { getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision } from "./features/getMaisonMereAAPLegalInformationDocumentsDecisionsByMaisonMereAAPIdAndDecision";
 import { getMaisonMereAAPOnConventionCollectives } from "./features/getMaisonMereAAPOnConventionCollectives";
 import { getMaisonMereAAPs } from "./features/getMaisonMereAAPs";
+import { getMetabaseIframeUrl } from "./features/getMetabaseIframeUrl";
 import { getOrganismById } from "./features/getOrganism";
 import { getOrganismCcnsByOrganismId } from "./features/getOrganismCcnsByOrganismId";
 import { getOrganismCertificationsByOrganismId } from "./features/getOrganismCertificationsByOrganismId";
@@ -207,6 +208,11 @@ const unsafeResolvers = {
       acceptedAt: cguAcceptedAt,
       isLatestVersion: (await getLastProfessionalCgu())?.version == cguVersion,
     }),
+    metabaseDashboardIframeUrl: async ({
+      id: maisonMereAAPId,
+    }: {
+      id: string;
+    }) => getMetabaseIframeUrl(maisonMereAAPId),
   },
   MaisonMereAAPLegalInformationDocuments: {
     attestationURSSAFFile: async (
