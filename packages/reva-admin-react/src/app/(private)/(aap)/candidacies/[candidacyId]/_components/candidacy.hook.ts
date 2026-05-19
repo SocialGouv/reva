@@ -120,7 +120,10 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     candidacy.typeAccompagnement === "ACCOMPAGNE";
 
   // Permissions de fin d'accompagnement
-  const canEndAccompagnement = candidacy.feasibility?.decision === "ADMISSIBLE";
+  const canEndAccompagnement =
+    !candidacy.feasibility ||
+    candidacy.feasibility?.decision === "DRAFT" ||
+    candidacy.feasibility?.decision === "ADMISSIBLE";
 
   return {
     candidacyCurrentActiveStatus: currentStatus,
