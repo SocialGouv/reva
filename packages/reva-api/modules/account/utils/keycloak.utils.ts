@@ -262,6 +262,7 @@ const callTokenEndpoint = async ({
     refresh_token: string;
     id_token: string;
   };
+  error?: string;
   errorDescription?: string;
 }> => {
   const serverUrl = process.env.KEYCLOAK_ADMIN_URL as string;
@@ -301,17 +302,19 @@ const callTokenEndpoint = async ({
     return { ok: true, status: response.status, grant };
   }
 
+  let error: string | undefined;
   let errorDescription: string | undefined;
   try {
     const errorPayload = (await response.json()) as {
       error?: string;
       error_description?: string;
     };
+    error = errorPayload.error;
     errorDescription = errorPayload.error_description;
   } catch {
     // ignore
   }
-  return { ok: false, status: response.status, errorDescription };
+  return { ok: false, status: response.status, error, errorDescription };
 };
 
 // Erreur dédiée: Keycloak n'est pas joignable / mal configuré (5xx, timeout,
@@ -323,6 +326,11 @@ export class KeycloakUnavailableError extends Error {
     this.name = "KeycloakUnavailableError";
   }
 }
+
+// RFC 6749 §5.2 : "invalid_grant" couvre mauvais mot de passe, mauvais OTP,
+// compte désactivé, action requise en attente... Tous attribuables à l'utilisateur.
+const isInvalidGrant = (error: string | undefined): boolean =>
+  error === "invalid_grant";
 
 // Vérifie le mot de passe via le client dédié "password-check" (sans step OTP).
 // Permet de distinguer un MDP incorrect d'un OTP incorrect dans le flow admin.
@@ -370,15 +378,17 @@ export const validatePasswordOnly = async (
   if (result.ok) {
     return { ok: true };
   }
-  if (result.status === 401) {
+  if (isInvalidGrant(result.error)) {
+    // Mauvais identifiants côté utilisateur : pas de log (évite le spam en prod).
     return { ok: false, reason: "invalid_credentials" };
   }
-  // Tout autre statut (4xx hors 401, 5xx, client mal configuré...) doit être
-  // remonté comme une indisponibilité afin de ne pas être confondu avec un
+  // Toute autre réponse (5xx, code OAuth inconnu, client mal configuré...) doit être
+  // remontée comme une indisponibilité afin de ne pas être confondue avec un
   // mauvais mot de passe côté utilisateur.
   logger.error({
     msg: "validatePasswordOnly: réponse inattendue de Keycloak",
     status: result.status,
+    error: result.error,
     errorDescription: result.errorDescription,
   });
   throw new KeycloakUnavailableError();
@@ -420,8 +430,12 @@ export const generateIAMTokenWithPassword = async (
       totp,
     });
   } catch (e) {
-    logger.error(e);
-    throw new Error("Erreur lors de la génération du token IAM");
+    // Erreur réseau / DNS / TLS sur l'appel à Keycloak.
+    logger.error({
+      msg: "generateIAMTokenWithPassword: erreur réseau lors de l'appel à Keycloak",
+      error: e,
+    });
+    throw new KeycloakUnavailableError();
   }
 
   if (result.ok && result.grant) {
@@ -432,15 +446,20 @@ export const generateIAMTokenWithPassword = async (
     };
   }
 
+  if (isInvalidGrant(result.error)) {
+    // Mauvais mot de passe ou mauvais OTP : pas de log (évite le spam en prod).
+    if (totp) {
+      throw new Error("Code de vérification (OTP) invalide");
+    }
+    throw new Error("Adresse électronique ou mot de passe incorrect");
+  }
+
   logger.error({
     msg: "Echec /token grant_type=password",
     status: result.status,
     totpProvided: !!totp,
-    error_description: result.errorDescription,
+    error: result.error,
+    errorDescription: result.errorDescription,
   });
-
-  if (totp) {
-    throw new Error("Code de vérification (OTP) invalide");
-  }
-  throw new Error("Erreur lors de la génération du token IAM");
+  throw new KeycloakUnavailableError();
 };
