@@ -1,11 +1,15 @@
 import {
   createAccountInIAM,
-  generateIAMTokenWithPassword,
   getAccountInIAM,
   resetPassword,
 } from "@/modules/shared/auth/auth.helper";
 import { getJWTContent } from "@/modules/shared/auth/jwt.helper";
 import { prismaClient } from "@/prisma/client";
+
+import {
+  candidateUserHasTotpConfigured,
+  generateCandidateIAMTokenWithPassword,
+} from "../utils/keycloak.utils";
 
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
 
@@ -53,9 +57,19 @@ export const candidateFinalizeRegistrationWithPassword = async ({
       data: { passwordUpdatedAt: new Date() },
     });
 
-    return generateIAMTokenWithPassword(keycloakId, password, realm);
+    // Si le candidat existant a un TOTP enrollé, on skip l'auto-login pour
+    // les mêmes raisons que `candidateResetPassword` (Conditional OTP sur
+    // `reva-app` exige `totp`). Le front redirige vers /login.
+    const isUserHasTotpConfigured =
+      await candidateUserHasTotpConfigured(keycloakId);
+    if (isUserHasTotpConfigured) {
+      return null;
+    }
+
+    return generateCandidateIAMTokenWithPassword(keycloakId, password);
   }
 
+  // Branche "new account": compte fraîchement créé, aucun TOTP possible.
   const keycloakId = await createAccountInIAM({ email }, realm);
 
   await resetPassword(keycloakId, password, realm);
@@ -79,5 +93,5 @@ export const candidateFinalizeRegistrationWithPassword = async ({
     },
   });
 
-  return generateIAMTokenWithPassword(keycloakId, password, realm);
+  return generateCandidateIAMTokenWithPassword(keycloakId, password);
 };

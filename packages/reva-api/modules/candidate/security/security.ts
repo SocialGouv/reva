@@ -15,6 +15,7 @@ export const resolversSecurityMap = {
   "Mutation.candidate_askForRegistrationWithPassword": isAnyone,
   "Mutation.candidate_loginWithToken": isAnyone,
   "Mutation.candidate_loginWithCredentials": isAnyone,
+  "Mutation.candidate_verifyOtpChallenge": isAnyone,
   "Mutation.candidate_forgotPassword": isAnyone,
   "Mutation.candidate_resetPassword": isAnyone,
   "Mutation.candidate_updateCandidateInformation": isAdminOrCandidacyCompanion,
