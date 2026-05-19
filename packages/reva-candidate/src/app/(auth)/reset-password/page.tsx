@@ -53,6 +53,10 @@ export default function ResetPassword() {
       if (tokens) {
         resetKeycloakInstance(tokens);
         router.push("/");
+      } else {
+        // Auto-login skip côté backend (utilisateur TOTP). On redirige vers
+        // /login avec un flag pour afficher un bandeau de succès.
+        router.push("/login?passwordReset=1");
       }
     } catch (error) {
       const errorMessage = (error as GraphQLError)?.response?.errors?.[0]
