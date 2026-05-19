@@ -12,6 +12,23 @@ const CANDIDATE_LOGIN_WITH_CREDENTIALS = graphql(`
         refreshToken
         idToken
       }
+      requiresOtp
+      otpChallengeToken
+    }
+  }
+`);
+
+const CANDIDATE_VERIFY_OTP_CHALLENGE = graphql(`
+  mutation candidate_verifyOtpChallenge(
+    $challengeToken: String!
+    $totp: String!
+  ) {
+    candidate_verifyOtpChallenge(challengeToken: $challengeToken, totp: $totp) {
+      tokens {
+        accessToken
+        refreshToken
+        idToken
+      }
     }
   }
 `);
@@ -28,5 +45,20 @@ export const useLogin = () => {
       }),
   });
 
-  return { loginWithWithCredentials };
+  const verifyOtpChallenge = useMutation({
+    mutationKey: ["candidate_verifyOtpChallenge"],
+    mutationFn: ({
+      challengeToken,
+      totp,
+    }: {
+      challengeToken: string;
+      totp: string;
+    }) =>
+      graphqlClient.request(CANDIDATE_VERIFY_OTP_CHALLENGE, {
+        challengeToken,
+        totp,
+      }),
+  });
+
+  return { loginWithWithCredentials, verifyOtpChallenge };
 };
