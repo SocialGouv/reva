@@ -1,4 +1,5 @@
 import { useAuth } from "@/components/auth/auth";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 import { FinanceModule, TypeAccompagnement } from "@/graphql/generated/graphql";
 
@@ -23,6 +24,9 @@ export const CandidacySummaryBottomButtons = ({
     typeAccompagnement: TypeAccompagnement;
   };
 }) => {
+  const { isFeatureActive } = useFeatureflipping();
+  const isCandidateDropOutV2Enabled = isFeatureActive("CANDIDATE_DROP_OUT_V2");
+
   const {
     canBeArchived,
     canBeRestored,
@@ -45,7 +49,7 @@ export const CandidacySummaryBottomButtons = ({
               Actions administratives
             </p>
           </div>
-          {canDropout && (
+          {!isCandidateDropOutV2Enabled && canDropout && (
             <AdminAction
               title="Déclarer l'abandon du candidat"
               description="Le candidat ne pourra plus déposer de dossier de faisabilité sur le même diplôme durant cette année civile."
