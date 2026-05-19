@@ -559,6 +559,37 @@ const unsafeResolvers = {
         userEmail: context.auth.userInfo?.email,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
+
+      const candidateDropOutV2Feature = await prismaClient.feature.findFirst({
+        where: {
+          key: "CANDIDATE_DROP_OUT_V2",
+        },
+      });
+
+      const isCandidateDropOutV2FeatureEnabled =
+        candidateDropOutV2Feature?.isActive ?? false;
+
+      if (isCandidateDropOutV2FeatureEnabled) {
+        const candidacy = await validateDropOutCandidacy({
+          candidacyId: payload.candidacyId,
+        });
+
+        logCandidacyEvent({
+          candidacyId: payload.candidacyId,
+          eventType: CandidacyBusinessEvent.VALIDATED_DROPPED_OUT_CANDIDACY,
+          context,
+          result: candidacy,
+        });
+
+        await logCandidacyAuditEvent({
+          candidacyId: payload.candidacyId,
+          eventType: "CANDIDACY_DROP_OUT_VALIDATED",
+          userKeycloakId: context.auth.userInfo?.sub,
+          userEmail: context.auth.userInfo?.email,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
+        });
+      }
+
       return candidacy;
     },
     candidacy_candidateDropOutCandidacy: async (
