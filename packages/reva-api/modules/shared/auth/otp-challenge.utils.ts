@@ -1,18 +1,16 @@
-import { generateJwt, getJWTContent } from "@/modules/shared/auth/jwt.helper";
-
-import { ClientApp } from "../account.type";
+import { generateJwt, getJWTContent } from "./jwt.helper";
 
 // TTL court : couvre la saisie d'un code OTP, sans bloquer durablement.
 export const OTP_CHALLENGE_TTL_SECONDS = 5 * 60;
 
-const VALID_CLIENT_APPS: ReadonlySet<ClientApp> = new Set([
-  "REVA_ADMIN",
-  "REVA_VAE_COLLECTIVE",
-]);
-
+// Payload réalm-agnostique: les modules admin et candidat utilisent le même
+// codec, chaque module fournit son couple (realm, clientId) explicitement.
+// Le mot de passe est embarqué chiffré dans le token et n'est jamais exposé
+// côté client en clair entre les deux étapes du flow.
 type OtpChallengePayload = {
   keycloakId: string;
-  clientApp: ClientApp;
+  realm: string;
+  clientId: string;
   password: string;
 };
 
@@ -30,15 +28,16 @@ export const decodeOtpChallengeToken = (
     if (
       !data ||
       typeof data.keycloakId !== "string" ||
-      typeof data.clientApp !== "string" ||
-      !VALID_CLIENT_APPS.has(data.clientApp as ClientApp) ||
+      typeof data.realm !== "string" ||
+      typeof data.clientId !== "string" ||
       typeof data.password !== "string"
     ) {
       return null;
     }
     return {
       keycloakId: data.keycloakId,
-      clientApp: data.clientApp as ClientApp,
+      realm: data.realm,
+      clientId: data.clientId,
       password: data.password,
     };
   } catch {

@@ -20,7 +20,7 @@ afterAll(() => {
 
 // Construit un JWT signé+chiffré avec les clés de test, en court-circuitant
 // `encodeOtpChallengeToken` pour pouvoir injecter un payload arbitraire
-// (payload incomplet, clientApp invalide, etc.).
+// (payload incomplet, champ manquant, etc.).
 const signWithArbitraryPayload = (rawPayload: unknown): string => {
   const cryptedData = CryptoJS.AES.encrypt(
     JSON.stringify(rawPayload),
@@ -35,7 +35,8 @@ describe("otp-challenge.utils", () => {
   test("l'encodage puis le décodage redonne le payload original", () => {
     const payload = {
       keycloakId: "kc-id-1",
-      clientApp: "REVA_ADMIN" as const,
+      realm: "reva-admin",
+      clientId: "reva-admin",
       password: "s3cret-p@ss",
     };
 
@@ -46,7 +47,8 @@ describe("otp-challenge.utils", () => {
   test("le décodage d'un token expiré renvoie null", () => {
     const payload = {
       keycloakId: "kc-id-2",
-      clientApp: "REVA_VAE_COLLECTIVE" as const,
+      realm: "reva-app",
+      clientId: "reva-app",
       password: "another-pwd",
     };
 
@@ -75,10 +77,19 @@ describe("otp-challenge.utils", () => {
     expect(decodeOtpChallengeToken(token)).toBeNull();
   });
 
-  test("le décodage d'un token avec un clientApp inconnu renvoie null", () => {
+  test("le décodage d'un token sans champ realm renvoie null", () => {
     const token = signWithArbitraryPayload({
       keycloakId: "kc-id",
-      clientApp: "BOGUS",
+      clientId: "reva-admin",
+      password: "p@ss",
+    });
+    expect(decodeOtpChallengeToken(token)).toBeNull();
+  });
+
+  test("le décodage d'un token sans champ clientId renvoie null", () => {
+    const token = signWithArbitraryPayload({
+      keycloakId: "kc-id",
+      realm: "reva-admin",
       password: "p@ss",
     });
     expect(decodeOtpChallengeToken(token)).toBeNull();

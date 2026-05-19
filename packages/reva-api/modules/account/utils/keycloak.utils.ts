@@ -1,4 +1,8 @@
-import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
+import {
+  generateIAMTokenWithPasswordShared,
+  userHasTotpConfigured as userHasTotpConfiguredShared,
+  validatePasswordOnly as validatePasswordOnlyShared,
+} from "@/modules/shared/auth/keycloak-token.utils";
 import {
   ADMIN_BASE_URL,
   CANDIDATE_BASE_URL,
@@ -223,119 +227,19 @@ const getKeycloakAccessToken = async (): Promise<string | undefined> => {
   return undefined;
 };
 
+// Wrapper admin: binde le realm `KEYCLOAK_ADMIN_REALM_REVA` au helper partagé.
 export const userHasTotpConfigured = async (
   userId: string,
 ): Promise<boolean> => {
-  try {
-    const keycloakAdmin = await getKeycloakAdmin();
-    const credentials = await keycloakAdmin.users.getCredentials({
-      id: userId,
-      realm: process.env.KEYCLOAK_ADMIN_REALM_REVA as string,
-    });
-    return (credentials ?? []).some((c) => c.type === "otp");
-  } catch (e) {
-    logger.error(e);
-    return false;
-  }
-};
-
-// Appel l'endpoint /token de Keycloak en grant_type=password.
-// Si le champ "totp" est fourni, il est transmis pour la step Conditional OTP
-// (keycloak-connect.obtainDirectly ne supporte pas ce champ, on passe en raw fetch).
-const callTokenEndpoint = async ({
-  username,
-  password,
-  clientId,
-  clientSecret,
-  totp,
-}: {
-  username: string;
-  password: string;
-  clientId: string;
-  clientSecret?: string;
-  totp?: string;
-}): Promise<{
-  ok: boolean;
-  status: number;
-  grant?: {
-    access_token: string;
-    refresh_token: string;
-    id_token: string;
-  };
-  error?: string;
-  errorDescription?: string;
-}> => {
-  const serverUrl = process.env.KEYCLOAK_ADMIN_URL as string;
-  const realm = process.env.KEYCLOAK_ADMIN_REALM_REVA as string;
-
-  const body = new URLSearchParams({
-    grant_type: "password",
-    client_id: clientId,
-    username,
-    password,
-    scope: "openid",
+  return userHasTotpConfiguredShared({
+    realm: process.env.KEYCLOAK_ADMIN_REALM_REVA as string,
+    userId,
   });
-  // Le secret n'est nécessaire que pour les clients confidentiels.
-  // Pour un client public (comme reva-admin), Keycloak ignore le secret.
-  if (clientSecret) {
-    body.set("client_secret", clientSecret);
-  }
-  if (totp) {
-    body.set("totp", totp);
-  }
-
-  const response = await fetch(
-    `${serverUrl}/realms/${realm}/protocol/openid-connect/token`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body,
-    },
-  );
-
-  if (response.ok) {
-    const grant = (await response.json()) as {
-      access_token: string;
-      refresh_token: string;
-      id_token: string;
-    };
-    return { ok: true, status: response.status, grant };
-  }
-
-  let error: string | undefined;
-  let errorDescription: string | undefined;
-  try {
-    const errorPayload = (await response.json()) as {
-      error?: string;
-      error_description?: string;
-    };
-    error = errorPayload.error;
-    errorDescription = errorPayload.error_description;
-  } catch {
-    // ignore
-  }
-  return { ok: false, status: response.status, error, errorDescription };
 };
 
-// Erreur dédiée: Keycloak n'est pas joignable / mal configuré (5xx, timeout,
-// client mal configuré...). Distincte d'un échec d'identifiants utilisateur.
-// Définie ici pour garder la couche `utils/` indépendante de mercurius.
-export class KeycloakUnavailableError extends Error {
-  constructor(message = "Service d'authentification indisponible") {
-    super(message);
-    this.name = "KeycloakUnavailableError";
-  }
-}
-
-// RFC 6749 §5.2 : "invalid_grant" couvre mauvais mot de passe, mauvais OTP,
-// compte désactivé, action requise en attente... Tous attribuables à l'utilisateur.
-const isInvalidGrant = (error: string | undefined): boolean =>
-  error === "invalid_grant";
-
-// Vérifie le mot de passe via le client dédié "password-check" (sans step OTP).
-// Permet de distinguer un MDP incorrect d'un OTP incorrect dans le flow admin.
-// Les tokens éventuellement renvoyés sont ignorés volontairement: ce client
-// ne sert qu'à valider le mot de passe.
+// Wrapper admin: binde le client password-check via la variable d'env dédiée
+// `KEYCLOAK_ADMIN_CLIENTID_REVA_PASSWORD_CHECK`. Le client est public côté
+// admin (pas de clientSecret transmis).
 export const validatePasswordOnly = async (
   userId: string,
   password: string,
@@ -349,117 +253,42 @@ export const validatePasswordOnly = async (
     );
   }
 
-  const keycloakAdmin = await getKeycloakAdmin();
-  const user = await keycloakAdmin.users.findOne({
-    id: userId,
+  return validatePasswordOnlyShared({
     realm: process.env.KEYCLOAK_ADMIN_REALM_REVA as string,
+    clientId,
+    userId,
+    password,
   });
-  if (!user) {
-    throw new Error(`userId ${userId} not found`);
-  }
-
-  let result: Awaited<ReturnType<typeof callTokenEndpoint>>;
-  try {
-    // Client public, pas de secret à transmettre.
-    result = await callTokenEndpoint({
-      username: user.username as string,
-      password,
-      clientId,
-    });
-  } catch (e) {
-    // Erreur réseau / DNS / TLS sur l'appel à Keycloak.
-    logger.error({
-      msg: "validatePasswordOnly: erreur réseau lors de l'appel à Keycloak",
-      error: e,
-    });
-    throw new KeycloakUnavailableError();
-  }
-
-  if (result.ok) {
-    return { ok: true };
-  }
-  if (isInvalidGrant(result.error)) {
-    // Mauvais identifiants côté utilisateur : pas de log (évite le spam en prod).
-    return { ok: false, reason: "invalid_credentials" };
-  }
-  // Toute autre réponse (5xx, code OAuth inconnu, client mal configuré...) doit être
-  // remontée comme une indisponibilité afin de ne pas être confondue avec un
-  // mauvais mot de passe côté utilisateur.
-  logger.error({
-    msg: "validatePasswordOnly: réponse inattendue de Keycloak",
-    status: result.status,
-    error: result.error,
-    errorDescription: result.errorDescription,
-  });
-  throw new KeycloakUnavailableError();
 };
 
+// Mappe un `ClientApp` admin vers le clientId Keycloak concret. Exposé pour
+// permettre aux features admin d'encoder le clientId dans le challenge OTP
+// (le payload partagé porte realm + clientId, pas un enum applicatif).
+export const getAdminClientIdFor = (clientApp: ClientApp): string => {
+  if (clientApp === "REVA_ADMIN") {
+    return process.env.KEYCLOAK_ADMIN_CLIENTID_REVA as string;
+  }
+  if (clientApp === "REVA_VAE_COLLECTIVE") {
+    return process.env.KEYCLOAK_ADMIN_CLIENTID_REVA_VAE_COLLECTIVE as string;
+  }
+  return "";
+};
+
+// Wrapper admin: mappe `clientApp` (REVA_ADMIN | REVA_VAE_COLLECTIVE) vers le
+// clientId concret, puis délègue au helper partagé. `reva-admin` et
+// `reva-vae-collective` sont confidentiels: on transmet le client secret.
 export const generateIAMTokenWithPassword = async (
   userId: string,
   password: string,
   clientApp: ClientApp,
   totp?: string,
 ) => {
-  const keycloakAdmin = await getKeycloakAdmin();
-
-  const user = await keycloakAdmin.users.findOne({
-    id: userId,
+  return generateIAMTokenWithPasswordShared({
     realm: process.env.KEYCLOAK_ADMIN_REALM_REVA as string,
+    clientId: getAdminClientIdFor(clientApp),
+    clientSecret: process.env.KEYCLOAK_ADMIN_CLIENT_SECRET as string,
+    userId,
+    password,
+    totp,
   });
-
-  if (!user) {
-    throw new Error(`userId ${userId} not found`);
-  }
-
-  let clientId = "";
-  if (clientApp === "REVA_ADMIN") {
-    clientId = process.env.KEYCLOAK_ADMIN_CLIENTID_REVA as string;
-  } else if (clientApp === "REVA_VAE_COLLECTIVE") {
-    clientId = process.env
-      .KEYCLOAK_ADMIN_CLIENTID_REVA_VAE_COLLECTIVE as string;
-  }
-  const clientSecret = process.env.KEYCLOAK_ADMIN_CLIENT_SECRET as string;
-
-  let result: Awaited<ReturnType<typeof callTokenEndpoint>>;
-  try {
-    result = await callTokenEndpoint({
-      username: user.username as string,
-      password,
-      clientId,
-      clientSecret,
-      totp,
-    });
-  } catch (e) {
-    // Erreur réseau / DNS / TLS sur l'appel à Keycloak.
-    logger.error({
-      msg: "generateIAMTokenWithPassword: erreur réseau lors de l'appel à Keycloak",
-      error: e,
-    });
-    throw new KeycloakUnavailableError();
-  }
-
-  if (result.ok && result.grant) {
-    return {
-      accessToken: result.grant.access_token,
-      refreshToken: result.grant.refresh_token,
-      idToken: result.grant.id_token,
-    };
-  }
-
-  if (isInvalidGrant(result.error)) {
-    // Mauvais mot de passe ou mauvais OTP : pas de log (évite le spam en prod).
-    if (totp) {
-      throw new Error("Code de vérification (OTP) invalide");
-    }
-    throw new Error("Adresse électronique ou mot de passe incorrect");
-  }
-
-  logger.error({
-    msg: "Echec /token grant_type=password",
-    status: result.status,
-    totpProvided: !!totp,
-    error: result.error,
-    errorDescription: result.errorDescription,
-  });
-  throw new KeycloakUnavailableError();
 };
