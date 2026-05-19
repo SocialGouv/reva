@@ -30,7 +30,6 @@ export const CandidacySummaryBottomButtons = ({
     canCancelDropout,
     canSwitchFinanceModuleToHorsPlateforme,
     canSwitchTypeAccompagnementToAutonome,
-    canEndAccompagnement,
   } = useCandidacyStatus(candidacy);
 
   const { isAdmin } = useAuth();
@@ -56,7 +55,7 @@ export const CandidacySummaryBottomButtons = ({
               }}
             />
           )}
-          {canEndAccompagnement && candidacy.endAccompagnementStatus && (
+          {candidacy.endAccompagnementStatus && (
             <EndAccompagnementTile
               candidacyId={candidacyId}
               endAccompagnementStatus={candidacy.endAccompagnementStatus}

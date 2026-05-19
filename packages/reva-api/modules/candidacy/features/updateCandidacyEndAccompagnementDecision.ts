@@ -44,35 +44,40 @@ export const updateCandidacyEndAccompagnementDecision = async ({
 
   const feasibility = candidacy.Feasibility[0];
 
-  if (!feasibility || feasibility?.decision === "DRAFT") {
+  if (endAccompagnement) {
+    if (!feasibility || feasibility?.decision === "DRAFT") {
+      await prismaClient.candidacy.update({
+        where: { id: candidacyId },
+        data: {
+          endAccompagnementStatus: "NOT_REQUESTED",
+          endAccompagnementDate: null,
+          endAccompagnementCandidateDropOutReasonId: null,
+          organismId: null,
+          sentAt: null,
+          status: "PROJET",
+        },
+      });
+
+      await prismaClient.candidaciesStatus.deleteMany({
+        where: {
+          candidacyId,
+          status: { not: "PROJET" },
+        },
+      });
+    } else {
+      await prismaClient.candidacy.update({
+        where: { id: candidacyId },
+        data: {
+          endAccompagnementStatus: "CONFIRMED_BY_CANDIDATE",
+        },
+      });
+    }
+  } else {
     await prismaClient.candidacy.update({
       where: { id: candidacyId },
       data: {
         endAccompagnementStatus: "NOT_REQUESTED",
         endAccompagnementDate: null,
-        endAccompagnementCandidateDropOutReasonId: null,
-        organismId: null,
-        sentAt: null,
-        status: "PROJET",
-      },
-    });
-
-    await prismaClient.candidaciesStatus.deleteMany({
-      where: {
-        candidacyId,
-        status: { not: "PROJET" },
-      },
-    });
-  } else {
-    await prismaClient.candidacy.update({
-      where: { id: candidacyId },
-      data: {
-        endAccompagnementStatus: endAccompagnement
-          ? "CONFIRMED_BY_CANDIDATE"
-          : "NOT_REQUESTED",
-        endAccompagnementDate: endAccompagnement
-          ? candidacy.endAccompagnementDate
-          : null,
       },
     });
   }

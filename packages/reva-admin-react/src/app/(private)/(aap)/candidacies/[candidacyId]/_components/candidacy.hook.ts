@@ -119,12 +119,6 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     candidacy.financeModule === "hors_plateforme" &&
     candidacy.typeAccompagnement === "ACCOMPAGNE";
 
-  // Permissions de fin d'accompagnement
-  const canEndAccompagnement =
-    !candidacy.feasibility ||
-    candidacy.feasibility?.decision === "DRAFT" ||
-    candidacy.feasibility?.decision === "ADMISSIBLE";
-
   return {
     candidacyCurrentActiveStatus: currentStatus,
     isCandidacyDroppedOut,
@@ -134,6 +128,5 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     canCancelDropout,
     canSwitchFinanceModuleToHorsPlateforme,
     canSwitchTypeAccompagnementToAutonome,
-    canEndAccompagnement,
   };
 };
