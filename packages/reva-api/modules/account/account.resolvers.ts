@@ -1,6 +1,7 @@
 import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 
+import { wrapKeycloakUnavailable } from "@/modules/shared/auth/wrap-keycloak-unavailable";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -16,7 +17,6 @@ import { resetAccountPassword } from "./features/resetAccountPassword";
 import { sendForgotPasswordEmail } from "./features/sendForgotPasswordEmail";
 import { updateAccountById } from "./features/updateAccount";
 import { verifyOtpChallenge } from "./features/verifyOtpChallenge";
-import { KeycloakUnavailableError } from "./utils/keycloak.utils";
 
 export const resolvers = {
   Mutation: {
@@ -79,38 +79,31 @@ export const resolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
-    account_loginWithCredentials: async (
+    account_loginWithCredentials: (
       _parent: unknown,
       params: {
         email: string;
         password: string;
         clientApp: ClientApp;
       },
-    ) => {
-      try {
-        return await loginWithCredentials({
+    ) =>
+      wrapKeycloakUnavailable(() =>
+        loginWithCredentials({
           email: params.email,
           password: params.password,
           clientApp: params.clientApp,
-        });
-      } catch (e) {
-        if (e instanceof KeycloakUnavailableError) {
-          throw new mercurius.ErrorWithProps(
-            "Service d'authentification indisponible, merci de réessayer plus tard.",
-            { code: "KEYCLOAK_UNAVAILABLE" },
-          );
-        }
-        throw e;
-      }
-    },
-    account_verifyOtpChallenge: async (
+        }),
+      ),
+    account_verifyOtpChallenge: (
       _parent: unknown,
       params: { challengeToken: string; totp: string },
     ) =>
-      verifyOtpChallenge({
-        challengeToken: params.challengeToken,
-        totp: params.totp,
-      }),
+      wrapKeycloakUnavailable(() =>
+        verifyOtpChallenge({
+          challengeToken: params.challengeToken,
+          totp: params.totp,
+        }),
+      ),
     account_sendForgotPasswordEmail: async (
       _parent: unknown,
       { email, clientApp }: { email: string; clientApp: ClientApp },

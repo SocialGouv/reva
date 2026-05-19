@@ -1,10 +1,12 @@
+import { encodeOtpChallengeToken } from "@/modules/shared/auth/otp-challenge.utils";
+
 import { ClientApp } from "../account.type";
 import {
   generateIAMTokenWithPassword,
+  getAdminClientIdFor,
   userHasTotpConfigured,
   validatePasswordOnly,
 } from "../utils/keycloak.utils";
-import { encodeOtpChallengeToken } from "../utils/otp-challenge.utils";
 
 import { getAccountByEmail } from "./getAccountByEmail";
 
@@ -47,7 +49,8 @@ export const loginWithCredentials = async ({
     // les deux étapes de l'authentification.
     const otpChallengeToken = encodeOtpChallengeToken({
       keycloakId: account.keycloakId,
-      clientApp,
+      realm: process.env.KEYCLOAK_ADMIN_REALM_REVA as string,
+      clientId: getAdminClientIdFor(clientApp),
       password,
     });
     return {
