@@ -11,8 +11,10 @@ type Tokens {
 }
 
 type CandidateLogged {
-  tokens: Tokens!
+  tokens: Tokens
   candidate: Candidate!
+  requiresOtp: Boolean!
+  otpChallengeToken: String
 }
 
 type TrainingForm {
@@ -132,8 +134,12 @@ type Mutation {
     email: String!
     password: String!
   ): CandidateLogged!
+  candidate_verifyOtpChallenge(
+    challengeToken: String!
+    totp: String!
+  ): CandidateLogged!
   candidate_forgotPassword(email: String!): Boolean!
-  candidate_resetPassword(token: String!, password: String!): Tokens!
+  candidate_resetPassword(token: String!, password: String!): Tokens
   candidate_updateCandidateInformation(
     candidacyId: String!
     candidateInformation: CandidateUpdateInformationInput!

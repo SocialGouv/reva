@@ -80,4 +80,3 @@ export const resetPassword = async (
     throw new Error(`Erreur lors de la mise à jour du mot de passe.`);
   }
 };
-

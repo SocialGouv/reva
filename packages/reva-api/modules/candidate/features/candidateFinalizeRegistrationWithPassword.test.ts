@@ -7,6 +7,7 @@ import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../../graphql/generated";
+import * as CandidateKeycloakUtils from "../utils/keycloak.utils";
 
 const resetPasswordMutation = graphql(`
   mutation candidate_resetPassword_finalize_registration_test(
@@ -54,7 +55,7 @@ describe("candidateFinalizeRegistrationWithPassword", () => {
     };
 
     const generateTokensSpy = vi
-      .spyOn(AuthHelper, "generateIAMTokenWithPassword")
+      .spyOn(CandidateKeycloakUtils, "generateCandidateIAMTokenWithPassword")
       .mockResolvedValue(tokens);
 
     const result = await graphqlClient.request(resetPasswordMutation, {
@@ -73,11 +74,7 @@ describe("candidateFinalizeRegistrationWithPassword", () => {
       password,
       process.env.KEYCLOAK_APP_REALM,
     );
-    expect(generateTokensSpy).toHaveBeenCalledWith(
-      keycloakId,
-      password,
-      process.env.KEYCLOAK_APP_REALM,
-    );
+    expect(generateTokensSpy).toHaveBeenCalledWith(keycloakId, password);
 
     const candidate = await prismaClient.candidate.findUnique({
       where: { email },
@@ -95,7 +92,7 @@ describe("candidateFinalizeRegistrationWithPassword", () => {
     expect(candidacy).toBeNull();
   });
 
-  test("resets password when an IAM account already exists", async () => {
+  test("resets password when an IAM account already exists without TOTP", async () => {
     const graphqlClient = getGraphQLClient({});
     const password = "StrongPassword123!";
     const keycloakId = faker.string.uuid();
@@ -116,6 +113,11 @@ describe("candidateFinalizeRegistrationWithPassword", () => {
       .spyOn(AuthHelper, "resetPassword")
       .mockResolvedValue(undefined);
 
+    vi.spyOn(
+      CandidateKeycloakUtils,
+      "candidateUserHasTotpConfigured",
+    ).mockResolvedValue(false);
+
     const tokens = {
       accessToken: "access-token",
       refreshToken: "refresh-token",
@@ -123,7 +125,7 @@ describe("candidateFinalizeRegistrationWithPassword", () => {
     };
 
     const generateTokensSpy = vi
-      .spyOn(AuthHelper, "generateIAMTokenWithPassword")
+      .spyOn(CandidateKeycloakUtils, "generateCandidateIAMTokenWithPassword")
       .mockResolvedValue(tokens);
 
     const result = await graphqlClient.request(resetPasswordMutation, {
@@ -137,12 +139,51 @@ describe("candidateFinalizeRegistrationWithPassword", () => {
       password,
       process.env.KEYCLOAK_APP_REALM,
     );
-    expect(generateTokensSpy).toHaveBeenCalledWith(
-      keycloakId,
-      password,
-      process.env.KEYCLOAK_APP_REALM,
-    );
+    expect(generateTokensSpy).toHaveBeenCalledWith(keycloakId, password);
     expect(result.candidate_resetPassword).toEqual(tokens);
+
+    const updatedCandidate = await prismaClient.candidate.findUnique({
+      where: { id: existingCandidate.id },
+    });
+
+    expect(updatedCandidate?.passwordUpdatedAt).not.toBeNull();
+  });
+
+  test("existing account with TOTP enrolled: returns null, skips auto-login, still updates passwordUpdatedAt", async () => {
+    const graphqlClient = getGraphQLClient({});
+    const password = "StrongPassword123!";
+    const keycloakId = faker.string.uuid();
+    const existingCandidate = await createCandidateHelper({
+      keycloakId,
+    });
+    const token = JwtHelper.generateJwt({
+      email: existingCandidate.email,
+      action: "finalize-registration",
+    });
+
+    vi.spyOn(AuthHelper, "getAccountInIAM").mockResolvedValue({
+      id: keycloakId,
+    });
+
+    vi.spyOn(AuthHelper, "resetPassword").mockResolvedValue(undefined);
+
+    vi.spyOn(
+      CandidateKeycloakUtils,
+      "candidateUserHasTotpConfigured",
+    ).mockResolvedValue(true);
+
+    const generateTokensSpy = vi.spyOn(
+      CandidateKeycloakUtils,
+      "generateCandidateIAMTokenWithPassword",
+    );
+
+    const result = await graphqlClient.request(resetPasswordMutation, {
+      token,
+      password,
+    });
+
+    expect(result.candidate_resetPassword).toBeNull();
+    expect(generateTokensSpy).not.toHaveBeenCalled();
 
     const updatedCandidate = await prismaClient.candidate.findUnique({
       where: { id: existingCandidate.id },

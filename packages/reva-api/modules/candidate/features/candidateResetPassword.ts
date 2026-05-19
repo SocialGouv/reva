@@ -1,5 +1,4 @@
 import {
-  generateIAMTokenWithPassword,
   getAccountInIAM,
   resetPassword,
 } from "@/modules/shared/auth/auth.helper";
@@ -11,6 +10,10 @@ import {
 import { prismaClient } from "@/prisma/client";
 
 import { CandidateResetPasswordInput } from "../candidate.types";
+import {
+  candidateUserHasTotpConfigured,
+  generateCandidateIAMTokenWithPassword,
+} from "../utils/keycloak.utils";
 
 import { candidateFinalizeRegistrationWithPassword } from "./candidateFinalizeRegistrationWithPassword";
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
@@ -69,10 +72,16 @@ export const candidateResetPassword = async ({
     data: { passwordUpdatedAt: new Date() },
   });
 
-  // Generate tokens for auto-login after password reset
-  return generateIAMTokenWithPassword(
+  // Si l'utilisateur a un TOTP enrollé, on skip l'auto-login: la Conditional
+  // OTP sur `reva-app` ferait échouer l'appel /token (pas de `totp` fourni).
+  // Le front redirige vers `/login?passwordReset=1` quand le retour est null.
+  const isUserHasTotpConfigured = await candidateUserHasTotpConfigured(
     candidate.keycloakId,
-    password,
-    process.env.KEYCLOAK_APP_REALM as string,
   );
+  if (isUserHasTotpConfigured) {
+    return null;
+  }
+
+  // Auto-login standard pour les candidats sans TOTP.
+  return generateCandidateIAMTokenWithPassword(candidate.keycloakId, password);
 };

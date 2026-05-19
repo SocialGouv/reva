@@ -80,7 +80,8 @@ describe("callTokenEndpoint", () => {
       "https://keycloak.test/realms/some-realm/protocol/openid-connect/token",
       expect.objectContaining({ method: "POST" }),
     );
-    const body = (fetchMock.mock.calls[0][1] as RequestInit).body as URLSearchParams;
+    const body = (fetchMock.mock.calls[0][1] as RequestInit)
+      .body as URLSearchParams;
     expect(body.get("client_id")).toBe("some-client");
     expect(body.get("grant_type")).toBe("password");
     expect(body.get("client_secret")).toBeNull();
@@ -99,7 +100,8 @@ describe("callTokenEndpoint", () => {
       password: "p",
     });
 
-    const body = (fetchMock.mock.calls[0][1] as RequestInit).body as URLSearchParams;
+    const body = (fetchMock.mock.calls[0][1] as RequestInit)
+      .body as URLSearchParams;
     expect(body.get("client_secret")).toBe("super-secret");
   });
 
@@ -115,7 +117,8 @@ describe("callTokenEndpoint", () => {
       totp: "123456",
     });
 
-    const body = (fetchMock.mock.calls[0][1] as RequestInit).body as URLSearchParams;
+    const body = (fetchMock.mock.calls[0][1] as RequestInit)
+      .body as URLSearchParams;
     expect(body.get("totp")).toBe("123456");
   });
 
@@ -144,10 +147,7 @@ describe("callTokenEndpoint", () => {
 describe("userHasTotpConfigured", () => {
   test("renvoie true si un credential 'otp' est présent", async () => {
     vi.spyOn(getKeycloakAdminModule, "getKeycloakAdmin").mockResolvedValue(
-      mockKeycloakAdminWithCredentials([
-        { type: "password" },
-        { type: "otp" },
-      ]),
+      mockKeycloakAdminWithCredentials([{ type: "password" }, { type: "otp" }]),
     );
 
     const result = await userHasTotpConfigured({

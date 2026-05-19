@@ -1,6 +1,7 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { CandidateTypology } from "@prisma/client";
 
+import { wrapKeycloakUnavailable } from "@/modules/shared/auth/wrap-keycloak-unavailable";
 import { prismaClient } from "@/prisma/client";
 
 import { getActiveCandidaciesByCandidateId } from "../candidacy/features/getActiveCandidaciesByCandidateId";
@@ -18,6 +19,7 @@ import { candidateForgotPassword } from "./features/candidateForgotPassword";
 import { candidateLoginWithCredentials } from "./features/candidateLoginWithCredentials";
 import { candidateLoginWithToken } from "./features/candidateLoginWithToken";
 import { candidateResetPassword } from "./features/candidateResetPassword";
+import { candidateVerifyOtpChallenge } from "./features/candidateVerifyOtpChallenge";
 import { deleteFranceConnectSandboxCandidates } from "./features/deleteFranceConnectSandboxCandidates";
 import { getCandidateByCandidacyId } from "./features/getCandidateByCandidacyId";
 import { getCandidateById } from "./features/getCandidateById";
@@ -125,16 +127,26 @@ const unsafeResolvers = {
       candidateLoginWithToken({
         ...params,
       }),
-    candidate_loginWithCredentials: async (
+    candidate_loginWithCredentials: (
       _: any,
       params: {
         email: string;
         password: string;
       },
     ) =>
-      candidateLoginWithCredentials({
-        ...params,
-      }),
+      wrapKeycloakUnavailable(() =>
+        candidateLoginWithCredentials({ ...params }),
+      ),
+    candidate_verifyOtpChallenge: (
+      _: any,
+      params: { challengeToken: string; totp: string },
+    ) =>
+      wrapKeycloakUnavailable(() =>
+        candidateVerifyOtpChallenge({
+          challengeToken: params.challengeToken,
+          totp: params.totp,
+        }),
+      ),
     candidate_forgotPassword: async (
       _: any,
       params: {
