@@ -26,6 +26,16 @@ const getCertificationAuthorityForHeaderQuery = graphql(`
   }
 `);
 
+const getMaisonMereAAPMetabaseDashboardIframeUrlQuery = graphql(`
+  query getMaisonMereAAPMetabaseDashboardIframeUrl {
+    account_getAccountForConnectedUser {
+      maisonMereAAP {
+        metabaseDashboardIframeUrl
+      }
+    }
+  }
+`);
+
 const getCohortesVaeCollectivesForConnectedAapQuery = graphql(`
   query getCohortesVaeCollectivesForConnectedAapForHeaderComponent {
     cohortesVaeCollectivesForConnectedAap {
@@ -49,6 +59,7 @@ const PATHS = {
   PORTEURS_DE_PROJET_VAE_COLLECTIVE: "/porteurs-de-projet-vae-collective",
   RESPONSABLE_CERTIFICATIONS: "/responsable-certifications/certifications",
   STATISTIQUES: "/dashboard",
+  STATISTIQUES_AAP: "/dashboard-aap",
   SUBSCRIPTIONS: "/subscriptions/pending",
   VAE_COLLECTIVES: "/vae-collectives",
   CERTIFICATEUR_CANDIDACIES_ANNUAIRE: "/candidacies/annuaire",
@@ -118,6 +129,7 @@ const getNavigationTabs = ({
   isCertificationRegistryManager,
   isAdminCertificationAuthority,
   metabaseDashboardIframeUrl,
+  metabaseDashboardIframeUrlForAAP,
   showAAPVaeCollectivesTab,
   certificationAuthorityId,
 }: {
@@ -129,6 +141,7 @@ const getNavigationTabs = ({
   isCertificationRegistryManager: boolean;
   isAdminCertificationAuthority: boolean;
   metabaseDashboardIframeUrl?: string | null;
+  metabaseDashboardIframeUrlForAAP?: string | null;
   showAAPVaeCollectivesTab: boolean;
   certificationAuthorityId?: string;
 }) => {
@@ -225,6 +238,15 @@ const getNavigationTabs = ({
       href: PATHS.AAP_HELP,
       isActive: currentPathname.startsWith(PATHS.AAP_HELP),
     }),
+    ...(metabaseDashboardIframeUrlForAAP
+      ? [
+          createTab({
+            text: LABELS.STATISTIQUES,
+            href: PATHS.STATISTIQUES_AAP,
+            isActive: currentPathname.startsWith(PATHS.STATISTIQUES_AAP),
+          }),
+        ]
+      : []),
   ];
 
   const registryManagerTabs = [
@@ -331,6 +353,18 @@ export const Header = () => {
     getCertificationAuthorityForHeader?.account_getAccountForConnectedUser
       ?.certificationAuthority?.metabaseDashboardIframeUrl;
 
+  const { data: getMaisonMereAAPMetabaseDashboardIframeUrl } = useQuery({
+    queryKey: ["aap", "getMaisonMereAAPMetabaseDashboardIframeUrl"],
+    queryFn: () =>
+      graphqlClient.request(getMaisonMereAAPMetabaseDashboardIframeUrlQuery),
+    enabled: isGestionnaireMaisonMereAAP,
+  });
+
+  const metabaseDashboardIframeUrlForAAP =
+    getMaisonMereAAPMetabaseDashboardIframeUrl
+      ?.account_getAccountForConnectedUser?.maisonMereAAP
+      ?.metabaseDashboardIframeUrl;
+
   const certificationAuthorityId =
     getCertificationAuthorityForHeader?.account_getAccountForConnectedUser
       ?.certificationAuthority?.id ??
@@ -359,6 +393,7 @@ export const Header = () => {
     isCertificationRegistryManager,
     isAdminCertificationAuthority,
     metabaseDashboardIframeUrl,
+    metabaseDashboardIframeUrlForAAP,
     showAAPVaeCollectivesTab,
     certificationAuthorityId,
   });
