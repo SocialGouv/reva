@@ -27,8 +27,38 @@
     </#if>
 
 <#--  Mail Body  -->
-<#--  user_profile_type = gestionnaire_maison_mere_aap  -->
-    <#if (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "gestionnaire_maison_mere_aap">
+<#--  Action prioritaire : CONFIGURE_TOTP (prime sur user_profile_type)  -->
+    <#if requiredActions?? && requiredActions?seq_contains("CONFIGURE_TOTP")>
+        <#if section="intro">
+            <p>Pour mieux protéger votre compte France VAE, nous vous demandons de mettre en place un système de <strong>double authentification</strong>.</p>
+            <p>Concrètement, à chaque connexion, en plus de votre mot de passe, vous devrez saisir un code à 6 chiffres qui change toutes les 30 secondes.</p>
+
+            <h2>Ce dont vous avez besoin</h2>
+            <p>Une application gratuite sur votre téléphone, par exemple :</p>
+            <ul>
+                <li>Google Authenticator</li>
+                <li>Microsoft Authenticator</li>
+                <li>FreeOTP</li>
+            </ul>
+
+            <h2>Comment faire ?</h2>
+            <p>Cliquez sur le bouton ci-dessous depuis votre ordinateur, puis suivez les instructions à l'écran. Vous scannerez un QR code avec votre application pour la lier à votre compte.</p>
+        <#elseif section="actionButton">
+            <a href="${link}"
+               style="display:inline-block;background:#000099;color:white;font-family:Arial, sans-serif;font-size:14px;font-weight:500;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:12px 16px;mso-padding-alt:0px;"
+               target="_blank">Activer la double authentification</a>
+        <#elseif section="outro">
+            <p><i>Ce lien est valable ${linkExpirationFormatter(linkExpiration)}.</i></p>
+            <p>Une fois la double authentification activée, vous devrez saisir un nouveau code à chaque connexion. Conservez votre téléphone en sécurité.</p>
+            <p>Pour toute question, vous pouvez nous contacter via
+                <a href="https://vae.gouv.fr/nous-contacter/" target="_blank">notre formulaire de contact</a>.
+            </p>
+            <p>Cordialement,</p>
+            <p>L'équipe France VAE.</p>
+        </#if>
+
+    <#--  user_profile_type = gestionnaire_maison_mere_aap  -->
+    <#elseif (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "gestionnaire_maison_mere_aap">
         <#if section="intro">
             <p>${user.attributes.nom_maison_mere_aap}</p>
             <p><strong>Votre compte a été créé avec succès !</strong></p>
