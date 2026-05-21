@@ -29,9 +29,12 @@
 <#--  Mail Body  -->
 <#--  Action prioritaire : CONFIGURE_TOTP (prime sur user_profile_type)  -->
     <#if requiredActions?? && requiredActions?seq_contains("CONFIGURE_TOTP")>
+        <#--  Sujet TOTP : doit etre defini hors des sections (rendues en plusieurs passes)  -->
+        <#assign subject = "Sécurisez votre compte France VAE avec la double authentification">
+
         <#if section="intro">
-            <p>Pour mieux protéger votre compte France VAE, nous vous demandons de mettre en place un système de <strong>double authentification</strong>.</p>
-            <p>Concrètement, à chaque connexion, en plus de votre mot de passe, vous devrez saisir un code à 6 chiffres qui change toutes les 30 secondes.</p>
+            <p>Pour mieux protéger votre compte France VAE, nous vous demandons de mettre en place une <strong>double authentification</strong>.</p>
+            <p>À chaque connexion, en plus de votre mot de passe, vous devrez saisir un code à 6 chiffres qui change toutes les 30 secondes.</p>
 
             <h2>Ce dont vous avez besoin</h2>
             <p>Une application gratuite sur votre téléphone, par exemple :</p>
