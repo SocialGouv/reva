@@ -8,7 +8,7 @@ addons:
 config_vars:
   PATH: "/app/bin:/app/keycloak/bin:/app/java/bin:/usr/local/bin:/usr/bin:/bin"
 default_process_types:
-  web: /app/keycloak/bin/kc.sh --verbose start --features=preview
+  web: /app/keycloak/bin/kc.sh --verbose start --features=preview admin-fine-grained-authz:v1
 EOF
 else
 cat << EOF

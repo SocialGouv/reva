@@ -111,7 +111,7 @@ step "Building keycloak server ready to production with ${KC_DB} vendor"
 export KC_DB="${KC_DB}"
 if [[ $KC_FEATURES_PREVIEW_ENABLE == "true" ]]; then
   step "PREVIEW FEATURES ENABLE"
-  "${KEYCLOAK_PATH}/bin/kc.sh" build --features="preview" --verbose
+  "${KEYCLOAK_PATH}/bin/kc.sh" build --features="preview admin-fine-grained-authz:v1" --verbose
 else
   step "PREVIEW FEATURES DISABLE"
   "${KEYCLOAK_PATH}/bin/kc.sh" build --verbose
