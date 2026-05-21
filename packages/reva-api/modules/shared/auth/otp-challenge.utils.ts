@@ -3,10 +3,8 @@ import { generateJwt, getJWTContent } from "./jwt.helper";
 // TTL court : couvre la saisie d'un code OTP, sans bloquer durablement.
 export const OTP_CHALLENGE_TTL_SECONDS = 5 * 60;
 
-// Payload réalm-agnostique: les modules admin et candidat utilisent le même
-// codec, chaque module fournit son couple (realm, clientId) explicitement.
-// Le mot de passe est embarqué chiffré dans le token et n'est jamais exposé
-// côté client en clair entre les deux étapes du flow.
+// Le mot de passe est embarqué chiffré dans le token, jamais exposé en clair
+// au navigateur entre les deux étapes du flow.
 type OtpChallengePayload = {
   keycloakId: string;
   realm: string;
@@ -17,9 +15,8 @@ type OtpChallengePayload = {
 export const encodeOtpChallengeToken = (payload: OtpChallengePayload): string =>
   generateJwt(payload, OTP_CHALLENGE_TTL_SECONDS);
 
-// Renvoie null si le token est invalide / expiré / falsifié, plutôt que de
-// remonter l'exception : le caller doit pouvoir distinguer "session expirée"
-// d'une vraie erreur technique.
+// Renvoie null (token invalide / expiré / falsifié) plutôt que de throw:
+// le caller doit pouvoir distinguer "session expirée" d'une erreur technique.
 export const decodeOtpChallengeToken = (
   token: string,
 ): OtpChallengePayload | null => {

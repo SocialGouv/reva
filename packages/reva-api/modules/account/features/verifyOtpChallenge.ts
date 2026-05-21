@@ -17,10 +17,7 @@ export const verifyOtpChallenge = async ({
     );
   }
 
-  // Le challenge porte déjà (realm, clientId) côté admin: les clients
-  // confidentiels (reva-admin / reva-vae-collective) partagent le même
-  // KEYCLOAK_ADMIN_CLIENT_SECRET, on peut donc appeler le helper partagé
-  // directement sans repasser par le wrapper "clientApp".
+  // Secret partagé entre reva-admin et reva-vae-collective: pas besoin du wrapper clientApp.
   const tokens = await generateIAMTokenWithPasswordShared({
     realm: payload.realm,
     clientId: payload.clientId,

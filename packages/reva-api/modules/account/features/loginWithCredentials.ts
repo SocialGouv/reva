@@ -25,12 +25,8 @@ export const loginWithCredentials = async ({
     throw new Error("Compte non trouvé");
   }
 
-  // On valide d'abord le mot de passe via le client password-check (sans OTP)
-  // pour distinguer un MDP incorrect d'un OTP incorrect, puis on demande
-  // l'étape OTP si l'utilisateur en a un configuré.
-  // Les erreurs d'indisponibilité Keycloak (KeycloakUnavailableError) sont
-  // laissées remonter telles quelles : le résolveur les transformera en
-  // ErrorWithProps avec le code "KEYCLOAK_UNAVAILABLE".
+  // Valide le MDP d'abord pour distinguer un MDP incorrect d'un OTP incorrect,
+  // puis demande l'étape OTP si l'utilisateur en a un configuré.
   const passwordResult = await validatePasswordOnly(
     account.keycloakId,
     password,
@@ -44,9 +40,8 @@ export const loginWithCredentials = async ({
   );
 
   if (isUserHasTotpConfigured) {
-    // On retourne un token de challenge chiffré porté par un cookie côté Next.js,
-    // afin de ne pas faire transiter le mot de passe par le navigateur entre
-    // les deux étapes de l'authentification.
+    // Challenge chiffré porté par cookie Next.js: le MDP ne transite pas
+    // par le navigateur entre les deux étapes.
     const otpChallengeToken = encodeOtpChallengeToken({
       keycloakId: account.keycloakId,
       realm: process.env.KEYCLOAK_ADMIN_REALM_REVA as string,

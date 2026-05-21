@@ -72,9 +72,8 @@ export const candidateResetPassword = async ({
     data: { passwordUpdatedAt: new Date() },
   });
 
-  // Si l'utilisateur a un TOTP enrollé, on skip l'auto-login: la Conditional
-  // OTP sur `reva-app` ferait échouer l'appel /token (pas de `totp` fourni).
-  // Le front redirige vers `/login?passwordReset=1` quand le retour est null.
+  // Si TOTP enrollé, on skip l'auto-login: la Conditional OTP sur `reva-app`
+  // ferait échouer /token (pas de `totp` fourni). Front redirige vers /login.
   const isUserHasTotpConfigured = await candidateUserHasTotpConfigured(
     candidate.keycloakId,
   );
@@ -82,6 +81,5 @@ export const candidateResetPassword = async ({
     return null;
   }
 
-  // Auto-login standard pour les candidats sans TOTP.
   return generateCandidateIAMTokenWithPassword(candidate.keycloakId, password);
 };

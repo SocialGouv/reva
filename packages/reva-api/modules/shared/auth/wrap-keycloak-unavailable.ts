@@ -2,10 +2,8 @@ import mercurius from "mercurius";
 
 import { KeycloakUnavailableError } from "./keycloak-token.utils";
 
-// Wrap les features qui peuvent lever `KeycloakUnavailableError`: l'erreur est
-// transformée en `mercurius.ErrorWithProps` avec le code "KEYCLOAK_UNAVAILABLE",
-// afin que le front puisse distinguer une indisponibilité d'un mauvais MDP /
-// mauvais OTP. Toute autre exception est propagée telle quelle.
+// Transforme `KeycloakUnavailableError` en `ErrorWithProps` code "KEYCLOAK_UNAVAILABLE"
+// pour que le front distingue une indisponibilité d'un mauvais MDP/OTP.
 export const wrapKeycloakUnavailable = async <T>(
   fn: () => Promise<T>,
 ): Promise<T> => {

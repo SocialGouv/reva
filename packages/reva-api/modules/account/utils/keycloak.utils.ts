@@ -227,7 +227,6 @@ const getKeycloakAccessToken = async (): Promise<string | undefined> => {
   return undefined;
 };
 
-// Wrapper admin: binde le realm `KEYCLOAK_ADMIN_REALM_REVA` au helper partagé.
 export const userHasTotpConfigured = async (
   userId: string,
 ): Promise<boolean> => {
@@ -237,9 +236,6 @@ export const userHasTotpConfigured = async (
   });
 };
 
-// Wrapper admin: binde le client password-check via la variable d'env dédiée
-// `KEYCLOAK_ADMIN_CLIENTID_REVA_PASSWORD_CHECK`. Le client est public côté
-// admin (pas de clientSecret transmis).
 export const validatePasswordOnly = async (
   userId: string,
   password: string,
@@ -261,8 +257,7 @@ export const validatePasswordOnly = async (
   });
 };
 
-// Mappe un `ClientApp` admin vers le clientId Keycloak concret. Exposé pour
-// permettre aux features admin d'encoder le clientId dans le challenge OTP
+// Exposé pour permettre aux features d'encoder le clientId dans le challenge OTP
 // (le payload partagé porte realm + clientId, pas un enum applicatif).
 export const getAdminClientIdFor = (clientApp: ClientApp): string => {
   if (clientApp === "REVA_ADMIN") {
@@ -274,9 +269,6 @@ export const getAdminClientIdFor = (clientApp: ClientApp): string => {
   return "";
 };
 
-// Wrapper admin: mappe `clientApp` (REVA_ADMIN | REVA_VAE_COLLECTIVE) vers le
-// clientId concret, puis délègue au helper partagé. `reva-admin` et
-// `reva-vae-collective` sont confidentiels: on transmet le client secret.
 export const generateIAMTokenWithPassword = async (
   userId: string,
   password: string,
