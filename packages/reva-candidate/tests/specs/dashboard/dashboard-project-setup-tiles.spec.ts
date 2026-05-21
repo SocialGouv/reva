@@ -194,24 +194,6 @@ test.describe("Certification Tile", () => {
 });
 
 test.describe("Type Accompagnement Tile", () => {
-  test("should display 'to complete' badge when typeAccompagnement is not selected", async ({
-    page,
-    msw,
-  }) => {
-    const candidacy = createDashboardCandidacy({
-      status: "PROJET",
-    });
-    candidacy.typeAccompagnement = null;
-
-    await setupDashboard(page, msw, candidacy);
-
-    await expect(
-      page
-        .getByTestId("type-accompagnement-tile")
-        .getByTestId("incomplete-badge"),
-    ).toBeVisible();
-  });
-
   test("should not display 'to complete' badge when typeAccompagnement is selected", async ({
     page,
     msw,

@@ -54,8 +54,7 @@ export const DashboardAccompagneTilesGroup = ({
             readOnly={isParcoursConfirme}
           />
           <TypeAccompagnementTile
-            typeAccompagnement={candidacy?.typeAccompagnement}
-            hasSelectedTypeAccompagnement={!!candidacy?.typeAccompagnement}
+            typeAccompagnement={candidacy.typeAccompagnement}
             disabled={isParcoursConfirme}
           />
           <GoalsTile

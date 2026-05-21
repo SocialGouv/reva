@@ -4,34 +4,28 @@ import { useRouter } from "next/navigation";
 
 import { TypeAccompagnement } from "@/graphql/generated/graphql";
 
-import { IncompleteBadge } from "./IncompleteBadge";
-
 export const TypeAccompagnementTile = ({
   disabled = false,
-  hasSelectedTypeAccompagnement,
   typeAccompagnement,
 }: {
   disabled: boolean;
-  hasSelectedTypeAccompagnement?: boolean;
-  typeAccompagnement?: TypeAccompagnement;
+  typeAccompagnement: TypeAccompagnement;
 }) => {
-  const hasTypeAccompagnement = !!hasSelectedTypeAccompagnement;
   const router = useRouter();
   const getDesc = () => {
-    if (!hasTypeAccompagnement || disabled) return undefined;
+    if (disabled) return undefined;
     return "Modifier";
   };
-  const AccompagnementBadge = () => {
-    if (!typeAccompagnement) return <IncompleteBadge />;
-    if (typeAccompagnement === "AUTONOME") {
-      return <Tag small>Autonome</Tag>;
-    }
-    return <Tag small>Accompagné</Tag>;
-  };
+  const accompanimentBadge =
+    typeAccompagnement === "AUTONOME" ? (
+      <Tag small>Autonome</Tag>
+    ) : (
+      <Tag small>Accompagné</Tag>
+    );
 
   const commonProps = {
     "data-testid": "type-accompagnement-tile",
-    start: <AccompagnementBadge />,
+    start: accompanimentBadge,
     desc: getDesc(),
     title: "Modalité de parcours",
     small: true as const,

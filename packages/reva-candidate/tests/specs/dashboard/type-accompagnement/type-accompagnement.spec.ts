@@ -62,27 +62,6 @@ test("should show enabled type-accompagnement tile when no certification is sele
   ).not.toBeVisible();
 });
 
-test("should display 'to complete' badge when typeAccompagnement is not selected", async ({
-  page,
-  msw,
-}) => {
-  const candidacy = createCandidacyEntity({
-    candidate,
-    typeAccompagnement: "AUTONOME",
-    status: "PROJET",
-    certification: null,
-  });
-  Object.assign(candidacy, { typeAccompagnement: null });
-  const { handlers, dashboardWait } = dashboardHandlers({ candidacy });
-
-  msw.use(...handlers);
-  await login(page);
-  await dashboardWait(page);
-
-  const tile = page.locator('[data-testid="type-accompagnement-tile"]');
-  await expect(tile.locator('[data-testid="incomplete-badge"]')).toBeVisible();
-});
-
 test("should be disabled for AUTONOME after feasibilityFileSentAt", async ({
   page,
   msw,
