@@ -33,8 +33,8 @@ export const candidateLoginWithCredentials = async ({
     );
   }
 
-  // Résolution candidat DB juste après IAM: évite de leak via timing qu'un
-  // email IAM existe sans candidat DB associé (cf. plan §5).
+  // Résolution candidat DB juste après IAM: évite de leak via timing
+  // qu'un email IAM existe sans candidat DB associé.
   const candidate = await getCandidateByKeycloakId({
     keycloakId: account?.id || "",
   });
@@ -43,11 +43,7 @@ export const candidateLoginWithCredentials = async ({
     throw new Error("Candidat non trouvé");
   }
 
-  // Valide le mot de passe via le client `reva-app-password-check` (sans OTP)
-  // pour distinguer un MDP incorrect d'un OTP incorrect. Les erreurs
-  // d'indisponibilité Keycloak (KeycloakUnavailableError) sont laissées
-  // remonter telles quelles: le résolveur les transformera en ErrorWithProps
-  // avec le code "KEYCLOAK_UNAVAILABLE".
+  // Valide le MDP d'abord pour distinguer un MDP incorrect d'un OTP incorrect.
   const passwordResult = await validateCandidatePasswordOnly(
     candidate.keycloakId,
     password,
@@ -61,11 +57,7 @@ export const candidateLoginWithCredentials = async ({
   );
 
   if (isUserHasTotpConfigured) {
-    // Le mot de passe ne transite pas en clair entre les deux étapes: il est
-    // embarqué chiffré dans le challenge JWT, signé+chiffré côté serveur.
-    // `lastLoginViaPasswordAt` ne sera mis à jour qu'après vérification OTP
-    // réussie (cf. candidateVerifyOtpChallenge), pour refléter le moment où
-    // l'utilisateur est réellement loggé end-to-end.
+    // MDP embarqué chiffré dans le challenge JWT: jamais en clair côté front.
     const otpChallengeToken = encodeOtpChallengeToken({
       keycloakId: candidate.keycloakId,
       realm: process.env.KEYCLOAK_APP_REALM as string,
@@ -85,8 +77,7 @@ export const candidateLoginWithCredentials = async ({
     password,
   );
 
-  // Mise à jour du timestamp uniquement quand l'utilisateur est réellement
-  // loggé (tokens mintés), pas en amont.
+  // Timestamp mis à jour seulement après mint des tokens (login end-to-end).
   await prismaClient.candidate.update({
     where: { id: candidate.id },
     data: { lastLoginViaPasswordAt: new Date() },

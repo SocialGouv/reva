@@ -2,9 +2,7 @@ import { logger } from "@/modules/shared/logger/logger";
 
 import { getKeycloakAdmin } from "./getKeycloakAdmin";
 
-// Erreur dédiée: Keycloak n'est pas joignable / mal configuré (5xx, timeout,
-// client mal configuré...). Distincte d'un échec d'identifiants utilisateur.
-// Définie ici pour garder la couche `utils/` indépendante de mercurius.
+// Distincte d'un échec d'identifiants utilisateur (5xx, timeout, client mal configuré...).
 export class KeycloakUnavailableError extends Error {
   constructor(message = "Service d'authentification indisponible") {
     super(message);
@@ -12,11 +10,8 @@ export class KeycloakUnavailableError extends Error {
   }
 }
 
-// Appel l'endpoint /token de Keycloak en grant_type=password.
-// Si le champ "totp" est fourni, il est transmis pour la step Conditional OTP
-// (keycloak-connect.obtainDirectly ne supporte pas ce champ, on passe en raw fetch).
-// Le couple (realm, clientId) est entièrement paramétré: ce helper est réutilisé
-// par les modules admin et candidat.
+// Raw fetch (pas keycloak-connect.obtainDirectly) car ce dernier ne supporte
+// pas le champ `totp` requis pour la step Conditional OTP.
 export const callTokenEndpoint = async ({
   realm,
   clientId,
@@ -51,8 +46,7 @@ export const callTokenEndpoint = async ({
     password,
     scope: "openid",
   });
-  // Le secret n'est nécessaire que pour les clients confidentiels.
-  // Pour un client public, Keycloak ignore le secret.
+  // Secret requis uniquement pour les clients confidentiels.
   if (clientSecret) {
     body.set("client_secret", clientSecret);
   }
@@ -98,8 +92,6 @@ export const callTokenEndpoint = async ({
 const isInvalidGrant = (error: string | undefined): boolean =>
   error === "invalid_grant";
 
-// Vérifie qu'un utilisateur Keycloak a au moins un credential de type "otp".
-// Sert à savoir s'il faut déclencher l'étape OTP dans le flow de connexion.
 export const userHasTotpConfigured = async ({
   realm,
   userId,
@@ -120,10 +112,8 @@ export const userHasTotpConfigured = async ({
   }
 };
 
-// Vérifie un mot de passe via le client "password-check" dédié (sans step OTP).
-// Permet de distinguer un MDP incorrect d'un OTP incorrect dans les flows
-// admin/candidat. Les tokens éventuellement renvoyés sont ignorés volontairement.
-// Lève `KeycloakUnavailableError` si Keycloak est injoignable / mal configuré.
+// Via un client "password-check" sans step OTP, pour distinguer un MDP
+// incorrect d'un OTP incorrect. Les tokens renvoyés sont ignorés.
 export const validatePasswordOnly = async ({
   realm,
   clientId,
@@ -146,7 +136,6 @@ export const validatePasswordOnly = async ({
 
   let result: Awaited<ReturnType<typeof callTokenEndpoint>>;
   try {
-    // Le password-check client est public côté admin et côté candidat.
     result = await callTokenEndpoint({
       realm,
       clientId,
@@ -154,7 +143,6 @@ export const validatePasswordOnly = async ({
       password,
     });
   } catch (e) {
-    // Erreur réseau / DNS / TLS sur l'appel à Keycloak.
     logger.error({
       msg: "validatePasswordOnly: erreur réseau lors de l'appel à Keycloak",
       error: e,
@@ -166,12 +154,11 @@ export const validatePasswordOnly = async ({
     return { ok: true };
   }
   if (isInvalidGrant(result.error)) {
-    // Mauvais identifiants côté utilisateur : pas de log (évite le spam en prod).
+    // Pas de log: mauvais identifiants côté utilisateur, évite le spam en prod.
     return { ok: false, reason: "invalid_credentials" };
   }
-  // Toute autre réponse (5xx, code OAuth inconnu, client mal configuré...) doit être
-  // remontée comme une indisponibilité afin de ne pas être confondue avec un
-  // mauvais mot de passe côté utilisateur.
+  // Toute autre réponse (5xx, OAuth inconnu, client mal configuré) doit
+  // remonter comme indisponibilité, pour ne pas être confondue avec un MDP incorrect.
   logger.error({
     msg: "validatePasswordOnly: réponse inattendue de Keycloak",
     status: result.status,
@@ -182,8 +169,6 @@ export const validatePasswordOnly = async ({
 };
 
 // Mint les tokens IAM via grant_type=password (avec ou sans totp).
-// Helper bas-niveau partagé: chaque module (admin / candidat) expose un wrapper
-// qui binde realm + clientId + clientSecret à ses propres variables d'env.
 export const generateIAMTokenWithPasswordShared = async ({
   realm,
   clientId,
@@ -225,9 +210,6 @@ export const generateIAMTokenWithPasswordShared = async ({
       totp,
     });
   } catch (e) {
-    // Erreur réseau / DNS / TLS sur l'appel à Keycloak: même contrat que
-    // validatePasswordOnly - on remonte une indisponibilité distincte d'un
-    // échec utilisateur (mauvais MDP / mauvais OTP).
     logger.error({
       msg: "generateIAMTokenWithPasswordShared: erreur réseau lors de l'appel à Keycloak",
       error: e,
@@ -244,16 +226,15 @@ export const generateIAMTokenWithPasswordShared = async ({
   }
 
   if (isInvalidGrant(result.error)) {
-    // Mauvais mot de passe ou mauvais OTP : pas de log (évite le spam en prod).
+    // Pas de log: mauvais MDP ou mauvais OTP côté utilisateur.
     if (totp) {
       throw new Error("Code de vérification (OTP) invalide");
     }
     throw new Error("Adresse électronique ou mot de passe incorrect");
   }
 
-  // Toute autre réponse (5xx, code OAuth inconnu, client mal configuré...) doit
-  // être remontée comme une indisponibilité, pour que le resolver le wrap en
-  // KEYCLOAK_UNAVAILABLE au lieu d'afficher "Code de vérification incorrect".
+  // Toute autre réponse remonte comme indisponibilité (sinon le front affiche
+  // "Code de vérification incorrect" sur une vraie panne Keycloak).
   logger.error({
     msg: "Echec /token grant_type=password",
     status: result.status,
