@@ -274,6 +274,8 @@ model Candidacy {
   paymentRequestDeadlinePassed                  Boolean                                         @default(false) @map("payment_request_deadline_passed")
   candidacyWithLastActiveDfDvJury               CandidacyWithLastActiveDfDvJury?
   candidacyCandidateInfo                        CandidacyCandidateInfo?
+  certificationAuthority                        CertificationAuthority?                         @relation(fields: [certificationAuthorityId], references: [id], onDelete: Restrict)
+  certificationAuthorityId                      String?                                         @map("certification_authority_id") @db.Uuid
 
   @@index([organismId])
   @@index([candidateId])
@@ -1147,6 +1149,7 @@ model CertificationAuthority {
   Jury                                                    Jury[]
   showLocalAccountsContactInfo                            Boolean                                                   @default(true) @map("show_local_accounts_contact_info")
   certificationAuthorityOnCertificationAuthorityStructure CertificationAuthorityOnCertificationAuthorityStructure[]
+  candidacies                                             Candidacy[]
 
   @@map("certification_authority")
 }
