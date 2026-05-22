@@ -181,7 +181,10 @@ const buildCandidateDataFromFCClaims = async ({
   const { firstname, firstname2, firstname3 } = splitGivenName(
     userInfo.given_name ?? "",
   );
-  const country = await getCountry(userInfo.birthcountry);
+
+  const birthCountryINSEECode = fixCountryINSEECode(userInfo.birthcountry);
+
+  const country = await getCountry(birthCountryINSEECode);
   let birthDepartmentId: string | null = null;
   let birthCity: string | null = null;
 
@@ -430,4 +433,21 @@ const getCountry = async (
     });
   }
   return country;
+};
+
+//Mèthode permettant de corriger les codes pays INSEE reçus qui ne correspondent pas à un pays existant.
+//Par exemple le cas de l'Algérie Française avant 1962
+//cf https://grives.sante-paca.fr/wp-content/uploads/2021/12/FP-04-CAT-Discordances-INS-et-identite%CC%81-pie%CC%80ce-identite%CC%81-V1.4.pdf pour plus d'éxemples
+const fixCountryINSEECode = (countryCode?: string): string | undefined => {
+  switch (countryCode) {
+    //Cas de l'Algérie Française avant 1962
+    //Au lieu du code pays on peut voir un code commune correspondant à Alger, Oran, Constantine ou Territoire du sud
+    case "91352":
+    case "92352":
+    case "93352":
+    case "94352":
+      return "99352";
+    default:
+      return countryCode;
+  }
 };
