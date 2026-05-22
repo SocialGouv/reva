@@ -16,9 +16,7 @@ export const NotAuthorized = () => {
       </p>
       <p className="text-sm leading-6 mb-0">
         Il semble que votre compte n’ait pas les autorisations requises pour
-        accéder à ce contenu. Si vous pensez qu’il s’agit d’une erreur ou que
-        vous avez besoin d’un accès, vous pouvez contacter le support FVAE à{" "}
-        <a href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</a>
+        accéder à ce contenu.
       </p>
     </EmptyState>
   );
