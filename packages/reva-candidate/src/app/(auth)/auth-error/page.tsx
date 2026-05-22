@@ -29,12 +29,15 @@ export default function AuthError() {
   if (isReconciliationError) {
     return (
       <StatusPage
-        title="Problème lors de la connexion"
+        title="Erreur d'authentification"
         chapo={
           <>
             <p className="text-xl leading-8 mb-6">
-              Une ou plusieurs des informations suivantes ne correspond(ent) pas
-              au compte existant avec la même adresse électronique :
+              Un compte existe déjà avec la même adresse électronique.
+              <br />
+              Cependant, une ou plusieurs des informations suivantes ne
+              correspond(ent) pas entre le compte existant et votre identité
+              FranceConnect :
             </p>
             <ul className="text-xl leading-8 list-disc mb-6 pl-8">
               <li>Nom de naissance</li>
@@ -48,22 +51,37 @@ export default function AuthError() {
           </>
         }
         details={
-          <p className="text-sm leading-6 mb-0">
-            Le problème persiste alors que vos informations sont identiques
-            entre vos comptes FranceConnect et France VAE ?{" "}
-            <Link
-              className="fr-link"
-              href="https://vae.gouv.fr/nous-contacter/"
-              target="_blank"
-            >
-              Contactez le support
-            </Link>{" "}
-            afin de comprendre d&apos;où peut venir le problème.
-          </p>
+          <>
+            <p className="text-sm leading-6">
+              <strong>
+                Vous rencontrez des problèmes pour vous connecter ?
+              </strong>{" "}
+              Consultez le{" "}
+              <Link
+                className="fr-link"
+                href="https://scribehow.com/viewer/Parcours_du_candidat_accompagne__vp9k4YzATvmheao9kAoKjw"
+                target="_blank"
+              >
+                guide pas à pas
+              </Link>{" "}
+            </p>
+            <p className="text-sm leading-6 mb-0">
+              Le problème persiste alors que vos informations sont identiques
+              entre vos comptes FranceConnect et France VAE ?{" "}
+              <Link
+                className="fr-link"
+                href="https://vae.gouv.fr/nous-contacter/"
+                target="_blank"
+              >
+                Contactez le support
+              </Link>{" "}
+              afin de comprendre d&apos;où peut venir le problème.
+            </p>
+          </>
         }
         actionLink={{
           href: "/login",
-          label: "Se connecter",
+          label: "Revenir à la page d'acceuil",
           priority: "primary",
         }}
         pictogram={PICTOGRAMS.errorLG}
@@ -80,7 +98,7 @@ export default function AuthError() {
       chapo={displayMessage}
       actionLink={{
         href: "/login",
-        label: "Se connecter",
+        label: "Revenir à la page d'acceuil",
         priority: "primary",
       }}
       pictogram={PICTOGRAMS.errorLG}
