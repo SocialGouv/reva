@@ -8,6 +8,7 @@ import { useEffect } from "react";
 
 import { CandidacySummaryBottomButtons } from "@/app/(private)/(aap)/candidacies/[candidacyId]/summary/_components/CandidacySummaryBottomButtons";
 import { CandidateExperiencesSectionCard } from "@/app/(private)/(aap)/candidacies/[candidacyId]/summary/_components/CandidateExperiencesSectionCard";
+import { CertificationAuthoritySummaryCard } from "@/app/(private)/(aap)/candidacies/[candidacyId]/summary/_components/CertificationAuthoritySummaryCard";
 import { useTakeOverCandidacy } from "@/app/(private)/(aap)/candidacies/[candidacyId]/summary/_components/takeOverCondidacy";
 import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
@@ -214,55 +215,18 @@ const CandidacySummaryPage = () => {
                 )}
               </EnhancedSectionCard>
             )}
-            <EnhancedSectionCard
-              title="Certificateur"
-              {...(canViewCertificationAuthorityProfile && {
-                customButtonTitle: "Voir son profil",
-                isEditable: true,
-                buttonOnClickHref: `/certification-authority-structures/${certificationAuthorityStructure.id}/certificateurs-administrateurs/${candidacy.feasibility?.certificationAuthority?.id}/`,
-              })}
-            >
-              <div className="ml-10 mr-6">
-                <p className="text-xl font-bold mb-0 leading-loose">
-                  {candidacy.feasibility?.certificationAuthority?.label}
-                </p>
-                <div>
-                  {candidacy.certificationAuthorityLocalAccounts &&
-                  candidacy.certificationAuthorityLocalAccounts.length > 0 ? (
-                    candidacy.certificationAuthorityLocalAccounts.map(
-                      (account, i) => (
-                        <p
-                          key={i}
-                          className="mb-4 [&:not(:last-child)]:border-b-2 [&:not(:last-child)]:pb-4"
-                          data-testid={`certification-authority-local-account-${i}`}
-                        >
-                          {account?.contactFullName} <br />
-                          {account?.contactEmail} <br />
-                          {account?.contactPhone}
-                        </p>
-                      ),
-                    )
-                  ) : (
-                    <p>
-                      {
-                        candidacy.feasibility?.certificationAuthority
-                          ?.contactFullName
-                      }
-                      <br />
-                      {
-                        candidacy.feasibility?.certificationAuthority
-                          ?.contactEmail
-                      }
-                      <br />
-                      {
-                        candidacy.feasibility?.certificationAuthority
-                          ?.contactPhone
-                      }
-                    </p>
-                  )}
-                </div>
-              </div>
-            </EnhancedSectionCard>
+            <CertificationAuthoritySummaryCard
+              label={candidacy.feasibility?.certificationAuthority?.label}
+              localAccounts={(
+                candidacy.certificationAuthorityLocalAccounts ?? []
+              ).filter((a) => a !== null)}
+              defaultContact={candidacy.feasibility?.certificationAuthority}
+              profileHref={
+                canViewCertificationAuthorityProfile
+                  ? `/certification-authority-structures/${certificationAuthorityStructure.id}/certificateurs-administrateurs/${candidacy.feasibility?.certificationAuthority?.id}/`
+                  : undefined
+              }
+            />
 
             <GrayCard>
               <span className="text-2xl font-bold mb-5">Ses objectifs</span>
