@@ -208,11 +208,15 @@ const unsafeResolvers = {
       acceptedAt: cguAcceptedAt,
       isLatestVersion: (await getLastProfessionalCgu())?.version == cguVersion,
     }),
-    metabaseDashboardIframeUrl: async ({
-      id: maisonMereAAPId,
-    }: {
-      id: string;
-    }) => getMetabaseIframeUrl(maisonMereAAPId),
+    metabaseDashboardIframeUrl: async (
+      {
+        id: maisonMereAAPId,
+      }: {
+        id: string;
+      },
+      _params: unknown,
+      context: GraphqlContext,
+    ) => getMetabaseIframeUrl(maisonMereAAPId, context.auth.userInfo?.sub),
   },
   MaisonMereAAPLegalInformationDocuments: {
     attestationURSSAFFile: async (
