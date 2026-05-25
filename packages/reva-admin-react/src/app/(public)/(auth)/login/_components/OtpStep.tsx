@@ -29,6 +29,14 @@ export const OtpStep = ({
       }}
       label="Code de vérification"
     />
+    {/* Bouton de validation avant "Retour" : doit être le 1er submit du form
+        pour que Entrée dans le champ TOTP valide le code et non l'annule. */}
+    <Button
+      className="w-full justify-center self-end mt-auto"
+      disabled={pending}
+    >
+      Valider le code
+    </Button>
     <Button
       className="mr-auto"
       priority="tertiary no outline"

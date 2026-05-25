@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import Form from "next/form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useActionState, useEffect, useRef } from "react";
@@ -55,6 +54,7 @@ export default function LoginPage() {
               <CredentialsStep
                 defaultEmail={state.email ?? ""}
                 passwordError={state.errors?.password?.message}
+                pending={pending}
               />
             )}
 
@@ -63,13 +63,6 @@ export default function LoginPage() {
               name="redirectAfterAuthUrl"
               value={redirectAfterAuthUrl}
             />
-
-            <Button
-              className="w-full justify-center self-end mt-auto"
-              disabled={pending}
-            >
-              {isOtpStep ? "Valider le code" : "Se connecter"}
-            </Button>
           </Form>
         </div>
         <RegistrationLinks />

@@ -1,3 +1,4 @@
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import Link from "next/link";
 
@@ -6,9 +7,11 @@ import { PasswordInput } from "@/components/password-input/PasswordInput";
 export const CredentialsStep = ({
   defaultEmail,
   passwordError,
+  pending,
 }: {
   defaultEmail: string;
   passwordError?: string;
+  pending: boolean;
 }) => (
   <>
     <Input
@@ -33,5 +36,12 @@ export const CredentialsStep = ({
     <Link href="/forgot-password" className="fr-link mr-auto">
       Mot de passe oublié ?
     </Link>
+
+    <Button
+      className="w-full justify-center self-end mt-auto"
+      disabled={pending}
+    >
+      Se connecter
+    </Button>
   </>
 );

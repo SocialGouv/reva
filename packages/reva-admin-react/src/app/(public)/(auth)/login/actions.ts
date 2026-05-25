@@ -91,7 +91,7 @@ export const login = async (
   _state: FormState,
   formData: FormData,
 ): Promise<FormState> => {
-  const email = formData.get("email")?.toString() ?? "";
+  const email = formData.get("email")?.toString().trim() ?? "";
   const totp = formData.get("totp")?.toString().trim() || undefined;
   const intent = formData.get("intent")?.toString();
   const redirectAfterAuthUrl = formData.get("redirectAfterAuthUrl")?.toString();
