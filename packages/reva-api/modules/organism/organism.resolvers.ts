@@ -53,6 +53,7 @@ import { getOrganismCcnsByOrganismId } from "./features/getOrganismCcnsByOrganis
 import { getOrganismCertificationsByOrganismId } from "./features/getOrganismCertificationsByOrganismId";
 import { getOrganismFormacodesByOrganismId } from "./features/getOrganismFormacodesByOrganismId";
 import { getOrganismsByMaisonAAPId } from "./features/getOrganismsByMaisonAAPId";
+import { getPaginatedComptesCollaborateursByMaisonMereAAPId } from "./features/getPaginatedComptesCollaborateursByMaisonMereAAPId";
 import { getPaginatedOrganismsByMaisonMereAAPId } from "./features/getPaginatedOrganismsByMaisonMereAAPId";
 import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismId";
 import { isOrganismAttachedToCertifications } from "./features/isOrganismAttachedToCertifications";
@@ -177,6 +178,24 @@ const unsafeResolvers = {
     }) => getAccountById({ id: gestionnaireAccountId }),
     comptesCollaborateurs: ({ id: maisonMereAAPId }: { id: string }) =>
       getComptesCollaborateursByMaisonMereAAPId({ maisonMereAAPId }),
+    paginatedComptesCollaborateurs: (
+      { id: maisonMereAAPId }: { id: string },
+      {
+        offset,
+        limit,
+        searchFilter,
+      }: {
+        offset: number;
+        limit: number;
+        searchFilter?: string;
+      },
+    ) =>
+      getPaginatedComptesCollaborateursByMaisonMereAAPId({
+        maisonMereAAPId,
+        searchFilter,
+        offset,
+        limit,
+      }),
     legalInformationDocumentsDecisions: (
       { id }: { id: string },
       {
