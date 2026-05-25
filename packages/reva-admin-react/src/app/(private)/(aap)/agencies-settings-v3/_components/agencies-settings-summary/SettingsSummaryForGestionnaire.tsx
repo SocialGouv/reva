@@ -36,6 +36,7 @@ export const SettingsSummaryForGestionnaire = ({
   gestionnaireAccountId,
   isAdmin,
   comptesCollaborateurs,
+  isAppAccountListingPageFeatureActive,
 }: {
   maisonMereAAP: MaisonMereAap;
   organism: Organism;
@@ -45,6 +46,7 @@ export const SettingsSummaryForGestionnaire = ({
     Account,
     "id" | "email" | "firstname" | "lastname" | "disabledAt"
   >[];
+  isAppAccountListingPageFeatureActive: boolean;
 }) => {
   if (!maisonMereAAP) {
     return null;
@@ -118,38 +120,56 @@ export const SettingsSummaryForGestionnaire = ({
         maisonMereAAPId={maisonMereAAP.id}
         isEditable={!isAdmin}
       />
-      <EnhancedSectionCard
-        data-testid="user-accounts"
-        title="Comptes collaborateurs"
-        isEditable={!isAdmin}
-        disabled={!isGeneralInformationCompleted}
-        buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAP.id}/user-accounts/add-user-account`}
-        titleIconClass="fr-icon-team-fill"
-        CustomBadge={<div />}
-        status={hasOtherAccounts ? "COMPLETED" : "TO_COMPLETE"}
-        customButtonTitle={"Créer un compte"}
-      >
-        {hasOtherAccounts ? (
-          <GestionnaireMaisonMereAAPSettingsSectionAccountList
-            gestionnaireAccountId={gestionnaireAccountId}
-            maisonMereAAPId={maisonMereAAP.id}
-            isAdmin={isAdmin}
-            comptesCollaborateurs={comptesCollaborateurs}
-          />
-        ) : (
+      {isAppAccountListingPageFeatureActive ? (
+        <EnhancedSectionCard
+          data-testid="user-accounts"
+          title="Comptes collaborateurs"
+          isEditable={!isAdmin}
+          disabled={!isGeneralInformationCompleted}
+          titleIconClass="fr-icon-team-fill"
+          customButtonTitle={"Modifier"}
+          buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAP.id}/user-accounts/list`}
+        >
           <p className="ml-10 md:w-4/5">
-            Vous avez besoin de collaborer à plusieurs sur la plateforme ? Créez
-            des comptes collaborateurs pour que vos collaborateurs puissent
-            avoir accès à leurs candidatures.
+            Vous avez besoin de collaborer à plusieurs sur la plateforme ?
+            Donnez à vos collaborateurs l’accès aux candidatures, sur un ou
+            plusieurs lieux (distanciel et/ou présentiel).
           </p>
-        )}
-        {!isGeneralInformationCompleted && (
-          <SmallNotice>
-            Vous pourrez ajouter des comptes collaborateurs une fois que vous
-            aurez complété les paramètres précédents.
-          </SmallNotice>
-        )}
-      </EnhancedSectionCard>
+        </EnhancedSectionCard>
+      ) : (
+        <EnhancedSectionCard
+          data-testid="user-accounts"
+          title="Comptes collaborateurs"
+          isEditable={!isAdmin}
+          disabled={!isGeneralInformationCompleted}
+          buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAP.id}/user-accounts/add-user-account`}
+          titleIconClass="fr-icon-team-fill"
+          CustomBadge={<div />}
+          status={hasOtherAccounts ? "COMPLETED" : "TO_COMPLETE"}
+          customButtonTitle={"Créer un compte"}
+        >
+          {hasOtherAccounts ? (
+            <GestionnaireMaisonMereAAPSettingsSectionAccountList
+              gestionnaireAccountId={gestionnaireAccountId}
+              maisonMereAAPId={maisonMereAAP.id}
+              isAdmin={isAdmin}
+              comptesCollaborateurs={comptesCollaborateurs}
+            />
+          ) : (
+            <p className="ml-10 md:w-4/5">
+              Vous avez besoin de collaborer à plusieurs sur la plateforme ?
+              Créez des comptes collaborateurs pour que vos collaborateurs
+              puissent avoir accès à leurs candidatures.
+            </p>
+          )}
+          {!isGeneralInformationCompleted && (
+            <SmallNotice>
+              Vous pourrez ajouter des comptes collaborateurs une fois que vous
+              aurez complété les paramètres précédents.
+            </SmallNotice>
+          )}
+        </EnhancedSectionCard>
+      )}
     </div>
   );
 };

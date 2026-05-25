@@ -5,6 +5,7 @@ import { useEffect } from "react";
 
 import { SettingsSummaryForGestionnaire } from "@/app/(private)/(aap)/agencies-settings-v3/_components/agencies-settings-summary/SettingsSummaryForGestionnaire";
 import { useAuth } from "@/components/auth/auth";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 import { MaisonMereAap, Organism } from "@/graphql/generated/graphql";
 
@@ -54,6 +55,12 @@ const SettingsSummaryForGestionnaireSection = ({
     gestionnaireAccountId,
   } = useGestionnaireMaisonMereAAPSettings();
 
+  const { isFeatureActive } = useFeatureflipping();
+
+  const isAppAccountListingPageFeatureActive = isFeatureActive(
+    "AAP_ACCOUNTS_LISTING_PAGE",
+  );
+
   if (!maisonMereAAP || !comptesCollaborateurs || !organism) {
     return null;
   }
@@ -65,6 +72,9 @@ const SettingsSummaryForGestionnaireSection = ({
       gestionnaireAccountId={gestionnaireAccountId as string}
       isAdmin={isAdmin}
       comptesCollaborateurs={comptesCollaborateurs}
+      isAppAccountListingPageFeatureActive={
+        isAppAccountListingPageFeatureActive
+      }
     />
   );
 };
