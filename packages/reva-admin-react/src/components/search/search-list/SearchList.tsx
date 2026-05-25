@@ -5,6 +5,8 @@ import { Pagination } from "@/components/pagination/Pagination";
 import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
 import { SearchResultsHeader } from "@/components/search-results-header/SearchResultsHeader";
 
+import { SearchListEmptyState } from "./SearchListEmptyState";
+
 type SearchResultsPage<T> = {
   info: { totalRows: number; totalPages: number; currentPage: number };
   rows: T[];
@@ -71,6 +73,13 @@ export const SearchList = <T,>({
     [pathname, router, searchParams],
   );
 
+  const resetAllFilters = useCallback(() => {
+    const queryParams = new URLSearchParams(searchParams);
+    queryParams.delete("search");
+    queryParams.set("page", "1");
+    router.push(`${pathname}?${queryParams.toString()}`);
+  }, [pathname, router, searchParams]);
+
   return (
     <div className="flex flex-col">
       {title && (
@@ -89,20 +98,31 @@ export const SearchList = <T,>({
 
       {FilterBar && FilterBar}
 
-      <SearchResultsHeader
-        className="mb-2 mt-8"
-        defaultSearchFilter={searchFilter}
-        onSearchFilterChange={onSearchFilterChange}
-        resultCount={searchResultsPage.info.totalRows}
-        addButton={addButton}
-      />
+      {searchResultsPage.info.totalRows === 0 ? (
+        <SearchListEmptyState
+          title="Aucun résultat trouvé"
+          description="Aucun résultat trouvé"
+          showAllItemsButtonLabel="Afficher tous les éléments"
+          onShowAllItemsButtonClick={resetAllFilters}
+        />
+      ) : (
+        <>
+          <SearchResultsHeader
+            className="mb-2 mt-8"
+            defaultSearchFilter={searchFilter}
+            onSearchFilterChange={onSearchFilterChange}
+            resultCount={searchResultsPage.info.totalRows}
+            addButton={addButton}
+          />
 
-      <ul
-        data-testid="results"
-        className={`flex flex-col gap-5 my-0 pl-0 ${childrenContainerClassName}`}
-      >
-        {searchResultsPage.rows.map((r) => children?.(r))}
-      </ul>
+          <ul
+            data-testid="results"
+            className={`flex flex-col gap-5 my-0 pl-0 ${childrenContainerClassName}`}
+          >
+            {searchResultsPage.rows.map((r) => children?.(r))}
+          </ul>
+        </>
+      )}
 
       <br />
 
