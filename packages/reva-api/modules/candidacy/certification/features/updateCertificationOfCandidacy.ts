@@ -14,6 +14,7 @@ import { updateCandidacyOrganism } from "../../features/updateCandidacyOrganism"
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 import { resetTrainingInformation } from "../../training/features/resetTrainingInformation";
 
+import { refreshCertificationAuthorityOfCandidacy } from "./refreshCertificationAuthorityOfCandidacy";
 import { updateCertification } from "./updateCertification";
 
 export const updateCertificationOfCandidacy = async ({
@@ -104,6 +105,10 @@ export const updateCertificationOfCandidacy = async ({
       data: {
         firstAppointmentOccuredAt: null,
       },
+    });
+
+    await refreshCertificationAuthorityOfCandidacy({
+      candidacyId,
     });
 
     await logCandidacyAuditEvent({

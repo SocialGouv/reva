@@ -11,6 +11,7 @@ import { prismaClient } from "@/prisma/client";
 
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 
+import { refreshCertificationAuthorityOfCandidacy } from "./refreshCertificationAuthorityOfCandidacy";
 import { updateCertification } from "./updateCertification";
 
 export const updateCertificationWithinOrganismScope = async ({
@@ -124,6 +125,10 @@ export const updateCertificationWithinOrganismScope = async ({
       candidacy.typeAccompagnement === "ACCOMPAGNE"
         ? newCertification?.feasibilityFormat
         : "UPLOADED_PDF",
+  });
+
+  await refreshCertificationAuthorityOfCandidacy({
+    candidacyId,
   });
 
   await logCandidacyAuditEvent({

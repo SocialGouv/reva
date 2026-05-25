@@ -9,6 +9,7 @@ import { prismaClient } from "@/prisma/client";
 import { TRAINING_INPUT } from "@/test/fixtures/trainings.fixture";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
@@ -402,4 +403,32 @@ test("should reset the status, keeping the training, after certification update"
     additionalHourCount: TRAINING_INPUT.additionalHourCount,
     isCertificationPartial: TRAINING_INPUT.isCertificationPartial,
   });
+});
+
+test("should refresh certificationAuthorityId after organism updates certification", async () => {
+  const { candidacy, organism } =
+    await createCandidacyWithSocialCertificationAndOrganism({
+      statut: CandidacyStatusStep.PRISE_EN_CHARGE,
+    });
+
+  const newCertification = await createCertificationSocial();
+  const ca = await createCertificationAuthorityHelper({
+    certificationAuthorityOnCertification: {
+      create: { certificationId: newCertification.id },
+    },
+    certificationAuthorityOnDepartment: {
+      create: { departmentId: candidacy.candidate!.departmentId },
+    },
+  });
+
+  await updateCertificationWithinScope({
+    certification: newCertification,
+    candidacy,
+    organism,
+  });
+
+  const updated = await prismaClient.candidacy.findUnique({
+    where: { id: candidacy.id },
+  });
+  expect(updated?.certificationAuthorityId).toEqual(ca.id);
 });

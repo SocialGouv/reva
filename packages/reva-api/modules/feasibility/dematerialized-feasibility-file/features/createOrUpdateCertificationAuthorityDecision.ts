@@ -1,6 +1,7 @@
 import { FeasibilityDecision, FeasibilityStatus } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 
+import { refreshCertificationAuthorityOfCandidacy } from "@/modules/candidacy/certification/features/refreshCertificationAuthorityOfCandidacy";
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
@@ -246,6 +247,12 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
 
     if (decision === "ADMISSIBLE" || decision === "REJECTED") {
       await deleteFeasibilityIDFile(feasibility.id);
+    }
+
+    if (decision === "INCOMPLETE") {
+      await refreshCertificationAuthorityOfCandidacy({
+        candidacyId: feasibility.candidacyId,
+      });
     }
 
     sendFeasibilityDecisionTakenEmail({

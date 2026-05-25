@@ -16,6 +16,8 @@ import { prismaClient } from "@/prisma/client";
 import { Account } from "../account/account.types";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
+import { refreshCertificationAuthorityOfCandidacy } from "../candidacy/certification/features/refreshCertificationAuthorityOfCandidacy";
+import { updateCertificationAuthorityOfCandidacy } from "../candidacy/certification/features/updateCertificationAuthorityOfCandidacy";
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
 import { updateCandidacyFinanceModule } from "../candidacy/features/updateCandidacyFinanceModule";
 import { updateCandidacyStatus } from "../candidacy/features/updateCandidacyStatus";
@@ -340,6 +342,12 @@ export const createFeasibility = async ({
       },
     });
   }
+
+  //update the certification authority of the candidacy
+  await updateCertificationAuthorityOfCandidacy({
+    candidacyId,
+    certificationAuthorityId,
+  });
 
   // sending a mail notification to candidacy certification authority and related certification authority local accounts
 
@@ -997,6 +1005,10 @@ const rejectFeasibility = async ({
     await updateCandidacyStatus({
       candidacyId: feasibility.candidacyId,
       status: "DOSSIER_FAISABILITE_NON_RECEVABLE",
+    });
+
+    await refreshCertificationAuthorityOfCandidacy({
+      candidacyId: feasibility.candidacyId,
     });
 
     const isAutonome =

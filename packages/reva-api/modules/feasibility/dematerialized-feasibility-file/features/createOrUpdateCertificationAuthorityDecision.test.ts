@@ -4,6 +4,7 @@ import { graphql } from "@/modules/graphql/generated";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
@@ -239,5 +240,72 @@ describe("Décision INCOMPLETE sur le dossier de faisabilité dématérialisé",
         result.dematerialized_feasibility_file_sendToCertificationAuthority,
       ).toBe("Ok");
     });
+  });
+});
+
+describe("INCOMPLETE decision resets certificationAuthorityId", () => {
+  test("should refresh certificationAuthorityId to null after INCOMPLETE decision when no single CA matches", async () => {
+    const candidacy = await createCandidacyHelper({
+      candidacyActiveStatus: "DOSSIER_FAISABILITE_ENVOYE",
+      candidacyArgs: { status: "DOSSIER_FAISABILITE_ENVOYE" },
+    });
+    const certificationAuthorityId = getCertificationAuthorityId(candidacy)!;
+
+    const feasibility = await createFeasibilityDematerializedHelper({
+      candidacyId: candidacy.id,
+      decision: "PENDING",
+      feasibilityFileSentAt: new Date(),
+      certificationAuthorityId,
+    });
+
+    await prismaClient.dematerializedFeasibilityFile.update({
+      where: { id: feasibility.dematerializedFeasibilityFile!.id },
+      data: {
+        sentToCandidateAt: new Date("2025-01-01"),
+        candidateConfirmationAt: new Date("2025-01-02"),
+        swornStatementFileId: (
+          await prismaClient.file.create({
+            data: {
+              id: uuidV4(),
+              name: "sworn-statement.pdf",
+              mimeType: "application/pdf",
+              path: `candidacies/${candidacy.id}/dff_files/sworn-statement.pdf`,
+            },
+          })
+        ).id,
+      },
+    });
+
+    // Pre-set a CA on the candidacy to verify it gets cleared
+    const someCA = await createCertificationAuthorityHelper();
+    await prismaClient.candidacy.update({
+      where: { id: candidacy.id },
+      data: { certificationAuthorityId: someCA.id },
+    });
+
+    const certKeycloakId = getCertificationAuthorityKeycloakId(candidacy);
+    const client = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "manage_feasibility",
+          keycloakId: certKeycloakId!,
+        }),
+      },
+    });
+
+    await client.request(createOrUpdateCertificationAuthorityDecisionMutation, {
+      candidacyId: candidacy.id,
+      input: {
+        decision: "INCOMPLETE",
+        decisionComment: "Documents manquants",
+      },
+    });
+
+    const updated = await prismaClient.candidacy.findUnique({
+      where: { id: candidacy.id },
+    });
+    // No CA has both the certification AND the candidate's department linked,
+    // so the refresh should set certificationAuthorityId to null
+    expect(updated?.certificationAuthorityId).toBeNull();
   });
 });

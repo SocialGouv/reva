@@ -6,6 +6,7 @@ import { prismaClient } from "@/prisma/client";
 import { TRAINING_INPUT } from "@/test/fixtures/trainings.fixture";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 
@@ -233,4 +234,41 @@ test("should allow admin to update certification when status is DOSSIER_FAISABIL
   });
 
   expect(candidacyUpdated?.certificationId).toEqual(certification.id);
+});
+
+test("should refresh certificationAuthorityId after candidate updates certification", async () => {
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
+  });
+  const newCertification = await createCertificationHelper();
+  const ca = await createCertificationAuthorityHelper({
+    certificationAuthorityOnCertification: {
+      create: { certificationId: newCertification.id },
+    },
+    certificationAuthorityOnDepartment: {
+      create: { departmentId: candidacy.candidate!.departmentId },
+    },
+  });
+
+  await injectGraphql({
+    fastify: global.testApp,
+    authorization: authorizationHeaderForUser({
+      role: "candidate",
+      keycloakId: candidacy.candidate?.keycloakId ?? "",
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "candidacy_certification_updateCertification",
+      arguments: {
+        candidacyId: candidacy.id,
+        certificationId: newCertification.id,
+      },
+      returnFields: "",
+    },
+  });
+
+  const updated = await prismaClient.candidacy.findUnique({
+    where: { id: candidacy.id },
+  });
+  expect(updated?.certificationAuthorityId).toEqual(ca.id);
 });

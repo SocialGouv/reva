@@ -1,4 +1,5 @@
 import { getAccountById } from "@/modules/account/features/getAccount";
+import { updateCertificationAuthorityOfCandidacy } from "@/modules/candidacy/certification/features/updateCertificationAuthorityOfCandidacy";
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "@/modules/certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
@@ -118,6 +119,12 @@ export const sendDFFToCertificationAuthority = async ({
   } catch (error) {
     console.error(error);
   }
+
+  //update the certification authority of the candidacy
+  await updateCertificationAuthorityOfCandidacy({
+    candidacyId,
+    certificationAuthorityId,
+  });
 
   // sending a mail notification to candidacy certification authority and related certification authority local accounts
 
