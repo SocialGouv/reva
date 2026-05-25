@@ -193,6 +193,7 @@ type CandidacyCertificationAuthorityLocalAccount {
 
 type Candidacy {
   certificationAuthorityLocalAccounts: [CandidacyCertificationAuthorityLocalAccount]
+  certificationAuthority: CertificationAuthority
 }
 
 type Query {

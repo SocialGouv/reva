@@ -36,6 +36,7 @@ import { getCertificationAuthoritiesByCertificationId } from "./features/getCert
 import { getCertificationAuthoritiesByStructureId } from "./features/getCertificationAuthoritiesByStructureId";
 import { getCertificationAuthoritiesToTransferCandidacy } from "./features/getCertificationAuthoritiesToTransferCandidacy";
 import { getCertificationAuthorityById } from "./features/getCertificationAuthority";
+import { getCertificationAuthorityByCandidacyId } from "./features/getCertificationAuthorityByCandidacyId";
 import { getCertificationAuthorityLocalAccountByAccountId } from "./features/getCertificationAuthorityLocalAccountByAccountId";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityId } from "./features/getCertificationAuthorityLocalAccountByCertificationAuthorityId";
 import { getCertificationAuthorityLocalAccountById } from "./features/getCertificationAuthorityLocalAccountById";
@@ -83,6 +84,8 @@ const unsafeResolvers = {
   Candidacy: {
     certificationAuthorityLocalAccounts: ({ id: candidacyId }: Candidacy) =>
       getCandidacyCertificationAuthorityLocalAccounts({ candidacyId }),
+    certificationAuthority: ({ id: candidacyId }: Candidacy) =>
+      getCertificationAuthorityByCandidacyId({ candidacyId }),
   },
   CertificationAuthority: {
     departments: (parent: CertificationAuthority) =>
