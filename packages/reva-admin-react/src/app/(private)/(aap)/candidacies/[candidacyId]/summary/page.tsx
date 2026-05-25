@@ -13,11 +13,13 @@ import { useTakeOverCandidacy } from "@/app/(private)/(aap)/candidacies/[candida
 import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Impersonate } from "@/components/impersonate/Impersonate.component";
 import { formatIso8601Date } from "@/utils/formatIso8601Date";
 
 import { CertificationCard } from "../_components/CertificationCard";
 
+import { CertificationAuthoritySummaryCardV2 } from "./_components/CertificationAuthoritySummaryCardV2";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
 
@@ -32,6 +34,12 @@ const CandidacySummaryPage = () => {
   const { takeOverCandidacy } = useTakeOverCandidacy();
 
   const { isAdmin } = useAuth();
+
+  const { isFeatureActive } = useFeatureflipping();
+
+  const isNewCertificationAuthorityCardFeatureActive = isFeatureActive(
+    "NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD",
+  );
 
   //mark the candidacy as "taken over" when the AAP opens it
   useEffect(() => {
@@ -215,18 +223,24 @@ const CandidacySummaryPage = () => {
                 )}
               </EnhancedSectionCard>
             )}
-            <CertificationAuthoritySummaryCard
-              label={candidacy.feasibility?.certificationAuthority?.label}
-              localAccounts={(
-                candidacy.certificationAuthorityLocalAccounts ?? []
-              ).filter((a) => a !== null)}
-              defaultContact={candidacy.feasibility?.certificationAuthority}
-              profileHref={
-                canViewCertificationAuthorityProfile
-                  ? `/certification-authority-structures/${certificationAuthorityStructure.id}/certificateurs-administrateurs/${candidacy.feasibility?.certificationAuthority?.id}/`
-                  : undefined
-              }
-            />
+            {isNewCertificationAuthorityCardFeatureActive ? (
+              <CertificationAuthoritySummaryCardV2
+                label={candidacy.certificationAuthority?.label}
+              />
+            ) : (
+              <CertificationAuthoritySummaryCard
+                label={candidacy.feasibility?.certificationAuthority?.label}
+                localAccounts={(
+                  candidacy.certificationAuthorityLocalAccounts ?? []
+                ).filter((a) => a !== null)}
+                defaultContact={candidacy.feasibility?.certificationAuthority}
+                profileHref={
+                  canViewCertificationAuthorityProfile
+                    ? `/certification-authority-structures/${certificationAuthorityStructure.id}/certificateurs-administrateurs/${candidacy.feasibility?.certificationAuthority?.id}/`
+                    : undefined
+                }
+              />
+            )}
 
             <GrayCard>
               <span className="text-2xl font-bold mb-5">Ses objectifs</span>

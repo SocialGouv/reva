@@ -113,6 +113,10 @@ const getCandidacyById = graphql(`
         feasibilityFileSentAt
         decision
       }
+      certificationAuthority {
+        id
+        label
+      }
     }
   }
 `);
