@@ -9,6 +9,17 @@ import { login } from "../shared/utils/auth/login";
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
+const successAccount = {
+  commanditaireVaeCollective: {
+    id: "115c2693-b625-491b-8b91-c7b3875d86a0",
+  },
+};
+const successTokens = {
+  accessToken: "accessToken",
+  refreshToken: "refreshToken",
+  idToken: "idToken",
+};
+
 test.describe("Login", () => {
   test.use({
     mswHandlers: [
@@ -17,16 +28,10 @@ test.describe("Login", () => {
           return HttpResponse.json({
             data: {
               account_loginWithCredentials: {
-                tokens: {
-                  accessToken: "accessToken",
-                  refreshToken: "refreshToken",
-                  idToken: "idToken",
-                },
-                account: {
-                  commanditaireVaeCollective: {
-                    id: "115c2693-b625-491b-8b91-c7b3875d86a0",
-                  },
-                },
+                requiresOtp: false,
+                otpChallengeToken: null,
+                tokens: successTokens,
+                account: successAccount,
               },
             },
           });
@@ -72,5 +77,60 @@ test.describe("Login", () => {
     await page.getByRole("link", { name: "Mot de passe oublié ?" }).click();
 
     await expect(page).toHaveURL("/vae-collective/forgot-password");
+  });
+});
+
+test.describe("Login with OTP", () => {
+  test.use({
+    mswHandlers: [
+      [
+        fvae.mutation("Login", () => {
+          return HttpResponse.json({
+            data: {
+              account_loginWithCredentials: {
+                requiresOtp: true,
+                otpChallengeToken: "challenge-token",
+                tokens: null,
+                account: successAccount,
+              },
+            },
+          });
+        }),
+        fvae.mutation("VerifyOtpChallengeVaeCollective", () => {
+          return HttpResponse.json({
+            data: {
+              account_verifyOtpChallenge: {
+                tokens: successTokens,
+                account: successAccount,
+              },
+            },
+          });
+        }),
+      ],
+      { scope: "test" },
+    ],
+  });
+
+  test("it should show the OTP step and redirect to post-login after a valid code", async ({
+    page,
+  }) => {
+    await login({ page, role: "notConnected" });
+
+    await page.goto("/vae-collective/login");
+
+    await page.fill("input[name='email']", "test@test.com");
+    await page.fill("input[name='password']", "password");
+    await page.getByRole("button", { name: "Se connecter" }).click();
+
+    await expect(
+      page.getByRole("textbox", { name: "Code de vérification" }),
+    ).toBeVisible();
+
+    await page.fill("input[name='totp']", "123456");
+    await page.getByRole("button", { name: "Valider le code" }).click();
+
+    await expect(page).toHaveURL((url) =>
+      url.pathname.startsWith("/vae-collective/post-login"),
+    );
   });
 });
