@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 import { REST_API_URL } from "@/config/config";
 
@@ -24,20 +24,22 @@ const isSafeAdminRedirect = (next: string): boolean => {
   }
 };
 
-// Fetch server-to-server reva-api/account/establish-sso et forward les
-// Set-Cookie KEYCLOAK_IDENTITY raw au browser via headers.append. Atteint via
-// window.location.assign depuis le login form (hard nav obligatoire).
+// Location relatif obligatoire : NextResponse.redirect construirait l'URL
+// absolue depuis request.url qui contient le hostname interne du container
+// derrière reverse proxy
+const redirectResponse = (target: string): Response =>
+  new Response(null, { status: 302, headers: { Location: target } });
+
 // eslint-disable-next-line import/no-unused-modules
 export async function GET(request: NextRequest) {
   const nextParam = request.nextUrl.searchParams.get("next");
   const target =
     nextParam && isSafeAdminRedirect(nextParam) ? nextParam : DEFAULT_REDIRECT;
-  const redirectUrl = new URL(target, request.url);
 
   const cookieStore = await cookies();
   const postLoginCookie = cookieStore.get(POST_LOGIN_TOKENS_COOKIE);
   if (!postLoginCookie) {
-    return NextResponse.redirect(redirectUrl);
+    return redirectResponse(target);
   }
 
   try {
@@ -48,16 +50,15 @@ export async function GET(request: NextRequest) {
       redirect: "manual",
     });
 
-    const response = NextResponse.redirect(redirectUrl);
+    const response = redirectResponse(target);
     for (const raw of apiResponse.headers.getSetCookie()) {
       response.headers.append("set-cookie", raw);
     }
-    // Invalide le cookie pour empêcher tout re-trigger de l'impersonation
-    // pendant les 60s de TTL restantes.
+    // Invalide post_login_tokens pour bloquer un re-trigger d'impersonation.
     response.headers.append("set-cookie", CLEAR_TOKENS_COOKIE);
     return response;
   } catch (error) {
     console.error("establish-sso route handler: fetch reva-api failed", error);
-    return NextResponse.redirect(redirectUrl);
+    return redirectResponse(target);
   }
 }
