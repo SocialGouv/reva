@@ -147,3 +147,11 @@ export interface GetCandidaciesForCertificationAuthorityInput {
   certificationAuthorityId?: string;
   certificationAuthorityLocalAccountId?: string;
 }
+
+export interface GetCandidaciesForAAPInput {
+  offset?: number;
+  limit?: number;
+  searchFilter?: string;
+  sortByFilter?: CandidacySortByFilter;
+  candidacyStatuses?: CandidacyStatusStep[];
+}

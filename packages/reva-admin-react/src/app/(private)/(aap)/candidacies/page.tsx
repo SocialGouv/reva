@@ -2,11 +2,17 @@
 
 import Button from "@codegouvfr/react-dsfr/Button";
 import { toDate } from "date-fns";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  redirect,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { useEffect } from "react";
 
 import { useAuth } from "@/components/auth/auth";
 import { CandidacyCard } from "@/components/card/candidacy-card/CandidacyCard";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { SearchList } from "@/components/search/search-list/SearchList";
 
 import {
@@ -20,6 +26,13 @@ import { CandidaciesLayout } from "./_components/CandidaciesLayout";
 import { SortByBar } from "./_components/SortByBar";
 
 export default function CandidaciesPage() {
+  const { isFeatureActive } = useFeatureflipping();
+  const isCandidaciesForAAPEnabled = isFeatureActive("CANDIDACIES_FOR_AAP");
+
+  if (isCandidaciesForAAPEnabled) {
+    redirect("/candidacies/candidacies-for-aap");
+  }
+
   const pathname = usePathname();
   const { replace } = useRouter();
 

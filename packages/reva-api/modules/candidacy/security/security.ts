@@ -28,6 +28,7 @@ export const resolversSecurityMap = {
   "Query.getCandidacies": isAdminOrManager,
   "Query.candidacy_getCandidaciesForCertificationAuthority":
     isAdminOrCertificationAuthority,
+  "Query.candidacy_getCandidaciesForAAP": isAdminOrManager,
 
   "Query.getCandidacyById": [canAccessCandidacy],
   "Query.candidacy_canAccessCandidacy": isAnyone,

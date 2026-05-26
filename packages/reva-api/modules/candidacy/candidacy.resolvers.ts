@@ -26,6 +26,7 @@ import {
   CandidacyBusinessEvent,
   CandidacyStatusFilter,
   CreateCandidacyInput,
+  GetCandidaciesForAAPInput,
   GetCandidaciesForCertificationAuthorityInput,
   SearchOrganismFilter,
 } from "./candidacy.types";
@@ -41,6 +42,7 @@ import { createCandidacy } from "./features/createCandidacy";
 import { deleteExperienceFromCandidacy } from "./features/deleteExperienceFromCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
 import { getCandidacies } from "./features/getCandicacies";
+import { getCandidaciesForAAP } from "./features/getCandidaciesForAAP";
 import { getCandidaciesForCertificationAuthority } from "./features/getCandidaciesForCertificationAuthority";
 import { getCandidacy } from "./features/getCandidacy";
 import { getCandidacyCandidateInfoByCandidacyId } from "./features/getCandidacyCandidateInfoByCandidacyId";
@@ -250,6 +252,25 @@ const unsafeResolvers = {
         cohorteVaeCollectiveId,
         certificationAuthorityId,
         certificationAuthorityLocalAccountId,
+      }),
+    candidacy_getCandidaciesForAAP: async (
+      _: unknown,
+      {
+        offset,
+        limit = 10,
+        searchFilter,
+        sortByFilter,
+        candidacyStatuses,
+      }: GetCandidaciesForAAPInput,
+      context: GraphqlContext,
+    ) =>
+      getCandidaciesForAAP({
+        context,
+        offset,
+        limit,
+        searchFilter,
+        sortByFilter,
+        candidacyStatuses,
       }),
   },
   Mutation: {

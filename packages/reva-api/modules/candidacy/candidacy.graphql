@@ -326,6 +326,13 @@ type Query {
     certificationAuthorityId: ID
     certificationAuthorityLocalAccountId: ID
   ): CandidacyPage!
+  candidacy_getCandidaciesForAAP(
+    offset: Int
+    limit: Int
+    searchFilter: String
+    sortByFilter: CandidacySortByFilter
+    candidacyStatuses: [CandidacyStatusStep!]
+  ): CandidacyPage!
 }
 
 # MUTATIONS

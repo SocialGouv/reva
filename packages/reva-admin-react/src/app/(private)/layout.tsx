@@ -12,7 +12,10 @@ import { Footer } from "@/components/footer/Footer";
 import { Header } from "@/components/header/Header";
 import { LayoutNotice } from "@/components/layout-notice/LayoutNotice";
 
-const WHITE_CARD_LAYOUT_EXCLUDED_PATHS = ["/candidacies/annuaire"] as const;
+const WHITE_CARD_LAYOUT_EXCLUDED_PATHS = [
+  "/candidacies/annuaire",
+  "/candidacies/candidacies-for-aap",
+] as const;
 
 export default function PrivateLayout({
   children,
