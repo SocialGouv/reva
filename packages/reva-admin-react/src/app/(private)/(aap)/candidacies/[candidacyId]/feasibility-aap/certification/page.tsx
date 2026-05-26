@@ -148,7 +148,7 @@ const CertificationPage = () => {
       </p>
       {candidacy && (
         <div className="mb-6">
-          <CertificationCard candidacy={candidacy} />
+          <CertificationCard candidacy={candidacy} disableUpdateCertification />
         </div>
       )}
       <a

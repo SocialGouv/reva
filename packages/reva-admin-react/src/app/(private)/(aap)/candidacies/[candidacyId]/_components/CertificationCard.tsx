@@ -7,6 +7,7 @@ import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 
 export const CertificationCard = ({
   candidacy,
+  disableUpdateCertification = false,
 }: {
   candidacy: {
     id: string;
@@ -18,6 +19,7 @@ export const CertificationCard = ({
     } | null;
     candidacyDropOut?: unknown;
   };
+  disableUpdateCertification?: boolean;
 }) => {
   const { isAdmin, isGestionnaireMaisonMereAAP, isOrganism } = useAuth();
 
@@ -44,7 +46,8 @@ export const CertificationCard = ({
       "DOSSIER_FAISABILITE_INCOMPLET",
     ].includes(candidacyActiveStatus) &&
     !candidacy.candidacyDropOut &&
-    !shouldBlockForNonAdmin;
+    !shouldBlockForNonAdmin &&
+    !disableUpdateCertification;
 
   return (
     <Card
@@ -61,15 +64,17 @@ export const CertificationCard = ({
         </div>
       }
       endDetail={
-        canUpdateCertification && (
+        canUpdateCertification ? (
           <span>
             Pour changer de certification, consultez la fiche détaillée de cette
             certification
           </span>
+        ) : (
+          <span>Consulter la fiche détaillée de cette certification</span>
         )
       }
       linkProps={{
-        href: `/certification-details/${certification.id}?candidacyId=${candidacy.id}`,
+        href: `/certification-details/${certification.id}${canUpdateCertification ? `?candidacyId=${candidacy.id}` : ""}`,
       }}
       enlargeLink
     />
