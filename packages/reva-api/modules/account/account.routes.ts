@@ -6,6 +6,7 @@ import {
 } from "@/modules/shared/config/config";
 import { logger } from "@/modules/shared/logger/logger";
 
+import { establishSsoSession } from "./features/establishSsoSession";
 import { getFranceConnectAuthorizeRedirectUrl } from "./features/france-connect-authorize";
 import {
   FranceConnectError,
@@ -13,6 +14,22 @@ import {
 } from "./features/france-connect.errors";
 import { handleFranceConnectCallback } from "./features/handleFranceConnectCallback";
 import { impersonate } from "./features/impersonate";
+
+const POST_LOGIN_TOKENS_COOKIE = "post_login_tokens";
+const DEFAULT_ESTABLISH_SSO_REDIRECT = "/admin2/post-login";
+
+// Anti-open-redirect : parse pour neutraliser ../, %2F, scheme absolu, etc.
+const isSafeAdminRedirect = (next: string): boolean => {
+  try {
+    const url = new URL(next, "http://placeholder.local");
+    return (
+      url.origin === "http://placeholder.local" &&
+      url.pathname.startsWith("/admin2/")
+    );
+  } catch {
+    return false;
+  }
+};
 
 const buildAuthErrorUrl = (error: unknown, state?: string): string => {
   const errorUrl = new URL(`${CANDIDATE_BASE_URL}/auth-error`);
@@ -100,6 +117,34 @@ export const accountRoute: FastifyPluginAsync = async (server) => {
       }
 
       return reply.status(401).send();
+    },
+  });
+
+  server.get<{ Querystring: { next?: string } }>("/account/establish-sso", {
+    schema: {
+      querystring: {
+        type: "object",
+        properties: {
+          next: { type: "string" },
+        },
+      },
+    },
+    handler: async (request, reply) => {
+      const next =
+        request.query.next && isSafeAdminRedirect(request.query.next)
+          ? request.query.next
+          : DEFAULT_ESTABLISH_SSO_REDIRECT;
+
+      const setCookies = await establishSsoSession({
+        postLoginTokensCookie: request.cookies?.[POST_LOGIN_TOKENS_COOKIE],
+      });
+
+      // reply.header("set-cookie", value) écrase ; pour multi-cookies passer un array.
+      if (setCookies.length > 0) {
+        reply.header("set-cookie", setCookies);
+      }
+
+      return reply.redirect(next);
     },
   });
 
