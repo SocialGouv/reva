@@ -272,7 +272,7 @@ const ReorientationPage = () => {
               },
             ]}
           >
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-6">
               <p>
                 Vous vous apprêtez à changer la certification du candidat.
                 Celui-ci sera effectif si vous enregistrez ce choix.
@@ -303,6 +303,14 @@ const ReorientationPage = () => {
                   />
                 </div>
               </div>
+              <p className="font-bold my-0">
+                Attention : Si vous aviez déjà ajouté des éléments dans le
+                dossier de faisabilité, vous les perdrez si vous confirmez le
+                changement de certification.
+              </p>
+              <p className="my-0">
+                Confirmez vous le changement de certification ?
+              </p>
             </div>
           </modal.Component>
         </>
