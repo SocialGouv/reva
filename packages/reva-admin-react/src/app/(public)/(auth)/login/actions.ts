@@ -1,7 +1,6 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 import { publicApiClient } from "@/helpers/graphql/public-api-client/publicApiClient";
 
@@ -20,6 +19,9 @@ type FormState = {
     password?: { message: string };
     totp?: { message: string };
   };
+  // Hard nav obligatoire : le client fait window.location.assign() ; un
+  // redirect() Server Action ferait du soft RSC qui n'atteint pas le handler.
+  redirectTo?: string;
 };
 
 const OTP_CHALLENGE_COOKIE = "otp_challenge";
@@ -59,7 +61,7 @@ const verifyOtpChallengeMutation = graphql(`
   }
 `);
 
-const buildPostLoginRedirectUrl = async (
+const buildEstablishSsoUrl = async (
   tokens: {
     accessToken: string;
     refreshToken: string;
@@ -79,12 +81,11 @@ const buildPostLoginRedirectUrl = async (
     maxAge: POST_LOGIN_TOKENS_COOKIE_MAX_AGE,
   });
 
-  if (redirectAfterAuthUrl) {
-    const params = new URLSearchParams();
-    params.set("redirectAfterAuthUrl", redirectAfterAuthUrl);
-    return `/post-login?${params.toString()}`;
-  }
-  return "/post-login";
+  const postLoginPath = redirectAfterAuthUrl
+    ? `/admin2/post-login?${new URLSearchParams({ redirectAfterAuthUrl }).toString()}`
+    : "/admin2/post-login";
+
+  return `/admin2/post-login/establish-sso?${new URLSearchParams({ next: postLoginPath }).toString()}`;
 };
 
 export const login = async (
@@ -156,7 +157,9 @@ export const login = async (
       path: OTP_CHALLENGE_COOKIE_PATH,
     });
 
-    redirect(await buildPostLoginRedirectUrl(tokens, redirectAfterAuthUrl));
+    return {
+      redirectTo: await buildEstablishSsoUrl(tokens, redirectAfterAuthUrl),
+    };
   }
 
   // Étape 1 : credentials.
@@ -217,7 +220,10 @@ export const login = async (
     };
   }
 
-  redirect(
-    await buildPostLoginRedirectUrl(payload.tokens, redirectAfterAuthUrl),
-  );
+  return {
+    redirectTo: await buildEstablishSsoUrl(
+      payload.tokens,
+      redirectAfterAuthUrl,
+    ),
+  };
 };

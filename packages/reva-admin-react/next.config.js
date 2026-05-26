@@ -1,8 +1,8 @@
 const path = require("path");
 
-/** @type {import('next').NextConfig} */
 const isTest = process.env.APP_ENV === "test";
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
   basePath: "/admin2",

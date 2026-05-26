@@ -33,6 +33,14 @@ export default function LoginPage() {
     }
   }, [authenticated, redirectAfterAuthUrl, router]);
 
+  // Hard nav obligatoire vers le Route Handler establish-sso : un redirect()
+  // Server Action ferait du soft RSC qui n'atteint pas le handler.
+  useEffect(() => {
+    if (state.redirectTo) {
+      window.location.assign(state.redirectTo);
+    }
+  }, [state.redirectTo]);
+
   // Evite le flash du formulaire avant que le useEffect ci-dessus ne navigue.
   if (authenticated) return null;
 
