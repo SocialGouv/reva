@@ -106,7 +106,7 @@ export const impersonateCandidate = async ({
   return undefined;
 };
 
-const impersonate = async (
+export const impersonate = async (
   keycloakId: string,
   realm: string,
 ): Promise<
@@ -136,6 +136,13 @@ const impersonate = async (
         },
       },
     );
+
+    if (!response.ok) {
+      logger.error(
+        `impersonate: Keycloak a répondu ${response.status} pour la cible ${keycloakId}`,
+      );
+      return undefined;
+    }
 
     const { redirect } = (await response.json()) as any;
 
