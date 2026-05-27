@@ -16,10 +16,7 @@
     "graphql:generate": "graphql-codegen --config codegen.ts",
     "graphql:watch": "graphql-codegen --config codegen.ts --watch",
     "test": "playwright test",
-    "test:ui": "playwright test --ui",
-    "cypress:open": "cypress open",
-    "cypress:ci": "cypress run",
-    "test:ci": "start-server-and-test 'PORT=3004 node .next/standalone/packages/reva-candidate/server.js' http://localhost:3004/candidat/ cypress:ci"
+    "test:ui": "playwright test --ui"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^1.23.4",
@@ -55,7 +52,6 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10",
-    "cypress": "^15.15.0",
     "dotenv": "^16.6.1",
     "eslint": "^9",
     "eslint-config-next": "^16.1.6",
@@ -66,7 +62,6 @@
     "postcss-url": "^10.1.3",
     "prettier": "^3.5.3",
     "sass": "^1.89.1",
-    "start-server-and-test": "^2.0.12",
     "tailwindcss": "^3.4.17",
     "type-fest": "^4.41.0",
     "typescript": "5.8.3"
