@@ -51,11 +51,18 @@ export async function GET(request: NextRequest) {
     });
 
     const response = redirectResponse(target);
-    for (const raw of apiResponse.headers.getSetCookie()) {
+    const setCookies = apiResponse.headers.getSetCookie();
+    for (const raw of setCookies) {
       response.headers.append("set-cookie", raw);
     }
-    // Invalide post_login_tokens pour bloquer un re-trigger d'impersonation.
-    response.headers.append("set-cookie", CLEAR_TOKENS_COOKIE);
+    // Clear post_login_tokens UNIQUEMENT si impersonation a posé un cookie :
+    // bloque le re-trigger pour les super-admins. Pour les autres rôles
+    // (manage_candidacy, manage_feasibility, ...) establishSsoSession retourne
+    // [] côté API, et /post-login a besoin du cookie survivant pour injecter
+    // les tokens via PostLoginClient.resetKeycloakInstance.
+    if (setCookies.length > 0) {
+      response.headers.append("set-cookie", CLEAR_TOKENS_COOKIE);
+    }
     return response;
   } catch (error) {
     console.error("establish-sso route handler: fetch reva-api failed", error);
