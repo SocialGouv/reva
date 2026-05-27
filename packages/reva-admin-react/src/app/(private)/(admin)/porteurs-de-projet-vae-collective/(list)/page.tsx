@@ -97,7 +97,7 @@ export default function PorteursDeProjetVaeCollectiveListPage() {
                   enlargeLink
                   endDetail={`Créé le ${format(commanditaire.createdAt, "dd/MM/yyyy")}`}
                   linkProps={{
-                    target: "_self",
+                    target: "_blank",
                     href: `${vaeCollectiveBaseUrl}/vae-collective/client-auth-redirect?redirectAfterAuthUrl=/commanditaires/${commanditaire.id}/cohortes`,
                   }}
                 />
