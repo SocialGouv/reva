@@ -9,6 +9,7 @@ import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
 import { prismaClient } from "@/prisma/client";
 
 import {
+  FeasibilityStatusFilter,
   GetCandidaciesForAAPInput,
   GetCandidaciesForCertificationAuthorityInput,
 } from "../candidacy.types";
@@ -38,6 +39,7 @@ export const getCandidaciesForAAP = async ({
   sortByFilter,
   candidacyStatuses,
   trainingStatuses,
+  feasibilityStatuses,
 }: GetCandidaciesForAAPInput & {
   context: GraphqlContext;
 }) => {
@@ -94,7 +96,7 @@ export const getCandidaciesForAAP = async ({
     });
   }
 
-  // Status filter
+  // Candidacy status filter
   if (candidacyStatuses && candidacyStatuses.length > 0) {
     const allowedCandidacyStatuses = isAdmin
       ? ALLOWED_CANDIDACY_STATUS_FOR_ADMIN_USERS
@@ -135,7 +137,7 @@ export const getCandidaciesForAAP = async ({
     }
   }
 
-  // Status filter
+  // Training status filter
   if (trainingStatuses && trainingStatuses.length > 0) {
     const allowedTrainingStatuses = ALLOWED_TRAINING_STATUS;
 
@@ -150,6 +152,75 @@ export const getCandidaciesForAAP = async ({
         status: {
           in: trainingStatuses,
         },
+      },
+    });
+  }
+
+  // Feasibility status filter
+  if (feasibilityStatuses && feasibilityStatuses.length > 0) {
+    const feasibilityWhereInput: Prisma.FeasibilityWhereInput[] = [];
+
+    if (
+      feasibilityStatuses.includes(FeasibilityStatusFilter.ENVOYE_AU_CANDIDAT)
+    ) {
+      feasibilityWhereInput.push({
+        dematerializedFeasibilityFile: {
+          sentToCandidateAt: { not: null },
+        },
+      });
+    }
+
+    if (
+      feasibilityStatuses.includes(
+        FeasibilityStatusFilter.PARTIELLEMENT_VALIDE_PAR_LE_CANDIDAT,
+      )
+    ) {
+      feasibilityWhereInput.push({
+        dematerializedFeasibilityFile: {
+          candidateConfirmationAt: { not: null },
+          swornStatementFileId: null,
+        },
+      });
+    }
+
+    if (
+      feasibilityStatuses.includes(
+        FeasibilityStatusFilter.VALIDE_PAR_LE_CANDIDAT,
+      )
+    ) {
+      feasibilityWhereInput.push({
+        dematerializedFeasibilityFile: {
+          candidateConfirmationAt: { not: null },
+          swornStatementFileId: { not: null },
+        },
+      });
+    }
+
+    if (
+      feasibilityStatuses.includes(
+        FeasibilityStatusFilter.ENVOYE_AU_CERTIFICATEUR,
+      )
+    ) {
+      feasibilityWhereInput.push({
+        decision: "PENDING",
+      });
+    }
+
+    if (feasibilityStatuses.includes(FeasibilityStatusFilter.INCOMPLET)) {
+      feasibilityWhereInput.push({
+        decision: "INCOMPLETE",
+      });
+    }
+
+    if (feasibilityStatuses.includes(FeasibilityStatusFilter.RECEVABLE)) {
+      feasibilityWhereInput.push({
+        decision: "ADMISSIBLE",
+      });
+    }
+
+    andClauses.push({
+      feasibility: {
+        OR: feasibilityWhereInput,
       },
     });
   }

@@ -262,6 +262,7 @@ const unsafeResolvers = {
         sortByFilter,
         candidacyStatuses,
         trainingStatuses,
+        feasibilityStatuses,
       }: GetCandidaciesForAAPInput,
       context: GraphqlContext,
     ) =>
@@ -273,6 +274,7 @@ const unsafeResolvers = {
         sortByFilter,
         candidacyStatuses,
         trainingStatuses,
+        feasibilityStatuses,
       }),
   },
   Mutation: {

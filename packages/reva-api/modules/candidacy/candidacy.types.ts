@@ -148,6 +148,15 @@ export interface GetCandidaciesForCertificationAuthorityInput {
   certificationAuthorityLocalAccountId?: string;
 }
 
+export enum FeasibilityStatusFilter {
+  ENVOYE_AU_CANDIDAT = "ENVOYE_AU_CANDIDAT",
+  PARTIELLEMENT_VALIDE_PAR_LE_CANDIDAT = "PARTIELLEMENT_VALIDE_PAR_LE_CANDIDAT",
+  VALIDE_PAR_LE_CANDIDAT = "VALIDE_PAR_LE_CANDIDAT",
+  ENVOYE_AU_CERTIFICATEUR = "ENVOYE_AU_CERTIFICATEUR",
+  INCOMPLET = "INCOMPLET",
+  RECEVABLE = "RECEVABLE",
+}
+
 export interface GetCandidaciesForAAPInput {
   offset?: number;
   limit?: number;
@@ -155,4 +164,5 @@ export interface GetCandidaciesForAAPInput {
   sortByFilter?: CandidacySortByFilter;
   candidacyStatuses?: CandidacyStatusStep[];
   trainingStatuses?: CandidacyStatusStep[];
+  feasibilityStatuses?: FeasibilityStatusFilter[];
 }

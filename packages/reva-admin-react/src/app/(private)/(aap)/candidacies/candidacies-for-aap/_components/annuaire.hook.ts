@@ -8,11 +8,13 @@ import { graphql } from "@/graphql/generated";
 import {
   CandidacySortByFilter,
   CandidacyStatusStep,
+  FeasibilityStatusFilter,
 } from "@/graphql/generated/graphql";
 
 export interface AnnuaireFilters {
   candidacyStatuses: CandidacyStatusStep[];
   trainingStatuses: CandidacyStatusStep[];
+  feasibilityStatuses: FeasibilityStatusFilter[];
 }
 
 const getCandidaciesForAAP = graphql(`
@@ -22,6 +24,7 @@ const getCandidaciesForAAP = graphql(`
     $sortByFilter: CandidacySortByFilter
     $candidacyStatuses: [CandidacyStatusStep!]
     $trainingStatuses: [CandidacyStatusStep!]
+    $feasibilityStatuses: [FeasibilityStatusFilter!]
   ) {
     candidacy_getCandidaciesForAAP(
       offset: $offset
@@ -30,6 +33,7 @@ const getCandidaciesForAAP = graphql(`
       sortByFilter: $sortByFilter
       candidacyStatuses: $candidacyStatuses
       trainingStatuses: $trainingStatuses
+      feasibilityStatuses: $feasibilityStatuses
     ) {
       rows {
         id
@@ -91,6 +95,7 @@ export const useAnnuaire = () => {
   const filters = useMemo<AnnuaireFilters>(() => {
     const candidacyParam = searchParams.get("candidacy");
     const trainingParam = searchParams.get("training");
+    const feasibilityParam = searchParams.get("feasibility");
 
     return {
       candidacyStatuses: candidacyParam
@@ -98,6 +103,9 @@ export const useAnnuaire = () => {
         : [],
       trainingStatuses: trainingParam
         ? (trainingParam.split(",") as CandidacyStatusStep[])
+        : [],
+      feasibilityStatuses: feasibilityParam
+        ? (feasibilityParam.split(",") as FeasibilityStatusFilter[])
         : [],
     };
   }, [searchParams]);
@@ -120,6 +128,7 @@ export const useAnnuaire = () => {
       currentPage,
       filters.candidacyStatuses,
       filters.trainingStatuses,
+      filters.feasibilityStatuses,
     ],
     queryFn: () =>
       graphqlClient.request(getCandidaciesForAAP, {
@@ -133,6 +142,10 @@ export const useAnnuaire = () => {
         trainingStatuses:
           filters.trainingStatuses.length > 0
             ? filters.trainingStatuses
+            : undefined,
+        feasibilityStatuses:
+          filters.feasibilityStatuses.length > 0
+            ? filters.feasibilityStatuses
             : undefined,
       }),
   });
@@ -155,6 +168,17 @@ export const useAnnuaire = () => {
           queryParams.set("training", newFilters.trainingStatuses.join(","));
         } else {
           queryParams.delete("training");
+        }
+      }
+
+      if (newFilters.feasibilityStatuses !== undefined) {
+        if (newFilters.feasibilityStatuses.length > 0) {
+          queryParams.set(
+            "feasibility",
+            newFilters.feasibilityStatuses.join(","),
+          );
+        } else {
+          queryParams.delete("feasibility");
         }
       }
       router.replace(`${pathname}?${queryParams.toString()}`, {
@@ -198,11 +222,21 @@ export const useAnnuaire = () => {
     [filters.trainingStatuses, updateFilters],
   );
 
+  const toggleFeasibilityStatus = useCallback(
+    (status: FeasibilityStatusFilter) => {
+      const newStatuses = filters.feasibilityStatuses.includes(status)
+        ? filters.feasibilityStatuses.filter((s) => s !== status)
+        : [...filters.feasibilityStatuses, status];
+      updateFilters({ feasibilityStatuses: newStatuses });
+    },
+    [filters.feasibilityStatuses, updateFilters],
+  );
+
   const clearFilters = useCallback(() => {
     const queryParams = new URLSearchParams(searchParams);
     queryParams.delete("candidacy");
     queryParams.delete("training");
-
+    queryParams.delete("feasibility");
     queryParams.set("page", "1");
     router.replace(`${pathname}?${queryParams.toString()}`, { scroll: false });
   }, [pathname, router, searchParams]);
@@ -210,8 +244,13 @@ export const useAnnuaire = () => {
   const hasActiveFilters = useMemo(
     () =>
       filters.candidacyStatuses.length > 0 ||
-      filters.trainingStatuses.length > 0,
-    [filters.candidacyStatuses, filters.trainingStatuses],
+      filters.trainingStatuses.length > 0 ||
+      filters.feasibilityStatuses.length > 0,
+    [
+      filters.candidacyStatuses,
+      filters.trainingStatuses,
+      filters.feasibilityStatuses,
+    ],
   );
 
   return {
@@ -222,6 +261,7 @@ export const useAnnuaire = () => {
     setSearchFilter,
     toggleCandidacyStatus,
     toggleTrainingStatus,
+    toggleFeasibilityStatus,
     clearFilters,
     hasActiveFilters,
   };

@@ -4,7 +4,10 @@ import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 
 import { useAuth } from "@/components/auth/auth";
 
-import { CandidacyStatusStep } from "@/graphql/generated/graphql";
+import {
+  CandidacyStatusStep,
+  FeasibilityStatusFilter,
+} from "@/graphql/generated/graphql";
 
 import { AnnuaireFilters } from "./annuaire.hook";
 
@@ -12,6 +15,7 @@ interface FiltersSectionProps {
   filters: AnnuaireFilters;
   onToggleCandidacyStatus: (status: CandidacyStatusStep) => void;
   onToggleTrainingStatus: (status: CandidacyStatusStep) => void;
+  onToggleFeasibilityStatus: (status: FeasibilityStatusFilter) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
 }
@@ -20,6 +24,7 @@ export const FiltersSection = ({
   filters,
   onToggleCandidacyStatus,
   onToggleTrainingStatus,
+  onToggleFeasibilityStatus,
   onClearFilters,
   hasActiveFilters,
 }: FiltersSectionProps) => {
@@ -82,6 +87,73 @@ export const FiltersSection = ({
               nativeInputProps: {
                 checked: filters.trainingStatuses.includes("PARCOURS_CONFIRME"),
                 onChange: () => onToggleTrainingStatus("PARCOURS_CONFIRME"),
+              },
+            },
+          ]}
+        />
+      </Accordion>
+
+      <Accordion
+        label="Dossier de faisabilité"
+        className="bg-white"
+        defaultExpanded
+      >
+        <Checkbox
+          small
+          className="mb-0"
+          options={[
+            {
+              label: "Envoyé au candidat",
+              nativeInputProps: {
+                checked:
+                  filters.feasibilityStatuses.includes("ENVOYE_AU_CANDIDAT"),
+                onChange: () => onToggleFeasibilityStatus("ENVOYE_AU_CANDIDAT"),
+              },
+            },
+            {
+              label: "Partiellement validé",
+              nativeInputProps: {
+                checked: filters.feasibilityStatuses.includes(
+                  "PARTIELLEMENT_VALIDE_PAR_LE_CANDIDAT",
+                ),
+                onChange: () =>
+                  onToggleFeasibilityStatus(
+                    "PARTIELLEMENT_VALIDE_PAR_LE_CANDIDAT",
+                  ),
+              },
+            },
+            {
+              label: "Validé par le candidat",
+              nativeInputProps: {
+                checked: filters.feasibilityStatuses.includes(
+                  "VALIDE_PAR_LE_CANDIDAT",
+                ),
+                onChange: () =>
+                  onToggleFeasibilityStatus("VALIDE_PAR_LE_CANDIDAT"),
+              },
+            },
+            {
+              label: "Envoyé au certificateur",
+              nativeInputProps: {
+                checked: filters.feasibilityStatuses.includes(
+                  "ENVOYE_AU_CERTIFICATEUR",
+                ),
+                onChange: () =>
+                  onToggleFeasibilityStatus("ENVOYE_AU_CERTIFICATEUR"),
+              },
+            },
+            {
+              label: "Incomplet",
+              nativeInputProps: {
+                checked: filters.feasibilityStatuses.includes("INCOMPLET"),
+                onChange: () => onToggleFeasibilityStatus("INCOMPLET"),
+              },
+            },
+            {
+              label: "Recevable",
+              nativeInputProps: {
+                checked: filters.feasibilityStatuses.includes("RECEVABLE"),
+                onChange: () => onToggleFeasibilityStatus("RECEVABLE"),
               },
             },
           ]}

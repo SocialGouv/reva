@@ -278,6 +278,15 @@ enum EndAccompagnementReason {
   FERMETURE_STRUCTURE
 }
 
+enum FeasibilityStatusFilter {
+  ENVOYE_AU_CANDIDAT
+  PARTIELLEMENT_VALIDE_PAR_LE_CANDIDAT
+  VALIDE_PAR_LE_CANDIDAT
+  ENVOYE_AU_CERTIFICATEUR
+  INCOMPLET
+  RECEVABLE
+}
+
 type Query {
   getCandidacyById(id: ID!): Candidacy
   getCandidacies(
@@ -333,6 +342,7 @@ type Query {
     sortByFilter: CandidacySortByFilter
     candidacyStatuses: [CandidacyStatusStep!]
     trainingStatuses: [CandidacyStatusStep!]
+    feasibilityStatuses: [FeasibilityStatusFilter!]
   ): CandidacyPage!
 }
 
