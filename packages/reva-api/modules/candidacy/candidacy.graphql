@@ -332,6 +332,7 @@ type Query {
     searchFilter: String
     sortByFilter: CandidacySortByFilter
     candidacyStatuses: [CandidacyStatusStep!]
+    trainingStatuses: [CandidacyStatusStep!]
   ): CandidacyPage!
 }
 

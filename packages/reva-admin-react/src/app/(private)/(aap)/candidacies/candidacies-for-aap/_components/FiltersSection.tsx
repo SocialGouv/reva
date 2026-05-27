@@ -11,6 +11,7 @@ import { AnnuaireFilters } from "./annuaire.hook";
 interface FiltersSectionProps {
   filters: AnnuaireFilters;
   onToggleCandidacyStatus: (status: CandidacyStatusStep) => void;
+  onToggleTrainingStatus: (status: CandidacyStatusStep) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
 }
@@ -18,6 +19,7 @@ interface FiltersSectionProps {
 export const FiltersSection = ({
   filters,
   onToggleCandidacyStatus,
+  onToggleTrainingStatus,
   onClearFilters,
   hasActiveFilters,
 }: FiltersSectionProps) => {
@@ -53,6 +55,33 @@ export const FiltersSection = ({
               nativeInputProps: {
                 checked: filters.candidacyStatuses.includes("PRISE_EN_CHARGE"),
                 onChange: () => onToggleCandidacyStatus("PRISE_EN_CHARGE"),
+              },
+            },
+          ]}
+        />
+      </Accordion>
+
+      <Accordion
+        label="Parcours et financement"
+        className="bg-white"
+        defaultExpanded
+      >
+        <Checkbox
+          small
+          className="mb-0"
+          options={[
+            {
+              label: "Envoyé au candidat",
+              nativeInputProps: {
+                checked: filters.trainingStatuses.includes("PARCOURS_ENVOYE"),
+                onChange: () => onToggleTrainingStatus("PARCOURS_ENVOYE"),
+              },
+            },
+            {
+              label: "Validé par le candidat",
+              nativeInputProps: {
+                checked: filters.trainingStatuses.includes("PARCOURS_CONFIRME"),
+                onChange: () => onToggleTrainingStatus("PARCOURS_CONFIRME"),
               },
             },
           ]}

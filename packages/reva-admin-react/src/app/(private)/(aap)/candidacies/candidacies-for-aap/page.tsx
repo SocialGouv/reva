@@ -35,6 +35,7 @@ export default function AnnuairePage() {
     searchFilter,
     setSearchFilter: onSearchFilterChange,
     toggleCandidacyStatus,
+    toggleTrainingStatus,
     clearFilters,
     hasActiveFilters,
   } = useAnnuaire();
@@ -103,6 +104,7 @@ export default function AnnuairePage() {
         <FiltersSection
           filters={filters}
           onToggleCandidacyStatus={toggleCandidacyStatus}
+          onToggleTrainingStatus={toggleTrainingStatus}
           onClearFilters={clearFilters}
           hasActiveFilters={hasActiveFilters}
         />

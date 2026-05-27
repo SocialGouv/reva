@@ -25,6 +25,11 @@ const ALLOWED_CANDIDACY_STATUS_FOR_ADMIN_USERS: CandidacyStatusStep[] = [
   CandidacyStatusStep.PRISE_EN_CHARGE,
 ];
 
+const ALLOWED_TRAINING_STATUS: CandidacyStatusStep[] = [
+  CandidacyStatusStep.PARCOURS_ENVOYE,
+  CandidacyStatusStep.PARCOURS_CONFIRME,
+];
+
 export const getCandidaciesForAAP = async ({
   context,
   offset = 0,
@@ -32,6 +37,7 @@ export const getCandidaciesForAAP = async ({
   searchFilter,
   sortByFilter,
   candidacyStatuses,
+  trainingStatuses,
 }: GetCandidaciesForAAPInput & {
   context: GraphqlContext;
 }) => {
@@ -96,7 +102,7 @@ export const getCandidaciesForAAP = async ({
 
     for (const status of candidacyStatuses) {
       if (!allowedCandidacyStatuses.includes(status)) {
-        throw new Error(`Le filtre ${status} n'est pas autorisé`);
+        throw new Error(`Le filtre candidacy: '${status}' n'est pas autorisé`);
       }
     }
 
@@ -127,6 +133,25 @@ export const getCandidaciesForAAP = async ({
         },
       });
     }
+  }
+
+  // Status filter
+  if (trainingStatuses && trainingStatuses.length > 0) {
+    const allowedTrainingStatuses = ALLOWED_TRAINING_STATUS;
+
+    for (const status of trainingStatuses) {
+      if (!allowedTrainingStatuses.includes(status)) {
+        throw new Error(`Le filtre training: '${status}' n'est pas autorisé`);
+      }
+    }
+
+    andClauses.push({
+      candidacy: {
+        status: {
+          in: trainingStatuses,
+        },
+      },
+    });
   }
 
   const whereClause: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput =

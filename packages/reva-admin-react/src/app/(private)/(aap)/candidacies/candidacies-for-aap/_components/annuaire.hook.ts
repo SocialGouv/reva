@@ -12,6 +12,7 @@ import {
 
 export interface AnnuaireFilters {
   candidacyStatuses: CandidacyStatusStep[];
+  trainingStatuses: CandidacyStatusStep[];
 }
 
 const getCandidaciesForAAP = graphql(`
@@ -20,6 +21,7 @@ const getCandidaciesForAAP = graphql(`
     $searchFilter: String
     $sortByFilter: CandidacySortByFilter
     $candidacyStatuses: [CandidacyStatusStep!]
+    $trainingStatuses: [CandidacyStatusStep!]
   ) {
     candidacy_getCandidaciesForAAP(
       offset: $offset
@@ -27,6 +29,7 @@ const getCandidaciesForAAP = graphql(`
       searchFilter: $searchFilter
       sortByFilter: $sortByFilter
       candidacyStatuses: $candidacyStatuses
+      trainingStatuses: $trainingStatuses
     ) {
       rows {
         id
@@ -87,10 +90,14 @@ export const useAnnuaire = () => {
 
   const filters = useMemo<AnnuaireFilters>(() => {
     const candidacyParam = searchParams.get("candidacy");
+    const trainingParam = searchParams.get("training");
 
     return {
       candidacyStatuses: candidacyParam
         ? (candidacyParam.split(",") as CandidacyStatusStep[])
+        : [],
+      trainingStatuses: trainingParam
+        ? (trainingParam.split(",") as CandidacyStatusStep[])
         : [],
     };
   }, [searchParams]);
@@ -112,6 +119,7 @@ export const useAnnuaire = () => {
       sortByFilter,
       currentPage,
       filters.candidacyStatuses,
+      filters.trainingStatuses,
     ],
     queryFn: () =>
       graphqlClient.request(getCandidaciesForAAP, {
@@ -121,6 +129,10 @@ export const useAnnuaire = () => {
         candidacyStatuses:
           filters.candidacyStatuses.length > 0
             ? filters.candidacyStatuses
+            : undefined,
+        trainingStatuses:
+          filters.trainingStatuses.length > 0
+            ? filters.trainingStatuses
             : undefined,
       }),
   });
@@ -138,6 +150,13 @@ export const useAnnuaire = () => {
         }
       }
 
+      if (newFilters.trainingStatuses !== undefined) {
+        if (newFilters.trainingStatuses.length > 0) {
+          queryParams.set("training", newFilters.trainingStatuses.join(","));
+        } else {
+          queryParams.delete("training");
+        }
+      }
       router.replace(`${pathname}?${queryParams.toString()}`, {
         scroll: false,
       });
@@ -169,16 +188,30 @@ export const useAnnuaire = () => {
     [filters.candidacyStatuses, updateFilters],
   );
 
+  const toggleTrainingStatus = useCallback(
+    (status: CandidacyStatusStep) => {
+      const newStatuses = filters.trainingStatuses.includes(status)
+        ? filters.trainingStatuses.filter((s) => s !== status)
+        : [...filters.trainingStatuses, status];
+      updateFilters({ trainingStatuses: newStatuses });
+    },
+    [filters.trainingStatuses, updateFilters],
+  );
+
   const clearFilters = useCallback(() => {
     const queryParams = new URLSearchParams(searchParams);
     queryParams.delete("candidacy");
+    queryParams.delete("training");
+
     queryParams.set("page", "1");
     router.replace(`${pathname}?${queryParams.toString()}`, { scroll: false });
   }, [pathname, router, searchParams]);
 
   const hasActiveFilters = useMemo(
-    () => filters.candidacyStatuses.length > 0,
-    [filters],
+    () =>
+      filters.candidacyStatuses.length > 0 ||
+      filters.trainingStatuses.length > 0,
+    [filters.candidacyStatuses, filters.trainingStatuses],
   );
 
   return {
@@ -188,6 +221,7 @@ export const useAnnuaire = () => {
     searchFilter,
     setSearchFilter,
     toggleCandidacyStatus,
+    toggleTrainingStatus,
     clearFilters,
     hasActiveFilters,
   };

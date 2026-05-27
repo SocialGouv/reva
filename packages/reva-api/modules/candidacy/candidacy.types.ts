@@ -154,4 +154,5 @@ export interface GetCandidaciesForAAPInput {
   searchFilter?: string;
   sortByFilter?: CandidacySortByFilter;
   candidacyStatuses?: CandidacyStatusStep[];
+  trainingStatuses?: CandidacyStatusStep[];
 }
