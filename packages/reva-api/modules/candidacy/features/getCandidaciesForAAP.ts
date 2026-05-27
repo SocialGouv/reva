@@ -1,4 +1,8 @@
-import { Prisma } from "@prisma/client";
+import {
+  CandidacyStatusStep,
+  CandidacyTypeAccompagnement,
+  Prisma,
+} from "@prisma/client";
 
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
@@ -9,6 +13,17 @@ import {
   GetCandidaciesForCertificationAuthorityInput,
 } from "../candidacy.types";
 import { candidacySearchWord } from "../utils/candidacy.helper";
+
+const ALLOWED_CANDIDACY_STATUS_FOR_NON_ADMIN_USERS: CandidacyStatusStep[] = [
+  CandidacyStatusStep.VALIDATION,
+  CandidacyStatusStep.PRISE_EN_CHARGE,
+];
+
+const ALLOWED_CANDIDACY_STATUS_FOR_ADMIN_USERS: CandidacyStatusStep[] = [
+  CandidacyStatusStep.PROJET,
+  CandidacyStatusStep.VALIDATION,
+  CandidacyStatusStep.PRISE_EN_CHARGE,
+];
 
 export const getCandidaciesForAAP = async ({
   context,
@@ -75,13 +90,43 @@ export const getCandidaciesForAAP = async ({
 
   // Status filter
   if (candidacyStatuses && candidacyStatuses.length > 0) {
-    andClauses.push({
-      candidacy: {
-        status: {
-          in: candidacyStatuses,
+    const allowedCandidacyStatuses = isAdmin
+      ? ALLOWED_CANDIDACY_STATUS_FOR_ADMIN_USERS
+      : ALLOWED_CANDIDACY_STATUS_FOR_NON_ADMIN_USERS;
+
+    for (const status of candidacyStatuses) {
+      if (!allowedCandidacyStatuses.includes(status)) {
+        throw new Error(`Le filtre ${status} n'est pas autorisé`);
+      }
+    }
+
+    if (candidacyStatuses.includes(CandidacyStatusStep.PROJET)) {
+      andClauses.push({
+        candidacy: {
+          OR: [
+            {
+              status: CandidacyStatusStep.PROJET,
+              typeAccompagnement: CandidacyTypeAccompagnement.AUTONOME,
+            },
+            {
+              status: {
+                in: allowedCandidacyStatuses.filter(
+                  (status) => status !== CandidacyStatusStep.PROJET,
+                ),
+              },
+            },
+          ],
         },
-      },
-    });
+      });
+    } else {
+      andClauses.push({
+        candidacy: {
+          status: {
+            in: candidacyStatuses,
+          },
+        },
+      });
+    }
   }
 
   const whereClause: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput =

@@ -2,6 +2,8 @@ import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 
+import { useAuth } from "@/components/auth/auth";
+
 import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 
 import { AnnuaireFilters } from "./annuaire.hook";
@@ -19,6 +21,8 @@ export const FiltersSection = ({
   onClearFilters,
   hasActiveFilters,
 }: FiltersSectionProps) => {
+  const { isAdmin } = useAuth();
+
   return (
     <div className="flex w-[282px] shrink-0 flex-col gap-4">
       <Accordion label="Candidatures" className="bg-white" defaultExpanded>
@@ -26,11 +30,22 @@ export const FiltersSection = ({
           small
           className="mb-0"
           options={[
+            ...(isAdmin
+              ? [
+                  {
+                    label: "Nouvelles candidatures autonomes",
+                    nativeInputProps: {
+                      checked: filters.candidacyStatuses.includes("PROJET"),
+                      onChange: () => onToggleCandidacyStatus("PROJET"),
+                    },
+                  },
+                ]
+              : []),
             {
               label: "Nouvelles",
               nativeInputProps: {
-                checked: filters.candidacyStatuses.includes("PROJET"),
-                onChange: () => onToggleCandidacyStatus("PROJET"),
+                checked: filters.candidacyStatuses.includes("VALIDATION"),
+                onChange: () => onToggleCandidacyStatus("VALIDATION"),
               },
             },
             {
