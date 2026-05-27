@@ -11,13 +11,13 @@
     <#elseif (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "organism">
         <#assign subject = "Vous avez été invité à rejoindre France VAE">
 
-     <#--  user_profile_type = certification_registry_manager  -->
+     <#--  user_profile_type = certification_authority  -->
     <#elseif (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "certification_authority">
-        <#assign subject = "Accédez à votre espace certificateur France VAE">
+        <#assign subject = "Activez votre compte Gestionnaire de candidatures administrateur - France VAE">
 
      <#--  user_profile_type = certification_registry_manager  -->
     <#elseif (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "certification_registry_manager">
-        <#assign subject = "Créez votre compte Responsable des certifications dès maintenant">
+        <#assign subject = "Activez votre compte Responsable de certifications - France VAE">
 
     </#if>
 
@@ -168,39 +168,33 @@
     <#--  user_profile_type = certification_authority  -->
     <#elseif (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "certification_authority">
         <#if section="intro">
-            <p>Vous avez été référencé en tant que certificateur dans le portail France VAE.</p>
-            <p>Pour finaliser votre inscription, il ne vous reste qu'une seule étape : choisir un mot de passe pour vos
-                futures connexions. Nous vous invitons à cliquer sur le bouton ci-dessous.</p>
+            <p>Votre demande de référencement sur France VAE a bien été prise en compte.</p>
+            <p>Activez votre compte <strong>Gestionnaire de candidatures administrateur</strong> dès maintenant :</p>
         <#elseif section="actionButton">
             <a href="${link}"
                style="display:inline-block;background:#000099;color:white;font-family:Arial, sans-serif;font-size:14px;font-weight:500;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:12px 16px;mso-padding-alt:0px;"
-               target="_blank">Finaliser mon inscription</a>
+               target="_blank">Activer mon compte</a>
         <#elseif section="outro">
-            <p>Ce lien est valable 4 jours.</p>
-            <p>Si vous avez dépassé ce délai, <a
-                        href="https://${properties.keycloakHostname}/realms/reva/login-actions/reset-credentials"
-                        target="_blank">nous vous invitons à redemander un mot de passe.</a></p>
-            <p>Si jamais vous rencontrez encore des difficultés, n'hésitez pas à nous contacter via la messagerie
-                instantanée (en bas à droite de l'écran sur le site France VAE) ou par email à support@vae.gouv.fr</p>
-            <p>L'équipe France VAE.</p>
+            <p>Passé 4 jours, vous pourrez l'activer depuis <a href="https://vae.gouv.fr/" target="_blank">France VAE</a> via <strong>Mot de passe oublié</strong>.</p>
+            <p>Pour prendre en main vos missions (recevabilité, dossiers de validation, dates et résultats de jury) et paramétrer vos comptes locaux, consultez le <a href="https://scribehow.com/viewer/Tutoriel_certificateurs__gestion_des_candidatures__iAOKgJsISUOp5K7_zfYhzw?referrer=documents" target="_blank">tutoriel "Certificateurs – Gestion des candidatures"</a>.</p>
+            <p>Pour toutes questions liées à vos missions au sein de la plateforme, vous pourrez vous adresser à notre équipe support : <a href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</a></p>
+            <p>L'équipe France VAE vous souhaite une bonne intégration.</p>
         </#if>
 
      <#--  user_profile_type = certification_registry_manager  -->
     <#elseif (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "certification_registry_manager">
         <#if section="intro">
-            <p>En tant que responsable des certifications, vous devez créer votre compte pour profiter d’un espace dédié à vos missions dans la plateforme France VAE  (éditer, corriger, modifier et valider les informations clés liées aux certifications en vue de leur publication sur France VAE).</p>
-            <p>Vous pouvez le faire dès à présent en cliquant sur le bouton ci-dessous : </p>
+            <p>Votre demande de référencement sur France VAE a bien été prise en compte.</p>
+            <p>Activez votre compte <strong>Responsable de certifications</strong> dès maintenant :</p>
         <#elseif section="actionButton">
             <a href="${link}"
                style="display:inline-block;background:#000099;color:white;font-family:Arial, sans-serif;font-size:14px;font-weight:500;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:12px 16px;mso-padding-alt:0px;"
-               target="_blank">Créer mon compte</a>
+               target="_blank">Activer mon compte</a>
         <#elseif section="outro">
-            <p>Ce lien est valable 4 jours.</p>
-            <p>Si vous avez dépassé ce délai, <a
-                        href="https://${properties.keycloakHostname}/realms/reva/login-actions/reset-credentials"
-                        target="_blank">nous vous invitons à redemander un mot de passe.</a></p>
-            <p>Nous restons disponibles si vous avez la moindre question.</p>
-            <p>L'équipe France VAE.</p>
+            <p>Passé 4 jours, vous pourrez l'activer depuis <a href="https://vae.gouv.fr/" target="_blank">France VAE</a> via <strong>Mot de passe oublié</strong>.</p>
+            <p>Afin de bénéficier d'un appui à la prise en main des fonctionnalités liées à vos missions sur la plateforme, nous vous invitons à consulter le <a href="https://scribehow.com/viewer/Tutoriel_du_Responsable_des_Certifications__7T3db0CzTtSaRV4tXSubfw?referrer=documents" target="_blank">tutoriel "Responsable des Certifications"</a> et les ressources mises à votre disposition dans l'<a href="https://www.notion.so/Espace-documentaire-2ea100b69ece81fc9cded783f96d88e8?pvs=21" target="_blank">espace documentaire des certificateurs</a></p>
+            <p>Pour toutes questions liées à vos missions au sein de la plateforme, vous pourrez vous adresser à notre équipe support via <a href="https://vae.gouv.fr/nous-contacter/" target="_blank">https://vae.gouv.fr/nous-contacter/</a></p>
+            <p>L'équipe France VAE vous souhaite une bonne intégration au sein de la plateforme.</p>
         </#if>
 
     <#--  default  -->
