@@ -4,7 +4,6 @@ import { TypeAccompagnement } from "../candidate/candidate.types";
 import {
   CandidacySortByFilter,
   JuryResultFilter,
-  JuryStatusFilter,
 } from "../graphql/generated/graphql";
 
 export interface CandidacyDropOut {
@@ -132,6 +131,12 @@ export interface CreateCandidacyInput {
   cohorteVaeCollectiveId?: string;
 }
 
+export enum JuryStatusFilter {
+  TO_SCHEDULE = "TO_SCHEDULE",
+  SCHEDULED = "SCHEDULED",
+  PASSED = "PASSED",
+}
+
 export interface GetCandidaciesForCertificationAuthorityInput {
   offset?: number;
   limit?: number;
@@ -172,4 +177,5 @@ export interface GetCandidaciesForAAPInput {
   trainingStatuses?: CandidacyStatusStep[];
   feasibilityStatuses?: FeasibilityStatusFilter[];
   dossierDeValidationStatuses?: DossierDeValidationStatusFilter[];
+  juryStatuses?: JuryStatusFilter[];
 }

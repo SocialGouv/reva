@@ -9,7 +9,10 @@ import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
 import { prismaClient } from "@/prisma/client";
 
-import { GetCandidaciesForCertificationAuthorityInput } from "../candidacy.types";
+import {
+  GetCandidaciesForCertificationAuthorityInput,
+  JuryStatusFilter,
+} from "../candidacy.types";
 import { candidacySearchWord } from "../utils/candidacy.helper";
 import { getWhereClauseFromStatusFilterForCertificationAuthority } from "../utils/getWhereClauseFromStatusFilterForCertificationAuthority.helper";
 
@@ -207,7 +210,7 @@ export const getCandidaciesForCertificationAuthority = async ({
   if (
     (sortByFilter === "JURY_PROGRAMME_DESC" ||
       sortByFilter === "JURY_PROGRAMME_ASC") &&
-    !juryStatuses?.includes("TO_SCHEDULE")
+    !juryStatuses?.includes(JuryStatusFilter.TO_SCHEDULE)
   ) {
     andClauses.push({ jury: { isNot: null } });
   }

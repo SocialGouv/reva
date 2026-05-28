@@ -226,6 +226,7 @@ enum CandidacySortByFilter {
 enum JuryStatusFilter {
   TO_SCHEDULE
   SCHEDULED
+  PASSED
 }
 
 enum DistanceStatus {
@@ -350,6 +351,7 @@ type Query {
     trainingStatuses: [CandidacyStatusStep!]
     feasibilityStatuses: [FeasibilityStatusFilter!]
     dossierDeValidationStatuses: [DossierDeValidationStatusFilter!]
+    juryStatuses: [JuryStatusFilter!]
   ): CandidacyPage!
 }
 

@@ -8,6 +8,7 @@ import {
   CandidacyStatusStep,
   FeasibilityStatusFilter,
   DossierDeValidationStatusFilter,
+  JuryStatusFilter,
 } from "@/graphql/generated/graphql";
 
 import { AnnuaireFilters } from "./annuaire.hook";
@@ -20,6 +21,7 @@ interface FiltersSectionProps {
   onToggleDossierDeValidationStatus: (
     status: DossierDeValidationStatusFilter,
   ) => void;
+  onToggleJuryStatus: (status: JuryStatusFilter) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
 }
@@ -30,6 +32,7 @@ export const FiltersSection = ({
   onToggleTrainingStatus,
   onToggleFeasibilityStatus,
   onToggleDossierDeValidationStatus,
+  onToggleJuryStatus,
   onClearFilters,
   hasActiveFilters,
 }: FiltersSectionProps) => {
@@ -196,6 +199,40 @@ export const FiltersSection = ({
                 checked:
                   filters.dossierDeValidationStatuses.includes("SIGNALE"),
                 onChange: () => onToggleDossierDeValidationStatus("SIGNALE"),
+              },
+            },
+          ]}
+        />
+      </Accordion>
+
+      <Accordion
+        label="Passage devant le jury"
+        className="bg-white"
+        defaultExpanded
+      >
+        <Checkbox
+          small
+          className="mb-0"
+          options={[
+            {
+              label: "En attente d'une date",
+              nativeInputProps: {
+                checked: filters.juryStatuses.includes("TO_SCHEDULE"),
+                onChange: () => onToggleJuryStatus("TO_SCHEDULE"),
+              },
+            },
+            {
+              label: "Programmé",
+              nativeInputProps: {
+                checked: filters.juryStatuses.includes("SCHEDULED"),
+                onChange: () => onToggleJuryStatus("SCHEDULED"),
+              },
+            },
+            {
+              label: "Passé",
+              nativeInputProps: {
+                checked: filters.juryStatuses.includes("PASSED"),
+                onChange: () => onToggleJuryStatus("PASSED"),
               },
             },
           ]}

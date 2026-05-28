@@ -10,6 +10,7 @@ import {
   CandidacyStatusStep,
   FeasibilityStatusFilter,
   DossierDeValidationStatusFilter,
+  JuryStatusFilter,
 } from "@/graphql/generated/graphql";
 
 export interface AnnuaireFilters {
@@ -17,6 +18,7 @@ export interface AnnuaireFilters {
   trainingStatuses: CandidacyStatusStep[];
   feasibilityStatuses: FeasibilityStatusFilter[];
   dossierDeValidationStatuses: DossierDeValidationStatusFilter[];
+  juryStatuses: JuryStatusFilter[];
 }
 
 const getCandidaciesForAAP = graphql(`
@@ -28,6 +30,7 @@ const getCandidaciesForAAP = graphql(`
     $trainingStatuses: [CandidacyStatusStep!]
     $feasibilityStatuses: [FeasibilityStatusFilter!]
     $dossierDeValidationStatuses: [DossierDeValidationStatusFilter!]
+    $juryStatuses: [JuryStatusFilter!]
   ) {
     candidacy_getCandidaciesForAAP(
       offset: $offset
@@ -38,6 +41,7 @@ const getCandidaciesForAAP = graphql(`
       trainingStatuses: $trainingStatuses
       feasibilityStatuses: $feasibilityStatuses
       dossierDeValidationStatuses: $dossierDeValidationStatuses
+      juryStatuses: $juryStatuses
     ) {
       rows {
         id
@@ -101,6 +105,7 @@ export const useAnnuaire = () => {
     const trainingParam = searchParams.get("training");
     const feasibilityParam = searchParams.get("feasibility");
     const dossierDeValidationParam = searchParams.get("dossierDeValidation");
+    const juryParam = searchParams.get("juryStatuses");
 
     return {
       candidacyStatuses: candidacyParam
@@ -116,6 +121,9 @@ export const useAnnuaire = () => {
         ? (dossierDeValidationParam.split(
             ",",
           ) as DossierDeValidationStatusFilter[])
+        : [],
+      juryStatuses: juryParam
+        ? (juryParam.split(",") as JuryStatusFilter[])
         : [],
     };
   }, [searchParams]);
@@ -140,6 +148,7 @@ export const useAnnuaire = () => {
       filters.trainingStatuses,
       filters.feasibilityStatuses,
       filters.dossierDeValidationStatuses,
+      filters.juryStatuses,
     ],
     queryFn: () =>
       graphqlClient.request(getCandidaciesForAAP, {
@@ -162,6 +171,8 @@ export const useAnnuaire = () => {
           filters.dossierDeValidationStatuses.length > 0
             ? filters.dossierDeValidationStatuses
             : undefined,
+        juryStatuses:
+          filters.juryStatuses.length > 0 ? filters.juryStatuses : undefined,
       }),
   });
 
@@ -205,6 +216,14 @@ export const useAnnuaire = () => {
           );
         } else {
           queryParams.delete("dossierDeValidation");
+        }
+      }
+
+      if (newFilters.juryStatuses !== undefined) {
+        if (newFilters.juryStatuses.length > 0) {
+          queryParams.set("juryStatuses", newFilters.juryStatuses.join(","));
+        } else {
+          queryParams.delete("juryStatuses");
         }
       }
 
@@ -269,12 +288,23 @@ export const useAnnuaire = () => {
     [filters.dossierDeValidationStatuses, updateFilters],
   );
 
+  const toggleJuryStatus = useCallback(
+    (status: JuryStatusFilter) => {
+      const newStatuses = filters.juryStatuses.includes(status)
+        ? filters.juryStatuses.filter((s) => s !== status)
+        : [...filters.juryStatuses, status];
+      updateFilters({ juryStatuses: newStatuses });
+    },
+    [filters.juryStatuses, updateFilters],
+  );
+
   const clearFilters = useCallback(() => {
     const queryParams = new URLSearchParams(searchParams);
     queryParams.delete("candidacy");
     queryParams.delete("training");
     queryParams.delete("feasibility");
     queryParams.delete("dossierDeValidation");
+    queryParams.delete("juryStatuses");
     queryParams.set("page", "1");
     router.replace(`${pathname}?${queryParams.toString()}`, { scroll: false });
   }, [pathname, router, searchParams]);
@@ -284,12 +314,14 @@ export const useAnnuaire = () => {
       filters.candidacyStatuses.length > 0 ||
       filters.trainingStatuses.length > 0 ||
       filters.feasibilityStatuses.length > 0 ||
-      filters.dossierDeValidationStatuses.length > 0,
+      filters.dossierDeValidationStatuses.length > 0 ||
+      filters.juryStatuses.length > 0,
     [
       filters.candidacyStatuses,
       filters.trainingStatuses,
       filters.feasibilityStatuses,
       filters.dossierDeValidationStatuses,
+      filters.juryStatuses,
     ],
   );
 
@@ -303,6 +335,7 @@ export const useAnnuaire = () => {
     toggleTrainingStatus,
     toggleFeasibilityStatus,
     toggleDossierDeValidationStatus,
+    toggleJuryStatus,
     clearFilters,
     hasActiveFilters,
   };

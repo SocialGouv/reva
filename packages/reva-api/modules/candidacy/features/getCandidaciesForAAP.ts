@@ -1,6 +1,7 @@
 import {
   CandidacyStatusStep,
   CandidacyTypeAccompagnement,
+  DossierDeValidationStatus,
   Prisma,
 } from "@prisma/client";
 
@@ -13,6 +14,7 @@ import {
   FeasibilityStatusFilter,
   GetCandidaciesForAAPInput,
   GetCandidaciesForCertificationAuthorityInput,
+  JuryStatusFilter,
 } from "../candidacy.types";
 import { candidacySearchWord } from "../utils/candidacy.helper";
 
@@ -42,6 +44,7 @@ export const getCandidaciesForAAP = async ({
   trainingStatuses,
   feasibilityStatuses,
   dossierDeValidationStatuses,
+  juryStatuses,
 }: GetCandidaciesForAAPInput & {
   context: GraphqlContext;
 }) => {
@@ -281,6 +284,42 @@ export const getCandidaciesForAAP = async ({
     andClauses.push({
       OR: dossierDeValidationWhereInput,
     });
+  }
+
+  // Jury status filter
+  if (juryStatuses && juryStatuses.length > 0) {
+    const juryWhereInput: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] =
+      [];
+
+    if (juryStatuses.includes(JuryStatusFilter.TO_SCHEDULE)) {
+      juryWhereInput.push({
+        dossierDeValidation: {
+          decision: {
+            in: [
+              DossierDeValidationStatus.PENDING,
+              DossierDeValidationStatus.COMPLETE,
+            ],
+          },
+        },
+        jury: null,
+      });
+    }
+    if (juryStatuses.includes(JuryStatusFilter.SCHEDULED)) {
+      juryWhereInput.push({
+        jury: {
+          dateOfSession: { gt: new Date() },
+        },
+      });
+    }
+    if (juryStatuses.includes(JuryStatusFilter.PASSED)) {
+      juryWhereInput.push({
+        jury: {
+          dateOfSession: { lt: new Date() },
+        },
+      });
+    }
+
+    andClauses.push({ OR: juryWhereInput });
   }
 
   const whereClause: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput =
