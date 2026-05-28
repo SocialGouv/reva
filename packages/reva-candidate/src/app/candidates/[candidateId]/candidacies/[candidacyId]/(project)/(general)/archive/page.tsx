@@ -1,7 +1,6 @@
 "use client";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { Highlight } from "@codegouvfr/react-dsfr/Highlight";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -143,7 +142,7 @@ export default function ArchiveCandidacyPage() {
         <p className="mb-6 text-lg font-bold">
           Quelles sont les conséquences d’une suppression à cette étape ?
         </p>
-        <Highlight>
+        <div className="fr-highlight mb-6">
           <ul>
             <li>
               les éléments renseignés dans cette candidature seront perdus
@@ -158,7 +157,7 @@ export default function ArchiveCandidacyPage() {
               France VAE.
             </li>
           </ul>
-        </Highlight>
+        </div>
       </div>
       <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
         <div className="pr-[30%]">
