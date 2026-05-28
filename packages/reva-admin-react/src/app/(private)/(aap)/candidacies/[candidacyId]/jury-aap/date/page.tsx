@@ -36,7 +36,11 @@ export default function DateDeJuryPage() {
 
   return (
     <>
-      <h1 className="mb-12">Passage devant le jury </h1>
+      <h1 className="mb-6">Passage devant le jury </h1>
+      <p className="mb-12 text-xl">
+        Les informations de passage devant le jury sont renseignées par le
+        certificateur. France VAE n'assure pas ce cette fonction.
+      </p>
       <div className="flex flex-col gap-8">
         <DateDeJuryCard
           jury={{

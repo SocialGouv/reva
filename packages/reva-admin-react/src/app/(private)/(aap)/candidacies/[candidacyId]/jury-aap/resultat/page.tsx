@@ -62,7 +62,11 @@ export default function ResultatPage() {
 
   return (
     <>
-      <h1>Jury</h1>
+      <h1 className="mb-6">Jury</h1>
+      <p className="mb-12 text-xl">
+        Les résultats de jury sont renseignés par le certificateur. France VAE
+        n'assure pas ce cette fonction.
+      </p>
       <div className="flex flex-col gap-10">
         <HistoryResultatView
           historyJury={historyJury.map((jury) => ({
