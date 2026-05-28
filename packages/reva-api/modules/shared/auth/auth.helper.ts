@@ -74,6 +74,13 @@ export const resetPassword = async (
         value: password,
       },
     });
+
+    // L'utilisateur a cliqué le lien reçu par email puis validé son mot de passe :
+    // la possession de l'adresse est prouvée, on confirme donc l'email.
+    await keycloakAdmin.users.update(
+      { id: userId, realm },
+      { emailVerified: true },
+    );
   } catch (e) {
     logger.error(e);
 
