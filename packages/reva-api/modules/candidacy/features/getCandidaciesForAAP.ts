@@ -45,6 +45,7 @@ export const getCandidaciesForAAP = async ({
   feasibilityStatuses,
   dossierDeValidationStatuses,
   juryStatuses,
+  juryResults,
 }: GetCandidaciesForAAPInput & {
   context: GraphqlContext;
 }) => {
@@ -288,11 +289,11 @@ export const getCandidaciesForAAP = async ({
 
   // Jury status filter
   if (juryStatuses && juryStatuses.length > 0) {
-    const juryWhereInput: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] =
+    const juryStatusesWhereInput: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] =
       [];
 
     if (juryStatuses.includes(JuryStatusFilter.TO_SCHEDULE)) {
-      juryWhereInput.push({
+      juryStatusesWhereInput.push({
         dossierDeValidation: {
           decision: {
             in: [
@@ -305,21 +306,50 @@ export const getCandidaciesForAAP = async ({
       });
     }
     if (juryStatuses.includes(JuryStatusFilter.SCHEDULED)) {
-      juryWhereInput.push({
+      juryStatusesWhereInput.push({
         jury: {
           dateOfSession: { gt: new Date() },
         },
       });
     }
     if (juryStatuses.includes(JuryStatusFilter.PASSED)) {
-      juryWhereInput.push({
+      juryStatusesWhereInput.push({
         jury: {
           dateOfSession: { lt: new Date() },
         },
       });
     }
 
-    andClauses.push({ OR: juryWhereInput });
+    andClauses.push({ OR: juryStatusesWhereInput });
+  }
+
+  // Jury result filter
+  if (juryResults && juryResults.length > 0) {
+    const juryResultsWhereInput: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] =
+      [];
+
+    const filteredResults = juryResults.filter(
+      (result) => result !== "AWAITING_RESULT",
+    );
+    if (filteredResults.length > 0) {
+      juryResultsWhereInput.push({
+        jury: {
+          result: { in: filteredResults },
+        },
+      });
+    }
+
+    const hasAwaitingResult = juryResults.includes("AWAITING_RESULT");
+    if (hasAwaitingResult) {
+      juryResultsWhereInput.push({
+        jury: {
+          dateOfSession: { lte: new Date() },
+          result: null,
+        },
+      });
+    }
+
+    andClauses.push({ OR: juryResultsWhereInput });
   }
 
   const whereClause: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput =

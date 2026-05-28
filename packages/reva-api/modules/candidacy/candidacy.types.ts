@@ -178,4 +178,5 @@ export interface GetCandidaciesForAAPInput {
   feasibilityStatuses?: FeasibilityStatusFilter[];
   dossierDeValidationStatuses?: DossierDeValidationStatusFilter[];
   juryStatuses?: JuryStatusFilter[];
+  juryResults?: JuryResultFilter[];
 }

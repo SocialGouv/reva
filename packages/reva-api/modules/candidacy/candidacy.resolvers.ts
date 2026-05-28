@@ -265,6 +265,7 @@ const unsafeResolvers = {
         feasibilityStatuses,
         dossierDeValidationStatuses,
         juryStatuses,
+        juryResults,
       }: GetCandidaciesForAAPInput,
       context: GraphqlContext,
     ) =>
@@ -279,6 +280,7 @@ const unsafeResolvers = {
         feasibilityStatuses,
         dossierDeValidationStatuses,
         juryStatuses,
+        juryResults,
       }),
   },
   Mutation: {

@@ -352,6 +352,7 @@ type Query {
     feasibilityStatuses: [FeasibilityStatusFilter!]
     dossierDeValidationStatuses: [DossierDeValidationStatusFilter!]
     juryStatuses: [JuryStatusFilter!]
+    juryResults: [JuryResultFilter!]
   ): CandidacyPage!
 }
 

@@ -9,6 +9,7 @@ import {
   FeasibilityStatusFilter,
   DossierDeValidationStatusFilter,
   JuryStatusFilter,
+  JuryResultFilter,
 } from "@/graphql/generated/graphql";
 
 import { AnnuaireFilters } from "./annuaire.hook";
@@ -22,6 +23,7 @@ interface FiltersSectionProps {
     status: DossierDeValidationStatusFilter,
   ) => void;
   onToggleJuryStatus: (status: JuryStatusFilter) => void;
+  onToggleJuryResults: (results: JuryResultFilter[]) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
 }
@@ -33,6 +35,7 @@ export const FiltersSection = ({
   onToggleFeasibilityStatus,
   onToggleDossierDeValidationStatus,
   onToggleJuryStatus,
+  onToggleJuryResults,
   onClearFilters,
   hasActiveFilters,
 }: FiltersSectionProps) => {
@@ -233,6 +236,83 @@ export const FiltersSection = ({
               nativeInputProps: {
                 checked: filters.juryStatuses.includes("PASSED"),
                 onChange: () => onToggleJuryStatus("PASSED"),
+              },
+            },
+          ]}
+        />
+      </Accordion>
+
+      <Accordion label="Résultat de jury" className="bg-white" defaultExpanded>
+        <Checkbox
+          small
+          className="mb-0"
+          options={[
+            {
+              label: "En attente de résultat",
+              nativeInputProps: {
+                checked: filters.juryResults.includes("AWAITING_RESULT"),
+                onChange: () => onToggleJuryResults(["AWAITING_RESULT"]),
+              },
+            },
+            {
+              label: "Réussite totale",
+              nativeInputProps: {
+                checked:
+                  filters.juryResults.includes(
+                    "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+                  ) ||
+                  filters.juryResults.includes(
+                    "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+                  ),
+                onChange: () => {
+                  onToggleJuryResults([
+                    "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+                    "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+                  ]);
+                },
+              },
+            },
+            {
+              label: "Réussite partielle",
+              nativeInputProps: {
+                checked:
+                  filters.juryResults.includes(
+                    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+                  ) ||
+                  filters.juryResults.includes(
+                    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+                  ) ||
+                  filters.juryResults.includes(
+                    "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
+                  ),
+                onChange: () => {
+                  onToggleJuryResults([
+                    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+                    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+                    "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
+                  ]);
+                },
+              },
+            },
+            {
+              label: "Non validation",
+              nativeInputProps: {
+                checked: filters.juryResults.includes("FAILURE"),
+                onChange: () => onToggleJuryResults(["FAILURE"]),
+              },
+            },
+            {
+              label: "Non présentation au jury",
+              nativeInputProps: {
+                checked:
+                  filters.juryResults.includes("CANDIDATE_EXCUSED") ||
+                  filters.juryResults.includes("CANDIDATE_ABSENT"),
+                onChange: () => {
+                  onToggleJuryResults([
+                    "CANDIDATE_EXCUSED",
+                    "CANDIDATE_ABSENT",
+                  ]);
+                },
               },
             },
           ]}
