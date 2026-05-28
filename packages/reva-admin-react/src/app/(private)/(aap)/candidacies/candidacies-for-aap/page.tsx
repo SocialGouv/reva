@@ -37,6 +37,7 @@ export default function AnnuairePage() {
     toggleCandidacyStatus,
     toggleTrainingStatus,
     toggleFeasibilityStatus,
+    toggleDossierDeValidationStatus,
     clearFilters,
     hasActiveFilters,
   } = useAnnuaire();
@@ -107,6 +108,7 @@ export default function AnnuairePage() {
           onToggleCandidacyStatus={toggleCandidacyStatus}
           onToggleTrainingStatus={toggleTrainingStatus}
           onToggleFeasibilityStatus={toggleFeasibilityStatus}
+          onToggleDossierDeValidationStatus={toggleDossierDeValidationStatus}
           onClearFilters={clearFilters}
           hasActiveFilters={hasActiveFilters}
         />

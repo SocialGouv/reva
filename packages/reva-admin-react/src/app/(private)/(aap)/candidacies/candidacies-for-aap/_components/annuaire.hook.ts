@@ -9,12 +9,14 @@ import {
   CandidacySortByFilter,
   CandidacyStatusStep,
   FeasibilityStatusFilter,
+  DossierDeValidationStatusFilter,
 } from "@/graphql/generated/graphql";
 
 export interface AnnuaireFilters {
   candidacyStatuses: CandidacyStatusStep[];
   trainingStatuses: CandidacyStatusStep[];
   feasibilityStatuses: FeasibilityStatusFilter[];
+  dossierDeValidationStatuses: DossierDeValidationStatusFilter[];
 }
 
 const getCandidaciesForAAP = graphql(`
@@ -25,6 +27,7 @@ const getCandidaciesForAAP = graphql(`
     $candidacyStatuses: [CandidacyStatusStep!]
     $trainingStatuses: [CandidacyStatusStep!]
     $feasibilityStatuses: [FeasibilityStatusFilter!]
+    $dossierDeValidationStatuses: [DossierDeValidationStatusFilter!]
   ) {
     candidacy_getCandidaciesForAAP(
       offset: $offset
@@ -34,6 +37,7 @@ const getCandidaciesForAAP = graphql(`
       candidacyStatuses: $candidacyStatuses
       trainingStatuses: $trainingStatuses
       feasibilityStatuses: $feasibilityStatuses
+      dossierDeValidationStatuses: $dossierDeValidationStatuses
     ) {
       rows {
         id
@@ -96,6 +100,7 @@ export const useAnnuaire = () => {
     const candidacyParam = searchParams.get("candidacy");
     const trainingParam = searchParams.get("training");
     const feasibilityParam = searchParams.get("feasibility");
+    const dossierDeValidationParam = searchParams.get("dossierDeValidation");
 
     return {
       candidacyStatuses: candidacyParam
@@ -106,6 +111,11 @@ export const useAnnuaire = () => {
         : [],
       feasibilityStatuses: feasibilityParam
         ? (feasibilityParam.split(",") as FeasibilityStatusFilter[])
+        : [],
+      dossierDeValidationStatuses: dossierDeValidationParam
+        ? (dossierDeValidationParam.split(
+            ",",
+          ) as DossierDeValidationStatusFilter[])
         : [],
     };
   }, [searchParams]);
@@ -129,6 +139,7 @@ export const useAnnuaire = () => {
       filters.candidacyStatuses,
       filters.trainingStatuses,
       filters.feasibilityStatuses,
+      filters.dossierDeValidationStatuses,
     ],
     queryFn: () =>
       graphqlClient.request(getCandidaciesForAAP, {
@@ -146,6 +157,10 @@ export const useAnnuaire = () => {
         feasibilityStatuses:
           filters.feasibilityStatuses.length > 0
             ? filters.feasibilityStatuses
+            : undefined,
+        dossierDeValidationStatuses:
+          filters.dossierDeValidationStatuses.length > 0
+            ? filters.dossierDeValidationStatuses
             : undefined,
       }),
   });
@@ -181,6 +196,18 @@ export const useAnnuaire = () => {
           queryParams.delete("feasibility");
         }
       }
+
+      if (newFilters.dossierDeValidationStatuses !== undefined) {
+        if (newFilters.dossierDeValidationStatuses.length > 0) {
+          queryParams.set(
+            "dossierDeValidation",
+            newFilters.dossierDeValidationStatuses.join(","),
+          );
+        } else {
+          queryParams.delete("dossierDeValidation");
+        }
+      }
+
       router.replace(`${pathname}?${queryParams.toString()}`, {
         scroll: false,
       });
@@ -232,11 +259,22 @@ export const useAnnuaire = () => {
     [filters.feasibilityStatuses, updateFilters],
   );
 
+  const toggleDossierDeValidationStatus = useCallback(
+    (status: DossierDeValidationStatusFilter) => {
+      const newStatuses = filters.dossierDeValidationStatuses.includes(status)
+        ? filters.dossierDeValidationStatuses.filter((s) => s !== status)
+        : [...filters.dossierDeValidationStatuses, status];
+      updateFilters({ dossierDeValidationStatuses: newStatuses });
+    },
+    [filters.dossierDeValidationStatuses, updateFilters],
+  );
+
   const clearFilters = useCallback(() => {
     const queryParams = new URLSearchParams(searchParams);
     queryParams.delete("candidacy");
     queryParams.delete("training");
     queryParams.delete("feasibility");
+    queryParams.delete("dossierDeValidation");
     queryParams.set("page", "1");
     router.replace(`${pathname}?${queryParams.toString()}`, { scroll: false });
   }, [pathname, router, searchParams]);
@@ -245,11 +283,13 @@ export const useAnnuaire = () => {
     () =>
       filters.candidacyStatuses.length > 0 ||
       filters.trainingStatuses.length > 0 ||
-      filters.feasibilityStatuses.length > 0,
+      filters.feasibilityStatuses.length > 0 ||
+      filters.dossierDeValidationStatuses.length > 0,
     [
       filters.candidacyStatuses,
       filters.trainingStatuses,
       filters.feasibilityStatuses,
+      filters.dossierDeValidationStatuses,
     ],
   );
 
@@ -262,6 +302,7 @@ export const useAnnuaire = () => {
     toggleCandidacyStatus,
     toggleTrainingStatus,
     toggleFeasibilityStatus,
+    toggleDossierDeValidationStatus,
     clearFilters,
     hasActiveFilters,
   };

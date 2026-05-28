@@ -157,6 +157,12 @@ export enum FeasibilityStatusFilter {
   RECEVABLE = "RECEVABLE",
 }
 
+export enum DossierDeValidationStatusFilter {
+  TRANSMETTRE = "TRANSMETTRE",
+  ENVOYE = "ENVOYE",
+  SIGNALE = "SIGNALE",
+}
+
 export interface GetCandidaciesForAAPInput {
   offset?: number;
   limit?: number;
@@ -165,4 +171,5 @@ export interface GetCandidaciesForAAPInput {
   candidacyStatuses?: CandidacyStatusStep[];
   trainingStatuses?: CandidacyStatusStep[];
   feasibilityStatuses?: FeasibilityStatusFilter[];
+  dossierDeValidationStatuses?: DossierDeValidationStatusFilter[];
 }

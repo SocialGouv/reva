@@ -7,6 +7,7 @@ import { useAuth } from "@/components/auth/auth";
 import {
   CandidacyStatusStep,
   FeasibilityStatusFilter,
+  DossierDeValidationStatusFilter,
 } from "@/graphql/generated/graphql";
 
 import { AnnuaireFilters } from "./annuaire.hook";
@@ -16,6 +17,9 @@ interface FiltersSectionProps {
   onToggleCandidacyStatus: (status: CandidacyStatusStep) => void;
   onToggleTrainingStatus: (status: CandidacyStatusStep) => void;
   onToggleFeasibilityStatus: (status: FeasibilityStatusFilter) => void;
+  onToggleDossierDeValidationStatus: (
+    status: DossierDeValidationStatusFilter,
+  ) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
 }
@@ -25,6 +29,7 @@ export const FiltersSection = ({
   onToggleCandidacyStatus,
   onToggleTrainingStatus,
   onToggleFeasibilityStatus,
+  onToggleDossierDeValidationStatus,
   onClearFilters,
   hasActiveFilters,
 }: FiltersSectionProps) => {
@@ -154,6 +159,43 @@ export const FiltersSection = ({
               nativeInputProps: {
                 checked: filters.feasibilityStatuses.includes("RECEVABLE"),
                 onChange: () => onToggleFeasibilityStatus("RECEVABLE"),
+              },
+            },
+          ]}
+        />
+      </Accordion>
+
+      <Accordion
+        label="Dossier de validation"
+        className="bg-white"
+        defaultExpanded
+      >
+        <Checkbox
+          small
+          className="mb-0"
+          options={[
+            {
+              label: "À transmettre",
+              nativeInputProps: {
+                checked:
+                  filters.dossierDeValidationStatuses.includes("TRANSMETTRE"),
+                onChange: () =>
+                  onToggleDossierDeValidationStatus("TRANSMETTRE"),
+              },
+            },
+            {
+              label: "Envoyé",
+              nativeInputProps: {
+                checked: filters.dossierDeValidationStatuses.includes("ENVOYE"),
+                onChange: () => onToggleDossierDeValidationStatus("ENVOYE"),
+              },
+            },
+            {
+              label: "Signalé",
+              nativeInputProps: {
+                checked:
+                  filters.dossierDeValidationStatuses.includes("SIGNALE"),
+                onChange: () => onToggleDossierDeValidationStatus("SIGNALE"),
               },
             },
           ]}

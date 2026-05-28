@@ -9,6 +9,7 @@ import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
 import { prismaClient } from "@/prisma/client";
 
 import {
+  DossierDeValidationStatusFilter,
   FeasibilityStatusFilter,
   GetCandidaciesForAAPInput,
   GetCandidaciesForCertificationAuthorityInput,
@@ -40,6 +41,7 @@ export const getCandidaciesForAAP = async ({
   candidacyStatuses,
   trainingStatuses,
   feasibilityStatuses,
+  dossierDeValidationStatuses,
 }: GetCandidaciesForAAPInput & {
   context: GraphqlContext;
 }) => {
@@ -158,14 +160,17 @@ export const getCandidaciesForAAP = async ({
 
   // Feasibility status filter
   if (feasibilityStatuses && feasibilityStatuses.length > 0) {
-    const feasibilityWhereInput: Prisma.FeasibilityWhereInput[] = [];
+    const feasibilityWhereInput: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] =
+      [];
 
     if (
       feasibilityStatuses.includes(FeasibilityStatusFilter.ENVOYE_AU_CANDIDAT)
     ) {
       feasibilityWhereInput.push({
-        dematerializedFeasibilityFile: {
-          sentToCandidateAt: { not: null },
+        feasibility: {
+          dematerializedFeasibilityFile: {
+            sentToCandidateAt: { not: null },
+          },
         },
       });
     }
@@ -176,9 +181,11 @@ export const getCandidaciesForAAP = async ({
       )
     ) {
       feasibilityWhereInput.push({
-        dematerializedFeasibilityFile: {
-          candidateConfirmationAt: { not: null },
-          swornStatementFileId: null,
+        feasibility: {
+          dematerializedFeasibilityFile: {
+            candidateConfirmationAt: { not: null },
+            swornStatementFileId: null,
+          },
         },
       });
     }
@@ -189,9 +196,11 @@ export const getCandidaciesForAAP = async ({
       )
     ) {
       feasibilityWhereInput.push({
-        dematerializedFeasibilityFile: {
-          candidateConfirmationAt: { not: null },
-          swornStatementFileId: { not: null },
+        feasibility: {
+          dematerializedFeasibilityFile: {
+            candidateConfirmationAt: { not: null },
+            swornStatementFileId: { not: null },
+          },
         },
       });
     }
@@ -202,26 +211,75 @@ export const getCandidaciesForAAP = async ({
       )
     ) {
       feasibilityWhereInput.push({
-        decision: "PENDING",
+        feasibility: {
+          decision: "PENDING",
+        },
       });
     }
 
     if (feasibilityStatuses.includes(FeasibilityStatusFilter.INCOMPLET)) {
       feasibilityWhereInput.push({
-        decision: "INCOMPLETE",
+        feasibility: {
+          decision: "INCOMPLETE",
+        },
       });
     }
 
     if (feasibilityStatuses.includes(FeasibilityStatusFilter.RECEVABLE)) {
       feasibilityWhereInput.push({
-        decision: "ADMISSIBLE",
+        feasibility: {
+          decision: "ADMISSIBLE",
+        },
       });
     }
 
     andClauses.push({
-      feasibility: {
-        OR: feasibilityWhereInput,
-      },
+      OR: feasibilityWhereInput,
+    });
+  }
+
+  // Dossier de validation status filter
+  if (dossierDeValidationStatuses && dossierDeValidationStatuses.length > 0) {
+    const dossierDeValidationWhereInput: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] =
+      [];
+
+    if (
+      dossierDeValidationStatuses.includes(
+        DossierDeValidationStatusFilter.TRANSMETTRE,
+      )
+    ) {
+      dossierDeValidationWhereInput.push({
+        feasibility: {
+          decision: "ADMISSIBLE",
+        },
+        dossierDeValidation: null,
+      });
+    }
+    if (
+      dossierDeValidationStatuses.includes(
+        DossierDeValidationStatusFilter.ENVOYE,
+      )
+    ) {
+      dossierDeValidationWhereInput.push({
+        dossierDeValidation: {
+          decision: "PENDING",
+        },
+      });
+    }
+    if (
+      dossierDeValidationStatuses.includes(
+        DossierDeValidationStatusFilter.SIGNALE,
+      )
+    ) {
+      dossierDeValidationWhereInput.push({
+        dossierDeValidation: {
+          decision: "INCOMPLETE",
+        },
+      });
+    }
+
+    andClauses.push({
+      OR: dossierDeValidationWhereInput,
     });
   }
 

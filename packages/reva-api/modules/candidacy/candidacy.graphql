@@ -287,6 +287,12 @@ enum FeasibilityStatusFilter {
   RECEVABLE
 }
 
+enum DossierDeValidationStatusFilter {
+  TRANSMETTRE
+  ENVOYE
+  SIGNALE
+}
+
 type Query {
   getCandidacyById(id: ID!): Candidacy
   getCandidacies(
@@ -343,6 +349,7 @@ type Query {
     candidacyStatuses: [CandidacyStatusStep!]
     trainingStatuses: [CandidacyStatusStep!]
     feasibilityStatuses: [FeasibilityStatusFilter!]
+    dossierDeValidationStatuses: [DossierDeValidationStatusFilter!]
   ): CandidacyPage!
 }
 
