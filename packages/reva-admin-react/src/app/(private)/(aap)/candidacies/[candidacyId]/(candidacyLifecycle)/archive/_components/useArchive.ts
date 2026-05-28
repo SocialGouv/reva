@@ -62,7 +62,7 @@ export const ARCHIVING_REASON_LABELS: Record<CandidacyArchivingReason, string> =
     REPRISE_EMPLOI: "Reprise d'emploi",
     ENTREE_EN_FORMATION: "Entrée en formation",
     DECOURAGEMENT: "Découragement",
-    RAISONS_PERSONNELLES: "Raisons personnelles",
+    RAISONS_PERSONNELLES: "Raisons personnelles (santé, famille)",
     CHANGEMENT_DE_PROJET: "Changement de projet",
     MANQUE_DE_TEMPS: "Manque de temps",
     NON_INTERESSE: "Pas / plus intéressé",
