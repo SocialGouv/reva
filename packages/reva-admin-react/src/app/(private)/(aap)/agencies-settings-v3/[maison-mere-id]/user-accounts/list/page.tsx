@@ -1,4 +1,5 @@
 "use client";
+import Badge from "@codegouvfr/react-dsfr/Badge";
 import Card from "@codegouvfr/react-dsfr/Card";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { formatDate } from "date-fns";
@@ -69,15 +70,28 @@ export default function UserAccountsListPage() {
             title={`${collaborateurAccount.firstname} ${collaborateurAccount.lastname}`}
             desc={collaborateurAccount.email}
             start={
-              <Tag small className="mb-1">
-                {collaborateurAccount.agences.length} organisme
-                {collaborateurAccount.agences.length > 1 ? "s" : ""}
-              </Tag>
+              collaborateurAccount.disabledAt ? (
+                <Badge severity="warning" small noIcon>
+                  Désactivé depuis le{" "}
+                  {formatDate(collaborateurAccount.disabledAt, "dd/MM/yyyy")}
+                </Badge>
+              ) : (
+                <Tag small className="mb-1">
+                  {collaborateurAccount.agences.length} organisme
+                  {collaborateurAccount.agences.length > 1 ? "s" : ""}
+                </Tag>
+              )
             }
-            enlargeLink
-            linkProps={{
-              href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${collaborateurAccount.id}`,
-            }}
+            {...(collaborateurAccount.disabledAt
+              ? {
+                  linkProps: undefined,
+                }
+              : {
+                  enlargeLink: true,
+                  linkProps: {
+                    href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${collaborateurAccount.id}`,
+                  },
+                })}
             endDetail={
               collaborateurAccount.disabledAt
                 ? `Compte désactivé le ${formatDate(collaborateurAccount.disabledAt, "dd/MM/yyyy")}`
