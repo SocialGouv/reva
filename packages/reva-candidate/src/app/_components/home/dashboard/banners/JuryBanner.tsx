@@ -159,7 +159,11 @@ export const JuryBanner = ({ jury }: JuryBannerProps) => {
   return (
     <BaseBanner
       content={
-        <>Vous recevrez bientôt le résultat de votre passage devant le jury.</>
+        <>
+          Vous recevrez bientôt le résultat de votre passage devant le jury. Les
+          résultats de jury sont renseignés par le certificateur. France VAE
+          n'assure pas ce cette fonction.
+        </>
       }
       testId="jury-banner-no-result"
     />
