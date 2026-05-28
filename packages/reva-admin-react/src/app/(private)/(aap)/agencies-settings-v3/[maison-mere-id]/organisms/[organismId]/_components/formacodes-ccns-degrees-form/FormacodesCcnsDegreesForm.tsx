@@ -364,7 +364,7 @@ const FormacodesCcnsDegreesForm = ({
                               ]}
                             />
 
-                            <Accordion label="" defaultExpanded>
+                            <Accordion label="">
                               <Checkbox
                                 className={`[&_label]:first-letter:uppercase mb-0 ${subDomainsForDomain.length > 1 ? "ml-4" : "ml-7"}`}
                                 options={subDomainsForDomain.map((od) => ({
