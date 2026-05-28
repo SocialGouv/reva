@@ -38,7 +38,7 @@ async function setupAuthenticated(page: Page) {
       path: "/candidat",
     },
   ]);
-  await page.goto("login?token=abc");
+  await page.goto("/candidat/");
 }
 
 async function setupKeycloakAuthRedirect(page: Page) {
