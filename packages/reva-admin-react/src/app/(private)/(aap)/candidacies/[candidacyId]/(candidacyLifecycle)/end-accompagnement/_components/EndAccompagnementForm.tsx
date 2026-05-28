@@ -28,6 +28,7 @@ const schema = z
       "CHOIX_AAP",
       "ABANDON_OU_NON_REPONSE_CANDIDAT",
       "FERMETURE_STRUCTURE",
+      "AUCUN_ACCOMPAGNEMENT_CONTRACTUALISE",
     ]),
     isCandidateDropOut: z.boolean(),
     endAccompagnementCandidateDropOutReasonId: sanitizedText({ minLength: 0 }),
@@ -199,6 +200,10 @@ export const EndAccompagnementForm = () => {
           </option>
           <option value="FERMETURE_STRUCTURE">
             Fermeture de la structure (ex : liquidation)
+          </option>
+          <option value="AUCUN_ACCOMPAGNEMENT_CONTRACTUALISE">
+            Aucun accompagnement n'a été contractualisé (ex : le candidat ne
+            souhaite finalement pas que vous l'accompagniez)
           </option>
         </Select>
 

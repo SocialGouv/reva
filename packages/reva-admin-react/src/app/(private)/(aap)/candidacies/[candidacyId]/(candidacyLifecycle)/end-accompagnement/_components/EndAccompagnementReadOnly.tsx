@@ -35,6 +35,8 @@ const getEndAccompagnementReasonLabel = (reason: EndAccompagnementReason) => {
       return "Abandon du candidat ou non-réponse du candidat après 3 relances";
     case "FERMETURE_STRUCTURE":
       return "Fermeture de la structure (ex : liquidation)";
+    case "AUCUN_ACCOMPAGNEMENT_CONTRACTUALISE":
+      return "Aucun accompagnement n'a été contractualisé (ex : le candidat ne souhaite finalement pas que vous l'accompagniez)";
     default:
       return "";
   }
