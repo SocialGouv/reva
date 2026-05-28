@@ -295,6 +295,12 @@ enum DossierDeValidationStatusFilter {
   SIGNALE
 }
 
+enum FundingStatusFilter {
+  FVAE_FINANCEMENT
+  FVAE_DEMANDE_PAIEMENT_A_ENVOYER
+  FVAE_DEMANDE_PAIEMENT_ENVOYEE
+}
+
 type Query {
   getCandidacyById(id: ID!): Candidacy
   getCandidacies(
@@ -354,6 +360,7 @@ type Query {
     dossierDeValidationStatuses: [DossierDeValidationStatusFilter!]
     juryStatuses: [JuryStatusFilter!]
     juryResults: [JuryResultFilter!]
+    fundingStatuses: [FundingStatusFilter!]
   ): CandidacyPage!
 }
 

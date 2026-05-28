@@ -15,6 +15,7 @@ import {
   GetCandidaciesForAAPInput,
   GetCandidaciesForCertificationAuthorityInput,
   JuryStatusFilter,
+  FundingStatusFilter,
 } from "../candidacy.types";
 import { candidacySearchWord } from "../utils/candidacy.helper";
 
@@ -46,6 +47,7 @@ export const getCandidaciesForAAP = async ({
   dossierDeValidationStatuses,
   juryStatuses,
   juryResults,
+  fundingStatuses,
 }: GetCandidaciesForAAPInput & {
   context: GraphqlContext;
 }) => {
@@ -350,6 +352,48 @@ export const getCandidaciesForAAP = async ({
     }
 
     andClauses.push({ OR: juryResultsWhereInput });
+  }
+
+  // Funding status filter
+  if (fundingStatuses && fundingStatuses.length > 0) {
+    const fundingStatusesWhereInput: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] =
+      [];
+
+    if (fundingStatuses.includes(FundingStatusFilter.FVAE_FINANCEMENT)) {
+      fundingStatusesWhereInput.push({
+        candidacy: {
+          financeModule: "unifvae",
+        },
+      });
+    }
+
+    if (
+      fundingStatuses.includes(
+        FundingStatusFilter.FVAE_DEMANDE_PAIEMENT_A_ENVOYER,
+      )
+    ) {
+      fundingStatusesWhereInput.push({
+        candidacy: {
+          financeModule: "unifvae",
+          fundingRequestUnifvae: { isNot: null },
+        },
+      });
+    }
+
+    if (
+      fundingStatuses.includes(
+        FundingStatusFilter.FVAE_DEMANDE_PAIEMENT_ENVOYEE,
+      )
+    ) {
+      fundingStatusesWhereInput.push({
+        candidacy: {
+          financeModule: "unifvae",
+          paymentRequestUnifvae: { confirmedAt: { not: null } },
+        },
+      });
+    }
+
+    andClauses.push({ OR: fundingStatusesWhereInput });
   }
 
   const whereClause: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput =

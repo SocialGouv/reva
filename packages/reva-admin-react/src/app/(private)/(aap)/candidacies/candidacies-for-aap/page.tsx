@@ -40,6 +40,7 @@ export default function AnnuairePage() {
     toggleDossierDeValidationStatus,
     toggleJuryStatus,
     toggleJuryResults,
+    toggleFundingStatus,
     clearFilters,
     hasActiveFilters,
   } = useAnnuaire();
@@ -113,6 +114,7 @@ export default function AnnuairePage() {
           onToggleDossierDeValidationStatus={toggleDossierDeValidationStatus}
           onToggleJuryStatus={toggleJuryStatus}
           onToggleJuryResults={toggleJuryResults}
+          onToggleFundingStatus={toggleFundingStatus}
           onClearFilters={clearFilters}
           hasActiveFilters={hasActiveFilters}
         />

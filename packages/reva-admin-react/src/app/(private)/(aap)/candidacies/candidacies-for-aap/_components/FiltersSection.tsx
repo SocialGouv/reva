@@ -10,6 +10,7 @@ import {
   DossierDeValidationStatusFilter,
   JuryStatusFilter,
   JuryResultFilter,
+  FundingStatusFilter,
 } from "@/graphql/generated/graphql";
 
 import { AnnuaireFilters } from "./annuaire.hook";
@@ -24,6 +25,7 @@ interface FiltersSectionProps {
   ) => void;
   onToggleJuryStatus: (status: JuryStatusFilter) => void;
   onToggleJuryResults: (results: JuryResultFilter[]) => void;
+  onToggleFundingStatus: (status: FundingStatusFilter) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
 }
@@ -36,6 +38,7 @@ export const FiltersSection = ({
   onToggleDossierDeValidationStatus,
   onToggleJuryStatus,
   onToggleJuryResults,
+  onToggleFundingStatus,
   onClearFilters,
   hasActiveFilters,
 }: FiltersSectionProps) => {
@@ -313,6 +316,46 @@ export const FiltersSection = ({
                     "CANDIDATE_ABSENT",
                   ]);
                 },
+              },
+            },
+          ]}
+        />
+      </Accordion>
+
+      <Accordion
+        label="Financement France VAE"
+        className="bg-white"
+        defaultExpanded
+      >
+        <Checkbox
+          small
+          className="mb-0"
+          options={[
+            {
+              label: "Candidatures financées par France VAE",
+              nativeInputProps: {
+                checked: filters.fundingStatuses.includes("FVAE_FINANCEMENT"),
+                onChange: () => onToggleFundingStatus("FVAE_FINANCEMENT"),
+              },
+            },
+            {
+              label: "Demande de paiement à envoyer",
+              nativeInputProps: {
+                checked: filters.fundingStatuses.includes(
+                  "FVAE_DEMANDE_PAIEMENT_A_ENVOYER",
+                ),
+                onChange: () =>
+                  onToggleFundingStatus("FVAE_DEMANDE_PAIEMENT_A_ENVOYER"),
+              },
+            },
+            {
+              label: "Demande de paiement envoyée",
+              nativeInputProps: {
+                checked: filters.fundingStatuses.includes(
+                  "FVAE_DEMANDE_PAIEMENT_ENVOYEE",
+                ),
+                onChange: () =>
+                  onToggleFundingStatus("FVAE_DEMANDE_PAIEMENT_ENVOYEE"),
               },
             },
           ]}

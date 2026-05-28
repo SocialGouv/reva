@@ -168,6 +168,12 @@ export enum DossierDeValidationStatusFilter {
   SIGNALE = "SIGNALE",
 }
 
+export enum FundingStatusFilter {
+  FVAE_FINANCEMENT = "FVAE_FINANCEMENT",
+  FVAE_DEMANDE_PAIEMENT_A_ENVOYER = "FVAE_DEMANDE_PAIEMENT_A_ENVOYER",
+  FVAE_DEMANDE_PAIEMENT_ENVOYEE = "FVAE_DEMANDE_PAIEMENT_ENVOYEE",
+}
+
 export interface GetCandidaciesForAAPInput {
   offset?: number;
   limit?: number;
@@ -179,4 +185,5 @@ export interface GetCandidaciesForAAPInput {
   dossierDeValidationStatuses?: DossierDeValidationStatusFilter[];
   juryStatuses?: JuryStatusFilter[];
   juryResults?: JuryResultFilter[];
+  fundingStatuses?: FundingStatusFilter[];
 }
