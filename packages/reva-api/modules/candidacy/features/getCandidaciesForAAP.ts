@@ -2,6 +2,7 @@ import {
   CandidacyStatusStep,
   CandidacyTypeAccompagnement,
   DossierDeValidationStatus,
+  FeasibilityStatus,
   Prisma,
 } from "@prisma/client";
 
@@ -16,6 +17,7 @@ import {
   GetCandidaciesForCertificationAuthorityInput,
   JuryStatusFilter,
   FundingStatusFilter,
+  ArchiveStatusFilter,
 } from "../candidacy.types";
 import { candidacySearchWord } from "../utils/candidacy.helper";
 
@@ -48,6 +50,7 @@ export const getCandidaciesForAAP = async ({
   juryStatuses,
   juryResults,
   fundingStatuses,
+  archiveStatuses,
 }: GetCandidaciesForAAPInput & {
   context: GraphqlContext;
 }) => {
@@ -59,7 +62,6 @@ export const getCandidaciesForAAP = async ({
     {
       candidacy: {
         candidateId: { not: null },
-        candidacyDropOut: null,
         endAccompagnementStatus: {
           notIn: ["CONFIRMED_BY_CANDIDATE", "CONFIRMED_BY_ADMIN"],
         },
@@ -394,6 +396,41 @@ export const getCandidaciesForAAP = async ({
     }
 
     andClauses.push({ OR: fundingStatusesWhereInput });
+  }
+
+  // Archive status filter
+  if (archiveStatuses && archiveStatuses.length > 0) {
+    const archiveStatusesWhereInput: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] =
+      [];
+
+    if (archiveStatuses.includes(ArchiveStatusFilter.NON_RECEVABLE)) {
+      archiveStatusesWhereInput.push({
+        feasibility: {
+          decision: FeasibilityStatus.REJECTED,
+        },
+      });
+    }
+
+    if (archiveStatuses.includes(ArchiveStatusFilter.ARCHIVE)) {
+      archiveStatusesWhereInput.push({
+        OR: [
+          {
+            candidacy: {
+              status: CandidacyStatusStep.ARCHIVE,
+            },
+          },
+          {
+            candidacy: {
+              candidacyDropOut: {
+                isNot: null,
+              },
+            },
+          },
+        ],
+      });
+    }
+
+    andClauses.push({ OR: archiveStatusesWhereInput });
   }
 
   const whereClause: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput =

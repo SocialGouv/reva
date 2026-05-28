@@ -174,6 +174,11 @@ export enum FundingStatusFilter {
   FVAE_DEMANDE_PAIEMENT_ENVOYEE = "FVAE_DEMANDE_PAIEMENT_ENVOYEE",
 }
 
+export enum ArchiveStatusFilter {
+  NON_RECEVABLE = "NON_RECEVABLE",
+  ARCHIVE = "ARCHIVE",
+}
+
 export interface GetCandidaciesForAAPInput {
   offset?: number;
   limit?: number;
@@ -186,4 +191,5 @@ export interface GetCandidaciesForAAPInput {
   juryStatuses?: JuryStatusFilter[];
   juryResults?: JuryResultFilter[];
   fundingStatuses?: FundingStatusFilter[];
+  archiveStatuses?: ArchiveStatusFilter[];
 }

@@ -11,6 +11,7 @@ import {
   JuryStatusFilter,
   JuryResultFilter,
   FundingStatusFilter,
+  ArchiveStatusFilter,
 } from "@/graphql/generated/graphql";
 
 import { AnnuaireFilters } from "./annuaire.hook";
@@ -26,6 +27,7 @@ interface FiltersSectionProps {
   onToggleJuryStatus: (status: JuryStatusFilter) => void;
   onToggleJuryResults: (results: JuryResultFilter[]) => void;
   onToggleFundingStatus: (status: FundingStatusFilter) => void;
+  onToggleArchiveStatus: (status: ArchiveStatusFilter) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
 }
@@ -39,6 +41,7 @@ export const FiltersSection = ({
   onToggleJuryStatus,
   onToggleJuryResults,
   onToggleFundingStatus,
+  onToggleArchiveStatus,
   onClearFilters,
   hasActiveFilters,
 }: FiltersSectionProps) => {
@@ -356,6 +359,33 @@ export const FiltersSection = ({
                 ),
                 onChange: () =>
                   onToggleFundingStatus("FVAE_DEMANDE_PAIEMENT_ENVOYEE"),
+              },
+            },
+          ]}
+        />
+      </Accordion>
+
+      <Accordion
+        label="Candidatures arrêtées"
+        className="bg-white"
+        defaultExpanded
+      >
+        <Checkbox
+          small
+          className="mb-0"
+          options={[
+            {
+              label: "Non recevables",
+              nativeInputProps: {
+                checked: filters.archiveStatuses.includes("NON_RECEVABLE"),
+                onChange: () => onToggleArchiveStatus("NON_RECEVABLE"),
+              },
+            },
+            {
+              label: "Abandonées",
+              nativeInputProps: {
+                checked: filters.archiveStatuses.includes("ARCHIVE"),
+                onChange: () => onToggleArchiveStatus("ARCHIVE"),
               },
             },
           ]}

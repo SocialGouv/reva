@@ -301,6 +301,11 @@ enum FundingStatusFilter {
   FVAE_DEMANDE_PAIEMENT_ENVOYEE
 }
 
+enum ArchiveStatusFilter {
+  NON_RECEVABLE
+  ARCHIVE
+}
+
 type Query {
   getCandidacyById(id: ID!): Candidacy
   getCandidacies(
@@ -361,6 +366,7 @@ type Query {
     juryStatuses: [JuryStatusFilter!]
     juryResults: [JuryResultFilter!]
     fundingStatuses: [FundingStatusFilter!]
+    archiveStatuses: [ArchiveStatusFilter!]
   ): CandidacyPage!
 }
 
