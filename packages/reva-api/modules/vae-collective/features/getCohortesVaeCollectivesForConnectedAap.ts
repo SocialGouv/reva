@@ -37,21 +37,21 @@ export const getCohortesVaeCollectivesForConnectedAap = async ({
   //Si l'aap est un aap non gestionnaire de maison mère on
   //retourne toutes les cohortes de vae collectives dont au moins une candidature est associée à son organisme
   else if (userRoles.includes("manage_candidacy")) {
-    const userOrganism = await prismaClient.organism.findFirst({
+    const userOrganisms = await prismaClient.organism.findMany({
       where: {
         organismOnAccounts: {
           some: { account: { keycloakId: userKeycloakId } },
         },
       },
     });
-    if (!userOrganism) {
+    if (userOrganisms.length === 0) {
       return [];
     }
     return prismaClient.cohorteVaeCollective.findMany({
       where: {
         candidacy: {
           some: {
-            organismId: userOrganism.id,
+            organismId: { in: userOrganisms.map((organism) => organism.id) },
           },
         },
       },
