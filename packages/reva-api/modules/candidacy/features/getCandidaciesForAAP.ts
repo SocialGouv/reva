@@ -56,6 +56,7 @@ export const getCandidaciesForAAP = async ({
   archiveStatuses,
   accompagnementStatuses,
   cohorteVaeCollectiveIds,
+  maisonMereAAPId,
 }: GetCandidaciesForAAPInput & {
   context: GraphqlContext;
 }) => {
@@ -97,6 +98,34 @@ export const getCandidaciesForAAP = async ({
         },
       },
     });
+  }
+
+  // Filters for admin users with maisonMereAAPId
+  if (isAdmin && maisonMereAAPId) {
+    const maisonMereAAP = await prismaClient.maisonMereAAP.findUnique({
+      where: { id: maisonMereAAPId },
+      select: {
+        gestionnaire: {
+          select: {
+            keycloakId: true,
+          },
+        },
+      },
+    });
+
+    if (maisonMereAAP?.gestionnaire.keycloakId) {
+      andClauses.push({
+        candidacy: {
+          organism: {
+            maisonMereAAP: {
+              gestionnaire: {
+                keycloakId: maisonMereAAP?.gestionnaire.keycloakId,
+              },
+            },
+          },
+        },
+      });
+    }
   }
 
   // Search filter

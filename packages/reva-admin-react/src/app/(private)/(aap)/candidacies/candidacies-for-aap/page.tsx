@@ -1,14 +1,18 @@
 "use client";
 
+import Button from "@codegouvfr/react-dsfr/Button";
 import DsfrPagination from "@codegouvfr/react-dsfr/Pagination";
 import SearchBar from "@codegouvfr/react-dsfr/SearchBar";
 import { redirect, usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
+import { useAuth } from "@/components/auth/auth";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { SearchResultsHeader } from "@/components/search-results-header/SearchResultsHeader";
 
 import { TypeAccompagnement } from "@/graphql/generated/graphql";
+
+import { MaisonMereAAP } from "../_components/MaisonMereAAP";
 
 import { useAnnuaire } from "./_components/annuaire.hook";
 import { AnnuaireEmptyState } from "./_components/AnnuaireEmptyState";
@@ -27,6 +31,8 @@ export default function AnnuairePage() {
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
+
+  const { isAdmin } = useAuth();
 
   const {
     candidacies,
@@ -47,6 +53,7 @@ export default function AnnuairePage() {
     toggleCohorteVAECollective,
     clearFilters,
     hasActiveFilters,
+    maisonMereAAPId,
   } = useAnnuaire();
 
   const [localSearchFilter, setLocalSearchFilter] = useState(searchFilter);
@@ -77,8 +84,37 @@ export default function AnnuairePage() {
     setLocalSearchFilter(searchFilter);
   }, [searchFilter]);
 
+  const getPathnameWithoutMaisonMereAAPId = (): string => {
+    const currentParams = new URLSearchParams(searchParams);
+    currentParams.delete("maisonMereAAPId");
+    return `${pathname}?${currentParams.toString()}`;
+  };
+
   return (
     <div className="w-full mx-auto max-w-[1248px]">
+      {isAdmin && maisonMereAAPId && (
+        <div className="mb-6">
+          <h1>Candidatures du gestionnaire</h1>
+
+          <MaisonMereAAP maisonMereAAPId={maisonMereAAPId} />
+
+          <p className="mt-2">
+            Ici, vous pouvez rechercher une ou plusieurs candidatures gérées par
+            ce gestionnaire. Pour retrouver toutes les candidatures, cliquez sur
+            “Accéder à toutes les candidatures”.
+          </p>
+
+          <Button
+            priority="secondary"
+            linkProps={{
+              href: getPathnameWithoutMaisonMereAAPId(),
+            }}
+          >
+            Accéder à toutes les candidatures
+          </Button>
+        </div>
+      )}
+
       <h1 className="mb-10">Candidatures</h1>
 
       <div className="mb-10 bg-white px-6 py-8 shadow-lifted">

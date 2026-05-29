@@ -35,6 +35,11 @@ const getCohortesForAAP = graphql(`
     cohortesVaeCollectivesForConnectedAap {
       id
       nom
+      organism {
+        maisonMereAAP {
+          id
+        }
+      }
     }
   }
 `);
@@ -54,6 +59,7 @@ const getCandidaciesForAAP = graphql(`
     $archiveStatuses: [ArchiveStatusFilter!]
     $accompagnementStatuses: [AccompagnementStatusFilter!]
     $cohorteVaeCollectiveIds: [ID!]
+    $maisonMereAAPId: ID
   ) {
     candidacy_getCandidaciesForAAP(
       offset: $offset
@@ -70,6 +76,7 @@ const getCandidaciesForAAP = graphql(`
       archiveStatuses: $archiveStatuses
       accompagnementStatuses: $accompagnementStatuses
       cohorteVaeCollectiveIds: $cohorteVaeCollectiveIds
+      maisonMereAAPId: $maisonMereAAPId
     ) {
       rows {
         id
@@ -127,6 +134,8 @@ export const useAnnuaire = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+
+  const maisonMereAAPIdParam = searchParams.get("maisonMereAAPId");
 
   const filters = useMemo<AnnuaireFilters>(() => {
     const candidacyParam = searchParams.get("candidacy");
@@ -204,6 +213,7 @@ export const useAnnuaire = () => {
       filters.archiveStatuses,
       filters.accompagnementStatuses,
       filters.cohorteVaeCollectiveIds,
+      maisonMereAAPIdParam,
     ],
     queryFn: () =>
       graphqlClient.request(getCandidaciesForAAP, {
@@ -246,6 +256,7 @@ export const useAnnuaire = () => {
           filters.cohorteVaeCollectiveIds.length > 0
             ? filters.cohorteVaeCollectiveIds
             : undefined,
+        maisonMereAAPId: maisonMereAAPIdParam,
       }),
   });
 
@@ -255,8 +266,15 @@ export const useAnnuaire = () => {
   });
 
   const cohortes = useMemo(() => {
-    return cohortesData?.cohortesVaeCollectivesForConnectedAap || [];
-  }, [cohortesData]);
+    const cohortes = cohortesData?.cohortesVaeCollectivesForConnectedAap || [];
+    if (maisonMereAAPIdParam) {
+      return cohortes.filter(
+        (cohorte) =>
+          cohorte.organism?.maisonMereAAP?.id === maisonMereAAPIdParam,
+      );
+    }
+    return cohortes;
+  }, [cohortesData, maisonMereAAPIdParam]);
 
   const updateFilters = useCallback(
     (newFilters: Partial<AnnuaireFilters>) => {
@@ -546,5 +564,6 @@ export const useAnnuaire = () => {
     toggleCohorteVAECollective,
     clearFilters,
     hasActiveFilters,
+    maisonMereAAPId: maisonMereAAPIdParam,
   };
 };

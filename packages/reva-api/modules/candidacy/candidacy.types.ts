@@ -199,4 +199,5 @@ export interface GetCandidaciesForAAPInput {
   archiveStatuses?: ArchiveStatusFilter[];
   accompagnementStatuses?: AccompagnementStatusFilter[];
   cohorteVaeCollectiveIds?: string[];
+  maisonMereAAPId?: string;
 }

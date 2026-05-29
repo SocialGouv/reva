@@ -374,6 +374,7 @@ type Query {
     archiveStatuses: [ArchiveStatusFilter!]
     accompagnementStatuses: [AccompagnementStatusFilter!]
     cohorteVaeCollectiveIds: [ID!]
+    maisonMereAAPId: ID
   ): CandidacyPage!
 }
 

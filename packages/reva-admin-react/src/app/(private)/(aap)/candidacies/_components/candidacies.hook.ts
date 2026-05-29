@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
@@ -45,6 +46,11 @@ const getCandidacyByStatusCountAndCohortesVaeCollectives = graphql(`
     cohortesVaeCollectivesForConnectedAap {
       id
       nom
+      organism {
+        maisonMereAAP {
+          id
+        }
+      }
     }
   }
 `);
@@ -193,9 +199,21 @@ export const useCandidacies = ({
   const candidaciesByStatusCount =
     getCandidacyByStatusCountAndCohortesVaeCollectivesResponse?.candidacy_candidacyCountByStatus;
   const candidaciesByStatus = getCandidaciesByStatusResponse?.getCandidacies;
-  const cohortesVaeCollectives =
-    getCandidacyByStatusCountAndCohortesVaeCollectivesResponse?.cohortesVaeCollectivesForConnectedAap ||
-    [];
+
+  const cohortesVaeCollectives = useMemo(() => {
+    const cohortes =
+      getCandidacyByStatusCountAndCohortesVaeCollectivesResponse?.cohortesVaeCollectivesForConnectedAap ||
+      [];
+    if (maisonMereAAPId) {
+      return cohortes.filter(
+        (cohorte) => cohorte.organism?.maisonMereAAP?.id === maisonMereAAPId,
+      );
+    }
+    return cohortes;
+  }, [
+    getCandidacyByStatusCountAndCohortesVaeCollectivesResponse,
+    maisonMereAAPId,
+  ]);
 
   return {
     candidaciesByStatusCount,

@@ -31,6 +31,11 @@ const MaisonMereAapPage = () => {
   const isAppAccountListingPageFeatureActive = isFeatureActive(
     "AAP_ACCOUNTS_LISTING_PAGE",
   );
+  const isCandidaciesForAAPEnabled = isFeatureActive("CANDIDACIES_FOR_AAP");
+
+  const candidaciesUrl = isCandidaciesForAAPEnabled
+    ? `/candidacies/candidacies-for-aap/?page=1&maisonMereAAPId=${maisonMereAAPId}`
+    : `/candidacies/?status=ACTIVE_HORS_ABANDON&page=1&maisonMereAAPId=${maisonMereAAPId}`;
 
   if (!maisonMereAAP) return null;
 
@@ -81,7 +86,7 @@ const MaisonMereAapPage = () => {
           <Button
             priority="secondary"
             linkProps={{
-              href: `/candidacies/?status=ACTIVE_HORS_ABANDON&page=1&maisonMereAAPId=${maisonMereAAPId}`,
+              href: candidaciesUrl,
               target: "_blank",
             }}
           >
