@@ -2,10 +2,17 @@ import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/Enh
 
 export const CertificationAuthoritySummaryCardV2 = ({
   label,
+  viewCertificationAuthorityDetailsHref,
 }: {
   label?: string | null;
+  viewCertificationAuthorityDetailsHref: string;
 }) => (
-  <EnhancedSectionCard title="Certificateur">
+  <EnhancedSectionCard
+    title="Certificateur"
+    isEditable
+    buttonOnClickHref={viewCertificationAuthorityDetailsHref}
+    customButtonTitle="Consulter"
+  >
     <p className="text-xl font-bold mb-0 mr-6 leading-loose">{label}</p>
   </EnhancedSectionCard>
 );

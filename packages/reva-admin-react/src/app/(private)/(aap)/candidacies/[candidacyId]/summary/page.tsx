@@ -226,6 +226,7 @@ const CandidacySummaryPage = () => {
             {isNewCertificationAuthorityCardFeatureActive ? (
               <CertificationAuthoritySummaryCardV2
                 label={candidacy.certificationAuthority?.label}
+                viewCertificationAuthorityDetailsHref={`/candidacies/${candidacyId}/summary/certification-authority-details`}
               />
             ) : (
               <CertificationAuthoritySummaryCard
