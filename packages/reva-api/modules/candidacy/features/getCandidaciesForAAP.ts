@@ -2,6 +2,7 @@ import {
   CandidacyStatusStep,
   CandidacyTypeAccompagnement,
   DossierDeValidationStatus,
+  EndAccompagnementStatus,
   FeasibilityStatus,
   Prisma,
 } from "@prisma/client";
@@ -18,6 +19,7 @@ import {
   JuryStatusFilter,
   FundingStatusFilter,
   ArchiveStatusFilter,
+  AccompagnementStatusFilter,
 } from "../candidacy.types";
 import { candidacySearchWord } from "../utils/candidacy.helper";
 
@@ -51,6 +53,7 @@ export const getCandidaciesForAAP = async ({
   juryResults,
   fundingStatuses,
   archiveStatuses,
+  accompagnementStatuses,
 }: GetCandidaciesForAAPInput & {
   context: GraphqlContext;
 }) => {
@@ -62,9 +65,6 @@ export const getCandidaciesForAAP = async ({
     {
       candidacy: {
         candidateId: { not: null },
-        endAccompagnementStatus: {
-          notIn: ["CONFIRMED_BY_CANDIDATE", "CONFIRMED_BY_ADMIN"],
-        },
       },
     },
   ];
@@ -431,6 +431,40 @@ export const getCandidaciesForAAP = async ({
     }
 
     andClauses.push({ OR: archiveStatusesWhereInput });
+  }
+
+  // Accompagnement status filter
+  if (accompagnementStatuses && accompagnementStatuses.length > 0) {
+    const accompagnementStatusesWhereInput: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] =
+      [];
+
+    if (accompagnementStatuses.includes(AccompagnementStatusFilter.EN_COURS)) {
+      accompagnementStatusesWhereInput.push({
+        candidacy: {
+          endAccompagnementStatus: {
+            in: [
+              EndAccompagnementStatus.NOT_REQUESTED,
+              EndAccompagnementStatus.PENDING,
+            ],
+          },
+        },
+      });
+    }
+
+    if (accompagnementStatuses.includes(AccompagnementStatusFilter.TERMINE)) {
+      accompagnementStatusesWhereInput.push({
+        candidacy: {
+          endAccompagnementStatus: {
+            in: [
+              EndAccompagnementStatus.CONFIRMED_BY_CANDIDATE,
+              EndAccompagnementStatus.CONFIRMED_BY_ADMIN,
+            ],
+          },
+        },
+      });
+    }
+
+    andClauses.push({ OR: accompagnementStatusesWhereInput });
   }
 
   const whereClause: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput =

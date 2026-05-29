@@ -306,6 +306,11 @@ enum ArchiveStatusFilter {
   ARCHIVE
 }
 
+enum AccompagnementStatusFilter {
+  EN_COURS
+  TERMINE
+}
+
 type Query {
   getCandidacyById(id: ID!): Candidacy
   getCandidacies(
@@ -367,6 +372,7 @@ type Query {
     juryResults: [JuryResultFilter!]
     fundingStatuses: [FundingStatusFilter!]
     archiveStatuses: [ArchiveStatusFilter!]
+    accompagnementStatuses: [AccompagnementStatusFilter!]
   ): CandidacyPage!
 }
 

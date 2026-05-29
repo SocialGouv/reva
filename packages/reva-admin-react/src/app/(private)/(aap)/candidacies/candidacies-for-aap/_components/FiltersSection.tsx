@@ -12,6 +12,7 @@ import {
   JuryResultFilter,
   FundingStatusFilter,
   ArchiveStatusFilter,
+  AccompagnementStatusFilter,
 } from "@/graphql/generated/graphql";
 
 import { AnnuaireFilters } from "./annuaire.hook";
@@ -28,6 +29,7 @@ interface FiltersSectionProps {
   onToggleJuryResults: (results: JuryResultFilter[]) => void;
   onToggleFundingStatus: (status: FundingStatusFilter) => void;
   onToggleArchiveStatus: (status: ArchiveStatusFilter) => void;
+  onToggleAccompagnementStatus: (status: AccompagnementStatusFilter) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
 }
@@ -42,6 +44,7 @@ export const FiltersSection = ({
   onToggleJuryResults,
   onToggleFundingStatus,
   onToggleArchiveStatus,
+  onToggleAccompagnementStatus,
   onClearFilters,
   hasActiveFilters,
 }: FiltersSectionProps) => {
@@ -386,6 +389,29 @@ export const FiltersSection = ({
               nativeInputProps: {
                 checked: filters.archiveStatuses.includes("ARCHIVE"),
                 onChange: () => onToggleArchiveStatus("ARCHIVE"),
+              },
+            },
+          ]}
+        />
+      </Accordion>
+
+      <Accordion label="Accompagnement" className="bg-white" defaultExpanded>
+        <Checkbox
+          small
+          className="mb-0"
+          options={[
+            {
+              label: "En cours",
+              nativeInputProps: {
+                checked: filters.accompagnementStatuses.includes("EN_COURS"),
+                onChange: () => onToggleAccompagnementStatus("EN_COURS"),
+              },
+            },
+            {
+              label: "Terminé",
+              nativeInputProps: {
+                checked: filters.accompagnementStatuses.includes("TERMINE"),
+                onChange: () => onToggleAccompagnementStatus("TERMINE"),
               },
             },
           ]}

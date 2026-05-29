@@ -14,6 +14,7 @@ import {
   JuryResultFilter,
   FundingStatusFilter,
   ArchiveStatusFilter,
+  AccompagnementStatusFilter,
 } from "@/graphql/generated/graphql";
 
 export interface AnnuaireFilters {
@@ -25,6 +26,7 @@ export interface AnnuaireFilters {
   juryResults: JuryResultFilter[];
   fundingStatuses: FundingStatusFilter[];
   archiveStatuses: ArchiveStatusFilter[];
+  accompagnementStatuses: AccompagnementStatusFilter[];
 }
 
 const getCandidaciesForAAP = graphql(`
@@ -40,6 +42,7 @@ const getCandidaciesForAAP = graphql(`
     $juryResults: [JuryResultFilter!]
     $fundingStatuses: [FundingStatusFilter!]
     $archiveStatuses: [ArchiveStatusFilter!]
+    $accompagnementStatuses: [AccompagnementStatusFilter!]
   ) {
     candidacy_getCandidaciesForAAP(
       offset: $offset
@@ -54,6 +57,7 @@ const getCandidaciesForAAP = graphql(`
       juryResults: $juryResults
       fundingStatuses: $fundingStatuses
       archiveStatuses: $archiveStatuses
+      accompagnementStatuses: $accompagnementStatuses
     ) {
       rows {
         id
@@ -121,6 +125,7 @@ export const useAnnuaire = () => {
     const juryResultParam = searchParams.get("juryResults");
     const fundingParam = searchParams.get("funding");
     const archiveParam = searchParams.get("archive");
+    const accompagnementParam = searchParams.get("accompagnement");
 
     return {
       candidacyStatuses: candidacyParam
@@ -149,6 +154,9 @@ export const useAnnuaire = () => {
       archiveStatuses: archiveParam
         ? (archiveParam.split(",") as ArchiveStatusFilter[])
         : [],
+      accompagnementStatuses: accompagnementParam
+        ? (accompagnementParam.split(",") as AccompagnementStatusFilter[])
+        : [],
     };
   }, [searchParams]);
 
@@ -176,6 +184,7 @@ export const useAnnuaire = () => {
       filters.juryResults,
       filters.fundingStatuses,
       filters.archiveStatuses,
+      filters.accompagnementStatuses,
     ],
     queryFn: () =>
       graphqlClient.request(getCandidaciesForAAP, {
@@ -209,6 +218,10 @@ export const useAnnuaire = () => {
         archiveStatuses:
           filters.archiveStatuses.length > 0
             ? filters.archiveStatuses
+            : undefined,
+        accompagnementStatuses:
+          filters.accompagnementStatuses.length > 0
+            ? filters.accompagnementStatuses
             : undefined,
       }),
   });
@@ -285,6 +298,17 @@ export const useAnnuaire = () => {
           queryParams.set("archive", newFilters.archiveStatuses.join(","));
         } else {
           queryParams.delete("archive");
+        }
+      }
+
+      if (newFilters.accompagnementStatuses !== undefined) {
+        if (newFilters.accompagnementStatuses.length > 0) {
+          queryParams.set(
+            "accompagnement",
+            newFilters.accompagnementStatuses.join(","),
+          );
+        } else {
+          queryParams.delete("accompagnement");
         }
       }
 
@@ -393,6 +417,16 @@ export const useAnnuaire = () => {
     [filters.archiveStatuses, updateFilters],
   );
 
+  const toggleAccompagnementStatus = useCallback(
+    (status: AccompagnementStatusFilter) => {
+      const newStatuses = filters.accompagnementStatuses.includes(status)
+        ? filters.accompagnementStatuses.filter((s) => s !== status)
+        : [...filters.accompagnementStatuses, status];
+      updateFilters({ accompagnementStatuses: newStatuses });
+    },
+    [filters.accompagnementStatuses, updateFilters],
+  );
+
   const clearFilters = useCallback(() => {
     const queryParams = new URLSearchParams(searchParams);
     queryParams.set("page", "1");
@@ -405,6 +439,7 @@ export const useAnnuaire = () => {
     queryParams.delete("juryResults");
     queryParams.delete("funding");
     queryParams.delete("archive");
+    queryParams.delete("accompagnement");
     router.replace(`${pathname}?${queryParams.toString()}`, { scroll: false });
   }, [pathname, router, searchParams]);
 
@@ -417,7 +452,8 @@ export const useAnnuaire = () => {
       filters.juryStatuses.length > 0 ||
       filters.juryResults.length > 0 ||
       filters.fundingStatuses.length > 0 ||
-      filters.archiveStatuses.length > 0,
+      filters.archiveStatuses.length > 0 ||
+      filters.accompagnementStatuses.length > 0,
     [
       filters.candidacyStatuses,
       filters.trainingStatuses,
@@ -427,6 +463,7 @@ export const useAnnuaire = () => {
       filters.juryResults,
       filters.fundingStatuses,
       filters.archiveStatuses,
+      filters.accompagnementStatuses,
     ],
   );
 
@@ -444,6 +481,7 @@ export const useAnnuaire = () => {
     toggleJuryResults,
     toggleFundingStatus,
     toggleArchiveStatus,
+    toggleAccompagnementStatus,
     clearFilters,
     hasActiveFilters,
   };

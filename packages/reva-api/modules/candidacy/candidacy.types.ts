@@ -179,6 +179,11 @@ export enum ArchiveStatusFilter {
   ARCHIVE = "ARCHIVE",
 }
 
+export enum AccompagnementStatusFilter {
+  EN_COURS = "EN_COURS",
+  TERMINE = "TERMINE",
+}
+
 export interface GetCandidaciesForAAPInput {
   offset?: number;
   limit?: number;
@@ -192,4 +197,5 @@ export interface GetCandidaciesForAAPInput {
   juryResults?: JuryResultFilter[];
   fundingStatuses?: FundingStatusFilter[];
   archiveStatuses?: ArchiveStatusFilter[];
+  accompagnementStatuses?: AccompagnementStatusFilter[];
 }
