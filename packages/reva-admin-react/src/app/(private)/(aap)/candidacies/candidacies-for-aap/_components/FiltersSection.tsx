@@ -19,6 +19,7 @@ import { AnnuaireFilters } from "./annuaire.hook";
 
 interface FiltersSectionProps {
   filters: AnnuaireFilters;
+  cohortes: Array<{ id: string; nom: string }>;
   onToggleCandidacyStatus: (status: CandidacyStatusStep) => void;
   onToggleTrainingStatus: (status: CandidacyStatusStep) => void;
   onToggleFeasibilityStatus: (status: FeasibilityStatusFilter) => void;
@@ -30,12 +31,14 @@ interface FiltersSectionProps {
   onToggleFundingStatus: (status: FundingStatusFilter) => void;
   onToggleArchiveStatus: (status: ArchiveStatusFilter) => void;
   onToggleAccompagnementStatus: (status: AccompagnementStatusFilter) => void;
+  onToggleCohorteVAECollective: (cohorteVaeCollectiveId: string) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
 }
 
 export const FiltersSection = ({
   filters,
+  cohortes,
   onToggleCandidacyStatus,
   onToggleTrainingStatus,
   onToggleFeasibilityStatus,
@@ -45,6 +48,7 @@ export const FiltersSection = ({
   onToggleFundingStatus,
   onToggleArchiveStatus,
   onToggleAccompagnementStatus,
+  onToggleCohorteVAECollective,
   onClearFilters,
   hasActiveFilters,
 }: FiltersSectionProps) => {
@@ -367,6 +371,22 @@ export const FiltersSection = ({
           ]}
         />
       </Accordion>
+
+      {cohortes.length > 0 && (
+        <Accordion label="VAE Collective" className="bg-white">
+          <Checkbox
+            small
+            className="mb-0"
+            options={cohortes.map((cohorte) => ({
+              label: cohorte.nom,
+              nativeInputProps: {
+                checked: filters.cohorteVaeCollectiveIds.includes(cohorte.id),
+                onChange: () => onToggleCohorteVAECollective(cohorte.id),
+              },
+            }))}
+          />
+        </Accordion>
+      )}
 
       <Accordion
         label="Candidatures arrêtées"

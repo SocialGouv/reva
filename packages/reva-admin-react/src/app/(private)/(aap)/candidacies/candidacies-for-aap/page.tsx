@@ -30,6 +30,7 @@ export default function AnnuairePage() {
 
   const {
     candidacies,
+    cohortes,
     isLoading,
     filters,
     searchFilter,
@@ -43,6 +44,7 @@ export default function AnnuairePage() {
     toggleFundingStatus,
     toggleArchiveStatus,
     toggleAccompagnementStatus,
+    toggleCohorteVAECollective,
     clearFilters,
     hasActiveFilters,
   } = useAnnuaire();
@@ -110,6 +112,7 @@ export default function AnnuairePage() {
       <div className="flex gap-6">
         <FiltersSection
           filters={filters}
+          cohortes={cohortes}
           onToggleCandidacyStatus={toggleCandidacyStatus}
           onToggleTrainingStatus={toggleTrainingStatus}
           onToggleFeasibilityStatus={toggleFeasibilityStatus}
@@ -119,6 +122,7 @@ export default function AnnuairePage() {
           onToggleFundingStatus={toggleFundingStatus}
           onToggleArchiveStatus={toggleArchiveStatus}
           onToggleAccompagnementStatus={toggleAccompagnementStatus}
+          onToggleCohorteVAECollective={toggleCohorteVAECollective}
           onClearFilters={clearFilters}
           hasActiveFilters={hasActiveFilters}
         />

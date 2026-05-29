@@ -373,6 +373,7 @@ type Query {
     fundingStatuses: [FundingStatusFilter!]
     archiveStatuses: [ArchiveStatusFilter!]
     accompagnementStatuses: [AccompagnementStatusFilter!]
+    cohorteVaeCollectiveIds: [ID!]
   ): CandidacyPage!
 }
 

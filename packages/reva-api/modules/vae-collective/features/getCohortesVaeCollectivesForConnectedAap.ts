@@ -7,6 +7,11 @@ export const getCohortesVaeCollectivesForConnectedAap = async ({
   userKeycloakId: string;
   userRoles: KeyCloakUserRole[];
 }) => {
+  const isAdmin = userRoles.includes("admin");
+  if (isAdmin) {
+    return prismaClient.cohorteVaeCollective.findMany();
+  }
+
   //Si l'aap est gestionnaire de maison mère on
   //retourne toutes les cohortes de vae collectives associées à une candidature faisant partie de la maison mère de l'aap
   if (userRoles.includes("gestion_maison_mere_aap")) {

@@ -9,6 +9,7 @@ import {
 
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
+import { getCohortesVaeCollectivesForConnectedAap } from "@/modules/vae-collective/features/getCohortesVaeCollectivesForConnectedAap";
 import { prismaClient } from "@/prisma/client";
 
 import {
@@ -54,6 +55,7 @@ export const getCandidaciesForAAP = async ({
   fundingStatuses,
   archiveStatuses,
   accompagnementStatuses,
+  cohorteVaeCollectiveIds,
 }: GetCandidaciesForAAPInput & {
   context: GraphqlContext;
 }) => {
@@ -465,6 +467,39 @@ export const getCandidaciesForAAP = async ({
     }
 
     andClauses.push({ OR: accompagnementStatusesWhereInput });
+  }
+
+  // Cohorte vae collective filter
+  if (cohorteVaeCollectiveIds && cohorteVaeCollectiveIds.length > 0) {
+    if (isAdmin) {
+      andClauses.push({
+        candidacy: {
+          cohorteVaeCollectiveId: { in: cohorteVaeCollectiveIds },
+        },
+      });
+    }
+
+    if (!isAdmin && keycloakId) {
+      // On récupère les cohortes de vae collectives associées à l'aap connecté
+      const cohortesForAAP = await getCohortesVaeCollectivesForConnectedAap({
+        userKeycloakId: keycloakId,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      });
+
+      // On filtre les cohortes de vae collectives pour ne garder que celles qui sont associées à l'aap connecté
+      const filteredCohorteVaeCollectiveIds = cohorteVaeCollectiveIds.filter(
+        (id) => cohortesForAAP.some((cohorte) => cohorte.id === id),
+      );
+
+      // On ajoute le filtre pour ne garder que les candidatures associées aux cohortes de vae collectives filtrées
+      andClauses.push({
+        candidacy: {
+          cohorteVaeCollectiveId: {
+            in: filteredCohorteVaeCollectiveIds,
+          },
+        },
+      });
+    }
   }
 
   const whereClause: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput =

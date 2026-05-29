@@ -27,7 +27,17 @@ export interface AnnuaireFilters {
   fundingStatuses: FundingStatusFilter[];
   archiveStatuses: ArchiveStatusFilter[];
   accompagnementStatuses: AccompagnementStatusFilter[];
+  cohorteVaeCollectiveIds: string[];
 }
+
+const getCohortesForAAP = graphql(`
+  query getCohortesForAAP {
+    cohortesVaeCollectivesForConnectedAap {
+      id
+      nom
+    }
+  }
+`);
 
 const getCandidaciesForAAP = graphql(`
   query getCandidaciesForAAP(
@@ -43,6 +53,7 @@ const getCandidaciesForAAP = graphql(`
     $fundingStatuses: [FundingStatusFilter!]
     $archiveStatuses: [ArchiveStatusFilter!]
     $accompagnementStatuses: [AccompagnementStatusFilter!]
+    $cohorteVaeCollectiveIds: [ID!]
   ) {
     candidacy_getCandidaciesForAAP(
       offset: $offset
@@ -58,6 +69,7 @@ const getCandidaciesForAAP = graphql(`
       fundingStatuses: $fundingStatuses
       archiveStatuses: $archiveStatuses
       accompagnementStatuses: $accompagnementStatuses
+      cohorteVaeCollectiveIds: $cohorteVaeCollectiveIds
     ) {
       rows {
         id
@@ -126,6 +138,9 @@ export const useAnnuaire = () => {
     const fundingParam = searchParams.get("funding");
     const archiveParam = searchParams.get("archive");
     const accompagnementParam = searchParams.get("accompagnement");
+    const cohorteVaeCollectiveIdsParam = searchParams.get(
+      "cohorteVaeCollectiveIds",
+    );
 
     return {
       candidacyStatuses: candidacyParam
@@ -157,6 +172,9 @@ export const useAnnuaire = () => {
       accompagnementStatuses: accompagnementParam
         ? (accompagnementParam.split(",") as AccompagnementStatusFilter[])
         : [],
+      cohorteVaeCollectiveIds: cohorteVaeCollectiveIdsParam
+        ? (cohorteVaeCollectiveIdsParam.split(",") as string[])
+        : [],
     };
   }, [searchParams]);
 
@@ -185,6 +203,7 @@ export const useAnnuaire = () => {
       filters.fundingStatuses,
       filters.archiveStatuses,
       filters.accompagnementStatuses,
+      filters.cohorteVaeCollectiveIds,
     ],
     queryFn: () =>
       graphqlClient.request(getCandidaciesForAAP, {
@@ -223,8 +242,21 @@ export const useAnnuaire = () => {
           filters.accompagnementStatuses.length > 0
             ? filters.accompagnementStatuses
             : undefined,
+        cohorteVaeCollectiveIds:
+          filters.cohorteVaeCollectiveIds.length > 0
+            ? filters.cohorteVaeCollectiveIds
+            : undefined,
       }),
   });
+
+  const { data: cohortesData } = useQuery({
+    queryKey: ["getCohortesForAAP"],
+    queryFn: () => graphqlClient.request(getCohortesForAAP),
+  });
+
+  const cohortes = useMemo(() => {
+    return cohortesData?.cohortesVaeCollectivesForConnectedAap || [];
+  }, [cohortesData]);
 
   const updateFilters = useCallback(
     (newFilters: Partial<AnnuaireFilters>) => {
@@ -309,6 +341,17 @@ export const useAnnuaire = () => {
           );
         } else {
           queryParams.delete("accompagnement");
+        }
+      }
+
+      if (newFilters.cohorteVaeCollectiveIds !== undefined) {
+        if (newFilters.cohorteVaeCollectiveIds.length > 0) {
+          queryParams.set(
+            "cohorteVaeCollectiveIds",
+            newFilters.cohorteVaeCollectiveIds.join(","),
+          );
+        } else {
+          queryParams.delete("cohorteVaeCollectiveIds");
         }
       }
 
@@ -427,6 +470,20 @@ export const useAnnuaire = () => {
     [filters.accompagnementStatuses, updateFilters],
   );
 
+  const toggleCohorteVAECollective = useCallback(
+    (cohorteVaeCollectiveId: string) => {
+      const newCohortes = filters.cohorteVaeCollectiveIds.includes(
+        cohorteVaeCollectiveId,
+      )
+        ? filters.cohorteVaeCollectiveIds.filter(
+            (c) => c !== cohorteVaeCollectiveId,
+          )
+        : [...filters.cohorteVaeCollectiveIds, cohorteVaeCollectiveId];
+      updateFilters({ cohorteVaeCollectiveIds: newCohortes });
+    },
+    [filters.cohorteVaeCollectiveIds, updateFilters],
+  );
+
   const clearFilters = useCallback(() => {
     const queryParams = new URLSearchParams(searchParams);
     queryParams.set("page", "1");
@@ -440,6 +497,7 @@ export const useAnnuaire = () => {
     queryParams.delete("funding");
     queryParams.delete("archive");
     queryParams.delete("accompagnement");
+    queryParams.delete("cohorteVaeCollectiveIds");
     router.replace(`${pathname}?${queryParams.toString()}`, { scroll: false });
   }, [pathname, router, searchParams]);
 
@@ -453,7 +511,8 @@ export const useAnnuaire = () => {
       filters.juryResults.length > 0 ||
       filters.fundingStatuses.length > 0 ||
       filters.archiveStatuses.length > 0 ||
-      filters.accompagnementStatuses.length > 0,
+      filters.accompagnementStatuses.length > 0 ||
+      filters.cohorteVaeCollectiveIds.length > 0,
     [
       filters.candidacyStatuses,
       filters.trainingStatuses,
@@ -464,11 +523,13 @@ export const useAnnuaire = () => {
       filters.fundingStatuses,
       filters.archiveStatuses,
       filters.accompagnementStatuses,
+      filters.cohorteVaeCollectiveIds,
     ],
   );
 
   return {
     candidacies: data?.candidacy_getCandidaciesForAAP,
+    cohortes,
     isLoading,
     filters,
     searchFilter,
@@ -482,6 +543,7 @@ export const useAnnuaire = () => {
     toggleFundingStatus,
     toggleArchiveStatus,
     toggleAccompagnementStatus,
+    toggleCohorteVAECollective,
     clearFilters,
     hasActiveFilters,
   };

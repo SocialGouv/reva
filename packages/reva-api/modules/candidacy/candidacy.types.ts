@@ -198,4 +198,5 @@ export interface GetCandidaciesForAAPInput {
   fundingStatuses?: FundingStatusFilter[];
   archiveStatuses?: ArchiveStatusFilter[];
   accompagnementStatuses?: AccompagnementStatusFilter[];
+  cohorteVaeCollectiveIds?: string[];
 }
