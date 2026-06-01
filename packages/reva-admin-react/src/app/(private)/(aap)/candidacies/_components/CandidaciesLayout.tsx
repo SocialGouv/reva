@@ -265,7 +265,7 @@ const CandidacyLayoutSideMenu = ({
     <nav
       role="navigation"
       aria-label="Menu latéral"
-      className="flex flex-col gap-4"
+      className="flex flex-col gap-4 md:w-[282px] md:flex-shrink-0 [overflow-wrap:anywhere]"
     >
       {isAdmin && maisonMereAAPId && (
         <MaisonMereAAP maisonMereAAPId={maisonMereAAPId} />
