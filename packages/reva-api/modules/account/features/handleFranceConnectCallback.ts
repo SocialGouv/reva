@@ -464,6 +464,10 @@ const fixCountryINSEECode = (countryCode?: string): string | undefined => {
     case "93352":
     case "94352":
       return "99352";
+    //Cas de la "Corée" (99237) : code COG périmé désignant la Corée unifiée d'avant la partition de 1948.
+    //On retourne la Corée du Sud (99239), le code ne distinguant pas le Nord du Sud.
+    case "99237":
+      return "99239";
     default:
       return countryCode;
   }
