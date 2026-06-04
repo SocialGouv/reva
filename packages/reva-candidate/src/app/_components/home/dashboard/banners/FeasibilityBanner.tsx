@@ -2,6 +2,7 @@ import {
   hasFreshCandidateConfirmation as computeHasFreshConfirmation,
   isSentToCandidateOutdatedAfterIncomplete,
 } from "@/utils/feasibilityIncompleteOutdated.util";
+import warningHandImage from "@public/images/image-warning-hand.png";
 
 import { FeasibilityUseCandidateForDashboard } from "../dashboard.hooks";
 
@@ -13,7 +14,6 @@ interface FeasibilityBannerProps {
   readyForJuryEstimatedAt?: string | null;
 }
 
-const WARNING_IMAGE = "/candidat/images/image-warning-hand.png";
 const WARNING_IMAGE_ALT = "Main levée en signe d'avertissement";
 
 export const FeasibilityBanner = ({
@@ -75,7 +75,7 @@ export const FeasibilityBanner = ({
             validation.
           </div>
         }
-        imageSrc={WARNING_IMAGE}
+        imageSrc={warningHandImage}
         imageAlt={WARNING_IMAGE_ALT}
       />
     );
@@ -191,7 +191,7 @@ export const FeasibilityBanner = ({
             validation.
           </div>
         }
-        imageSrc={WARNING_IMAGE}
+        imageSrc={warningHandImage}
         imageAlt={WARNING_IMAGE_ALT}
       />
     );
@@ -208,7 +208,7 @@ export const FeasibilityBanner = ({
             dossier.
           </div>
         }
-        imageSrc={WARNING_IMAGE}
+        imageSrc={warningHandImage}
         imageAlt={WARNING_IMAGE_ALT}
       />
     );
@@ -223,7 +223,7 @@ export const FeasibilityBanner = ({
             : votre parcours VAE s’arrête ici.
           </div>
         }
-        imageSrc={WARNING_IMAGE}
+        imageSrc={warningHandImage}
         imageAlt={WARNING_IMAGE_ALT}
       />
     );

@@ -1,3 +1,5 @@
+import warningHandImage from "@public/images/image-warning-hand.png";
+
 import { DossierDeValidationUseCandidateForDashboard } from "../dashboard.hooks";
 
 import { BaseBanner } from "./BaseBanner";
@@ -6,7 +8,6 @@ interface DossierDeValidationBannerProps {
   activeDossierDeValidation: NonNullable<DossierDeValidationUseCandidateForDashboard>;
 }
 
-const WARNING_IMAGE = "/candidat/images/image-warning-hand.png";
 const WARNING_IMAGE_ALT = "Main levée en signe d'avertissement";
 
 export const DossierDeValidationBanner = ({
@@ -40,7 +41,7 @@ export const DossierDeValidationBanner = ({
             dossier.
           </div>
         }
-        imageSrc={WARNING_IMAGE}
+        imageSrc={warningHandImage}
         imageAlt={WARNING_IMAGE_ALT}
       />
     );

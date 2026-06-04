@@ -1,12 +1,12 @@
 import { format, toDate } from "date-fns";
 
 import { isDropOutConfirmed } from "@/utils/dropOutHelper";
+import warningImage from "@public/images/fvae_warning.png";
 
 import { CandidacyDropOutUseCandidateForDashboard } from "../dashboard.hooks";
 
 import { BaseBanner } from "./BaseBanner";
 
-const WARNING_IMAGE = "/candidat/images/fvae_warning.png";
 const WARNING_IMAGE_ALT = "main levée devant un panneau d'interdiction";
 
 interface CandidacyDropOutBannerProps {
@@ -26,7 +26,7 @@ export const CandidacyDropOutBanner = ({
             {format(toDate(candidacyDropOut.createdAt), "dd/MM/yyyy")}.{" "}
           </div>
         }
-        imageSrc={WARNING_IMAGE}
+        imageSrc={warningImage}
         imageAlt={WARNING_IMAGE_ALT}
       />
     );
@@ -60,7 +60,7 @@ export const CandidacyDropOutBanner = ({
   return (
     <BaseBanner
       content={content}
-      imageSrc={WARNING_IMAGE}
+      imageSrc={warningImage}
       imageAlt={WARNING_IMAGE_ALT}
       actionButton={actionButton}
     />

@@ -1,8 +1,10 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
 
-const DEFAULT_BANNER_IMAGE =
-  "/candidat/images/image-home-character-young-man-glasses.png";
+import defaultBannerImage from "@public/images/image-home-character-young-man-glasses.png";
+
+import type { StaticImageData } from "next/image";
+
 const DEFAULT_BANNER_IMAGE_ALT = "Homme portant des lunettes";
 
 interface BannerActionButton {
@@ -13,16 +15,16 @@ interface BannerActionButton {
 
 interface BaseBannerProps {
   content: React.ReactNode;
-  imageSrc?: string;
+  imageSrc?: StaticImageData;
   imageAlt?: string;
   actionButton?: BannerActionButton;
   testId?: string;
   topBadge?: React.ReactNode;
 }
 
-const BannerImage = ({ src, alt }: { src: string; alt: string }) => (
-  <div className="min-w-[167px] hidden lg:flex relative -left-3">
-    <Image src={src} width={167} height={168} alt={alt} />
+const BannerImage = ({ src, alt }: { src: StaticImageData; alt: string }) => (
+  <div className="w-[167px] h-[195px] hidden lg:flex relative -left-3 shrink-0">
+    <Image className="object-contain" src={src} alt={alt} fill sizes="167px" />
   </div>
 );
 
@@ -39,7 +41,7 @@ const ActionButton = ({ href, label, testId }: BannerActionButton) => (
 
 export const BaseBanner = ({
   content,
-  imageSrc = DEFAULT_BANNER_IMAGE,
+  imageSrc = defaultBannerImage,
   imageAlt = DEFAULT_BANNER_IMAGE_ALT,
   actionButton,
   testId,

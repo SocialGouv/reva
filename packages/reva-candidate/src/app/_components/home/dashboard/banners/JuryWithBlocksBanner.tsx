@@ -3,6 +3,8 @@ import { format, isAfter } from "date-fns";
 import Link from "next/link";
 
 import { CustomErrorBadge } from "@/components/legacy/organisms/CustomErrorBadge/CustomErrorBadge";
+import warningImage from "@public/images/fvae_warning.png";
+import goldCupImage from "@public/images/gold-cup.png";
 
 import { JuryUseCandidateForDashboard } from "../dashboard.hooks";
 
@@ -12,7 +14,6 @@ interface JuryWithBlocksBannerProps {
   jury: NonNullable<JuryUseCandidateForDashboard>;
 }
 
-const WARNING_IMAGE = "/candidat/images/fvae_warning.png";
 const WARNING_IMAGE_ALT = "main levée devant un panneau d'interdiction";
 
 const BadgeSubtitle = () => (
@@ -57,7 +58,7 @@ export const JuryWithBlocksBanner = ({ jury }: JuryWithBlocksBannerProps) => {
             </p>
           </>
         }
-        imageSrc="/candidat/images/gold-cup.png"
+        imageSrc={goldCupImage}
         imageAlt="Une coupe en or"
         topBadge={
           <>
@@ -127,7 +128,7 @@ export const JuryWithBlocksBanner = ({ jury }: JuryWithBlocksBannerProps) => {
             </p>
           </>
         }
-        imageSrc={WARNING_IMAGE}
+        imageSrc={warningImage}
         imageAlt={WARNING_IMAGE_ALT}
         topBadge={
           <>
@@ -163,7 +164,7 @@ export const JuryWithBlocksBanner = ({ jury }: JuryWithBlocksBannerProps) => {
             </p>
           </>
         }
-        imageSrc={WARNING_IMAGE}
+        imageSrc={warningImage}
         imageAlt={WARNING_IMAGE_ALT}
         topBadge={
           <>

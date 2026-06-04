@@ -104,7 +104,7 @@ export const Header = () => {
         imgUrl: "/candidat/fvae_logo.svg",
         orientation: "horizontal",
       }}
-      classes={{ operator: "min-w-[128px] min-h-[72px]" }}
+      classes={{ operator: "min-w-[128px] h-auto" }}
       quickAccessItems={
         authenticated ? [<UserDropdown key="user-dropdown" />] : undefined
       }

@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import fvaeLogo from "@public/fvae_logo.svg";
+
 export const Footer = () => (
   <footer className="fr-footer" role="contentinfo" id="footer">
     <div className="fr-container">
@@ -17,10 +19,9 @@ export const Footer = () => (
           >
             <Image
               className="fr-footer__logo"
-              width="225"
-              height="138"
-              src="/candidat/fvae_logo.svg"
+              src={fvaeLogo}
               alt="France VAE"
+              style={{ width: "225px", height: "auto" }}
             />
           </Link>
         </div>
