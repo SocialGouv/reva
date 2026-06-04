@@ -27,6 +27,10 @@ type Feasibility = {
   feasibilityFileSentAt?: number | null;
 } | null;
 
+type DossierDeValidation = {
+  dossierDeValidationSentAt?: number | null;
+} | null;
+
 type Jury = {
   dateOfSession: number;
   result?: JuryResult | null;
@@ -58,6 +62,7 @@ export const CandidacyCard = ({
   statusHistory,
   firstAppointmentOccuredAt,
   feasibility,
+  dossierDeValidation,
   readyForJuryEstimatedAt,
   jury,
   dropout,
@@ -84,6 +89,7 @@ export const CandidacyCard = ({
   statusHistory: Omit<CandidacyStatus, "id">[];
   firstAppointmentOccuredAt?: Date;
   feasibility?: Feasibility;
+  dossierDeValidation?: DossierDeValidation;
   readyForJuryEstimatedAt?: Date;
   jury?: Jury;
   dropout?: Dropout;
@@ -178,8 +184,23 @@ export const CandidacyCard = ({
 
       <div className="flex flex-row gap-2 justify-between">
         <div className="text-xs text-dsfrGray-mentionGrey">
-          {!!candidacySentAt &&
+          {!feasibility?.feasibilityFileSentAt &&
+            !dossierDeValidation?.dossierDeValidationSentAt &&
+            !jury?.dateOfSession &&
+            candidacySentAt &&
             `Envoyée le ${format(candidacySentAt, "dd MMMM yyyy")}`}
+
+          {feasibility?.feasibilityFileSentAt &&
+            !dossierDeValidation?.dossierDeValidationSentAt &&
+            !jury?.dateOfSession &&
+            `Dossier de faisabilité envoyé le ${format(feasibility?.feasibilityFileSentAt, "d MMM yyyy")}`}
+
+          {dossierDeValidation?.dossierDeValidationSentAt &&
+            !jury?.dateOfSession &&
+            `Dossier de validation envoyé le ${format(dossierDeValidation?.dossierDeValidationSentAt, "d MMM yyyy")}`}
+
+          {jury?.dateOfSession &&
+            `Jury programmé le ${format(jury?.dateOfSession, "d MMM yyyy")}`}
         </div>
 
         <span

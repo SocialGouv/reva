@@ -3,20 +3,19 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import DsfrPagination from "@codegouvfr/react-dsfr/Pagination";
 import SearchBar from "@codegouvfr/react-dsfr/SearchBar";
+import { toDate } from "date-fns";
 import { redirect, usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { useAuth } from "@/components/auth/auth";
+import { CandidacyCard } from "@/components/card/candidacy-card/CandidacyCard";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { SearchResultsHeader } from "@/components/search-results-header/SearchResultsHeader";
-
-import { TypeAccompagnement } from "@/graphql/generated/graphql";
 
 import { MaisonMereAAP } from "../_components/MaisonMereAAP";
 
 import { useAnnuaire } from "./_components/annuaire.hook";
 import { AnnuaireEmptyState } from "./_components/AnnuaireEmptyState";
-import { CandidacyCard } from "./_components/CandidacyCard";
 import { CandidacyCardSkeleton } from "./_components/CandidacyCardSkeleton";
 import { FiltersSection } from "./_components/FiltersSection";
 import { SortByBar } from "./_components/SortByBar";
@@ -187,44 +186,54 @@ export default function AnnuairePage() {
                 candidacies?.rows.map((candidacy) => (
                   <CandidacyCard
                     key={candidacy.id}
-                    candidateFullName={
-                      candidacy.candidate?.firstname +
-                      " " +
-                      candidacy.candidate?.lastname
+                    candidacyId={candidacy.id}
+                    candidateFirstname={candidacy.candidate?.firstname || ""}
+                    candidateFirstname2={
+                      candidacy.candidate?.firstname2 || undefined
                     }
-                    cohorteVaeCollective={
+                    candidateFirstname3={
+                      candidacy.candidate?.firstname3 || undefined
+                    }
+                    candidateMiddleNames={
+                      candidacy.candidate?.middleNames || undefined
+                    }
+                    candidateLastname={candidacy.candidate?.lastname || ""}
+                    candidateGivenName={
+                      candidacy.candidate?.givenName || undefined
+                    }
+                    certificationLabel={
+                      candidacy.certification
+                        ? `RNCP ${candidacy?.certification.codeRncp} : ${candidacy?.certification?.label}`
+                        : undefined
+                    }
+                    departmentCode={candidacy.candidate?.department?.code}
+                    departmentLabel={candidacy.candidate?.department?.label}
+                    organismLabel={
+                      candidacy.organism?.nomPublic || candidacy.organism?.label
+                    }
+                    organismModalitateAccompagnement={
+                      candidacy.organism?.modaliteAccompagnement
+                    }
+                    vaeCollective={!!candidacy.cohorteVaeCollective}
+                    vaeCollectiveCommanditaireLabel={
                       candidacy.cohorteVaeCollective?.commanditaireVaeCollective
-                        ? (candidacy.cohorteVaeCollective as {
-                            nom: string;
-                            commanditaireVaeCollective: {
-                              raisonSociale: string;
-                            };
-                          })
-                        : null
+                        .raisonSociale
                     }
-                    certificationCode={candidacy.certification?.codeRncp || ""}
-                    certificationLabel={candidacy.certification?.label || ""}
-                    organismLabel={candidacy.organism?.label || ""}
-                    typeAccompagnement={
-                      candidacy.typeAccompagnement as TypeAccompagnement
+                    vaeCollectiveCohortLabel={
+                      candidacy.cohorteVaeCollective?.nom
                     }
                     status={candidacy.status}
                     statusHistory={candidacy.candidacyStatuses}
+                    typeAccompagnement={candidacy.typeAccompagnement}
+                    feasibility={candidacy.feasibility}
+                    dossierDeValidation={candidacy.activeDossierDeValidation}
+                    readyForJuryEstimatedAt={
+                      candidacy.readyForJuryEstimatedAt
+                        ? toDate(candidacy.readyForJuryEstimatedAt)
+                        : undefined
+                    }
                     jury={candidacy.jury}
                     dropout={candidacy.candidacyDropOut}
-                    departmentLabel={
-                      candidacy.candidate?.department?.label || ""
-                    }
-                    candidacyId={candidacy.id}
-                    searchResultLink={() => `../${candidacy.id}/summary/`}
-                    feasibilityFileSentAt={
-                      candidacy.feasibility?.feasibilityFileSentAt
-                    }
-                    dossierDeValidationSentAt={
-                      candidacy.activeDossierDeValidation
-                        ?.dossierDeValidationSentAt
-                    }
-                    dateOfSession={candidacy.jury?.dateOfSession}
                   />
                 ))
               )}

@@ -84,7 +84,12 @@ const getCandidaciesForAAP = graphql(`
         candidate {
           firstname
           lastname
+          givenName
+          firstname2
+          firstname3
+          middleNames
           department {
+            code
             label
           }
         }
@@ -100,6 +105,7 @@ const getCandidaciesForAAP = graphql(`
         activeDossierDeValidation {
           dossierDeValidationSentAt
         }
+        readyForJuryEstimatedAt
         jury {
           dateOfSession
           result
@@ -110,6 +116,8 @@ const getCandidaciesForAAP = graphql(`
         }
         organism {
           label
+          nomPublic
+          modaliteAccompagnement
         }
         candidacyDropOut {
           createdAt
