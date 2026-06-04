@@ -63,7 +63,7 @@ export const getCandidaciesForAAP = async ({
   const isAdmin = context.auth.hasRole("admin");
   const keycloakId = context.auth.userInfo?.sub;
 
-  // Dropout filter: only get candidacies without dropout and end accompagnement not confirmed by candidate or admin
+  // Get candidacies
   const andClauses: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] = [
     {
       candidacy: {
@@ -71,6 +71,56 @@ export const getCandidaciesForAAP = async ({
       },
     },
   ];
+
+  // If archive status is not set, filter out candidacies with dropout
+  if (
+    !archiveStatuses ||
+    !archiveStatuses.includes(ArchiveStatusFilter.ARCHIVE)
+  ) {
+    const archiveStatusesWhereInput: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] =
+      [];
+
+    archiveStatusesWhereInput.push({
+      OR: [
+        {
+          candidacy: {
+            status: {
+              notIn: [CandidacyStatusStep.ARCHIVE],
+            },
+          },
+        },
+        {
+          candidacy: {
+            candidacyDropOut: null,
+          },
+        },
+      ],
+    });
+
+    andClauses.push({ AND: archiveStatusesWhereInput });
+  }
+
+  // If end accompagnement status is not set, filter out candidacies with end accompagnement not confirmed by candidate or admin
+  if (
+    !accompagnementStatuses ||
+    !accompagnementStatuses.includes(AccompagnementStatusFilter.EN_COURS)
+  ) {
+    const endAccompagnementStatusesWhereInput: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] =
+      [];
+
+    endAccompagnementStatusesWhereInput.push({
+      candidacy: {
+        endAccompagnementStatus: {
+          notIn: [
+            EndAccompagnementStatus.CONFIRMED_BY_CANDIDATE,
+            EndAccompagnementStatus.CONFIRMED_BY_ADMIN,
+          ],
+        },
+      },
+    });
+
+    andClauses.push({ AND: endAccompagnementStatusesWhereInput });
+  }
 
   // Filters for non-admin users
   if (!isAdmin && keycloakId) {
