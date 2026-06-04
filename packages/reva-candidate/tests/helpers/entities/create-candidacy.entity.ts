@@ -135,7 +135,7 @@ export const createCandidacyEntity = (
     collectiveHourCount: collectiveHourCount ?? null,
     additionalHourCount: additionalHourCount ?? null,
     certificationAuthorityLocalAccounts:
-      certificationAuthorityLocalAccounts ?? null,
+      certificationAuthorityLocalAccounts ?? [],
     mandatoryTrainings: mandatoryTrainings ?? [],
     feasibilityFormat: feasibilityFormat || "DEMATERIALIZED",
     certificationAuthorities: certificationAuthorities || [],
