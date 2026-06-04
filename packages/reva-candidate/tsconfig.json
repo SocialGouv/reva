@@ -26,6 +26,9 @@
       "@/*": [
         "./src/*"
       ],
+      "@public/*": [
+        "./public/*"
+      ],
       "@tests/helpers/*": [
         "./tests/helpers/*"
       ],
