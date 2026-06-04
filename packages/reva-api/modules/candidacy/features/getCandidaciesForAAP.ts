@@ -81,20 +81,12 @@ export const getCandidaciesForAAP = async ({
       [];
 
     archiveStatusesWhereInput.push({
-      OR: [
-        {
-          candidacy: {
-            status: {
-              notIn: [CandidacyStatusStep.ARCHIVE],
-            },
-          },
+      candidacy: {
+        status: {
+          notIn: [CandidacyStatusStep.ARCHIVE],
         },
-        {
-          candidacy: {
-            candidacyDropOut: null,
-          },
-        },
-      ],
+        candidacyDropOut: null,
+      },
     });
 
     andClauses.push({ AND: archiveStatusesWhereInput });
