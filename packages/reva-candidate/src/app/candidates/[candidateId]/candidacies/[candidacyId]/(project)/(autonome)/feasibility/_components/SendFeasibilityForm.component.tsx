@@ -134,9 +134,9 @@ export const SendFeasibilityForm = (): React.ReactNode => {
       <CallOut
         title={
           <>
-            <h4 className="inline-block">
+            <span className="mb-2 inline-block">
               Comment contacter mon certificateur ?
-            </h4>
+            </span>
             <Tooltip tooltipText="Il vous informe sur les frais liés à votre parcours VAE, étudie votre dossier de faisabilité, prononce votre recevabilité et organise les jurys.">
               <span
                 className="fr-icon-question-line text-dsfrBlue-500"
