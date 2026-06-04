@@ -249,8 +249,11 @@ export const getCandidaciesForAAP = async ({
     ) {
       feasibilityWhereInput.push({
         feasibility: {
+          decision: FeasibilityStatus.DRAFT,
           dematerializedFeasibilityFile: {
             sentToCandidateAt: { not: null },
+            candidateConfirmationAt: null,
+            swornStatementFileId: null,
           },
         },
       });
@@ -263,6 +266,7 @@ export const getCandidaciesForAAP = async ({
     ) {
       feasibilityWhereInput.push({
         feasibility: {
+          decision: FeasibilityStatus.DRAFT,
           dematerializedFeasibilityFile: {
             candidateConfirmationAt: { not: null },
             swornStatementFileId: null,
@@ -278,6 +282,7 @@ export const getCandidaciesForAAP = async ({
     ) {
       feasibilityWhereInput.push({
         feasibility: {
+          decision: FeasibilityStatus.DRAFT,
           dematerializedFeasibilityFile: {
             candidateConfirmationAt: { not: null },
             swornStatementFileId: { not: null },
