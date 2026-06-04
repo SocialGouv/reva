@@ -24,7 +24,14 @@ interface BaseBannerProps {
 
 const BannerImage = ({ src, alt }: { src: StaticImageData; alt: string }) => (
   <div className="w-[167px] h-[195px] hidden lg:flex relative -left-3 shrink-0">
-    <Image className="object-contain" src={src} alt={alt} fill sizes="167px" />
+    <Image
+      className="object-contain"
+      src={src}
+      alt={alt}
+      fill
+      sizes="167px"
+      loading="eager"
+    />
   </div>
 );
 

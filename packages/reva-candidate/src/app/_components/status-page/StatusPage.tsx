@@ -47,7 +47,12 @@ export const StatusPage = ({
         )}
       </div>
       <div className="shrink-0 hidden lg:flex relative items-center justify-center w-[282px] h-[319px]">
-        <Image src={hexagonBackground} className="absolute inset-0" alt="" />
+        <Image
+          src={hexagonBackground}
+          className="absolute inset-0"
+          alt=""
+          loading="eager"
+        />
         <div className="z-10">{pictogram}</div>
       </div>
     </div>

@@ -21,6 +21,8 @@ export const Footer = () => (
               className="fr-footer__logo"
               src={fvaeLogo}
               alt="France VAE"
+              // This logo can be reported as LCP on short candidate pages.
+              loading="eager"
               style={{ width: "225px", height: "auto" }}
             />
           </Link>
