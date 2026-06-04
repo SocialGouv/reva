@@ -292,8 +292,13 @@ export const getCandidaciesForAAP = async ({
       )
     ) {
       feasibilityWhereInput.push({
-        feasibility: {
-          decision: "PENDING",
+        candidacy: {
+          status: {
+            in: [
+              CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE,
+              CandidacyStatusStep.DOSSIER_FAISABILITE_COMPLET,
+            ],
+          },
         },
       });
     }
