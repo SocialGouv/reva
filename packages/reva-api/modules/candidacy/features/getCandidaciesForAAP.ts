@@ -93,10 +93,7 @@ export const getCandidaciesForAAP = async ({
   }
 
   // If end accompagnement status is not set, filter out candidacies with end accompagnement not confirmed by candidate or admin
-  if (
-    !accompagnementStatuses ||
-    !accompagnementStatuses.includes(AccompagnementStatusFilter.EN_COURS)
-  ) {
+  if (!accompagnementStatuses) {
     const endAccompagnementStatusesWhereInput: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] =
       [];
 
@@ -118,6 +115,9 @@ export const getCandidaciesForAAP = async ({
   if (!isAdmin && keycloakId) {
     andClauses.push({
       candidacy: {
+        status: {
+          notIn: [CandidacyStatusStep.PROJET],
+        },
         organism: {
           OR: [
             {
