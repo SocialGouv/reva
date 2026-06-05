@@ -12,6 +12,7 @@ export const CertificationAuthoritySummaryCardV2 = ({
     isEditable
     buttonOnClickHref={viewCertificationAuthorityDetailsHref}
     customButtonTitle="Consulter"
+    data-testid="certification-authority-summary-card"
   >
     <p className="text-xl font-bold mb-0 mr-6 leading-loose">{label}</p>
   </EnhancedSectionCard>

@@ -96,7 +96,7 @@ test.describe("Certification authority card V2 (feature flag active)", () => {
       ]);
 
       await expect(
-        page.getByRole("heading", { name: "Certificateur" }),
+        page.getByTestId("certification-authority-summary-card"),
       ).toBeVisible();
       await expect(page.getByText(CERTIFICATION_AUTHORITY_LABEL)).toBeVisible();
     });
@@ -109,7 +109,9 @@ test.describe("Certification authority card V2 (feature flag active)", () => {
         waitGraphQL(page, "getCandidacySummaryById"),
       ]);
 
-      const consulterLink = page.getByRole("button", { name: "Consulter" });
+      const consulterLink = page
+        .getByTestId("certification-authority-summary-card")
+        .getByRole("button", { name: "Consulter" });
       await expect(consulterLink).toBeVisible();
     });
 
@@ -123,7 +125,9 @@ test.describe("Certification authority card V2 (feature flag active)", () => {
         waitGraphQL(page, "getCandidacySummaryById"),
       ]);
 
-      const consulterLink = page.getByRole("button", { name: "Consulter" });
+      const consulterLink = page
+        .getByTestId("certification-authority-summary-card")
+        .getByRole("button", { name: "Consulter" });
       await consulterLink.click();
       await expect(page).toHaveURL(
         `/admin2/candidacies/${CANDIDACY_ID}/summary/certification-authority-details/`,
@@ -142,7 +146,7 @@ test.describe("Certification authority card V2 (feature flag active)", () => {
       ],
     });
 
-    test("should display the certificateur card without a label", async ({
+    test("should display the empty certification authority card", async ({
       page,
     }) => {
       await login({ role: "aap", page });
@@ -152,12 +156,10 @@ test.describe("Certification authority card V2 (feature flag active)", () => {
         waitGraphQL(page, "getCandidacySummaryById"),
       ]);
 
-      await expect(
-        page.getByRole("heading", { name: "Certificateur" }),
-      ).toBeVisible();
-      await expect(
-        page.getByText(CERTIFICATION_AUTHORITY_LABEL),
-      ).not.toBeVisible();
+      const card = page.getByTestId(
+        "empty-certification-authority-summary-card",
+      );
+      await expect(card).toBeVisible();
     });
   });
 });

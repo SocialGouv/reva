@@ -21,6 +21,7 @@ import { CertificationCard } from "../_components/CertificationCard";
 
 import { CertificationAuthoritySummaryCardV2 } from "./_components/CertificationAuthoritySummaryCardV2";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
+import { EmptyCertificationAuthoritySummaryCard } from "./_components/EmptyCertificationAuthoritySummaryCard";
 import useCandidateSummary from "./_components/useCandidateSummary";
 
 const CandidacySummaryPage = () => {
@@ -224,10 +225,14 @@ const CandidacySummaryPage = () => {
               </EnhancedSectionCard>
             )}
             {isNewCertificationAuthorityCardFeatureActive ? (
-              <CertificationAuthoritySummaryCardV2
-                label={candidacy.certificationAuthority?.label}
-                viewCertificationAuthorityDetailsHref={`/candidacies/${candidacyId}/summary/certification-authority-details`}
-              />
+              candidacy.certificationAuthority ? (
+                <CertificationAuthoritySummaryCardV2
+                  label={candidacy.certificationAuthority?.label}
+                  viewCertificationAuthorityDetailsHref={`/candidacies/${candidacyId}/summary/certification-authority-details`}
+                />
+              ) : (
+                <EmptyCertificationAuthoritySummaryCard />
+              )
             ) : (
               <CertificationAuthoritySummaryCard
                 label={candidacy.feasibility?.certificationAuthority?.label}
