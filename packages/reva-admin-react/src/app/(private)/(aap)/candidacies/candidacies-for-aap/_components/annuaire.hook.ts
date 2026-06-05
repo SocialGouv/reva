@@ -286,7 +286,7 @@ export const useAnnuaire = () => {
 
   const updateFilters = useCallback(
     (newFilters: Partial<AnnuaireFilters>) => {
-      const queryParams = new URLSearchParams(searchParams);
+      const queryParams = new URLSearchParams(searchParams.toString());
       queryParams.set("page", "1");
 
       if (newFilters.candidacyStatuses !== undefined) {
@@ -390,7 +390,7 @@ export const useAnnuaire = () => {
 
   const setSearchFilter = useCallback(
     (filter: string) => {
-      const queryParams = new URLSearchParams(searchParams);
+      const queryParams = new URLSearchParams(searchParams.toString());
       if (filter) {
         queryParams.set("page", "1");
         queryParams.set("search", filter);
@@ -511,7 +511,7 @@ export const useAnnuaire = () => {
   );
 
   const clearFilters = useCallback(() => {
-    const queryParams = new URLSearchParams(searchParams);
+    const queryParams = new URLSearchParams(searchParams.toString());
     queryParams.set("page", "1");
 
     queryParams.delete("candidacy");
@@ -524,7 +524,8 @@ export const useAnnuaire = () => {
     queryParams.delete("archive");
     queryParams.delete("accompagnement");
     queryParams.delete("cohorteVaeCollectiveIds");
-    router.replace(`${pathname}?${queryParams.toString()}`, { scroll: false });
+
+    router.replace(`${pathname}?${queryParams.toString()}`);
   }, [pathname, router, searchParams]);
 
   const hasActiveFilters = useMemo(
