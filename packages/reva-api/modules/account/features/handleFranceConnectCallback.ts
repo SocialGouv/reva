@@ -296,9 +296,10 @@ export const getOrCreateCandidate = async (
   keycloakId: string,
   userInfo: FranceConnectClaims,
 ): Promise<{ candidate: { id: string }; isNewAccount: boolean }> => {
-  let candidate = await getCandidateByKeycloakId({ keycloakId });
+  const candidate = await getCandidateByKeycloakId({ keycloakId });
 
-  if (candidate) {
+  // Si le candidat existe et n'est pas lié à FranceConnect, on vérifie que les données pivots correspondent
+  if (candidate && !candidate.franceConnectLinked) {
     // Keycloak auto-link le compte FC par email sans vérifier l'identité.
     // On vérifie que les données pivots (nom, prénom, date de naissance)
     // correspondent pour éviter qu'un utilisateur FC récupère le compte
@@ -318,47 +319,63 @@ export const getOrCreateCandidate = async (
       fcBirthdate: userInfo.birthdate,
     });
 
+    // Si les données pivots ne correspondent pas, on désactive la connexion FranceConnect
     if (!isMatch) {
       await unlinkFranceConnectIdentity(keycloakId);
+
       throw new FranceConnectReconciliationError({
         candidateId: candidate.id,
         mismatchedFields,
       });
     }
+
     const updated = await updateCandidateFromFCClaims({
       candidateId: candidate.id,
       userInfo,
     });
+
     return { candidate: updated, isNewAccount: false };
   }
 
-  candidate = await prismaClient.candidate.findUnique({
-    where: { email: userInfo.email },
-  });
+  // Si le candidat existe et est lié à FranceConnect, on met à jour les données pivots
+  if (candidate && candidate.franceConnectLinked) {
+    const updated = await updateCandidateFromFCClaims({
+      candidateId: candidate.id,
+      userInfo,
+    });
 
-  if (candidate) {
-    if (candidate.keycloakId && candidate.keycloakId !== keycloakId) {
+    return { candidate: updated, isNewAccount: false };
+  }
+
+  // Ce cas ne peut en théorie pas arriver, car on a déjà vérifié que le candidat existe avec le keycloakId.
+  // Le keycloakId et le mail présents sur keycloak correspondent donc forcément à un candidat existant sur la db métier.
+  // Il ne peut y pas y avoir de mismatch entre le keycloakId et le mail. Sauf modification manuelle de la db métier et pas de modification sur keycloak ou l'inverse.
+  if (!candidate) {
+    // Si le candidat n'existe pas, on vérifie si un candidat existe avec le même email
+    // et si le keycloakId est différent, on throw une erreur
+    const candidateByEmail = await prismaClient.candidate.findUnique({
+      where: { email: userInfo.email },
+    });
+
+    if (
+      candidateByEmail &&
+      candidateByEmail?.keycloakId &&
+      candidateByEmail.keycloakId !== keycloakId
+    ) {
       throw new FranceConnectForbiddenError({
-        message: `Conflit de keycloakId pour le candidat ${candidate.id} : le compte est déjà lié à un autre identifiant FranceConnect`,
+        message: `Conflit de keycloakId pour le candidat ${candidateByEmail.id} : le compte est déjà lié à un autre identifiant FranceConnect`,
         userMessage:
           "Un compte existe déjà avec cette adresse email. Veuillez vous connecter avec vos identifiants habituels.",
       });
     }
-
-    logger.info(
-      `[France Connect] Association du keycloakId FranceConnect ${keycloakId} au candidat existant ${candidate.id}`,
-    );
-    const linked = await updateCandidateFromFCClaims({
-      candidateId: candidate.id,
-      userInfo,
-    });
-    return { candidate: linked, isNewAccount: false };
   }
 
+  // Si le candidat n'existe pas, on crée un nouveau candidat
   const created = await createCandidateFromFranceConnect({
     keycloakId,
     userInfo,
   });
+
   return { candidate: created, isNewAccount: true };
 };
 
