@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
@@ -140,7 +140,6 @@ const getCandidaciesForAAP = graphql(`
 export const useAnnuaire = () => {
   const { graphqlClient } = useGraphQlClient();
   const searchParams = useSearchParams();
-  const pathname = usePathname();
   const router = useRouter();
 
   const maisonMereAAPIdParam = searchParams.get("maisonMereAAPId");
@@ -381,11 +380,12 @@ export const useAnnuaire = () => {
         }
       }
 
-      router.replace(`${pathname}?${queryParams.toString()}`, {
+      router.refresh();
+      router.replace(`./?${queryParams.toString()}`, {
         scroll: false,
       });
     },
-    [pathname, router, searchParams],
+    [router, searchParams],
   );
 
   const setSearchFilter = useCallback(
@@ -397,9 +397,11 @@ export const useAnnuaire = () => {
       } else {
         queryParams.delete("search");
       }
-      router.push(`${pathname}?${queryParams.toString()}`);
+
+      router.refresh();
+      router.replace(`./?${queryParams.toString()}`);
     },
-    [pathname, router, searchParams],
+    [router, searchParams],
   );
 
   const toggleCandidacyStatus = useCallback(
@@ -524,8 +526,10 @@ export const useAnnuaire = () => {
     queryParams.delete("archive");
     queryParams.delete("accompagnement");
     queryParams.delete("cohorteVaeCollectiveIds");
-    router.replace(`${pathname}?${queryParams.toString()}`, { scroll: false });
-  }, [pathname, router, searchParams]);
+
+    router.refresh();
+    router.replace(`./?${queryParams.toString()}`, { scroll: false });
+  }, [router, searchParams]);
 
   const hasActiveFilters = useMemo(
     () =>
