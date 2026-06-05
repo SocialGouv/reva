@@ -380,6 +380,8 @@ export const useAnnuaire = () => {
         }
       }
 
+      // Force refresh to prevent bug from nextjs navigation
+      // Bug occurs when using page is loaded with default filters
       router.refresh();
       router.replace(`./?${queryParams.toString()}`, {
         scroll: false,
@@ -398,6 +400,8 @@ export const useAnnuaire = () => {
         queryParams.delete("search");
       }
 
+      // Force refresh to prevent bug from nextjs navigation
+      // Bug occurs when using page is loaded with default filters
       router.refresh();
       router.replace(`./?${queryParams.toString()}`);
     },
@@ -527,6 +531,8 @@ export const useAnnuaire = () => {
     queryParams.delete("accompagnement");
     queryParams.delete("cohorteVaeCollectiveIds");
 
+    // Force refresh to prevent bug from nextjs navigation
+    // Bug occurs when using page is loaded with default filters
     router.refresh();
     router.replace(`./?${queryParams.toString()}`, { scroll: false });
   }, [router, searchParams]);
