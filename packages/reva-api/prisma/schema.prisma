@@ -552,6 +552,7 @@ model Account {
   maisonMereAAPs                     MaisonMereAAPOnAccount[]
   organism                           Organism?                            @relation(fields: [organismId], references: [id])
   organismId                         String?                              @db.Uuid
+  accountEmailOtps                   AccountEmailOtp[]
 
   @@index([email])
   @@index([certificationAuthorityId])
@@ -2093,4 +2094,16 @@ model ParcoursCertification {
   certificationAuthorityOnCertificationOnParcoursCertifications CertificationAuthorityOnCertificationOnParcoursCertification[]
 
   @@map("parcours_certification")
+}
+
+model AccountEmailOtp {
+  id        String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  accountId String    @map("account_id") @db.Uuid
+  account   Account   @relation(fields: [accountId], references: [id])
+  otp       String    @map("otp") @db.VarChar(255)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime? @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([accountId])
+  @@map("account_email_otp")
 }
