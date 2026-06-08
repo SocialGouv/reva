@@ -63,11 +63,7 @@ export const createAccount = async (params: {
     groups: [account.group],
     firstName: account.firstname,
     lastName: account.lastname,
-    //When setting the password for the first time if we are not sending an email via keycloak we need to remove the "VERIFY_EMAIL" action
-    //Otherwise the user will not be able to login
-    requiredActions: dontSendKeycloakEmail
-      ? ["UPDATE_PASSWORD"]
-      : ["UPDATE_PASSWORD", "VERIFY_EMAIL"],
+    requiredActions: ["UPDATE_PASSWORD"],
     enabled: true,
     realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
   };
