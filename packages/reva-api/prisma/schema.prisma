@@ -553,6 +553,7 @@ model Account {
   organism                           Organism?                            @relation(fields: [organismId], references: [id])
   organismId                         String?                              @db.Uuid
   accountEmailOtps                   AccountEmailOtp[]
+  emailOtpEnabled                    Boolean                              @default(false) @map("email_otp_enabled")
 
   @@index([email])
   @@index([certificationAuthorityId])
