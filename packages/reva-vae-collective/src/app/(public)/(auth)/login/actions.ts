@@ -55,9 +55,9 @@ const loginMutation = graphql(`
 const verifyOtpChallengeMutation = graphql(`
   mutation VerifyOtpChallengeVaeCollective(
     $challengeToken: String!
-    $totp: String!
+    $otp: String!
   ) {
-    account_verifyOtpChallenge(challengeToken: $challengeToken, totp: $totp) {
+    account_verifyOtpChallenge(challengeToken: $challengeToken, otp: $otp) {
       tokens {
         accessToken
         refreshToken
@@ -140,7 +140,7 @@ export const login = async (
 
     const result = await client.mutation(verifyOtpChallengeMutation, {
       challengeToken,
-      totp,
+      otp: totp,
     });
 
     if (result.error) {

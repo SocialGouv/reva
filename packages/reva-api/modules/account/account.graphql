@@ -69,7 +69,7 @@ type Mutation {
   ): AccountLogged!
   account_verifyOtpChallenge(
     challengeToken: String!
-    totp: String!
+    otp: String!
   ): AccountLogged!
   account_sendForgotPasswordEmail(email: String!, clientApp: ClientApp!): Void
   account_resetPassword(token: String!, password: String!): Void

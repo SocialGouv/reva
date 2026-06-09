@@ -5,10 +5,10 @@ import { getAccountByKeycloakId } from "./getAccountByKeycloakId";
 
 export const verifyOtpChallenge = async ({
   challengeToken,
-  totp,
+  otp,
 }: {
   challengeToken: string;
-  totp: string;
+  otp: string;
 }) => {
   const payload = decodeOtpChallengeToken(challengeToken);
   if (!payload) {
@@ -24,7 +24,7 @@ export const verifyOtpChallenge = async ({
     clientSecret: process.env.KEYCLOAK_ADMIN_CLIENT_SECRET as string,
     userId: payload.keycloakId,
     password: payload.password,
-    totp,
+    totp: otp,
   });
 
   const account = await getAccountByKeycloakId({

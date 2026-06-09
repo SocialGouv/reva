@@ -96,12 +96,12 @@ export const resolvers = {
       ),
     account_verifyOtpChallenge: (
       _parent: unknown,
-      params: { challengeToken: string; totp: string },
+      params: { challengeToken: string; otp: string },
     ) =>
       wrapKeycloakUnavailable(() =>
         verifyOtpChallenge({
           challengeToken: params.challengeToken,
-          totp: params.totp,
+          otp: params.otp,
         }),
       ),
     account_sendForgotPasswordEmail: async (
