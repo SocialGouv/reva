@@ -1,10 +1,12 @@
 "use client";
 import Badge from "@codegouvfr/react-dsfr/Badge";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import Card from "@codegouvfr/react-dsfr/Card";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { formatDate } from "date-fns";
 import { useSearchParams } from "next/navigation";
 
+import { useAuth } from "@/components/auth/auth";
 import { SearchList } from "@/components/search/search-list/SearchList";
 
 import { AccountsListEmptyState } from "./AccountsListEmptyState";
@@ -15,7 +17,7 @@ export default function UserAccountsListPage() {
   const searchParamsPage = searchParams.get("page");
   const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
   const searchFilter = searchParams.get("search") ?? "";
-
+  const { isAdmin } = useAuth();
   const {
     comptesCollaborateursPage,
     collaborateurAccountsListStatus,
@@ -62,6 +64,20 @@ export default function UserAccountsListPage() {
           placeholder:
             "Rechercher par nom, prénom, adresse électronique etc...",
         }}
+        addButton={
+          isAdmin ? null : (
+            <Button
+              priority="tertiary no outline"
+              className="text-sm"
+              iconId="fr-icon-add-line"
+              linkProps={{
+                href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/add-user-account`,
+              }}
+            >
+              Ajouter un compte
+            </Button>
+          )
+        }
       >
         {(collaborateurAccount) => (
           <Card
