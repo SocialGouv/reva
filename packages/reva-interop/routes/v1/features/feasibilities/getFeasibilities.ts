@@ -65,6 +65,11 @@ const getFeasibilitiesQuery = graphql(`
             mimeType
             previewUrl
           }
+          swornStatementFile {
+            name
+            mimeType
+            previewUrl
+          }
           attachments {
             id
             type

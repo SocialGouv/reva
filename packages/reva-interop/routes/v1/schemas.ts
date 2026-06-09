@@ -368,6 +368,7 @@ export const typeDeDocumentSchemaDossierDeFaisabilite = {
     "JUSTIFICATIF_D_EQUIVALENCE_OU_DE_DISPENSE",
     "ATTESTATION_OU_CERTIFICAT_DE_FORMATION",
     "PIECE_SUPPLEMENTAIRE",
+    "ATTESTATION_SUR_L_HONNEUR",
   ],
   description: "Type du document",
   example: "DOSSIER_DE_FAISABILITE",

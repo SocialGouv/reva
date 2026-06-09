@@ -124,7 +124,8 @@ const mapFeasibility = (
   }[] = [];
 
   if (feasibilityFormat == "DEMATERIALIZED" && dematerializedFeasibilityFile) {
-    const { dffFile, attachments } = dematerializedFeasibilityFile;
+    const { dffFile, attachments, swornStatementFile } =
+      dematerializedFeasibilityFile;
 
     if (dffFile && dffFile.previewUrl) {
       documents.push({
@@ -133,6 +134,17 @@ const mapFeasibility = (
           nom: dffFile.name,
           url: buildPreviewUrl(dffFile.previewUrl),
           typeMime: dffFile.mimeType,
+        },
+      });
+    }
+
+    if (swornStatementFile && swornStatementFile.previewUrl) {
+      documents.push({
+        type: "ATTESTATION_SUR_L_HONNEUR",
+        fichier: {
+          nom: swornStatementFile.name,
+          url: buildPreviewUrl(swornStatementFile.previewUrl),
+          typeMime: swornStatementFile.mimeType,
         },
       });
     }

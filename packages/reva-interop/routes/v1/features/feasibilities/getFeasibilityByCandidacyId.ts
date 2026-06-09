@@ -37,6 +37,11 @@ const getFeasibilityByCandidacyIdQuery = graphql(`
           }
         }
         dematerializedFeasibilityFile {
+          swornStatementFile {
+            name
+            mimeType
+            previewUrl
+          }
           dffFile {
             name
             mimeType
