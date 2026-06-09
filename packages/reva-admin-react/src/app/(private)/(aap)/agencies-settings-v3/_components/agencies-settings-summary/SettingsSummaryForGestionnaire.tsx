@@ -124,10 +124,10 @@ export const SettingsSummaryForGestionnaire = ({
         <EnhancedSectionCard
           data-testid="user-accounts"
           title="Comptes collaborateurs"
-          isEditable={!isAdmin}
+          isEditable
           disabled={!isGeneralInformationCompleted}
           titleIconClass="fr-icon-team-fill"
-          customButtonTitle={"Modifier"}
+          customButtonTitle={isAdmin ? "Consulter" : "Modifier"}
           buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAP.id}/user-accounts/list`}
         >
           <p className="ml-10 md:w-4/5">
