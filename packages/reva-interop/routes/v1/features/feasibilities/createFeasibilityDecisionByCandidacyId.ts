@@ -139,10 +139,11 @@ const createFeasibilityDecisionForPdf = async (
     },
   );
 
-  const text = await response.text();
-  if (text) {
-    throw new Error(text);
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText);
   }
+  return response.json();
 };
 
 const createFeasibilityDecisionForDemat = async (
