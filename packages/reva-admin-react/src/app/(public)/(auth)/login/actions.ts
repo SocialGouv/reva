@@ -15,9 +15,10 @@ import {
 type FormState = {
   step?: "credentials" | "otp";
   email?: string;
+  otpType?: "authenticator" | "email";
   errors?: {
     password?: { message: string };
-    totp?: { message: string };
+    otp?: { message: string };
   };
   // Hard nav obligatoire : le client fait window.location.assign() ; un
   // redirect() Server Action ferait du soft RSC qui n'atteint pas le handler.
@@ -40,6 +41,7 @@ const loginMutation = graphql(`
     ) {
       requiresOtp
       otpChallengeToken
+      otpType
       tokens {
         accessToken
         refreshToken
@@ -93,7 +95,7 @@ export const login = async (
   formData: FormData,
 ): Promise<FormState> => {
   const email = formData.get("email")?.toString().trim() ?? "";
-  const totp = formData.get("totp")?.toString().trim() || undefined;
+  const otp = formData.get("otp")?.toString().trim() || undefined;
   const intent = formData.get("intent")?.toString();
   const redirectAfterAuthUrl = formData.get("redirectAfterAuthUrl")?.toString();
 
@@ -111,7 +113,7 @@ export const login = async (
 
   // Étape 2 : vérification OTP. Le mot de passe n'est jamais ré-envoyé par le
   // navigateur, il vit côté serveur dans le cookie httpOnly chiffré.
-  if (totp) {
+  if (otp) {
     const challengeToken = cookieStore.get(OTP_CHALLENGE_COOKIE)?.value;
     if (!challengeToken) {
       return {
@@ -127,7 +129,7 @@ export const login = async (
 
     const result = await publicApiClient.mutation(verifyOtpChallengeMutation, {
       challengeToken,
-      otp: totp,
+      otp,
     });
 
     if (result.error) {
@@ -137,7 +139,7 @@ export const login = async (
       return {
         step: "otp",
         email,
-        errors: { totp: { message } },
+        errors: { otp: { message } },
       };
     }
 
@@ -147,7 +149,7 @@ export const login = async (
         step: "otp",
         email,
         errors: {
-          totp: { message: "Code de vérification incorrect" },
+          otp: { message: "Code de vérification incorrect" },
         },
       };
     }
@@ -207,7 +209,11 @@ export const login = async (
       path: OTP_CHALLENGE_COOKIE_PATH,
       maxAge: OTP_CHALLENGE_COOKIE_MAX_AGE,
     });
-    return { step: "otp", email };
+
+    if (payload.otpType === "none") {
+      throw new Error("OTP type not defined");
+    }
+    return { step: "otp", email, otpType: payload.otpType };
   }
 
   if (!payload?.tokens) {
