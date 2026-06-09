@@ -35,11 +35,15 @@ export const loginWithCredentials = async ({
     throw new Error("Adresse électronique ou mot de passe incorrect");
   }
 
-  const isUserHasTotpConfigured = await userHasTotpConfigured(
-    account.keycloakId,
-  );
+  let userOtpType: "authenticator" | "email" | "none" = "none";
 
-  if (isUserHasTotpConfigured) {
+  if (account.emailOtpEnabled) {
+    userOtpType = "email";
+  } else if (await userHasTotpConfigured(account.keycloakId)) {
+    userOtpType = "authenticator";
+  }
+
+  if (userOtpType === "email" || userOtpType === "authenticator") {
     // Challenge chiffré porté par cookie Next.js: le MDP ne transite pas
     // par le navigateur entre les deux étapes.
     const otpChallengeToken = encodeOtpChallengeToken({
@@ -52,6 +56,7 @@ export const loginWithCredentials = async ({
       tokens: null,
       account,
       requiresOtp: true,
+      otpType: userOtpType,
       otpChallengeToken,
     };
   }
@@ -62,5 +67,11 @@ export const loginWithCredentials = async ({
     clientApp,
   );
 
-  return { tokens, account, requiresOtp: false, otpChallengeToken: null };
+  return {
+    tokens,
+    account,
+    requiresOtp: false,
+    otpChallengeToken: null,
+    otpType: "none",
+  };
 };

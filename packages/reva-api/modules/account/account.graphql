@@ -41,12 +41,19 @@ type AccountLogged {
   tokens: AccountTokens
   requiresOtp: Boolean!
   otpChallengeToken: String
+  otpType: OtpType!
 }
 
 type AccountTokens {
   accessToken: String!
   refreshToken: String!
   idToken: String!
+}
+
+enum OtpType {
+  authenticator
+  email
+  none
 }
 
 type Mutation {
