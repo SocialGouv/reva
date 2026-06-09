@@ -18,8 +18,6 @@ export const getPaginatedComptesCollaborateursByMaisonMereAAPId = async ({
     maisonMereAAPId,
   };
 
-  console.log("searchFilter", searchFilter);
-
   if (searchFilter) {
     where.account = {
       OR: [
