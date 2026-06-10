@@ -1,4 +1,5 @@
 import * as AuthHelper from "@/modules/shared/auth/auth.helper";
+import { createFeatureHelper } from "@/test/helpers/entities/create-feature-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../../graphql/generated";
@@ -13,6 +14,12 @@ const askForRegistrationWithPasswordMutation = graphql(`
 
 describe("candidateAskForRegistrationWithPassword", () => {
   test("sends registration email when no IAM account exists", async () => {
+    await createFeatureHelper({
+      args: {
+        key: "ENABLE_REGISTER_WITH_PASSWORD",
+      },
+    });
+
     const graphqlClient = getGraphQLClient({});
     const getAccountSpy = vi
       .spyOn(AuthHelper, "getAccountInIAM")
@@ -45,6 +52,12 @@ describe("candidateAskForRegistrationWithPassword", () => {
   });
 
   test("sends login email when an IAM account already exists", async () => {
+    await createFeatureHelper({
+      args: {
+        key: "ENABLE_REGISTER_WITH_PASSWORD",
+      },
+    });
+
     const graphqlClient = getGraphQLClient({});
     vi.spyOn(AuthHelper, "getAccountInIAM").mockResolvedValue({
       id: "existing-account",
@@ -68,5 +81,28 @@ describe("candidateAskForRegistrationWithPassword", () => {
     expect(result.candidate_askForRegistrationWithPassword).toBe("ok");
     expect(registrationEmailSpy).not.toHaveBeenCalled();
     expect(loginEmailSpy).toHaveBeenCalledWith("alice.doe@example.com");
+  });
+
+  test("rejects registration when password registration is disabled", async () => {
+    const graphqlClient = getGraphQLClient({});
+    const getAccountSpy = vi.spyOn(AuthHelper, "getAccountInIAM");
+
+    const registrationEmailSpy = vi
+      .spyOn(RegistrationEmailModule, "sendRegistrationWithPasswordEmail")
+      .mockResolvedValue(undefined);
+
+    const loginEmailSpy = vi
+      .spyOn(LoginEmailModule, "sendLoginEmail")
+      .mockResolvedValue(undefined);
+
+    await expect(
+      graphqlClient.request(askForRegistrationWithPasswordMutation, {
+        email: "alice.doe@example.com",
+      }),
+    ).rejects.toThrow("L'inscription par mot de passe n'est pas activée");
+
+    expect(getAccountSpy).not.toHaveBeenCalled();
+    expect(registrationEmailSpy).not.toHaveBeenCalled();
+    expect(loginEmailSpy).not.toHaveBeenCalled();
   });
 });
