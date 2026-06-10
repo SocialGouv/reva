@@ -36,10 +36,6 @@ export default function Login() {
   const { resetKeycloakInstance } = useKeycloakContext();
   const { isFeatureActive } = useAnonymousFeatureFlipping();
 
-  const isRegisterWithPasswordEnabled = isFeatureActive(
-    "ENABLE_REGISTER_WITH_PASSWORD",
-  );
-
   // Affiche un bandeau "mot de passe modifié" quand l'utilisateur arrive
   // depuis l'écran de reset password avec un TOTP enrollé (auto-login skip
   // côté backend). On nettoie le query param après lecture pour qu'il ne
@@ -184,20 +180,13 @@ export default function Login() {
               Vous n'avez pas encore de compte ?
             </p>
 
-            {isRegisterWithPasswordEnabled && (
-              <div>
-                <p className="text-lg leading-7 mb-0">
-                  Créez votre compte avec des identifiants :
-                </p>
-                <Button
-                  priority="secondary"
-                  className="w-full justify-center mt-4"
-                  linkProps={{ href: "/register" }}
-                >
-                  Créer mon compte
-                </Button>
-              </div>
-            )}
+            <Button
+              priority="secondary"
+              className="w-full justify-center"
+              linkProps={{ href: "/register" }}
+            >
+              Créer mon compte
+            </Button>
           </div>
         )}
       </div>

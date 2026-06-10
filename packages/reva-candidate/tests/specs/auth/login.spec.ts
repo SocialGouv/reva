@@ -10,17 +10,20 @@ import { graphQLResolver } from "@tests/helpers/network/msw";
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 test.describe("Login page", () => {
-  test.describe("when ENABLE_REGISTER_WITH_PASSWORD is active", () => {
-    const handlers = [
-      fvae.query(
-        "activeFeaturesForConnectedUser",
-        graphQLResolver({
-          activeFeaturesForConnectedUser: ["ENABLE_REGISTER_WITH_PASSWORD"],
-        }),
-      ),
-    ];
-
-    test.use({ mswHandlers: [handlers, { scope: "test" }] });
+  test.describe("default", () => {
+    test.use({
+      mswHandlers: [
+        [
+          fvae.query(
+            "activeFeaturesForConnectedUser",
+            graphQLResolver({
+              activeFeaturesForConnectedUser: [],
+            }),
+          ),
+        ],
+        { scope: "test" },
+      ],
+    });
 
     test("redirige vers la page d'inscription au clic sur « Créer mon compte »", async ({
       page,
@@ -33,10 +36,6 @@ test.describe("Login page", () => {
         page.getByRole("heading", { name: "Création de compte" }),
       ).toBeVisible();
     });
-  });
-
-  test.describe("default", () => {
-    test.use({ mswHandlers: [[], { scope: "test" }] });
 
     test("affiche uniquement le formulaire de connexion par mot de passe sans titre", async ({
       page,
