@@ -18,6 +18,7 @@ const UNAUTHENTICATED_PATHS = [
   "/forgot-password",
   "/reset-password",
   "/register",
+  "/register-with-password",
   "/register-confirmation",
 ];
 

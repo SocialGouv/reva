@@ -13,22 +13,29 @@ const fvae = graphql.link("https://reva-api/api/graphql");
 const handlers = [
   fvae.query(
     "activeFeaturesForConnectedUser",
-    graphQLResolver({ activeFeaturesForConnectedUser: [] }),
+    graphQLResolver({
+      activeFeaturesForConnectedUser: [
+        "ENABLE_REGISTER_WITH_PASSWORD",
+        "FRANCE_CONNECT_AUTH_FOR_CANDIDATE",
+      ],
+    }),
   ),
 ];
 
-async function navigateToRegisterPage(page: import("@playwright/test").Page) {
+async function navigateToRegisterWithPasswordPage(
+  page: import("@playwright/test").Page,
+) {
   await setupKeycloakUnauthenticated(page);
-  await page.goto("register");
+  await page.goto("register-with-password");
 }
 
-test.describe("Register page", () => {
+test.describe("Register with password page", () => {
   test.use({ mswHandlers: [handlers, { scope: "test" }] });
 
-  test("affiche le formulaire d'inscription avec le lien de connexion et l'avertissement pour les agents publics", async ({
+  test("affiche le formulaire d'inscription par mot de passe via l'URL dédiée même quand FranceConnect est actif", async ({
     page,
   }) => {
-    await navigateToRegisterPage(page);
+    await navigateToRegisterWithPasswordPage(page);
 
     await expect(
       page.getByRole("heading", { name: "Création de compte" }),
@@ -37,23 +44,30 @@ test.describe("Register page", () => {
     await expect(
       page.getByRole("button", { name: "S'inscrire" }),
     ).toBeVisible();
-    await expect(
-      page.getByRole("link", { name: "Se connecter" }),
-    ).toBeVisible();
-    await expect(
-      page.getByText(/France VAE n'est pas encore disponible pour les/),
-    ).toBeVisible();
   });
 
-  test("redirige vers la page de connexion au clic sur « Se connecter »", async ({
+  test("redirige vers l'inscription standard quand l'inscription par mot de passe est désactivée", async ({
     page,
+    msw,
   }) => {
-    await navigateToRegisterPage(page);
+    msw.use(
+      fvae.query(
+        "activeFeaturesForConnectedUser",
+        graphQLResolver({
+          activeFeaturesForConnectedUser: ["FRANCE_CONNECT_AUTH_FOR_CANDIDATE"],
+        }),
+      ),
+    );
 
-    await page.getByRole("link", { name: "Se connecter" }).click();
+    await setupKeycloakUnauthenticated(page);
+    await page.goto("register-with-password");
 
+    await expect(page).toHaveURL("/candidat/register/");
     await expect(
-      page.getByRole("heading", { name: "Connexion candidat" }),
+      page.getByRole("heading", { name: "Création de compte" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "S’identifier avec FranceConnect" }),
     ).toBeVisible();
   });
 
@@ -68,7 +82,7 @@ test.describe("Register page", () => {
       ),
     );
 
-    await navigateToRegisterPage(page);
+    await navigateToRegisterWithPasswordPage(page);
 
     await page.getByLabel("Identifiant").fill("newuser@example.com");
 
