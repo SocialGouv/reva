@@ -16,7 +16,7 @@ export const AccountsListEmptyState = ({
         className=""
         iconId="fr-icon-add-line"
         linkProps={{
-          href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/new`,
+          href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/add-user-account`,
         }}
       >
         Créer un compte collaborateur
