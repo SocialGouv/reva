@@ -71,6 +71,7 @@
     "magic-bytes.js": "^1.12.1",
     "mercurius": "^16.8.0",
     "openid-client": "^6.8.1",
+    "otplib": "^13.4.1",
     "pdfkit": "^0.17.2",
     "pino": "^9.7.0",
     "pino-datadog-transport": "^3.0.6",

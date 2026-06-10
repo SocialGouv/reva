@@ -1,0 +1,1 @@
+create sequence account_otp_counter_seq;

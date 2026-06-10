@@ -9,6 +9,7 @@ import {
 } from "../utils/keycloak.utils";
 
 import { getAccountByEmail } from "./getAccountByEmail";
+import { sendEmailOtp } from "./sendEmailOtp";
 
 export const loginWithCredentials = async ({
   email,
@@ -39,6 +40,7 @@ export const loginWithCredentials = async ({
 
   if (account.emailOtpEnabled) {
     userOtpType = "email";
+    await sendEmailOtp({ accountId: account.id });
   } else if (await userHasTotpConfigured(account.keycloakId)) {
     userOtpType = "authenticator";
   }
