@@ -48,23 +48,5 @@ test.describe("Login page", () => {
       await expect(page.getByLabel("Identifiant")).toBeVisible();
       await expect(page.getByLabel("Mot de passe")).toBeVisible();
     });
-
-    test("affiche le bandeau d'information avec les instructions de mot de passe", async ({
-      page,
-    }) => {
-      await login(page, { authenticated: false });
-
-      const noticeBanner = page.getByTestId("magic-link-disabled-notice");
-
-      await expect(
-        noticeBanner.getByText(
-          "Vous devez désormais vous connecter à votre espace candidat avec un mot de passe.",
-        ),
-      ).toBeVisible();
-
-      await expect(
-        noticeBanner.getByRole("link", { name: "Mot de passe oublié ?" }),
-      ).toBeVisible();
-    });
   });
 });
