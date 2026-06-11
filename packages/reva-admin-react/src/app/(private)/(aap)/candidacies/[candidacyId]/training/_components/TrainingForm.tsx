@@ -34,11 +34,10 @@ const trainingFormSchema = z.object({
   additionalHourCount: z
     .number({
       errorMap: () => ({
-        message: "Ce champ doit être un entier compris entre 0 et 100.",
+        message: "Ce champ doit être un entier supérieur ou égal à zéro.",
       }),
     })
-    .min(0)
-    .max(100),
+    .min(0),
 
   mandatoryTrainings: z
     .object({ id: z.string(), label: z.string(), checked: z.boolean() })
@@ -306,7 +305,7 @@ export const TrainingForm = ({
               NOMBRE D’HEURES DE FORMATIONS COMPLÉMENTAIRES
             </p>
           }
-          hintText="Un entier compris entre 0 et 100."
+          hintText="Un entier supérieur ou égal à zéro."
           nativeInputProps={{
             type: "number",
             ...register("additionalHourCount", { valueAsNumber: true }),
