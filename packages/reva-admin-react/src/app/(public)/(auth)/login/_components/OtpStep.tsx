@@ -19,6 +19,7 @@ export const OtpStep = ({
   return (
     <>
       <input type="hidden" name="email" value={email} />
+      <input type="hidden" name="otpType" value={otpType} />
       <Input
         className="mb-0"
         state={otpError ? "error" : "default"}

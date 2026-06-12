@@ -96,6 +96,10 @@ export const login = async (
 ): Promise<FormState> => {
   const email = formData.get("email")?.toString().trim() ?? "";
   const otp = formData.get("otp")?.toString().trim() || undefined;
+  const otpType = formData.get("otpType")?.toString() as
+    | "email"
+    | "authenticator"
+    | undefined;
   const intent = formData.get("intent")?.toString();
   const redirectAfterAuthUrl = formData.get("redirectAfterAuthUrl")?.toString();
 
@@ -113,7 +117,7 @@ export const login = async (
 
   // Étape 2 : vérification OTP. Le mot de passe n'est jamais ré-envoyé par le
   // navigateur, il vit côté serveur dans le cookie httpOnly chiffré.
-  if (otp) {
+  if (otp && otpType) {
     const challengeToken = cookieStore.get(OTP_CHALLENGE_COOKIE)?.value;
     if (!challengeToken) {
       return {
@@ -139,6 +143,7 @@ export const login = async (
       return {
         step: "otp",
         email,
+        otpType: otpType as "email" | "authenticator",
         errors: { otp: { message } },
       };
     }
