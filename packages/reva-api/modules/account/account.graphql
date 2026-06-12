@@ -39,6 +39,11 @@ input GetImpersonateUrlInput {
 type AccountLogged {
   account: Account!
   tokens: AccountTokens
+}
+
+type AccountLoggedWithOptionalOtpChallenge {
+  account: Account!
+  tokens: AccountTokens
   requiresOtp: Boolean!
   otpChallengeToken: String
   otpType: OtpType!
@@ -66,7 +71,7 @@ type Mutation {
     email: String!
     password: String!
     clientApp: ClientApp!
-  ): AccountLogged!
+  ): AccountLoggedWithOptionalOtpChallenge!
   account_verifyOtpChallenge(
     challengeToken: String!
     otp: String!

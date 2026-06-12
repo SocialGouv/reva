@@ -51,5 +51,5 @@ export const verifyOtpChallenge = async ({
     });
   }
 
-  return { tokens, account, requiresOtp: false, otpChallengeToken: null };
+  return { tokens, account };
 };
