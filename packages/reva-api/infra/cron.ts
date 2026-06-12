@@ -6,6 +6,7 @@ import path from "path";
 import { CronJob } from "cron";
 import dotenv from "dotenv";
 
+import { deleteExpiredAccountEmailOtps } from "@/modules/account/features/deleteExpiredAccountEmailOtps";
 import { sendReminderToAAPForMissingSwornStatement } from "@/modules/feasibility/dematerialized-feasibility-file/features/sendReminderToAAPForMissingSwornStatement";
 import { overwriteOutscaleBackupBucket } from "@/scripts/overwriteOutscaleBackupBucket";
 import { syncOutscaleBucketToBackup } from "@/scripts/syncOutcsaleBucketToBackup";
@@ -31,6 +32,7 @@ const EVERY_DAY_AT_3_AM = "0 3 * * *";
 const EVERY_DAY_AT_4_AM = "0 4 * * *";
 const EVERY_SUNDAY_AT_2_AM = "0 2 * * 0";
 const EVERY_1ST_OF_MONTH_AT_3_AM = "0 3 1 * *";
+const EVERY_5_MINUTES = "*/5 * * * *";
 
 const paymentRequestProofUpload = CronJob.from({
   cronTime: process.env.BATCH_PAYMENT_REQUEST_PROOF_CRONTIME || "*/2 * * * *",
@@ -285,6 +287,16 @@ CronJob.from({
         await overwriteOutscaleBackupBucket({ sourceBucket, backupBucket });
       },
     }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+CronJob.from({
+  cronTime: EVERY_5_MINUTES,
+  onTick: async () => {
+    logger.info("Running ");
+    await deleteExpiredAccountEmailOtps();
+  },
   start: true,
   timeZone: "Europe/Paris",
 });
