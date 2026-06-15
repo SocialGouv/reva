@@ -1,6 +1,10 @@
+"use client";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
+import { useState } from "react";
+
+import { resendEmailOtp } from "../actions";
 
 export const EmailOtpStep = ({
   email,
@@ -11,13 +15,32 @@ export const EmailOtpStep = ({
   otpError?: string;
   pending: boolean;
 }) => {
+  const [otpResent, setOtpResent] = useState(false);
+
+  const resendOtp = async () => {
+    await resendEmailOtp(email);
+    setOtpResent(true);
+  };
   return (
     <div className="flex flex-col gap-8">
-      <Alert
-        small
-        severity="info"
-        description={`Pour sécuriser votre accès, nous avons envoyé un code de vérification à ${email}`}
-      />
+      {otpResent ? (
+        <Alert
+          small
+          severity="success"
+          description={
+            <p>
+              Un nouveau code a été envoyé à {email}.
+              <br /> Ce code est valable 10 minutes.
+            </p>
+          }
+        />
+      ) : (
+        <Alert
+          small
+          severity="info"
+          description={`Pour sécuriser votre accès, nous avons envoyé un code de vérification à ${email}`}
+        />
+      )}
       <input type="hidden" name="email" value={email} />
       <input type="hidden" name="otpType" value="email" />
       <Input
@@ -45,19 +68,29 @@ export const EmailOtpStep = ({
       >
         Valider
       </Button>
-      <Button
-        className="mr-auto"
-        priority="tertiary"
-        nativeButtonProps={{
-          type: "submit",
-          name: "intent",
-          value: "cancel-otp",
-          formNoValidate: true,
-          disabled: pending,
-        }}
-      >
-        Retour à la connexion
-      </Button>
+      <div className="flex gap-4">
+        <Button
+          className="mr-auto w-full justify-center"
+          priority="tertiary"
+          nativeButtonProps={{
+            type: "submit",
+            name: "intent",
+            value: "cancel-otp",
+            formNoValidate: true,
+            disabled: pending,
+          }}
+        >
+          Retour à la connexion
+        </Button>
+        <Button
+          className="w-full justify-center"
+          type="button"
+          priority="tertiary"
+          onClick={resendOtp}
+        >
+          Renvoyer un code
+        </Button>
+      </div>
     </div>
   );
 };

@@ -63,6 +63,12 @@ const verifyOtpChallengeMutation = graphql(`
   }
 `);
 
+const resendEmailOtpMutation = graphql(`
+  mutation ResendEmailOtp($email: String!) {
+    account_resendEmailOtp(email: $email)
+  }
+`);
+
 const buildEstablishSsoUrl = async (
   tokens: {
     accessToken: string;
@@ -245,4 +251,14 @@ export const login = async (
       redirectAfterAuthUrl,
     ),
   };
+};
+
+export const resendEmailOtp = async (email: string) => {
+  const result = await publicApiClient.mutation(resendEmailOtpMutation, {
+    email,
+  });
+  if (result.error) {
+    throw new Error("Une erreur est survenue, veuillez réessayer.");
+  }
+  return result.data?.account_resendEmailOtp;
 };
