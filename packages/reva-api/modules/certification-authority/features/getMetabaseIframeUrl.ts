@@ -86,7 +86,7 @@ export const getMetabaseIframeUrl = async (
     },
     params: {
       [certificationAuthorityStructureParams.filter]: [
-        certificationAuthority.label,
+        certificationAuthority.id,
       ],
     },
     exp: Math.round(Date.now() / 1000) + 30 * 60, // 30 minute expiration
