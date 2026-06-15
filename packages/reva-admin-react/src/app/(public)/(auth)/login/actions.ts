@@ -137,9 +137,16 @@ export const login = async (
     });
 
     if (result.error) {
-      const message = result.error.networkError
-        ? "Service indisponible, merci de réessayer plus tard."
-        : "Code de vérification incorrect";
+      let message = "";
+      if (result.error.networkError) {
+        message = "Service indisponible, merci de réessayer plus tard.";
+      } else if (otpType === "email") {
+        message =
+          "Ce code est incorrect ou a expiré. Vérifiez votre email ou renvoyez un nouveau code";
+      } else {
+        message = "Code de vérification incorrect";
+      }
+
       return {
         step: "otp",
         email,
@@ -153,8 +160,9 @@ export const login = async (
       return {
         step: "otp",
         email,
+        otpType: otpType as "email" | "authenticator",
         errors: {
-          otp: { message: "Code de vérification incorrect" },
+          otp: { message: "Une erreur est survenue, veuillez réessayer." },
         },
       };
     }
