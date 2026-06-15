@@ -13,6 +13,7 @@ import { createAccount } from "./features/createAccount";
 import { getAccountByKeycloakId } from "./features/getAccountByKeycloakId";
 import { getImpersonateUrl } from "./features/impersonate";
 import { loginWithCredentials } from "./features/loginWithCredentials";
+import { resendEmailOtp } from "./features/resendEmailOtp";
 import { resetAccountPassword } from "./features/resetAccountPassword";
 import { sendForgotPasswordEmail } from "./features/sendForgotPasswordEmail";
 import { updateAccountById } from "./features/updateAccount";
@@ -112,6 +113,11 @@ export const resolvers = {
       _parent: unknown,
       params: { token: string; password: string },
     ) => resetAccountPassword(params),
+
+    account_resendEmailOtp: async (
+      _parent: unknown,
+      params: { email: string },
+    ) => resendEmailOtp(params),
   },
   Query: {
     account_getAccountForConnectedUser: async (
