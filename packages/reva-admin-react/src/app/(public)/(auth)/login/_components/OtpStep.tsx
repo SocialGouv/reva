@@ -1,3 +1,4 @@
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 
@@ -15,9 +16,16 @@ export const OtpStep = ({
   const hintText =
     otpType === "authenticator"
       ? "Saisissez le code à 6 chiffres généré par votre application d'authentification."
-      : "Saisissez le code de vérification envoyé par email.";
+      : "Saisissez le code de vérification à 6 chiffres, valable 10 minutes";
   return (
-    <>
+    <div className="flex flex-col gap-8">
+      {otpType === "email" && (
+        <Alert
+          small
+          severity="info"
+          description={`Pour sécuriser votre accès, nous avons envoyé un code de vérification à ${email}`}
+        />
+      )}
       <input type="hidden" name="email" value={email} />
       <input type="hidden" name="otpType" value={otpType} />
       <Input
@@ -35,7 +43,7 @@ export const OtpStep = ({
           maxLength: 6,
           autoFocus: true,
         }}
-        label="Code de vérification"
+        label="Vérification de votre identité"
       />
       {/* Bouton de validation avant "Retour" : doit être le 1er submit du form
         pour que Entrée dans le champ OTP valide le code et non l'annule. */}
@@ -43,11 +51,11 @@ export const OtpStep = ({
         className="w-full justify-center self-end mt-auto"
         disabled={pending}
       >
-        Valider le code
+        Valider
       </Button>
       <Button
         className="mr-auto"
-        priority="tertiary no outline"
+        priority="tertiary"
         nativeButtonProps={{
           type: "submit",
           name: "intent",
@@ -58,6 +66,6 @@ export const OtpStep = ({
       >
         Retour à la connexion
       </Button>
-    </>
+    </div>
   );
 };
