@@ -10,6 +10,7 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { filetypeinfo } from "magic-bytes.js";
 
+import { scanFile } from "../clamav/clamav.service";
 import { logger } from "../logger/logger";
 
 import { UploadedFile } from "./file.interface";
@@ -98,8 +99,21 @@ export const uploadFile = async ({
     typesFromMagicBytes.includes(type),
   );
 
+  // For test and development environments, only scan if the antivirus endpoint is configured
+  // We do this so as not to force every developer to deploy the AV stack on their local machine
+  if (
+    (process.env.NODE_ENV !== "test" &&
+      process.env.NODE_ENV !== "development") ||
+    !!process.env.CLAMAV_REST_URL
+  ) {
+    const antivirusResult = await scanFile(data);
+    if (antivirusResult.malware) {
+      throw new Error("La vérification d'intégrité du fichier a échoué");
+    }
+  }
+
   if (!isAllowed) {
-    throw new Error("File type not allowed");
+    throw new Error("Le type de fichier n'est pas autorisé");
   }
 
   const command = new PutObjectCommand({
