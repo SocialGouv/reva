@@ -18,5 +18,11 @@
       "description": "À modifier après le déploiement, ceux sont les mêmes que la CI",
       "value": ""
     }
+  },
+  "formation": {
+    "web": {
+      "amount": 1,
+      "size": "2XL"
+    }
   }
 }
