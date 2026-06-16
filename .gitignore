@@ -29,3 +29,4 @@ infra/ftps/data/*
 .claudeignore
 CLAUDE.md
 code_specs/
+__pycache__/
