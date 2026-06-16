@@ -20,6 +20,10 @@ export const scanFile = async (
       },
       body: new Uint8Array(file),
     });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText);
+    }
     return response.json();
   } catch (error) {
     logger.error(error);
