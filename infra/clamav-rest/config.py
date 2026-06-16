@@ -20,7 +20,7 @@ class BaseConfig(object):
 
 
 class ProductionConfig(BaseConfig):
-    CLAMD_SOCKET = os.environ.get("CLAMD_SOCKET", "/app/run/clamd.sock")
+    CLAMD_SOCKET = os.environ.get("CLAMD_SOCKET", "/app/clamav/run/clamd.sock")
     # CLAMD_HOST = os.environ.get("CLAMD_HOST", "clamav")
 
 
