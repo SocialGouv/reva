@@ -51,7 +51,7 @@ const buildPreviewUrl = (path: string) => {
 };
 
 const mapFeasibilityDecision = (
-  history: FeasibilityHistory,
+  history: Omit<FeasibilityHistory, "id">,
 ): MappedFeasibilityDecision => {
   return {
     decision: statusMapFromGqlToInterop[history.decision],
@@ -72,9 +72,25 @@ const mapFeasibilityDecision = (
 export const mapGetFeasibilityHistoryByCandidacyId = (
   candidacy: GetGqlResponseType<typeof getFeasibilityHistoryByCandidacyId>,
 ): MappedFeasibilityDecisionsResponse => {
-  if (candidacy.feasibility?.history) {
-    return { data: candidacy.feasibility.history.map(mapFeasibilityDecision) };
+  let data: MappedFeasibilityDecision[] = [];
+
+  if (candidacy.feasibility?.feasibilityFormat === "UPLOADED_PDF") {
+    data.push(
+      mapFeasibilityDecision({
+        decision: candidacy.feasibility.decision,
+        decisionComment: candidacy.feasibility.decisionComment,
+        decisionSentAt: candidacy.feasibility.decisionSentAt,
+        decisionFile: candidacy.feasibility.decisionFile,
+      }),
+    );
   }
 
-  return { data: [] };
+  if (candidacy.feasibility?.history) {
+    data = [
+      ...data,
+      ...candidacy.feasibility.history.map(mapFeasibilityDecision),
+    ];
+  }
+
+  return { data };
 };
