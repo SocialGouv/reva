@@ -34,7 +34,10 @@ export const markDossierDeValidationAsIncomplete = async ({
     );
   }
 
-  if (dossierDeValidation.decision !== "PENDING") {
+  if (
+    dossierDeValidation.decision !== "PENDING" &&
+    dossierDeValidation.decision !== "COMPLETE"
+  ) {
     throw new Error(
       "Impossible de demander une correction sur ce dossier. Il n'est pas en cours",
     );
