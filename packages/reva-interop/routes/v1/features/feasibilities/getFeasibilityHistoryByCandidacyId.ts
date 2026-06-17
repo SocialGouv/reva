@@ -7,6 +7,17 @@ const getFeasibilityHistoryByCandidacyIdQuery = graphql(`
     getCandidacyById(id: $candidacyId) {
       id
       feasibility {
+        feasibilityFormat
+        decision
+        decisionComment
+        decisionSentAt
+        decisionFile {
+          createdAt
+          name
+          mimeType
+          url
+          previewUrl
+        }
         history {
           id
           decision
