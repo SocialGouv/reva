@@ -25,7 +25,7 @@ const CollaborateurAccountsListQuery = graphql(`
           firstname
           lastname
           disabledAt
-          agences {
+          organisms {
             id
           }
         }
