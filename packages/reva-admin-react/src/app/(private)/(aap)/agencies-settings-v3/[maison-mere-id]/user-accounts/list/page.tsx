@@ -93,8 +93,8 @@ export default function UserAccountsListPage() {
                 </Badge>
               ) : (
                 <Tag small className="mb-1">
-                  {collaborateurAccount.agences.length} organisme
-                  {collaborateurAccount.agences.length > 1 ? "s" : ""}
+                  {collaborateurAccount.organisms.length} organisme
+                  {collaborateurAccount.organisms.length > 1 ? "s" : ""}
                 </Tag>
               )
             }
