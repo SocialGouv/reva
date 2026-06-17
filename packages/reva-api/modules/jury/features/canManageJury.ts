@@ -92,25 +92,21 @@ export const canManageJury = async ({
     return false;
   }
 
-  const departmentIds =
-    certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnDepartment.map(
-      (calad) => calad.departmentId,
-    );
-
-  const certificationIds =
-    certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnCertification.map(
-      (calac) => calac.certificationId,
-    );
-
-  const authorized = !!(await prismaClient.candidacy.findFirst({
-    where: {
-      id: candidacyId,
-      candidate: {
-        departmentId: { in: departmentIds },
+  //check if the candidacy is assigned to the certification authority local account
+  const certificationAuthorityLocalAccountOnCandidacy =
+    await prismaClient.certificationAuthorityLocalAccountOnCandidacy.findUnique(
+      {
+        where: {
+          certificationAuthorityLocalAccountId_candidacyId: {
+            candidacyId: feasibility.candidacyId,
+            certificationAuthorityLocalAccountId:
+              certificationAuthorityLocalAccount.id,
+          },
+        },
       },
-      certificationId: { in: certificationIds },
-    },
-  }));
+    );
+
+  const authorized = !!certificationAuthorityLocalAccountOnCandidacy;
 
   return authorized;
 };

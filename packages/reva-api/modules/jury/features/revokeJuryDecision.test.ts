@@ -1,3 +1,4 @@
+import { assignCandidacyToCertificationAuthorityLocalAccounts } from "@/modules/certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
 import { graphql } from "@/modules/graphql/generated";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
@@ -208,13 +209,7 @@ test("certificateur can submit a jury result but cannot revoke his decision hims
   const { candidacy, certification, certificationAuthority } =
     await setupTestCandidacyWithFeasibility();
 
-  const jury = await createJuryHelper({
-    candidacyId: candidacy.id,
-    certificationAuthorityId: certificationAuthority.id,
-    result: null,
-  });
-
-  const candidate = await prismaClient.candidate.findUnique({
+  const candidate = await prismaClient.candidate.findUniqueOrThrow({
     where: { id: candidacy.candidateId! },
   });
 
@@ -228,10 +223,20 @@ test("certificateur can submit a jury result but cannot revoke his decision hims
       },
       certificationAuthorityLocalAccountOnDepartment: {
         create: {
-          departmentId: candidate!.departmentId,
+          departmentId: candidate.departmentId,
         },
       },
     });
+
+  await assignCandidacyToCertificationAuthorityLocalAccounts({
+    candidacyId: candidacy.id,
+  });
+
+  const jury = await createJuryHelper({
+    candidacyId: candidacy.id,
+    certificationAuthorityId: certificationAuthority.id,
+    result: null,
+  });
 
   const updateResultMutation = graphql(`
     mutation updateJuryResult($juryId: ID!, $input: JuryInfoInput!) {
