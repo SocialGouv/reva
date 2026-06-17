@@ -39,13 +39,6 @@ async function createJuryAndDependenciesHelper() {
     },
   });
 
-  await createFeasibilityUploadedPdfHelper({
-    certificationAuthorityId:
-      certificationAuthorityLocalAccount.certificationAuthorityId,
-    candidacyId: candidacy.id,
-    decision: "ADMISSIBLE",
-  });
-
   await prismaClient.certificationAuthorityLocalAccountOnCertification.create({
     data: {
       certificationAuthorityLocalAccountId:
@@ -60,6 +53,13 @@ async function createJuryAndDependenciesHelper() {
         certificationAuthorityLocalAccount.id,
       departmentId: candidacy.candidate?.departmentId || "",
     },
+  });
+
+  await createFeasibilityUploadedPdfHelper({
+    certificationAuthorityId:
+      certificationAuthorityLocalAccount.certificationAuthorityId,
+    candidacyId: candidacy.id,
+    decision: "ADMISSIBLE",
   });
 
   const jury = await createJuryHelper({
