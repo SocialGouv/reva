@@ -9,6 +9,7 @@ import certificateurToken from "./tokens/certificateurToken.json";
 export const login = async ({
   page,
   role,
+  loginRequired = false, // when set to true do not authenticate the user and redirect to the login page
 }: {
   page: Page;
   role:
@@ -17,6 +18,7 @@ export const login = async ({
     | "admin"
     | "certificateur"
     | "certificateurRegistryManager";
+  loginRequired?: boolean;
 }) => {
   await page.route(
     "**/auth/realms/reva/protocol/openid-connect/3p-cookies/step1.html",
@@ -35,9 +37,15 @@ export const login = async ({
     },
   );
   await page.route("**/admin2/silent-check-sso.html", async (route) => {
-    await route.fulfill({
-      path: `tests/shared/helpers/auth/pages/silent-check-sso.html`,
-    });
+    if (loginRequired) {
+      await route.fulfill({
+        path: `tests/shared/helpers/auth/pages/silent-check-sso-with-login-required.html`,
+      });
+    } else {
+      await route.fulfill({
+        path: `tests/shared/helpers/auth/pages/silent-check-sso.html`,
+      });
+    }
   });
 
   await page.route(
