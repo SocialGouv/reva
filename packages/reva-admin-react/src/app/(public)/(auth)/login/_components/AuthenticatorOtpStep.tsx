@@ -41,10 +41,10 @@ export const AuthenticatorOtpStep = ({
     <Button
       className="mr-auto"
       priority="tertiary no outline"
+      value="cancel-otp"
       nativeButtonProps={{
         type: "submit",
         name: "intent",
-        value: "cancel-otp",
         formNoValidate: true,
         disabled: pending,
       }}

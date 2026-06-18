@@ -72,10 +72,10 @@ export const EmailOtpStep = ({
         <Button
           className="mr-auto w-full justify-center"
           priority="tertiary"
+          value="cancel-otp"
           nativeButtonProps={{
             type: "submit",
             name: "intent",
-            value: "cancel-otp",
             formNoValidate: true,
             disabled: pending,
           }}
