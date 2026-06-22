@@ -6,6 +6,7 @@ export const scanFile = async (
   if (!process.env.CLAMAV_REST_URL) {
     throw new Error("Antivirus endpoint is not configured");
   }
+  console.log("CLAMAV file.length", file.length);
   try {
     const response = await fetch(process.env.CLAMAV_REST_URL, {
       method: "POST",

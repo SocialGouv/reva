@@ -10,6 +10,8 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { filetypeinfo } from "magic-bytes.js";
 
+import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
+
 import { scanFile } from "../clamav/clamav.service";
 import { logger } from "../logger/logger";
 
@@ -99,15 +101,23 @@ export const uploadFile = async ({
     typesFromMagicBytes.includes(type),
   );
 
-  if (process.env.NODE_ENV === "production" || !!process.env.CLAMAV_REST_URL) {
+  if (!isAllowed) {
+    throw new Error("Le type de fichier n'est pas autorisé");
+  }
+
+  const isClamavEnabled = await isFeatureActiveForUser({
+    feature: "CLAMAV",
+  });
+
+  if (
+    (process.env.NODE_ENV === "production" || !!process.env.CLAMAV_REST_URL) &&
+    isClamavEnabled
+  ) {
+    logger.info(`Scanning file ${filePath} with ClamAV`);
     const antivirusResult = await scanFile(data);
     if (antivirusResult.malware) {
       throw new Error("La vérification d'intégrité du fichier a échoué");
     }
-  }
-
-  if (!isAllowed) {
-    throw new Error("Le type de fichier n'est pas autorisé");
   }
 
   const command = new PutObjectCommand({

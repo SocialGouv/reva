@@ -1,0 +1,1 @@
+INSERT INTO features (key, label, description) VALUES ('CLAMAV', 'Vérification antivirus', 'Activer la vérification antivirus des fichiers uploadés');
