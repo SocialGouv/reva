@@ -8,7 +8,7 @@ import { useEffect } from "react";
 
 import { CandidacySummaryBottomButtons } from "@/app/(private)/(aap)/candidacies/[candidacyId]/summary/_components/CandidacySummaryBottomButtons";
 import { CandidateExperiencesSectionCard } from "@/app/(private)/(aap)/candidacies/[candidacyId]/summary/_components/CandidateExperiencesSectionCard";
-import { CertificationAuthoritySummaryCard } from "@/app/(private)/(aap)/candidacies/[candidacyId]/summary/_components/CertificationAuthoritySummaryCard";
+import { CertificationAuthoritySummaryCard } from "@/app/(private)/(aap)/candidacies/[candidacyId]/summary/_components/certification-authority-summary-cards/CertificationAuthoritySummaryCard";
 import { useTakeOverCandidacy } from "@/app/(private)/(aap)/candidacies/[candidacyId]/summary/_components/takeOverCondidacy";
 import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
@@ -19,9 +19,9 @@ import { formatIso8601Date } from "@/utils/formatIso8601Date";
 
 import { CertificationCard } from "../_components/CertificationCard";
 
-import { CertificationAuthoritySummaryCardV2 } from "./_components/CertificationAuthoritySummaryCardV2";
+import { CertificationAuthoritySummaryCardV2 } from "./_components/certification-authority-summary-cards/CertificationAuthoritySummaryCardV2";
+import { EmptyCertificationAuthoritySummaryCard } from "./_components/certification-authority-summary-cards/EmptyCertificationAuthoritySummaryCard";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
-import { EmptyCertificationAuthoritySummaryCard } from "./_components/EmptyCertificationAuthoritySummaryCard";
 import useCandidateSummary from "./_components/useCandidateSummary";
 
 const CandidacySummaryPage = () => {
