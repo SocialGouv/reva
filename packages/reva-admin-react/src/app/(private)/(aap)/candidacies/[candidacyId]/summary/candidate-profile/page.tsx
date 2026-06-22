@@ -1,4 +1,5 @@
 "use client";
+import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 
@@ -10,11 +11,12 @@ const CandidateProfilePage = () => {
   const {
     candidacyId,
     degrees,
+    candidate,
     register,
     handleFormSubmit,
     resetForm,
     watch,
-    formState: { errors, isDirty, isSubmitting },
+    formState: { errors, isSubmitting },
   } = useCandidateProfilePageLogic();
 
   const highestDegreeId = watch("highestDegreeId");
@@ -24,7 +26,24 @@ const CandidateProfilePage = () => {
 
   return (
     <div className="flex flex-col">
-      <h1>Compléter le profil</h1>
+      <Breadcrumb
+        className="mb-4"
+        currentPageLabel="Formations"
+        segments={[
+          {
+            label: (
+              <span>
+                {candidate?.givenName
+                  ? candidate.givenName
+                  : candidate?.lastname}{" "}
+                {candidate?.firstname}
+              </span>
+            ),
+            linkProps: { href: "../" },
+          },
+        ]}
+      />
+      <h1>Formations</h1>
       <FormOptionalFieldsDisclaimer />
       <form
         onSubmit={handleFormSubmit}
@@ -32,14 +51,16 @@ const CandidateProfilePage = () => {
           e.preventDefault();
           resetForm();
         }}
-        className="flex flex-col mt-8"
+        className="flex flex-col"
       >
         <fieldset>
-          <legend className="mb-6 font-bold text-lg">
-            Niveau de formation du candidat
-          </legend>
+          <p className="mb-12 text-xl">
+            Ces informations seront automatiquement transmises au certificateur,
+            lorsque vous enverrez votre dossier de faisabilité
+          </p>
           <Select
             label="Niveau de formation le plus élevé"
+            hint="Indiquez le niveau d’études le plus élevé, même si le diplôme n’a pas été obtenu à la fin de la formation."
             nativeSelectProps={{
               ...register("niveauDeFormationLePlusEleveDegreeId"),
             }}
@@ -54,7 +75,9 @@ const CandidateProfilePage = () => {
               value=""
               disabled={!!niveauDeFormationLePlusEleveDegreeId}
               hidden={!!niveauDeFormationLePlusEleveDegreeId}
-            ></option>
+            >
+              Sélectionner un niveau
+            </option>
             {degrees?.map((d) => (
               <option key={d.id} value={d.id}>
                 Niveau {d.level}
@@ -63,6 +86,7 @@ const CandidateProfilePage = () => {
           </Select>
           <Select
             label="Niveau de la certification obtenue le plus élevé"
+            hint="Indiquez le niveau de diplôme le plus élevé obtenu."
             nativeSelectProps={{
               ...register("highestDegreeId"),
             }}
@@ -73,7 +97,9 @@ const CandidateProfilePage = () => {
               value=""
               disabled={!!highestDegreeId}
               hidden={!!highestDegreeId}
-            ></option>
+            >
+              Sélectionner un niveau
+            </option>
             {degrees?.map((d) => (
               <option key={d.id} value={d.id}>
                 Niveau {d.level}
@@ -88,8 +114,9 @@ const CandidateProfilePage = () => {
           />
         </fieldset>
         <FormButtons
+          hideResetButton
           backUrl={`/candidacies/${candidacyId}/summary`}
-          formState={{ isDirty, isSubmitting }}
+          formState={{ isSubmitting }}
         />
       </form>
     </div>

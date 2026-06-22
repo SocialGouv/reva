@@ -27,6 +27,9 @@ const getCandidateProfileQuery = graphql(`
     getCandidacyById(id: $candidacyId) {
       candidate {
         id
+        firstname
+        lastname
+        givenName
         highestDegree {
           id
           level
@@ -107,9 +110,13 @@ export const useCandidateProfilePageLogic = () => {
   const schema = useMemo(() => {
     return z
       .object({
-        highestDegreeId: sanitizedText(),
+        highestDegreeId: sanitizedText({
+          invalid_type_error: "Ce champ est obligatoire",
+        }),
         highestDegreeLabel: sanitizedOptionalText(),
-        niveauDeFormationLePlusEleveDegreeId: sanitizedText(),
+        niveauDeFormationLePlusEleveDegreeId: sanitizedText({
+          invalid_type_error: "Ce champ est obligatoire",
+        }),
       })
       .superRefine((data, ctx) => {
         const highestDegreeId = data?.highestDegreeId;
@@ -120,7 +127,7 @@ export const useCandidateProfilePageLogic = () => {
         ) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Merci de remplir ce champ",
+            message: "Ce champ est obligatoire",
             path: ["highestDegreeLabel"],
           });
         }
@@ -181,6 +188,7 @@ export const useCandidateProfilePageLogic = () => {
   return {
     candidacyId,
     degrees,
+    candidate,
     register,
     handleFormSubmit,
     formState,
