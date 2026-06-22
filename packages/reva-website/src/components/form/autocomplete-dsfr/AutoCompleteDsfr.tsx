@@ -36,11 +36,13 @@ export const AutocompleteDsfr = ({
     "IDLE" | "SEARCHING" | "GOT_RESULTS" | "GOT_NO_RESULT"
   >("IDLE");
   const [displayOptions, setDisplayOptions] = useState(true);
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState(defaultValue);
   const [isHydrated, setIsHydrated] = useState(false);
   const [debouncedSearchText] = useDebounce(searchText, 500);
 
   const updateSearchText = async (newSearchText: string) => {
+    console.log("newSearchText", newSearchText);
+    console.log("searchText", searchText);
     setSearchText(newSearchText);
   };
 
@@ -94,7 +96,7 @@ export const AutocompleteDsfr = ({
     const updateOptions = async () => {
       setStatus("SEARCHING");
       setSelectedOption(null);
-      if (debouncedSearchText) {
+      if (debouncedSearchText && debouncedSearchText !== defaultValue) {
         const newOptions = await searchFunction(debouncedSearchText);
         setOptions(newOptions);
         setStatus(newOptions.length ? "GOT_RESULTS" : "GOT_NO_RESULT");
@@ -104,7 +106,7 @@ export const AutocompleteDsfr = ({
       }
     };
     updateOptions();
-  }, [debouncedSearchText, searchFunction]);
+  }, [debouncedSearchText, searchFunction, defaultValue]);
 
   const handleSubmit = (searchText: string) => {
     const selectedCertification = selectedOption ?? {
@@ -142,7 +144,7 @@ export const AutocompleteDsfr = ({
                   onKeyDown={handleKeyDownOnOptions}
                   onChange={(event) => updateSearchText(event.target.value)}
                   placeholder={placeholder}
-                  value={searchText || defaultValue}
+                  value={searchText}
                   readOnly={!isHydrated}
                   onBlur={() => {
                     setDisplayOptions(false);
