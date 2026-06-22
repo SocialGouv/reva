@@ -19,8 +19,10 @@ function createSummaryHandlers({
     id: "cert-auth-1",
     label: CERTIFICATION_AUTHORITY_LABEL,
   },
+  certificationAuthorities = [],
 }: {
   certificationAuthority?: { id: string; label: string } | null;
+  certificationAuthorities?: { id: string }[];
 } = {}) {
   return [
     fvae.query(
@@ -32,6 +34,7 @@ function createSummaryHandlers({
           typeAccompagnement: "ACCOMPAGNE",
           endAccompagnementStatus: null,
           endAccompagnementDate: null,
+          certificationAuthorities,
           certificationAuthorityLocalAccounts: [],
           candidacyDropOut: null,
           reorientationReason: null,
@@ -160,6 +163,58 @@ test.describe("Certification authority card V2 (feature flag active)", () => {
         "empty-certification-authority-summary-card",
       );
       await expect(card).toBeVisible();
+    });
+  });
+
+  test.describe("with multiple certification authorities", () => {
+    test.use({
+      mswHandlers: [
+        [
+          ...createSummaryHandlers({
+            certificationAuthority: null,
+            certificationAuthorities: [
+              { id: "cert-auth-1" },
+              { id: "cert-auth-2" },
+            ],
+          }),
+          ...aapCommonHandlers,
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("should display the multiple certification authorities card", async ({
+      page,
+    }) => {
+      await login({ role: "aap", page });
+      await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/summary/`);
+      await Promise.all([
+        aapCommonWait(page),
+        waitGraphQL(page, "getCandidacySummaryById"),
+      ]);
+
+      await expect(
+        page.getByTestId("multiple-certification-authorities-summary-card"),
+      ).toBeVisible();
+    });
+
+    test("should lead me to the select certification authority page when i click on the 'Modifier' button", async ({
+      page,
+    }) => {
+      await login({ role: "aap", page });
+      await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/summary/`);
+      await Promise.all([
+        aapCommonWait(page),
+        waitGraphQL(page, "getCandidacySummaryById"),
+      ]);
+
+      const modifierButton = page
+        .getByTestId("multiple-certification-authorities-summary-card")
+        .getByRole("button", { name: "Compléter" });
+      await modifierButton.click();
+      await expect(page).toHaveURL(
+        `/admin2/candidacies/${CANDIDACY_ID}/summary/select-certification-authority/`,
+      );
     });
   });
 });

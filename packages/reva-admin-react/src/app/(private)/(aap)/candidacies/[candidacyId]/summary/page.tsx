@@ -21,6 +21,7 @@ import { CertificationCard } from "../_components/CertificationCard";
 
 import { CertificationAuthoritySummaryCardV2 } from "./_components/certification-authority-summary-cards/CertificationAuthoritySummaryCardV2";
 import { EmptyCertificationAuthoritySummaryCard } from "./_components/certification-authority-summary-cards/EmptyCertificationAuthoritySummaryCard";
+import { MultipleCertificationAuthoritiesSummaryCard } from "./_components/certification-authority-summary-cards/MultipleCertificationAuthoritiesSummaryCard";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
 
@@ -77,6 +78,33 @@ const CandidacySummaryPage = () => {
   const canViewCertificationAuthorityProfile =
     isAdmin && certificationAuthorityStructure;
 
+  const getCertificationAuthoritySummaryCard = () => {
+    let certificationAuthoritySummaryCardType: "empty" | "multiple" | "single" =
+      "empty";
+
+    if (candidacy.certificationAuthority) {
+      certificationAuthoritySummaryCardType = "single";
+    } else if (candidacy.certificationAuthorities.length > 1) {
+      certificationAuthoritySummaryCardType = "multiple";
+    }
+    switch (certificationAuthoritySummaryCardType) {
+      case "empty":
+        return <EmptyCertificationAuthoritySummaryCard />;
+      case "single":
+        return (
+          <CertificationAuthoritySummaryCardV2
+            label={candidacy.certificationAuthority?.label}
+            viewCertificationAuthorityDetailsHref={`/candidacies/${candidacyId}/summary/certification-authority-details`}
+          />
+        );
+      case "multiple":
+        return (
+          <MultipleCertificationAuthoritiesSummaryCard
+            buttonOnClickHref={`/candidacies/${candidacyId}/summary/select-certification-authority`}
+          />
+        );
+    }
+  };
   return (
     <>
       <div>
@@ -225,14 +253,7 @@ const CandidacySummaryPage = () => {
               </EnhancedSectionCard>
             )}
             {isNewCertificationAuthorityCardFeatureActive ? (
-              candidacy.certificationAuthority ? (
-                <CertificationAuthoritySummaryCardV2
-                  label={candidacy.certificationAuthority?.label}
-                  viewCertificationAuthorityDetailsHref={`/candidacies/${candidacyId}/summary/certification-authority-details`}
-                />
-              ) : (
-                <EmptyCertificationAuthoritySummaryCard />
-              )
+              getCertificationAuthoritySummaryCard()
             ) : (
               <CertificationAuthoritySummaryCard
                 label={candidacy.feasibility?.certificationAuthority?.label}
