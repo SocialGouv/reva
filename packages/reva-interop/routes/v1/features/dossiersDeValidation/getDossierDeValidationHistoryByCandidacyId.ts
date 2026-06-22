@@ -6,9 +6,15 @@ const getDossierDeValidationHistoryByCandidacyIdQuery = graphql(`
   query getDossierDeValidationHistoryByCandidacyIdQuery($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
+      activeDossierDeValidation {
+        decision
+        decisionComment
+        decisionSentAt
+      }
       historyDossierDeValidation {
         decision
         decisionComment
+        decisionSentAt
       }
     }
   }

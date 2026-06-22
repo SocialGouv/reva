@@ -43,6 +43,9 @@ const mapDossierDeValidationDecision = (
   return {
     decision: statusMapFromGqlToInterop[dossierDeValidation.decision],
     commentaire: dossierDeValidation.decisionComment || undefined,
+    dateEnvoi: dossierDeValidation.decisionSentAt
+      ? new Date(dossierDeValidation.decisionSentAt).toISOString()
+      : null,
   };
 };
 
@@ -51,13 +54,22 @@ export const mapGetDossierDeValidationHistoryByCandidacyId = (
     typeof getDossierDeValidationHistoryByCandidacyId
   >,
 ): MappedDossierDeValidationDecisionsResponse => {
-  if (candidacy.historyDossierDeValidation) {
-    return {
-      data: candidacy.historyDossierDeValidation.map(
-        mapDossierDeValidationDecision,
-      ),
-    };
+  let data: MappedDossierDeValidationDecision[] = [];
+
+  if (candidacy.activeDossierDeValidation) {
+    data.push(
+      mapDossierDeValidationDecision(candidacy.activeDossierDeValidation),
+    );
   }
 
-  return { data: [] };
+  if (candidacy.historyDossierDeValidation) {
+    data = [
+      ...data,
+      ...candidacy.historyDossierDeValidation.map(
+        mapDossierDeValidationDecision,
+      ),
+    ];
+  }
+
+  return { data };
 };
