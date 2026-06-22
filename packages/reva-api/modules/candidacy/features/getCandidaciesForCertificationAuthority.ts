@@ -40,13 +40,16 @@ const FEASIBILITY_DECISION_BY_STATUS: Partial<
 };
 
 const VALIDATION_DECISION_BY_STATUS: Partial<
-  Record<CandidacyStatusStep, DossierDeValidationStatus | null>
+  Record<CandidacyStatusStep, DossierDeValidationStatus[] | null>
 > = {
   [CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE]: null,
-  [CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE]:
+  [CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE]: [
     DossierDeValidationStatus.PENDING,
-  [CandidacyStatusStep.DOSSIER_DE_VALIDATION_SIGNALE]:
+    DossierDeValidationStatus.COMPLETE,
+  ],
+  [CandidacyStatusStep.DOSSIER_DE_VALIDATION_SIGNALE]: [
     DossierDeValidationStatus.INCOMPLETE,
+  ],
 };
 
 export const getCandidaciesForCertificationAuthority = async ({
@@ -425,6 +428,7 @@ const buildValidationFilter = (
 
   const decisions = (statuses ?? [])
     .map((status) => VALIDATION_DECISION_BY_STATUS[status])
+    .flat()
     .filter((decision): decision is DossierDeValidationStatus =>
       Boolean(decision),
     );
