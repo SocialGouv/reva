@@ -99,13 +99,7 @@ export const uploadFile = async ({
     typesFromMagicBytes.includes(type),
   );
 
-  // For test and development environments, only scan if the antivirus endpoint is configured
-  // We do this so as not to force every developer to deploy the AV stack on their local machine
-  if (
-    (process.env.NODE_ENV !== "test" &&
-      process.env.NODE_ENV !== "development") ||
-    !!process.env.CLAMAV_REST_URL
-  ) {
+  if (process.env.NODE_ENV === "production" || !!process.env.CLAMAV_REST_URL) {
     const antivirusResult = await scanFile(data);
     if (antivirusResult.malware) {
       throw new Error("La vérification d'intégrité du fichier a échoué");
