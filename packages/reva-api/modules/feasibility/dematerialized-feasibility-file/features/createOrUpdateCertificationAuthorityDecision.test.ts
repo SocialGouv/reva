@@ -208,6 +208,12 @@ describe("Décision INCOMPLETE sur le dossier de faisabilité dématérialisé",
         where: { id: feasibility.dematerializedFeasibilityFile!.id },
         data: {
           candidateConfirmationAt: new Date(Date.now() + ONE_DAY_IN_MS), // après la décision INCOMPLETE
+          attachmentsPartComplete: true,
+          certificationPartComplete: true,
+          competenceBlocsPartCompletion: "COMPLETED",
+          prerequisitesPartComplete: true,
+          eligibilityRequirement: "FULL_ELIGIBILITY_REQUIREMENT",
+          aapDecision: "FAVORABLE",
         },
       });
 
