@@ -1,3 +1,4 @@
+import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,7 +28,7 @@ type Duration = (typeof durationValues)[number];
 const durationToString: {
   [key in Duration]: string;
 } = {
-  unknown: "Inconnue",
+  unknown: "",
   lessThanOneYear: "Moins d'un an",
   betweenOneAndThreeYears: "Entre 1 et 3 ans",
   moreThanThreeYears: "Plus de 3 ans",
@@ -58,10 +59,16 @@ export const CandidateExperienceForm = ({
   onSubmit,
   editedExperience,
   disabled = false,
+  candidate,
 }: {
   onSubmit(data: CandidateExperienceFormData): Promise<void>;
   editedExperience?: CandidateExperienceFormData;
   disabled?: boolean;
+  candidate?: {
+    firstname: string;
+    lastname: string;
+    givenName?: string | null;
+  };
 }) => {
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -104,11 +111,30 @@ export const CandidateExperienceForm = ({
   const handleFormSubmit = handleSubmit(onSubmit);
   return (
     <div className="flex flex-col">
-      <h1>Expérience du candidat</h1>
+      <Breadcrumb
+        className="mb-4"
+        currentPageLabel="Nouvelle expérience"
+        segments={[
+          {
+            label: (
+              <span>
+                {candidate?.givenName
+                  ? candidate.givenName
+                  : candidate?.lastname}{" "}
+                {candidate?.firstname}
+              </span>
+            ),
+            linkProps: { href: "../" },
+          },
+        ]}
+      />
+      <h1>Nouvelle expérience</h1>
       <FormOptionalFieldsDisclaimer />
-      <p>
-        Il peut s’agir d’une expérience professionnelle, bénévole, d’un stage ou
-        d’une activité extra-professionnelle.
+      <p className="text-xl mb-12">
+        Ces informations seront envoyées au certificateur avec le dossier de
+        faisabilité. Il est donc important d'être très précis : décrivez les
+        tâches réalisées et le contexte de travail (lieu, équipe, outils
+        utilisés…).
       </p>
       <form
         onReset={(e) => {
@@ -120,8 +146,8 @@ export const CandidateExperienceForm = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-6">
           <Input
             className="col-span-2"
-            label="Intitulé de l’expérience"
-            hintText="Exemple : Agent d’entretien ; Service à domicile ; Commercial ; etc."
+            label="Intitulé du poste ou de l’activité"
+            hintText="Exemple : Agent d'entretien, service à domicile, commercial, etc."
             nativeInputProps={{ ...register("title") }}
             state={errors.title ? "error" : "default"}
             stateRelatedMessage={errors.title?.message}
@@ -157,8 +183,16 @@ export const CandidateExperienceForm = ({
             className="col-span-2"
             classes={{ nativeInputOrTextArea: "min-h-[100px]" }}
             textArea
-            label="Description de l’expérience"
-            hintText="Exemple : Entretien de l’espace de vie ; respect des normes d’hygiène ; pilotage d’activité commerciale ; etc."
+            label="Description du poste ou de l’activité extra-professionnelle"
+            hintText={
+              <span>
+                Décrivez précisément les activités réalisées (par exemple :
+                gestion des stocks, entretien des locaux, accueil du public,
+                etc). <br />
+                Décrivez aussi l’environnement de travail : type d’entreprise ou
+                de structure, travail seul ou en équipe, niveau d’autonomie.
+              </span>
+            }
             nativeTextAreaProps={{ ...register("description") }}
             state={errors.description ? "error" : "default"}
             stateRelatedMessage={errors.description?.message}
@@ -166,8 +200,9 @@ export const CandidateExperienceForm = ({
           />
         </div>
         <FormButtons
+          hideResetButton
           backUrl={`/candidacies/${candidacyId}/summary`}
-          formState={{ isDirty, isSubmitting }}
+          formState={{ isSubmitting }}
           disabled={disabled}
         />
       </form>

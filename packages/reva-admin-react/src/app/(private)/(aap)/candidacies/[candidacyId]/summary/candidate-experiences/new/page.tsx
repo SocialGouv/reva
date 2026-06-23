@@ -14,11 +14,16 @@ import { canAAPEditExperiences } from "@/utils/canAAPEditExperiences";
 import { graphql } from "@/graphql/generated";
 import { ExperienceInput } from "@/graphql/generated/graphql";
 
-const getCandidacyStatusForExperienceQuery = graphql(`
-  query getCandidacyStatusForExperienceQuery($candidacyId: ID!) {
+const getCandidacyForExperienceQuery = graphql(`
+  query getCandidacyForExperienceQuery($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
       status
+      candidate {
+        firstname
+        lastname
+        givenName
+      }
     }
   }
 `);
@@ -54,14 +59,15 @@ const NewCandidateExperiencePage = () => {
   });
 
   const { data } = useQuery({
-    queryKey: [candidacyId, "getCandidacyStatusForExperienceQuery"],
+    queryKey: [candidacyId, "getCandidacyForExperienceQuery"],
     queryFn: () =>
-      graphqlClient.request(getCandidacyStatusForExperienceQuery, {
+      graphqlClient.request(getCandidacyForExperienceQuery, {
         candidacyId,
       }),
   });
 
   const candidacyStatus = data?.getCandidacyById?.status;
+  const candidate = data?.getCandidacyById?.candidate;
 
   const canEditExperiences = canAAPEditExperiences(candidacyStatus);
 
@@ -84,6 +90,7 @@ const NewCandidateExperiencePage = () => {
     <CandidateExperienceForm
       onSubmit={handleSubmit}
       disabled={!canEditExperiences}
+      candidate={candidate}
     />
   );
 };
