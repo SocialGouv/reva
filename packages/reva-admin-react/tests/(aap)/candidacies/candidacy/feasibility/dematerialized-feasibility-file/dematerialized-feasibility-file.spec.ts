@@ -202,7 +202,7 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
       );
       await expect(
         competenciesBlocksSection.getByTestId("to-complete-badge"),
-      ).not.toBeVisible();
+      ).toBeVisible();
       await expect(
         competenciesBlocksSection.getByRole("button"),
       ).not.toBeVisible();
@@ -210,8 +210,8 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
       const prerequisitesSection = page.getByTestId("prerequisites-section");
       await expect(
         prerequisitesSection.getByTestId("to-complete-badge"),
-      ).not.toBeVisible();
-      await expect(prerequisitesSection.getByRole("button")).toBeDisabled();
+      ).toBeVisible();
+      await expect(prerequisitesSection.getByRole("button")).not.toBeDisabled();
 
       const decisionSection = page.getByTestId("decision-section");
       await expect(
@@ -268,7 +268,7 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
       ).not.toBeVisible();
 
       const prerequisitesSection = page.getByTestId("prerequisites-section");
-      await expect(prerequisitesSection.getByRole("button")).toBeDisabled();
+      await expect(prerequisitesSection.getByRole("button")).not.toBeDisabled();
 
       const decisionSection = page.getByTestId("decision-section");
       await expect(decisionSection.getByRole("button")).toBeEnabled();

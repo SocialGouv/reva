@@ -64,7 +64,6 @@ export const CompetenciesBlocksSection = ({
           />
         )
       }
-      disabled={disabled}
       data-testid="competencies-blocks-section"
     >
       <ul className="list-none flex flex-col gap-2">

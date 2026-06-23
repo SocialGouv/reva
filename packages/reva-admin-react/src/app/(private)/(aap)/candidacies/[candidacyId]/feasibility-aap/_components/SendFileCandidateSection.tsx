@@ -78,6 +78,10 @@ export const SendFileCandidateSection = ({
   return (
     <Tile
       {...TILE_COMMON_PROPS}
+      classes={{
+        title:
+          "text-dsfr-light-decisions-text-disabled-grey before:bg-gradient-to-t before:from-dsfr-light-decisions-border-border-disabled-grey before:to-dsfr-light-decisions-border-border-disabled-grey",
+      }}
       desc="Une fois toutes les sections complétées, vous pourrez envoyer le dossier au candidat. Il devra valider ce dossier avant que vous puissiez l'envoyer au certificateur."
       start={<CustomErrorBadge label="attente de la saisie complète" />}
       style={{

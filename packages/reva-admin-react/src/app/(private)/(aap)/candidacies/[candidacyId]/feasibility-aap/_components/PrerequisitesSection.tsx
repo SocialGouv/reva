@@ -4,7 +4,6 @@ import { useParams } from "next/navigation";
 import { useMemo } from "react";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
 
 import { Prerequisite } from "@/graphql/generated/graphql";
 
@@ -39,7 +38,6 @@ export const PrerequisitesSection = ({
       titleIconClass="fr-icon-checkbox-circle-fill"
       status={prerequisitesPartComplete ? "COMPLETED" : "TO_COMPLETE"}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/prerequisites`}
-      disabled={disabled}
       isEditable={isEditable}
       data-testid="prerequisites-section"
     >
@@ -70,13 +68,7 @@ export const PrerequisitesSection = ({
               </Accordion>
             )}
           </div>
-        ))}{" "}
-      {disabled && (
-        <SmallNotice>
-          Vous devez d'abord détailler la certification visée avant d'intégrer
-          les pré-requis.
-        </SmallNotice>
-      )}
+        ))}
     </EnhancedSectionCard>
   );
 };
