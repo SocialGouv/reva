@@ -100,7 +100,7 @@ const CandidacySummaryPage = () => {
       case "multiple":
         return (
           <MultipleCertificationAuthoritiesSummaryCard
-            buttonOnClickHref={`/candidacies/${candidacyId}/summary/select-certification-authority`}
+            buttonOnClickHref={`/candidacies/${candidacyId}/summary/multiple-certification-authorities-selection/disclaimer`}
           />
         );
     }

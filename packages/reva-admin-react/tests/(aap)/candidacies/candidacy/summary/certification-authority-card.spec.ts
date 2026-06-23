@@ -213,7 +213,7 @@ test.describe("Certification authority card V2 (feature flag active)", () => {
         .getByRole("button", { name: "Compléter" });
       await modifierButton.click();
       await expect(page).toHaveURL(
-        `/admin2/candidacies/${CANDIDACY_ID}/summary/select-certification-authority/`,
+        `/admin2/candidacies/${CANDIDACY_ID}/summary/multiple-certification-authorities-selection/disclaimer/`,
       );
     });
   });
