@@ -1,4 +1,5 @@
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -57,11 +58,13 @@ export type CandidateExperienceFormData = z.infer<typeof schema>;
 
 export const CandidateExperienceForm = ({
   onSubmit,
+  onDelete,
   editedExperience,
   disabled = false,
   candidate,
 }: {
   onSubmit(data: CandidateExperienceFormData): Promise<void>;
+  onDelete?: () => Promise<void>;
   editedExperience?: CandidateExperienceFormData;
   disabled?: boolean;
   candidate?: {
@@ -199,6 +202,21 @@ export const CandidateExperienceForm = ({
             disabled={disabled}
           />
         </div>
+
+        {onDelete && (
+          <div className="mt-4 border-t border-gray-200 pt-4">
+            <Button
+              data-testid="delete-experience-button"
+              type="button"
+              onClick={onDelete}
+              priority="tertiary no outline"
+              iconId="fr-icon-delete-line"
+              className="col-span-full"
+            >
+              Supprimer cette expérience
+            </Button>
+          </div>
+        )}
         <FormButtons
           hideResetButton
           backUrl={`/candidacies/${candidacyId}/summary`}

@@ -45,6 +45,18 @@ const updateCandidacyExperienceMutation = graphql(`
   }
 `);
 
+const deleteCandidacyExperienceMutation = graphql(`
+  mutation deleteCandidacyExperienceMutation(
+    $candidacyId: ID!
+    $experienceId: ID!
+  ) {
+    candidacy_deleteExperience(
+      candidacyId: $candidacyId
+      experienceId: $experienceId
+    )
+  }
+`);
+
 const EditCandidateExperiencePage = () => {
   const { candidacyId, experienceId } = useParams<{
     candidacyId: string;
@@ -92,10 +104,29 @@ const EditCandidateExperiencePage = () => {
     }
   };
 
+  const deleteCandidacyExperience = useMutation({
+    mutationFn: () =>
+      graphqlClient.request(deleteCandidacyExperienceMutation, {
+        candidacyId,
+        experienceId,
+      }),
+  });
+
+  const handleDelete = async () => {
+    try {
+      await deleteCandidacyExperience.mutateAsync();
+      successToast("Expérience supprimée");
+      router.push(`/candidacies/${candidacyId}/summary`);
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  };
+
   return (
     experience && (
       <CandidateExperienceForm
         onSubmit={handleSubmit}
+        onDelete={handleDelete}
         editedExperience={{
           ...experience,
           startedAt: format(toDate(experience.startedAt), "yyyy-MM-dd"),
