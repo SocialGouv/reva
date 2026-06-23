@@ -9,12 +9,18 @@ export const StatusPage = ({
   details,
   pictogram,
   actionLink,
+  extraLink,
 }: {
   title: string;
   chapo: React.ReactNode;
   details?: React.ReactNode;
   pictogram: React.ReactNode;
   actionLink?: {
+    href: string;
+    label: string;
+    priority?: ButtonProps["priority"];
+  };
+  extraLink?: {
     href: string;
     label: string;
     priority?: ButtonProps["priority"];
@@ -33,15 +39,26 @@ export const StatusPage = ({
           </div>
         )}
       </div>
-      {actionLink && (
-        <Button
-          priority={actionLink.priority ?? "secondary"}
-          linkProps={{ href: actionLink.href }}
-          className="w-full justify-center lg:w-auto lg:self-start"
-        >
-          {actionLink.label}
-        </Button>
-      )}
+      <div className="flex gap-4 flex-col lg:flex-row">
+        {actionLink && (
+          <Button
+            priority={actionLink.priority ?? "secondary"}
+            linkProps={{ href: actionLink.href }}
+            className="w-full justify-center lg:w-auto lg:self-start"
+          >
+            {actionLink.label}
+          </Button>
+        )}
+        {extraLink && (
+          <Button
+            priority={extraLink.priority ?? "secondary"}
+            linkProps={{ href: extraLink.href }}
+            className="w-full justify-center lg:w-auto lg:self-start"
+          >
+            {extraLink.label}
+          </Button>
+        )}
+      </div>
     </div>
     <div className="shrink-0 hidden lg:flex relative items-center justify-center w-[282px] h-[319px]">
       <Image
