@@ -195,14 +195,17 @@ const buildCandidateDataFromFCClaims = async ({
       );
       if (resolution) {
         birthCity = resolution.cityName;
+        const departmentCode = normalizeBirthDepartmentCode(
+          resolution.departmentCode,
+        );
         const department = await prismaClient.department.findUnique({
-          where: { code: resolution.departmentCode },
+          where: { code: departmentCode },
         });
         if (department) {
           birthDepartmentId = department.id;
         } else {
           logger.warn(
-            `[France Connect] Code département "${resolution.departmentCode}" retourné par l'API Geo introuvable en base pour le code INSEE "${userInfo.birthplace}"`,
+            `[France Connect] Code département "${resolution.departmentCode}" retourné par l'API Geo normalisé en "${departmentCode}" introuvable en base pour le code INSEE "${userInfo.birthplace}"`,
           );
           birthDepartmentId = null;
         }
@@ -248,6 +251,11 @@ const buildCandidateDataFromFCClaims = async ({
     countryIsFrance,
   };
 };
+
+// Saint-Martin is stored by postal code in the local department referential,
+// while the Geo API returns its administrative department code.
+const normalizeBirthDepartmentCode = (departmentCode: string) =>
+  departmentCode === "978" ? "97150" : departmentCode;
 
 const updateCandidateFromFCClaims = async ({
   candidateId,
