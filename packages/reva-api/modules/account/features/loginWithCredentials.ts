@@ -49,10 +49,13 @@ export const loginWithCredentials = async ({
     // Challenge chiffré porté par cookie Next.js: le MDP ne transite pas
     // par le navigateur entre les deux étapes.
     const otpChallengeToken = encodeOtpChallengeToken({
-      keycloakId: account.keycloakId,
-      realm: process.env.KEYCLOAK_ADMIN_REALM_REVA as string,
-      clientId: getAdminClientIdFor(clientApp),
-      password,
+      payload: {
+        keycloakId: account.keycloakId,
+        realm: process.env.KEYCLOAK_ADMIN_REALM_REVA as string,
+        clientId: getAdminClientIdFor(clientApp),
+        password,
+      },
+      otpType: userOtpType,
     });
     return {
       tokens: null,

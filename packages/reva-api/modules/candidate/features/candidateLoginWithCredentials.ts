@@ -59,10 +59,13 @@ export const candidateLoginWithCredentials = async ({
   if (isUserHasTotpConfigured) {
     // MDP embarqué chiffré dans le challenge JWT: jamais en clair côté front.
     const otpChallengeToken = encodeOtpChallengeToken({
-      keycloakId: candidate.keycloakId,
-      realm: process.env.KEYCLOAK_APP_REALM as string,
-      clientId: process.env.KEYCLOAK_APP_REVA_APP as string,
-      password,
+      payload: {
+        keycloakId: candidate.keycloakId,
+        realm: process.env.KEYCLOAK_APP_REALM as string,
+        clientId: process.env.KEYCLOAK_APP_REVA_APP as string,
+        password,
+      },
+      otpType: "authenticator",
     });
     return {
       tokens: null,

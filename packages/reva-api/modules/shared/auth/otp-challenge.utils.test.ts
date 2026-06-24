@@ -4,10 +4,10 @@ import jwt from "jsonwebtoken";
 import {
   decodeOtpChallengeToken,
   encodeOtpChallengeToken,
-  OTP_CHALLENGE_TTL_SECONDS,
 } from "./otp-challenge.utils";
 
 const ORIGINAL_ENV = { ...process.env };
+const AUTHENTICATOR_OTP_CHALLENGE_EXPIRES_IN = 5 * 60;
 
 beforeAll(() => {
   process.env.JWT_PRIVATE_KEY = "test-jwt-private-key";
@@ -40,7 +40,12 @@ describe("otp-challenge.utils", () => {
       password: "s3cret-p@ss",
     };
 
-    const decoded = decodeOtpChallengeToken(encodeOtpChallengeToken(payload));
+    const decoded = decodeOtpChallengeToken(
+      encodeOtpChallengeToken({
+        payload,
+        otpType: "authenticator",
+      }),
+    );
     expect(decoded).toEqual(payload);
   });
 
@@ -52,10 +57,15 @@ describe("otp-challenge.utils", () => {
       password: "another-pwd",
     };
 
-    const expiredToken = encodeOtpChallengeToken(payload);
+    const expiredToken = encodeOtpChallengeToken({
+      payload,
+      otpType: "authenticator",
+    });
     // Avance l'horloge de TTL + 1s pour forcer l'expiration JWT.
     vi.useFakeTimers();
-    vi.setSystemTime(Date.now() + (OTP_CHALLENGE_TTL_SECONDS + 1) * 1000);
+    vi.setSystemTime(
+      Date.now() + (AUTHENTICATOR_OTP_CHALLENGE_EXPIRES_IN + 1) * 1000,
+    );
 
     try {
       const decoded = decodeOtpChallengeToken(expiredToken);
