@@ -30,7 +30,12 @@ const OTP_CHALLENGE_COOKIE = "otp_challenge";
 // donc la vraie URL côté navigateur est `/admin2/login/`. Le path du cookie
 // doit refléter ce préfixe pour que le navigateur le renvoie à l'étape OTP.
 const OTP_CHALLENGE_COOKIE_PATH = "/admin2/login";
-const OTP_CHALLENGE_COOKIE_MAX_AGE = 5 * 60;
+
+// TTL pour OTP généré par l'authenticateur : 5 minutes
+const AUTHENTICATOR_OTP_CHALLENGE_COOKIE_MAX_AGE = 5 * 60;
+
+// TTL pour OTP généré par email : 10 minutes
+const EMAIL_OTP_CHALLENGE_COOKIE_MAX_AGE = 10 * 60;
 
 const loginMutation = graphql(`
   mutation LoginAdmin($email: String!, $password: String!) {
@@ -221,12 +226,23 @@ export const login = async (
         },
       };
     }
+
+    let otpCookieMaxAge = 0;
+    switch (payload.otpType) {
+      case "authenticator":
+        otpCookieMaxAge = AUTHENTICATOR_OTP_CHALLENGE_COOKIE_MAX_AGE;
+        break;
+      case "email":
+        otpCookieMaxAge = EMAIL_OTP_CHALLENGE_COOKIE_MAX_AGE;
+        break;
+    }
+
     cookieStore.set(OTP_CHALLENGE_COOKIE, payload.otpChallengeToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: OTP_CHALLENGE_COOKIE_PATH,
-      maxAge: OTP_CHALLENGE_COOKIE_MAX_AGE,
+      maxAge: otpCookieMaxAge,
     });
 
     if (payload.otpType === "none") {
