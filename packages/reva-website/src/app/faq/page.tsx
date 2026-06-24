@@ -114,7 +114,7 @@ const FaqPage = async () => {
               >
                 <Button
                   linkProps={{
-                    href: "/nous-contacter",
+                    href: "https://francevae.crisp.help/fr/?contact",
                   }}
                 >
                   Contactez-nous
