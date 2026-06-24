@@ -44,7 +44,6 @@ export const DecisionSection = ({
       titleIconClass="fr-icon-thumb-up-fill"
       status={aapDecision ? "COMPLETED" : "TO_COMPLETE"}
       isEditable={isEditable && !disabled}
-      disabled={disabled}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/decision`}
       CustomBadge={<DecisionBadge />}
       data-testid="decision-section"
@@ -52,8 +51,8 @@ export const DecisionSection = ({
       {aapDecisionComment && <p className="md:pl-10">“{aapDecisionComment}”</p>}
       {disabled && (
         <SmallNotice>
-          Une recevabilité en cours favorable existe déjà sur cette candidature.
-          Vous ne pouvez pas émettre un avis sur la faisabilité.
+          Vous n'avez pas besoin de compléter cette catégorie car une
+          recevabilité favorable est en cours
         </SmallNotice>
       )}
     </EnhancedSectionCard>

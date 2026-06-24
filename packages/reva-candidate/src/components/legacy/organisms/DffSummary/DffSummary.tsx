@@ -34,6 +34,7 @@ type DffSummaryProps = {
 
 const eligibilityCandidateSituationMap = {
   PREMIERE_DEMANDE_RECEVABILITE: "Première demande de recevabilité",
+  DEMANDE_RENOUVELLEMENT_RECEVABILITE: "Demande de renouvellement",
   DETENTEUR_RECEVABILITE: "Détenteur d'une recevabilité",
   DETENTEUR_RECEVABILITE_AVEC_CHGT_CODE_RNCP_ET_REV_REFERENTIEL:
     "Détenteur d'une recevabilité avec changement de code RNCP et révision du référentiel",

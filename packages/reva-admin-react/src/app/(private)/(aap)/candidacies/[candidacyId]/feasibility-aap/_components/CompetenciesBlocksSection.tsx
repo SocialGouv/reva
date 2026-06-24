@@ -40,6 +40,7 @@ export const CompetenciesBlocksSection = ({
   isEligibilityRequirementPartial,
   showComplementExperienceParcoursVise,
   complementExperienceParcoursVise,
+  hideCompleteBadge,
 }: {
   isEditable: boolean;
   competenceBlocsPartCompletion?: CompetenceBlocsPartCompletion;
@@ -50,6 +51,7 @@ export const CompetenciesBlocksSection = ({
   isEligibilityRequirementPartial: boolean;
   showComplementExperienceParcoursVise: boolean;
   complementExperienceParcoursVise: string;
+  hideCompleteBadge?: boolean;
 }) => {
   const { candidacyId } = useParams<{ candidacyId: string }>();
 
@@ -58,6 +60,7 @@ export const CompetenciesBlocksSection = ({
       title="Blocs de compétences"
       titleIconClass="fr-icon-survey-fill"
       badge={
+        !hideCompleteBadge &&
         isEditable && (
           <CompetencesSectionBadge
             completion={competenceBlocsPartCompletion || "TO_COMPLETE"}

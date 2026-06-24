@@ -17,8 +17,14 @@ const getCandidacyById = graphql(`
         }
       }
       certification {
+        id
         label
         codeRncp
+      }
+      candidate {
+        givenName
+        lastname
+        firstname
       }
     }
   }
@@ -72,6 +78,12 @@ export const useEligibility = () => {
   const candidacy = getCandidacyByIdResponse?.getCandidacyById;
   const certification = candidacy?.certification;
   const feasibility = candidacy?.feasibility;
+  const candidate = candidacy?.candidate;
 
-  return { certification, createOrUpdateEligibilityRequirement, feasibility };
+  return {
+    certification,
+    createOrUpdateEligibilityRequirement,
+    feasibility,
+    candidate,
+  };
 };

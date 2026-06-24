@@ -71,9 +71,6 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
       await expect(
         page.getByRole("button", { name: "Enregistrer" }),
       ).toBeDisabled();
-      await expect(
-        page.getByRole("button", { name: "Réinitialiser" }),
-      ).toBeDisabled();
     });
   });
 
@@ -97,9 +94,6 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
       await expect(
         page.getByRole("button", { name: "Enregistrer" }),
       ).toBeDisabled();
-      await expect(
-        page.getByRole("button", { name: "Réinitialiser" }),
-      ).toBeDisabled();
 
       const eligibilitySelect = page.getByTestId("eligibility-select");
       await eligibilitySelect
@@ -107,22 +101,10 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
         .selectOption("PREMIERE_DEMANDE_RECEVABILITE");
 
       const validUntilInput = page.getByTestId("eligibility-valid-until-input");
-      await expect(validUntilInput).toBeVisible();
-      await expect(validUntilInput.getByRole("textbox")).toBeDisabled();
-
-      const timeEnoughRadioButtons = page.getByTestId(
-        "eligibility-time-enough-radio-buttons",
-      );
-      await expect(timeEnoughRadioButtons).toBeVisible();
-      await expect(
-        timeEnoughRadioButtons.getByRole("radio").first(),
-      ).toBeDisabled();
+      await expect(validUntilInput).not.toBeVisible();
 
       await expect(
         page.getByRole("button", { name: "Enregistrer" }),
-      ).toBeEnabled();
-      await expect(
-        page.getByRole("button", { name: "Réinitialiser" }),
       ).toBeEnabled();
     });
   });
@@ -148,9 +130,6 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
         await expect(
           page.getByRole("button", { name: "Enregistrer" }),
         ).toBeDisabled();
-        await expect(
-          page.getByRole("button", { name: "Réinitialiser" }),
-        ).toBeDisabled();
 
         const eligibilitySelect = page.getByTestId("eligibility-select");
         await eligibilitySelect
@@ -166,18 +145,8 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
         await dateInput.clear();
         await dateInput.fill(DF_FORMATED_DATE_6_MONTHS_FROM_NOW);
 
-        const timeEnoughRadioButtons = page.getByTestId(
-          "eligibility-time-enough-radio-buttons",
-        );
-        await expect(timeEnoughRadioButtons).toBeVisible();
-        await expect(timeEnoughRadioButtons.getByText("Oui")).toBeEnabled();
-        await timeEnoughRadioButtons.getByText("Oui").click();
-
         await expect(
           page.getByRole("button", { name: "Enregistrer" }),
-        ).toBeEnabled();
-        await expect(
-          page.getByRole("button", { name: "Réinitialiser" }),
         ).toBeEnabled();
       });
 
@@ -192,9 +161,6 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
 
         await expect(
           page.getByRole("button", { name: "Enregistrer" }),
-        ).toBeDisabled();
-        await expect(
-          page.getByRole("button", { name: "Réinitialiser" }),
         ).toBeDisabled();
 
         const eligibilitySelect = page.getByTestId("eligibility-select");
@@ -211,22 +177,12 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
         await dateInput.clear();
         await dateInput.fill(DF_FORMATED_DATE_6_MONTHS_AGO);
 
-        const timeEnoughRadioButtons = page.getByTestId(
-          "eligibility-time-enough-radio-buttons",
-        );
-        await expect(timeEnoughRadioButtons).toBeVisible();
-        await expect(timeEnoughRadioButtons.getByText("Oui")).toBeEnabled();
-        await timeEnoughRadioButtons.getByText("Oui").click();
-
         await expect(
           validUntilInput.locator('[class*="fr-error-text"]'),
         ).not.toBeVisible();
 
         await expect(
           page.getByRole("button", { name: "Enregistrer" }),
-        ).toBeEnabled();
-        await expect(
-          page.getByRole("button", { name: "Réinitialiser" }),
         ).toBeEnabled();
 
         await page.getByRole("button", { name: "Enregistrer" }).click();
@@ -237,7 +193,7 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
       });
     });
 
-    test.describe("RNCP code changes", () => {
+    test.describe("DETENTEUR_RECEVABILITE", () => {
       test.use({
         mswHandlers: [
           [...aapCommonHandlers, ...createEligibilityHandlers()],
@@ -245,7 +201,7 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
         ],
       });
 
-      test("should disable date and time fields when DETENTEUR_RECEVABILITE_AVEC_CHGT_CODE_RNCP_ET_REV_REFERENTIEL eligibility is selected", async ({
+      test("should handle DETENTEUR_RECEVABILITE eligibility with future date validation", async ({
         page,
       }) => {
         await login({ role: "aap", page });
@@ -257,68 +213,11 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
         await expect(
           page.getByRole("button", { name: "Enregistrer" }),
         ).toBeDisabled();
-        await expect(
-          page.getByRole("button", { name: "Réinitialiser" }),
-        ).toBeDisabled();
 
         const eligibilitySelect = page.getByTestId("eligibility-select");
         await eligibilitySelect
           .locator("select")
-          .selectOption(
-            "DETENTEUR_RECEVABILITE_AVEC_CHGT_CODE_RNCP_ET_REV_REFERENTIEL",
-          );
-
-        const validUntilInput = page.getByTestId(
-          "eligibility-valid-until-input",
-        );
-        await expect(validUntilInput).toBeVisible();
-        await expect(validUntilInput.getByRole("textbox")).toBeDisabled();
-
-        const timeEnoughRadioButtons = page.getByTestId(
-          "eligibility-time-enough-radio-buttons",
-        );
-        await expect(timeEnoughRadioButtons).toBeVisible();
-        await expect(timeEnoughRadioButtons.getByText("Oui")).toBeDisabled();
-
-        await expect(
-          page.getByRole("button", { name: "Enregistrer" }),
-        ).toBeEnabled();
-        await expect(
-          page.getByRole("button", { name: "Réinitialiser" }),
-        ).toBeEnabled();
-      });
-    });
-
-    test.describe("No RNCP code changes", () => {
-      test.use({
-        mswHandlers: [
-          [...aapCommonHandlers, ...createEligibilityHandlers()],
-          { scope: "test" },
-        ],
-      });
-
-      test("should handle DETENTEUR_RECEVABILITE_AVEC_REV_SANS_CHGT_REFERENTIEL eligibility with future date validation", async ({
-        page,
-      }) => {
-        await login({ role: "aap", page });
-        await page.goto(
-          `/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap/eligibility`,
-        );
-        await waitForEligibilityQueries(page);
-
-        await expect(
-          page.getByRole("button", { name: "Enregistrer" }),
-        ).toBeDisabled();
-        await expect(
-          page.getByRole("button", { name: "Réinitialiser" }),
-        ).toBeDisabled();
-
-        const eligibilitySelect = page.getByTestId("eligibility-select");
-        await eligibilitySelect
-          .locator("select")
-          .selectOption(
-            "DETENTEUR_RECEVABILITE_AVEC_REV_SANS_CHGT_REFERENTIEL",
-          );
+          .selectOption("DETENTEUR_RECEVABILITE");
 
         const validUntilInput = page.getByTestId(
           "eligibility-valid-until-input",
@@ -329,18 +228,8 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
         await dateInput.clear();
         await dateInput.fill(DF_FORMATED_DATE_6_MONTHS_FROM_NOW);
 
-        const timeEnoughRadioButtons = page.getByTestId(
-          "eligibility-time-enough-radio-buttons",
-        );
-        await expect(timeEnoughRadioButtons).toBeVisible();
-        await expect(timeEnoughRadioButtons.getByText("Oui")).toBeEnabled();
-        await timeEnoughRadioButtons.getByText("Oui").click();
-
         await expect(
           page.getByRole("button", { name: "Enregistrer" }),
-        ).toBeEnabled();
-        await expect(
-          page.getByRole("button", { name: "Réinitialiser" }),
         ).toBeEnabled();
       });
     });

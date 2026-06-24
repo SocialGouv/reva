@@ -222,6 +222,11 @@ export const getEligibilityLabelAndType = ({
           label: "PREMIÈRE DEMANDE DE RECEVABILITÉ",
           type: "info",
         };
+      case DFFEligibilityCandidateSituation.DEMANDE_RENOUVELLEMENT_RECEVABILITE:
+        return {
+          label: "DEMANDE DE RENOUVELLEMENT",
+          type: "info",
+        };
       case DFFEligibilityCandidateSituation.DETENTEUR_RECEVABILITE:
         return {
           label: "DÉTENTEUR DE RECEVABILITÉ",

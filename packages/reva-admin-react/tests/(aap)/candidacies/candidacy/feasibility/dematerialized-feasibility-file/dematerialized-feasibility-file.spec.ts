@@ -425,6 +425,9 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
         "competencies-blocks-section",
       );
       await expect(
+        competenciesBlocksSection.getByTestId("completed-badge"),
+      ).not.toBeVisible();
+      await expect(
         competenciesBlocksSection.getByRole("button"),
       ).not.toBeVisible();
 

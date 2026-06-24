@@ -1,5 +1,4 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
 
@@ -48,16 +47,12 @@ export const EligibilitySection = ({
         <>
           <EligibiltyBadge eligibilityRequirement={eligibilityRequirement} />
           {eligibilityValidUntil && (
-            <>
-              <p className="mb-0 mt-4">Date de fin de validité</p>
-              <p className="font-medium mb-4">
+            <div className="mt-4 flex flex-row justify-between items-center px-4 py-2 border-t border-b border-dsfr-light-border-default">
+              <p className="m-0">Date de fin de validité</p>
+              <p className="font-medium m-0">
                 {format(eligibilityValidUntil, "dd/MM/yyyy")}
               </p>
-              <CallOut className="mb-0">
-                Le candidat s'engage à respecter le délai de fin de validité de
-                la recevabilité
-              </CallOut>
-            </>
+            </div>
           )}
         </>
       ) : (

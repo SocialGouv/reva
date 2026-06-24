@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "DFFEligibilityCandidateSituation" ADD VALUE 'DEMANDE_RENOUVELLEMENT_RECEVABILITE';
