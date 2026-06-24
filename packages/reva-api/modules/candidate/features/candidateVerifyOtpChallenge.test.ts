@@ -53,10 +53,13 @@ describe("candidateVerifyOtpChallenge", () => {
     });
 
     const challengeToken = encodeOtpChallengeToken({
-      keycloakId,
-      realm: "reva-app",
-      clientId: "reva-app",
-      password,
+      payload: {
+        keycloakId,
+        realm: "reva-app",
+        clientId: "reva-app",
+        password,
+      },
+      otpType: "authenticator",
     });
 
     const tokens = {
@@ -103,10 +106,13 @@ describe("candidateVerifyOtpChallenge", () => {
     await createCandidateHelper({ keycloakId });
 
     const challengeToken = encodeOtpChallengeToken({
-      keycloakId,
-      realm: "reva-app",
-      clientId: "reva-app",
-      password,
+      payload: {
+        keycloakId,
+        realm: "reva-app",
+        clientId: "reva-app",
+        password,
+      },
+      otpType: "authenticator",
     });
 
     vi.spyOn(
@@ -129,10 +135,13 @@ describe("candidateVerifyOtpChallenge", () => {
     await createCandidateHelper({ keycloakId });
 
     const challengeToken = encodeOtpChallengeToken({
-      keycloakId,
-      realm: "reva-app",
-      clientId: "reva-app",
-      password,
+      payload: {
+        keycloakId,
+        realm: "reva-app",
+        clientId: "reva-app",
+        password,
+      },
+      otpType: "authenticator",
     });
 
     vi.spyOn(
@@ -158,10 +167,13 @@ describe("candidateVerifyOtpChallenge", () => {
     });
 
     const challengeToken = encodeOtpChallengeToken({
-      keycloakId,
-      realm: "reva-app",
-      clientId: "reva-app",
-      password,
+      payload: {
+        keycloakId,
+        realm: "reva-app",
+        clientId: "reva-app",
+        password,
+      },
+      otpType: "authenticator",
     });
 
     vi.spyOn(
