@@ -190,6 +190,40 @@ describe("getOrCreateCandidate - réconciliation FranceConnect", () => {
     expect(dbCandidate?.birthDepartmentId).toBeNull();
   });
 
+  test("rattache Saint-Martin au département local 97150 quand l'API Geo retourne 978", async () => {
+    mockKeycloakAdmin();
+    vi.mocked(
+      birthplaceModule.resolveBirthplaceFromInseeCode,
+    ).mockResolvedValue({
+      cityName: "Saint-Martin",
+      departmentCode: "978",
+    });
+
+    const saintMartinDepartment = await prismaClient.department.findUnique({
+      where: { code: "97150" },
+    });
+
+    const claims = {
+      sub: FC_KEYCLOAK_ID,
+      email: `saint-martin-${faker.string.uuid()}@example.com`,
+      given_name: "Jean",
+      family_name: "Dupont",
+      birthdate: "1990-05-15",
+      birthcountry: "99100",
+      birthplace: "97801",
+    };
+
+    const result = await getOrCreateCandidate(FC_KEYCLOAK_ID, claims as never);
+
+    expect(result.isNewAccount).toBe(true);
+
+    const dbCandidate = await prismaClient.candidate.findUnique({
+      where: { id: result.candidate.id },
+    });
+    expect(dbCandidate?.birthCity).toBe("Saint-Martin");
+    expect(dbCandidate?.birthDepartmentId).toBe(saintMartinDepartment?.id);
+  });
+
   test("crée un candidat sans birthCity ni birthDepartmentId quand l'API Geo échoue", async () => {
     mockKeycloakAdmin();
     vi.mocked(
