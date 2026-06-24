@@ -92,6 +92,27 @@ export const callTokenEndpoint = async ({
 const isInvalidGrant = (error: string | undefined): boolean =>
   error === "invalid_grant";
 
+//Vérifie la validité d'un access token auprès de Keycloak via /userinfo.
+export const verifyAccessToken = async ({
+  realm,
+  accessToken,
+}: {
+  realm: string;
+  accessToken: string;
+}): Promise<boolean> => {
+  const serverUrl = process.env.KEYCLOAK_ADMIN_URL as string;
+  try {
+    const response = await fetch(
+      `${serverUrl}/realms/${realm}/protocol/openid-connect/userinfo`,
+      { headers: { Authorization: `Bearer ${accessToken}` } },
+    );
+    return response.ok;
+  } catch (e) {
+    logger.error(e);
+    return false;
+  }
+};
+
 export const userHasTotpConfigured = async ({
   realm,
   userId,

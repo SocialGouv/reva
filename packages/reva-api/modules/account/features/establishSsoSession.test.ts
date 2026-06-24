@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 
+import * as keycloakTokenUtils from "@/modules/shared/auth/keycloak-token.utils";
 import { logger } from "@/modules/shared/logger/logger";
 
 import * as keycloakUtils from "../utils/keycloak.utils";
@@ -16,6 +17,7 @@ describe("establishSsoSession", () => {
   beforeEach(() => {
     vi.stubEnv("KEYCLOAK_ADMIN_REALM_REVA", "reva-admin");
     vi.stubEnv("KEYCLOAK_ADMIN_CLIENTID_REVA", "reva-admin");
+    vi.spyOn(keycloakTokenUtils, "verifyAccessToken").mockResolvedValue(true);
   });
 
   test("admin happy path : renvoie les Set-Cookie bruts de Keycloak", async () => {
@@ -146,6 +148,23 @@ describe("establishSsoSession", () => {
     const result = await establishSsoSession({
       postLoginTokensCookie: buildPostLoginCookie("not-a-jwt"),
     });
+    expect(impersonateSpy).not.toHaveBeenCalled();
+    expect(result).toEqual([]);
+  });
+
+  test("token forgé (signature invalide auprès de Keycloak) : renvoie [] sans impersonate", async () => {
+    vi.spyOn(keycloakTokenUtils, "verifyAccessToken").mockResolvedValue(false);
+    const impersonateSpy = vi.spyOn(keycloakUtils, "impersonate");
+
+    const accessToken = buildAccessToken({
+      sub: "kc-admin-id",
+      resource_access: { "reva-admin": { roles: ["admin"] } },
+    });
+
+    const result = await establishSsoSession({
+      postLoginTokensCookie: buildPostLoginCookie(accessToken),
+    });
+
     expect(impersonateSpy).not.toHaveBeenCalled();
     expect(result).toEqual([]);
   });

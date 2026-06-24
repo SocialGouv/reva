@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 
+import { verifyAccessToken } from "@/modules/shared/auth/keycloak-token.utils";
 import { logger } from "@/modules/shared/logger/logger";
 
 import { impersonate } from "../utils/keycloak.utils";
@@ -24,6 +25,17 @@ export const establishSsoSession = async ({
       accessToken?: string;
     };
     if (!accessToken) return [];
+
+    // Le cookie postLoginTokensCookie n'est pas signé : un client pourrait y
+    // mettre n'importe quel JWT. On valide donc le token auprès de Keycloak
+    // avant d'exploiter le moindre claim décodé.
+    if (
+      !(await verifyAccessToken({
+        realm: process.env.KEYCLOAK_ADMIN_REALM_REVA as string,
+        accessToken,
+      }))
+    )
+      return [];
 
     const decoded = jwt.decode(accessToken) as DecodedAdminToken | null;
     if (!decoded?.sub) return [];
