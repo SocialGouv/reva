@@ -1,20 +1,6 @@
 import jwt from "jsonwebtoken";
 
-import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
-
-export const getMetabaseIframeUrl = async (
-  maisonMereAapId: string,
-  keycloakId?: string,
-) => {
-  const isFeatureActive = await isFeatureActiveForUser({
-    feature: "SHOW_METABASE_DASHBOARD_AAP",
-    userKeycloakId: keycloakId,
-  });
-
-  if (!isFeatureActive) {
-    return null;
-  }
-
+export const getMetabaseIframeUrl = async (maisonMereAapId: string) => {
   const METABASE_SITE_URL = process.env.METABASE_SITE_URL;
   const METABASE_SECRET_KEY = process.env.METABASE_SECRET_KEY;
 

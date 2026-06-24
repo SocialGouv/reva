@@ -10,6 +10,8 @@ import { WEBSITE_BASE_URL } from "@/config/config";
 
 import { graphql } from "@/graphql/generated";
 
+import { useFeatureflipping } from "../feature-flipping/featureFlipping";
+
 const getCertificationAuthorityForHeaderQuery = graphql(`
   query getCertificationAuthorityForHeader {
     account_getAccountForConnectedUser {
@@ -21,16 +23,6 @@ const getCertificationAuthorityForHeaderQuery = graphql(`
         certificationAuthority {
           id
         }
-      }
-    }
-  }
-`);
-
-const getMaisonMereAAPMetabaseDashboardIframeUrlQuery = graphql(`
-  query getMaisonMereAAPMetabaseDashboardIframeUrl {
-    account_getAccountForConnectedUser {
-      maisonMereAAP {
-        metabaseDashboardIframeUrl
       }
     }
   }
@@ -129,7 +121,7 @@ const getNavigationTabs = ({
   isCertificationRegistryManager,
   isAdminCertificationAuthority,
   metabaseDashboardIframeUrl,
-  metabaseDashboardIframeUrlForAAP,
+  shouldShowAapMetabaseDashboard,
   showAAPVaeCollectivesTab,
   certificationAuthorityId,
 }: {
@@ -141,7 +133,7 @@ const getNavigationTabs = ({
   isCertificationRegistryManager: boolean;
   isAdminCertificationAuthority: boolean;
   metabaseDashboardIframeUrl?: string | null;
-  metabaseDashboardIframeUrlForAAP?: string | null;
+  shouldShowAapMetabaseDashboard?: boolean;
   showAAPVaeCollectivesTab: boolean;
   certificationAuthorityId?: string;
 }) => {
@@ -238,7 +230,7 @@ const getNavigationTabs = ({
       href: PATHS.AAP_HELP,
       isActive: currentPathname.startsWith(PATHS.AAP_HELP),
     }),
-    ...(metabaseDashboardIframeUrlForAAP
+    ...(shouldShowAapMetabaseDashboard && isGestionnaireMaisonMereAAP
       ? [
           createTab({
             text: LABELS.STATISTIQUES,
@@ -340,6 +332,12 @@ export const Header = () => {
   } = useAuth();
   const { logout } = useKeycloakContext();
 
+  const { isFeatureActive } = useFeatureflipping();
+
+  const shouldShowAapMetabaseDashboard = isFeatureActive(
+    "SHOW_METABASE_DASHBOARD_AAP",
+  );
+
   const { graphqlClient } = useGraphQlClient();
 
   const { data: getCertificationAuthorityForHeader } = useQuery({
@@ -352,18 +350,6 @@ export const Header = () => {
   const metabaseDashboardIframeUrl =
     getCertificationAuthorityForHeader?.account_getAccountForConnectedUser
       ?.certificationAuthority?.metabaseDashboardIframeUrl;
-
-  const { data: getMaisonMereAAPMetabaseDashboardIframeUrl } = useQuery({
-    queryKey: ["aap", "getMaisonMereAAPMetabaseDashboardIframeUrl"],
-    queryFn: () =>
-      graphqlClient.request(getMaisonMereAAPMetabaseDashboardIframeUrlQuery),
-    enabled: isGestionnaireMaisonMereAAP,
-  });
-
-  const metabaseDashboardIframeUrlForAAP =
-    getMaisonMereAAPMetabaseDashboardIframeUrl
-      ?.account_getAccountForConnectedUser?.maisonMereAAP
-      ?.metabaseDashboardIframeUrl;
 
   const certificationAuthorityId =
     getCertificationAuthorityForHeader?.account_getAccountForConnectedUser
@@ -393,7 +379,7 @@ export const Header = () => {
     isCertificationRegistryManager,
     isAdminCertificationAuthority,
     metabaseDashboardIframeUrl,
-    metabaseDashboardIframeUrlForAAP,
+    shouldShowAapMetabaseDashboard,
     showAAPVaeCollectivesTab,
     certificationAuthorityId,
   });

@@ -234,8 +234,7 @@ const unsafeResolvers = {
         id: string;
       },
       _params: unknown,
-      context: GraphqlContext,
-    ) => getMetabaseIframeUrl(maisonMereAAPId, context.auth.userInfo?.sub),
+    ) => getMetabaseIframeUrl(maisonMereAAPId),
   },
   MaisonMereAAPLegalInformationDocuments: {
     attestationURSSAFFile: async (
