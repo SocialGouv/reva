@@ -11,7 +11,7 @@ export interface AddressOption {
   street: string;
   zip: string;
   city: string;
-  type: "street" | "municipality";
+  type: "housenumber" | "street" | "municipality" | "locality";
 }
 
 type AutocompleteAddressResponse = {
@@ -37,7 +37,7 @@ type AutocompleteAddressResponse = {
       city: string;
       district?: string;
       context: string;
-      type: string;
+      type: AddressOption["type"];
       importance: number;
       street: string;
     };
@@ -78,7 +78,7 @@ export function useAutocompleteAddress({ search }: { search?: string }) {
           street: feature.properties.name,
           zip: feature.properties.postcode,
           city: feature.properties.city,
-          type: feature.properties.type as "street" | "municipality",
+          type: feature.properties.type,
         };
       });
       return result;

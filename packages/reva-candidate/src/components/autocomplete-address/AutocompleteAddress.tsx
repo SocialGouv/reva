@@ -25,7 +25,7 @@ export const AutocompleteAddress = ({
   disabled = false,
 }: {
   label?: string;
-  displayMode?: "street" | "municipality";
+  displayMode?: "street" | "birthPlace";
   onOptionSelection: (
     selectedOption: AddressOption,
     department?: { id: string; code: string; label: string },
@@ -45,8 +45,10 @@ export const AutocompleteAddress = ({
     search: searchText,
   });
   const options = useMemo(() => {
-    if (displayMode === "municipality") {
-      return defaultOptions.filter((option) => option.type === "municipality");
+    if (displayMode === "birthPlace") {
+      return defaultOptions.filter((option) =>
+        ["municipality", "locality"].includes(option.type),
+      );
     }
 
     return defaultOptions;
@@ -138,7 +140,7 @@ export const AutocompleteAddress = ({
     setSelectedOption(newSelectedOption);
     onOptionSelection?.(newSelectedOption, department);
 
-    if (displayMode === "municipality") {
+    if (displayMode === "birthPlace") {
       setSearchText(`${newSelectedOption.city} (${department?.code})`);
     } else {
       setSearchText(newSelectedOption.label);

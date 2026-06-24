@@ -26,6 +26,18 @@ const countries = [
 const departments = [
   { id: "dept-75", label: "Paris", code: "75", timezone: "Europe/Paris" },
   { id: "dept-69", label: "Lyon", code: "69", timezone: "Europe/Paris" },
+  {
+    id: "dept-971",
+    label: "Guadeloupe",
+    code: "971",
+    timezone: "America/Guadeloupe",
+  },
+  {
+    id: "dept-97150",
+    label: "Saint-Martin",
+    code: "97150",
+    timezone: "America/Marigot",
+  },
 ];
 
 const candidateFields = {
@@ -134,7 +146,7 @@ async function mockAddressSearchResult(
     query: string;
     score: number;
     street: string;
-    type: "municipality";
+    type: "municipality" | "locality";
   },
 ) {
   await page.route(
@@ -317,6 +329,44 @@ test.describe("Non-FranceConnect candidate", () => {
       candidateInformation: {
         birthCity: "Paris",
         birthDepartmentId: "dept-75",
+      },
+    });
+  });
+
+  test("should allow selecting Marigot Saint-Martin as a birth place", async ({
+    msw,
+    page,
+  }) => {
+    await mockAddressSearchResult(page, {
+      city: "Saint-Martin",
+      citycode: "97801",
+      context: "978, Saint-Martin",
+      coordinates: [-63.085588, 18.068788],
+      id: "97801_h9y3xs",
+      label: "Marigot 97150 Saint-Martin",
+      name: "Marigot",
+      postcode: "97150",
+      query: "Marigot",
+      score: 0.95428,
+      street: "Marigot",
+      type: "locality",
+    });
+
+    await visitCivilInformations(page);
+
+    const birthPlaceInput = page.getByLabel("Lieu de naissance");
+    await birthPlaceInput.fill("Marigot");
+    await page.getByText("Marigot 97150 Saint-Martin").click();
+
+    const submittedVariablesPromise =
+      waitForUpdateCandidateInformationMutation(msw);
+    await page.getByRole("button", { name: "Enregistrer" }).click();
+    const submittedVariables = await submittedVariablesPromise;
+
+    expect(submittedVariables).toMatchObject({
+      candidateInformation: {
+        birthCity: "Saint-Martin",
+        birthDepartmentId: "dept-97150",
       },
     });
   });
