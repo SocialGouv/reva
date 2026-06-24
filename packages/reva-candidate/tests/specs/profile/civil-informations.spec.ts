@@ -1,7 +1,9 @@
 import {
   expect,
   graphql,
+  HttpResponse,
   test,
+  type MswFixture,
   type Page,
 } from "next/experimental/testmode/playwright/msw";
 
@@ -86,6 +88,14 @@ function civilInformationHandlers(
         getDepartments: departments,
       }),
     ),
+    fvae.mutation(
+      "updateCivilInformationMutation",
+      graphQLResolver({
+        candidate_updateCandidateInformationBySelf: {
+          id: candidate.id,
+        },
+      }),
+    ),
   ];
 }
 
@@ -108,6 +118,76 @@ async function visitCivilInformations(page: Page) {
     waitGraphQL(page, "getCountries"),
     waitGraphQL(page, "getDepartments"),
   ]);
+}
+
+async function mockAddressSearchResult(
+  page: Page,
+  result: {
+    city: string;
+    citycode: string;
+    context: string;
+    coordinates: [number, number];
+    id: string;
+    label: string;
+    name: string;
+    postcode: string;
+    query: string;
+    score: number;
+    street: string;
+    type: "municipality";
+  },
+) {
+  await page.route(
+    `https://api-adresse.data.gouv.fr/search/?q=${result.query}&limit=10`,
+    async (route) => {
+      await route.fulfill({
+        json: {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: result.coordinates,
+              },
+              properties: {
+                label: result.label,
+                score: result.score,
+                type: result.type,
+                id: result.id,
+                name: result.name,
+                postcode: result.postcode,
+                citycode: result.citycode,
+                city: result.city,
+                context: result.context,
+                street: result.street,
+              },
+            },
+          ],
+          query: result.query,
+          limit: 10,
+        },
+      });
+    },
+  );
+}
+
+function waitForUpdateCandidateInformationMutation(msw: MswFixture) {
+  return new Promise<unknown>((resolve) => {
+    msw.use(
+      fvae.mutation("updateCandidateInformationMutation", ({ variables }) => {
+        resolve(variables);
+
+        return HttpResponse.json({
+          data: {
+            candidate_updateCandidateInformationBySelf: {
+              id: nonFcCandidate.id,
+            },
+          },
+        });
+      }),
+    );
+  });
 }
 
 test.describe("FranceConnect linked candidate", () => {
@@ -201,5 +281,43 @@ test.describe("Non-FranceConnect candidate", () => {
     await expect(
       page.locator('input[name="gender"]').first(),
     ).not.toBeDisabled();
+  });
+
+  test("should allow selecting a municipality birth place", async ({
+    msw,
+    page,
+  }) => {
+    await mockAddressSearchResult(page, {
+      city: "Paris",
+      citycode: "75056",
+      context: "75, Paris, Ile-de-France",
+      coordinates: [2.347, 48.859],
+      id: "75056",
+      label: "Paris 75001 Paris",
+      name: "Paris",
+      postcode: "75001",
+      query: "Paris",
+      score: 0.97053,
+      street: "Paris",
+      type: "municipality",
+    });
+
+    await visitCivilInformations(page);
+
+    const birthPlaceInput = page.getByLabel("Lieu de naissance");
+    await birthPlaceInput.fill("Paris");
+    await page.getByText("Paris 75001 Paris").click();
+
+    const submittedVariablesPromise =
+      waitForUpdateCandidateInformationMutation(msw);
+    await page.getByRole("button", { name: "Enregistrer" }).click();
+    const submittedVariables = await submittedVariablesPromise;
+
+    expect(submittedVariables).toMatchObject({
+      candidateInformation: {
+        birthCity: "Paris",
+        birthDepartmentId: "dept-75",
+      },
+    });
   });
 });
