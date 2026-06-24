@@ -170,7 +170,10 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
   });
 
   fastify.register(formBody);
-  fastify.register(multipart, { attachFieldsToBody: true });
+  fastify.register(multipart, {
+    attachFieldsToBody: true,
+    limits: { fileSize: 1024 * 1024 * 10 }, // 10MB
+  });
 
   addSchemas(fastify);
   addInputSchemas(fastify);
