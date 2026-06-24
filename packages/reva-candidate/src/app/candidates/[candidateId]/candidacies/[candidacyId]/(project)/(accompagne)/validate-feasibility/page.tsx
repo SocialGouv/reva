@@ -96,7 +96,7 @@ export default function ValidateFeasibility() {
           candidacyId: candidacy.id,
           swornStatement: swornStatementFile,
         });
-        if (!response) {
+        if (!response || response.error) {
           throw new GraphQLError("Erreur lors de la création de l'attestation");
         }
       }
