@@ -8,6 +8,7 @@ import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 export const CertificationCard = ({
   candidacy,
   disableUpdateCertification = false,
+  size,
 }: {
   candidacy: {
     id: string;
@@ -20,6 +21,7 @@ export const CertificationCard = ({
     candidacyDropOut?: unknown;
   };
   disableUpdateCertification?: boolean;
+  size?: "small" | "medium" | "large";
 }) => {
   const { isAdmin, isGestionnaireMaisonMereAAP, isOrganism } = useAuth();
 
@@ -52,6 +54,7 @@ export const CertificationCard = ({
   return (
     <Card
       title={certification.label}
+      size={size}
       detail={
         <div className="flex items-center gap-2 mb-3">
           <Image

@@ -24,6 +24,11 @@ function createCertificationHandlers() {
           id: CANDIDACY_ID,
           isCertificationPartial: false,
           certification: DF_CERTIFICATION,
+          candidate: {
+            givenName: "John",
+            lastname: "Doe",
+            firstname: "John",
+          },
         },
       }),
     ),
@@ -68,10 +73,9 @@ test.describe("Dematerialized Feasibility File Certification Page", () => {
 
       await page
         .getByTestId("certification-completion-radio-buttons")
-        .getByText(
-          "Un ou plusieurs bloc(s) de compétences de la certification",
-          { exact: true },
-        )
+        .getByText("Un ou plusieurs bloc(s) de compétences visé(s)", {
+          exact: false,
+        })
         .check();
 
       const checkboxes = page.locator('input[type="checkbox"]');
