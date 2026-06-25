@@ -1,5 +1,6 @@
 "use client";
 
+import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
@@ -115,7 +116,7 @@ export default function AttachmentsPage() {
 
   const { candidacyId } = useParams() satisfies { candidacyId: string };
   const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
-  const { attachments } = useAttachments();
+  const { attachments, candidate } = useAttachments();
 
   const {
     register,
@@ -250,12 +251,31 @@ export default function AttachmentsPage() {
 
   return (
     <div className="flex flex-col">
+      <Breadcrumb
+        className="mb-4"
+        currentPageLabel="Pièces jointes"
+        segments={[
+          {
+            label: (
+              <span>
+                {candidate?.givenName
+                  ? candidate.givenName
+                  : candidate?.lastname}{" "}
+                {candidate?.firstname}
+              </span>
+            ),
+            linkProps: { href: "../" },
+          },
+        ]}
+      />
+
       <h1>Pièces jointes</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">
-        Ajoutez toutes les pièces jointes nécessaires à la validation du dossier
-        de faisabilité. Si nécessaire, vous pouvez revenir sur cet espace pour
-        les ajouter au fur et à mesure.
+        Veillez à bien transmettre toutes les pièces justificatives qui peuvent
+        être demandées. Si ce n’est pas le cas, le certificateur retournera le
+        dossier incomplet. Vous devrez alors fournir les pièces manquantes afin
+        qu’il puisse l’examiner.
       </p>
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
@@ -346,6 +366,7 @@ export default function AttachmentsPage() {
           )}
         </div>
         <FormButtons
+          hideResetButton
           backUrl={`/candidacies/${candidacyId}/feasibility-aap`}
           formState={{
             isDirty,

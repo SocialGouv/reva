@@ -23,6 +23,13 @@ const feasibilityWithDematerializedFeasibilityFileAttachmentsByCandidacyId =
       $candidacyId: ID!
     ) {
       feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
+        candidacy {
+          candidate {
+            givenName
+            lastname
+            firstname
+          }
+        }
         dematerializedFeasibilityFile {
           attachments {
             type
@@ -63,8 +70,11 @@ export const useAttachments = () => {
   const feasibility =
     getCandidacyByIdResponse?.feasibility_getActiveFeasibilityByCandidacyId;
   const attachments = feasibility?.dematerializedFeasibilityFile?.attachments;
+  const candidate = feasibility?.candidacy?.candidate;
+
   return {
     attachments,
+    candidate,
     queryStatus: getCandidacyByIdStatus,
   };
 };
