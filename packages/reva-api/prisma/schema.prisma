@@ -1605,10 +1605,20 @@ model MaisonMereAAP {
   isMCFCompatible                                     Boolean?                                            @map("is_mcf_compatible")
   AAPLog                                              AAPLog[]
   comptesCollaborateurs                               MaisonMereAAPOnAccount[]
+  maisonMereAAPVaeco                                  MaisonMereAAPVaeco?
 
   @@index([typologie])
   @@index([gestionnaireAccountId])
   @@map("maison_mere_aap")
+}
+
+view MaisonMereAAPVaeco {
+  maisonMereAAP       MaisonMereAAP @relation(fields: [maisonMereAAPId], references: [id])
+  maisonMereAAPId     String        @map("maison_mere_aap_id") @db.Uuid
+  hasVaecoCandidacies Boolean       @map("has_vaeco_candidacies")
+
+  @@unique([maisonMereAAPId])
+  @@map("maison_mere_aap_vaeco")
 }
 
 model MaisonMereAAPOnAccount {
