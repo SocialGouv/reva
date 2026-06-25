@@ -137,6 +137,7 @@ const getCandidacyById = graphql(`
           firstForeignLanguage
           secondForeignLanguage
           option
+          prerequisitesComment
           prerequisites {
             id
             label

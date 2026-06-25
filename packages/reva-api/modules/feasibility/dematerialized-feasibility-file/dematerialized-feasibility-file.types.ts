@@ -44,6 +44,7 @@ export interface DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {
     state: PrerequisiteState;
     certificationPrerequisiteId?: string;
   }[];
+  prerequisitesComment?: string;
 }
 
 type PrerequisiteState = "ACQUIRED" | "IN_PROGRESS";

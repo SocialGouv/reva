@@ -12,6 +12,7 @@ type DematerializedFeasibilityFile {
   certificationCompetenceDetails: [CertificationCompetenceDetails!]!
   prerequisitesPartComplete: Boolean!
   prerequisites: [Prerequisite]!
+  prerequisitesComment: String
   dffAndCertificationPrerequisites: [PrerequisiteFromDffAndCertification]!
   aapDecision: DFFileAapDecision
   aapDecisionComment: String
@@ -124,6 +125,7 @@ input DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsI
 
 input DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {
   prerequisites: [PrerequisiteInput]!
+  prerequisitesComment: String
 }
 
 input DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput {

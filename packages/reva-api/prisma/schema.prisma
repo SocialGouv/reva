@@ -1746,6 +1746,7 @@ model DematerializedFeasibilityFile {
   prerequisitesPartComplete         Boolean                             @default(false) @map("prerequisites_part_complete")
   attachmentsPartComplete           Boolean                             @default(false) @map("attachments_part_complete")
   prerequisites                     DFFPrerequisite[]
+  prerequisitesComment              String?                             @map("prerequisites_comment")
   competenceBlocsPartCompletion     CompetenceBlocsPartCompletionEnum   @default(TO_COMPLETE) @map("competence_blocs_part_completion")
   aapDecision                       DFFDecision?                        @map("aap_decision")
   aapDecisionComment                String?                             @map("aap_decision_comment")

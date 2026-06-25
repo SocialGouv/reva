@@ -17,7 +17,7 @@ export const CertificationPrerequisiteInput = ({
   label: string;
 }) => {
   return (
-    <div className="border-b border-dsfr-light-decisions-border-border-default-grey pb-2 last:border-b-0 last:pb-0">
+    <div className="border-b mt-6 border-dsfr-light-decisions-border-border-default-grey last:border-b-0">
       <input
         type="hidden"
         value={label}
@@ -26,7 +26,7 @@ export const CertificationPrerequisiteInput = ({
       <p className="m-0 mb-4 text-dsfrGray-labelGrey">{label}</p>
       <RadioButtons
         legend={
-          <p className="mb-4 font-bold">
+          <p className="mb-4 text-m">
             Le candidat est-il détenteur du pré-requis exigé ?
           </p>
         }

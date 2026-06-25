@@ -94,6 +94,7 @@ export function DffSummary({
     aapDecision,
     aapDecisionComment,
     prerequisites,
+    prerequisitesComment,
     blocsDeCompetences,
     certificationCompetenceDetails,
     eligibilityRequirement,
@@ -160,6 +161,7 @@ export function DffSummary({
             firstForeignLanguage={firstForeignLanguage}
             secondForeignLanguage={secondForeignLanguage}
             prerequisites={prerequisites as Prerequisite[]}
+            prerequisitesComment={prerequisitesComment}
             isCertificationPartial={candidacy.isCertificationPartial}
             certificationCompetenceBlocs={
               candidacy.certification?.competenceBlocs

@@ -212,6 +212,7 @@ export const generateFeasibilityFileByCandidacyId = async (
           label: p.label,
           state: p.state,
         })) ?? [],
+      prerequisitesComment: dematerializedFeasibilityFile.prerequisitesComment,
     });
 
     //dff competences blocs with competences (label and state)
@@ -417,6 +418,7 @@ const addContexteDemandeSection = ({
   isCertificationPartial,
   certificationCompetenceBlocsWithSelectionStatus,
   prerequisites,
+  prerequisitesComment,
 }: {
   doc: PDFKit.PDFDocument;
   eligibilityLabelAndType: { label: string; type: "info" | "warning" };
@@ -432,6 +434,7 @@ const addContexteDemandeSection = ({
     selected: boolean;
   }[];
   prerequisites: { label: string; state: PrerequisiteState }[];
+  prerequisitesComment: string | null;
 }) => {
   addSection({
     doc,
@@ -452,6 +455,7 @@ const addContexteDemandeSection = ({
       addCertificationPrerequisitesSubSection({
         doc,
         prerequisites,
+        prerequisitesComment,
       });
     },
   });
@@ -635,9 +639,11 @@ const addCertificationSubSection = ({
 const addCertificationPrerequisitesSubSection = ({
   doc,
   prerequisites,
+  prerequisitesComment,
 }: {
   doc: PDFKit.PDFDocument;
   prerequisites: { label: string; state: PrerequisiteState }[];
+  prerequisitesComment: string | null;
 }) => {
   addSubSection({
     title:
@@ -687,6 +693,20 @@ const addCertificationPrerequisitesSubSection = ({
             );
         },
       });
+      if (prerequisitesComment) {
+        doc.moveDown(1);
+        doc
+          .font("assets/fonts/Marianne/Marianne-Bold.otf")
+          .fontSize(8)
+          .text("Commentaire sur les pré-requis");
+        doc.moveDown(0.25);
+        doc
+          .font("assets/fonts/Marianne/Marianne-Regular.otf")
+          .fontSize(8)
+          .text(prerequisitesComment, doc.x, doc.y, {
+            width: pxToPt(1200),
+          });
+      }
     },
   });
 };

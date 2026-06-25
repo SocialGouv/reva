@@ -10,7 +10,7 @@ import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
 
 export const createOrUpdatePrerequisites = async ({
   candidacyId,
-  input: { prerequisites },
+  input: { prerequisites, prerequisitesComment },
 }: {
   input: DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput;
   candidacyId: string;
@@ -85,6 +85,7 @@ export const createOrUpdatePrerequisites = async ({
             data: prerequisite,
           })),
         },
+        prerequisitesComment,
       },
     });
   } else {
@@ -100,6 +101,7 @@ export const createOrUpdatePrerequisites = async ({
             })),
           },
         },
+        prerequisitesComment,
         prerequisitesPartComplete: true,
       },
     });

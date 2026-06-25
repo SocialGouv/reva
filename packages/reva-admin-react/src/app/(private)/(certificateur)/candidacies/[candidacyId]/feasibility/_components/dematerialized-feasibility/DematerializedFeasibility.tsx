@@ -150,8 +150,6 @@ export const DematerializedFeasibility = () => {
 
   const dffSummaryAccordionsDefaultExpanded = !isFeasibilityDecisionMade;
 
-  console.log({ dffSummaryAccordionsDefaultExpanded });
-
   return (
     <div
       data-testid={`feasibility-page-dematerialized-${feasibility?.decision?.toLowerCase() || "pending"}`}

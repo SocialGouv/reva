@@ -9,6 +9,7 @@ export default function CertificationSection({
   firstForeignLanguage,
   secondForeignLanguage,
   prerequisites,
+  prerequisitesComment,
   isCertificationPartial,
   certificationAuthorityStructureLabel,
   certificationCompetenceBlocs,
@@ -18,6 +19,7 @@ export default function CertificationSection({
   firstForeignLanguage?: string | null;
   secondForeignLanguage?: string | null;
   prerequisites?: Prerequisite[] | null;
+  prerequisitesComment?: string | null;
   isCertificationPartial?: boolean | null;
   certificationAuthorityStructureLabel?: string | null;
   certificationCompetenceBlocs?: {
@@ -192,6 +194,10 @@ export default function CertificationSection({
           </Accordion>
         )}
       </div>
+
+      {!noPrerequisites && prerequisitesComment && (
+        <p className="mt-6 mb-0">“{prerequisitesComment}”</p>
+      )}
     </div>
   );
 }

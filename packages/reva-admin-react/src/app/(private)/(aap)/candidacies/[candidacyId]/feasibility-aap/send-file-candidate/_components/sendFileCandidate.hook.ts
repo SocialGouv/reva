@@ -32,6 +32,7 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
           aapDecision
           aapDecisionComment
           candidateDecisionComment
+          prerequisitesComment
           prerequisites {
             id
             label
