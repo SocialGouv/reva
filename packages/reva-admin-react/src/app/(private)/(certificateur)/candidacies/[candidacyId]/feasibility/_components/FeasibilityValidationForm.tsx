@@ -196,7 +196,7 @@ export const FeasibilityValidationForm = ({
           <FancyUpload
             title="Joindre le courrier de recevabilité (optionnel)"
             description="Ce courrier sera joint au message envoyé au candidat."
-            hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
+            hint="Formats supportés : pdf avec un poids maximum de 2Mo"
             nativeInputProps={register("infoFile")}
             state={errors.infoFile ? "error" : "default"}
             stateRelatedMessage={errors.infoFile?.[0]?.message}
