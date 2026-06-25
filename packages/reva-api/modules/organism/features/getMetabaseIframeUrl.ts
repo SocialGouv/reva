@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 
+import { prismaClient } from "@/prisma/client";
+
 export const getMetabaseIframeUrl = async (maisonMereAapId: string) => {
   const METABASE_SITE_URL = process.env.METABASE_SITE_URL;
   const METABASE_SECRET_KEY = process.env.METABASE_SECRET_KEY;
@@ -11,9 +13,17 @@ export const getMetabaseIframeUrl = async (maisonMereAapId: string) => {
     return null;
   }
 
+  const maisonMereAAPVaeco = await prismaClient.maisonMereAAPVaeco.findUnique({
+    where: {
+      maisonMereAAPId: maisonMereAapId,
+    },
+  });
+
+  const hasVaecoCandidacies = maisonMereAAPVaeco?.hasVaecoCandidacies;
+
   const payload = {
     resource: {
-      dashboard: 182,
+      dashboard: hasVaecoCandidacies ? 272 : 182,
     },
     params: {
       id_maison_mere: [maisonMereAapId],
