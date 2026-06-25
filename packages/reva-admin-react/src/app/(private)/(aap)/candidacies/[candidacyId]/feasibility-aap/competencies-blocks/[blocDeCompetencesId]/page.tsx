@@ -1,5 +1,9 @@
 "use client";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -19,6 +23,11 @@ import {
   CertificationCompetenceBlocInput,
   CompetenceDetails,
 } from "@/graphql/generated/graphql";
+
+const modal = createModal({
+  id: "how-to-write-competence-block-comment",
+  isOpenedByDefault: false,
+});
 
 const schema = z.object({
   competences: z
@@ -44,6 +53,13 @@ const getBlocDeCompetencesQuery = graphql(`
     $blocDeCompetencesId: ID!
   ) {
     feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
+      candidacy {
+        candidate {
+          givenName
+          lastname
+          firstname
+        }
+      }
       dematerializedFeasibilityFile {
         id
         certificationCompetenceDetails {
@@ -112,6 +128,10 @@ const CompetenciesBlockPage = () => {
         input,
       }),
   });
+
+  const candidate =
+    getBlocDeCompetencesResponse?.feasibility_getActiveFeasibilityByCandidacyId
+      ?.candidacy?.candidate;
 
   const dematerializedFile =
     getBlocDeCompetencesResponse?.feasibility_getActiveFeasibilityByCandidacyId
@@ -184,9 +204,27 @@ const CompetenciesBlockPage = () => {
 
   return (
     <div className="flex flex-col">
+      <Breadcrumb
+        className="mb-4"
+        currentPageLabel="Blocs de compétences"
+        segments={[
+          {
+            label: (
+              <span>
+                {candidate?.givenName
+                  ? candidate.givenName
+                  : candidate?.lastname}{" "}
+                {candidate?.firstname}
+              </span>
+            ),
+            linkProps: { href: "../" },
+          },
+        ]}
+      />
+
       <h1>Blocs de compétences</h1>
       <FormOptionalFieldsDisclaimer />
-      <p className="text-xl">
+      <p className="text-xl mb-12">
         Pour chaque bloc, décrivez les activités réalisées et le contexte dans
         lequel elles ont été exercées. Si la certification comporte un parcours
         spécifique, précisez les activités liées à celui-ci.
@@ -195,6 +233,7 @@ const CompetenciesBlockPage = () => {
         <>
           <h2 className="mb-0">{block.code}</h2>
           <p className="text-xl font-bold mb-8">{block.label}</p>
+          <hr className="pb-8" />
           <form
             onSubmit={handleFormSubmit}
             onReset={(e) => {
@@ -204,11 +243,13 @@ const CompetenciesBlockPage = () => {
           >
             {competencesFields?.map((c, i) => (
               <div key={c.competenceId}>
-                <p className="text-lg font-medium">{c.label}</p>
+                <p className="text-m mb-4">{c.label}</p>
                 <RadioButtons
+                  small
                   stateRelatedMessage={errors?.competences?.[i]?.state?.message}
                   state={errors?.competences?.[i]?.state ? "error" : "default"}
                   orientation="horizontal"
+                  className="[&_label]:py-2"
                   options={[
                     {
                       label: "Oui",
@@ -241,6 +282,26 @@ const CompetenciesBlockPage = () => {
             <Input
               textArea
               label="Commentaire sur le bloc"
+              className="mb-4"
+              hintText={
+                <span>
+                  Décrivez les activités réalisées pour maîtriser les
+                  compétences listées ci-dessus. Expliquer également le contexte
+                  professionnel dans lequel ces compétences ont été développées.{" "}
+                  <strong>
+                    Donner des exemples concrets qui illustrent chacune des
+                    activités.
+                  </strong>
+                  <Button
+                    type="button"
+                    className="underline p-0 m-0 mx-1 text-xs shadow-none min-h-0"
+                    priority="secondary"
+                    onClick={modal.open}
+                  >
+                    Voir plus de détails →
+                  </Button>
+                </span>
+              }
               nativeTextAreaProps={{
                 ...register("blocText"),
               }}
@@ -248,7 +309,15 @@ const CompetenciesBlockPage = () => {
               state={errors?.blocText ? "error" : "default"}
               data-testid="block-comment-input"
             />
+
+            <Alert
+              severity="info"
+              description="Si cette partie n’est pas assez détaillée, le certificateur pourra vous demander de compléter le dossier, ou prononcer un avis défavorable."
+              small
+            />
+
             <FormButtons
+              hideResetButton
               backUrl={`/candidacies/${candidacyId}/feasibility-aap`}
               formState={{
                 isDirty,
@@ -258,6 +327,62 @@ const CompetenciesBlockPage = () => {
           </form>
         </>
       )}
+
+      <modal.Component
+        title={
+          <div>
+            <span className="fr-icon-info-fill mr-2" aria-hidden="true"></span>
+            Quelles informations renseigner ?
+          </div>
+        }
+        size="large"
+      >
+        <p>
+          Cette partie permet au certificateur de mieux comprendre les
+          expériences en lien avec ce bloc de compétences.
+        </p>
+
+        <p>
+          <ul>
+            <li>
+              Précisez s’il s’agit d’un travail en équipe ou seul, et quelle
+              était la place occupée dans l’organisation (poste,
+              responsabilités).
+            </li>
+            <li>
+              Décrivez le lieu de ce poste. Par exemple : en crèche, à domicile,
+              en entreprise, etc… Indiquez aussi le nom de la structure, la
+              ville.
+            </li>
+            <li>
+              Donnez des exemples précis de ce qui a été réalisé : projets,
+              missions, tâches importantes.
+            </li>
+          </ul>
+        </p>
+
+        <p>Par exemple :</p>
+
+        <p>
+          <ul>
+            <li>
+              pour une activité de gestion des stocks : comment a-t’elle été
+              organisée, quels outils ont été utilisés, quelles interactions ont
+              eu lieu avec les autres collègues, etc...
+            </li>
+            <li>
+              pour une activité d’entretien des locaux : quel type de locaux et
+              de surfaces étaient concernés, quel type de matériel et de
+              produits ont été utilisés, etc...
+            </li>
+            <li>
+              pour une activité d’accueil du public : dans quel lieu de travail,
+              quelles étaient les intéractions avec le public, une langue
+              étrangère était-elle utilisée, etc...
+            </li>
+          </ul>
+        </p>
+      </modal.Component>
     </div>
   );
 };
