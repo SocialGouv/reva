@@ -39,7 +39,7 @@ const schema = z.object({
   title: sanitizedText(),
   startedAt: sanitizedText(),
   duration: z.nativeEnum(ExperienceDuration, {
-    errorMap: () => ({ message: "Ce champ est requis" }),
+    errorMap: () => ({ message: "Ce champ est obligatoire" }),
   }),
   description: sanitizedTextAllowSpecialCharacters(),
 });

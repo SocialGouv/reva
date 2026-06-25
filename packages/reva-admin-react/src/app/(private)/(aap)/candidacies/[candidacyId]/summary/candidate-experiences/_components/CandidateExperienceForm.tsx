@@ -1,6 +1,7 @@
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
@@ -14,6 +15,11 @@ import {
   sanitizedText,
   sanitizedTextAllowSpecialCharacters,
 } from "@/utils/input-sanitization";
+
+const modal = createModal({
+  id: "confirm-delete-experience",
+  isOpenedByDefault: false,
+});
 
 const durationValues = [
   "unknown",
@@ -29,7 +35,7 @@ type Duration = (typeof durationValues)[number];
 const durationToString: {
   [key in Duration]: string;
 } = {
-  unknown: "",
+  unknown: "Sélectionner une durée",
   lessThanOneYear: "Moins d'un an",
   betweenOneAndThreeYears: "Entre 1 et 3 ans",
   moreThanThreeYears: "Plus de 3 ans",
@@ -50,6 +56,14 @@ const schema = z
         code: z.ZodIssueCode.custom,
         path: ["startedAt"],
         message: "La date de début ne peut pas se situer dans le futur.",
+      });
+    }
+
+    if (data.duration === "unknown") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["duration"],
+        message: "Ce champ est obligatoire",
       });
     }
   });
@@ -177,7 +191,7 @@ export const CandidateExperienceForm = ({
             disabled={disabled}
           >
             {durationValues.map((d) => (
-              <option key={d} value={d}>
+              <option disabled={d === "unknown"} key={d} value={d}>
                 {durationToString[d]}
               </option>
             ))}
@@ -208,7 +222,7 @@ export const CandidateExperienceForm = ({
             <Button
               data-testid="delete-experience-button"
               type="button"
-              onClick={onDelete}
+              onClick={modal.open}
               priority="tertiary no outline"
               iconId="fr-icon-delete-line"
               className="col-span-full"
@@ -224,6 +238,29 @@ export const CandidateExperienceForm = ({
           disabled={disabled}
         />
       </form>
+
+      <modal.Component
+        title={
+          <span className="ml-2">Voulez-vous supprimer cette expérience ?</span>
+        }
+        iconId="fr-icon-warning-fill"
+        buttons={[
+          {
+            priority: "secondary",
+            children: "Annuler",
+          },
+          {
+            priority: "primary",
+            children: "Supprimer",
+            onClick: onDelete,
+          },
+        ]}
+      >
+        <p>
+          Attention, cette action est irréversible. Une fois supprimée, vous ne
+          pourrez pas revenir en arrière.
+        </p>
+      </modal.Component>
     </div>
   );
 };

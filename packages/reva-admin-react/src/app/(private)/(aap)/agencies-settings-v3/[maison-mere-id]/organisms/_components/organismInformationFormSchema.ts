@@ -30,7 +30,7 @@ export const organismInformationFormSchema = z
         if (val === "") {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Ce champ est requis",
+            message: "Ce champ est obligatoire",
           });
         }
       }),

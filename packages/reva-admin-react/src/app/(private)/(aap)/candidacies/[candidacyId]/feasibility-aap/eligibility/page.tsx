@@ -263,7 +263,6 @@ export default function EligibilityPage() {
             <Input
               className="max-w-xs mb-0"
               label="Date de fin de validité "
-              hintText="Date au format 31/12/2022"
               nativeInputProps={{
                 type: "date",
                 ...register("eligibilityValidUntil"),
