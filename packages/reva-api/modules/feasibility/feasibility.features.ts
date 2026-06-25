@@ -324,6 +324,12 @@ export const createFeasibility = async ({
     });
   }
 
+  //update the certification authority of the candidacy
+  await updateCertificationAuthorityOfCandidacy({
+    candidacyId,
+    certificationAuthorityId,
+  });
+
   await updateCandidacyStatus({
     candidacyId,
     status: "DOSSIER_FAISABILITE_ENVOYE",
@@ -342,12 +348,6 @@ export const createFeasibility = async ({
       },
     });
   }
-
-  //update the certification authority of the candidacy
-  await updateCertificationAuthorityOfCandidacy({
-    candidacyId,
-    certificationAuthorityId,
-  });
 
   // sending a mail notification to candidacy certification authority and related certification authority local accounts
 

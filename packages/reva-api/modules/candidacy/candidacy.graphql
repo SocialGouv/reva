@@ -486,4 +486,8 @@ type Mutation {
     candidacyId: UUID!
     endAccompagnement: Boolean!
   ): Candidacy!
+  candidacy_updateCertificationAuthority(
+    candidacyId: UUID!
+    certificationAuthorityId: UUID!
+  ): Candidacy!
 }

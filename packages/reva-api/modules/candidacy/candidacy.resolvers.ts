@@ -30,6 +30,7 @@ import {
   GetCandidaciesForCertificationAuthorityInput,
   SearchOrganismFilter,
 } from "./candidacy.types";
+import { updateCertificationAuthorityOfCandidacy } from "./certification/features/updateCertificationAuthorityOfCandidacy";
 import { sendCandidacyArchivedEmailToCertificateur } from "./emails/sendCandidacyArchivedEmailToCertificateur";
 import { sendCandidacyDropOutEmailToCandidate } from "./emails/sendCandidacyDropOutEmailToCandidate";
 import { sendCandidacyDropOutEmailToCertificateur } from "./emails/sendCandidacyDropOutEmailToCertificateur";
@@ -837,6 +838,13 @@ const unsafeResolvers = {
         userEmail: context.auth.userInfo?.email || "",
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
       }),
+    candidacy_updateCertificationAuthority: async (
+      _parent: unknown,
+      input: {
+        candidacyId: string;
+        certificationAuthorityId: string;
+      },
+    ) => updateCertificationAuthorityOfCandidacy(input),
   },
 };
 

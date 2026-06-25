@@ -85,6 +85,12 @@ export const sendDFFToCertificationAuthority = async ({
   }
 
   const candidacy = await prismaClient.$transaction(async (tx) => {
+    //update the certification authority of the candidacy
+    await updateCertificationAuthorityOfCandidacy({
+      candidacyId,
+      certificationAuthorityId,
+      tx,
+    });
     await tx.feasibility.updateMany({
       where: { candidacyId, isActive: true },
       data: {
@@ -134,12 +140,6 @@ export const sendDFFToCertificationAuthority = async ({
   } catch (error) {
     console.error(error);
   }
-
-  //update the certification authority of the candidacy
-  await updateCertificationAuthorityOfCandidacy({
-    candidacyId,
-    certificationAuthorityId,
-  });
 
   // sending a mail notification to candidacy certification authority and related certification authority local accounts
 

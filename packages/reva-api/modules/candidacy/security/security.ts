@@ -79,4 +79,6 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_submitEndAccompagnement": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_updateCandidacyEndAccompagnementDecision":
     isAdminOrOwnerOfCandidacy,
+  "Mutation.candidacy_updateCertificationAuthority":
+    isAdminOrCandidacyCompanion,
 };
