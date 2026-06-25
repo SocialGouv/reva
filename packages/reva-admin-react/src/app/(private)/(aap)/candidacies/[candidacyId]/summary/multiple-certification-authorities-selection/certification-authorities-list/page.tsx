@@ -44,7 +44,7 @@ const MultipleCertificationAuthoritiesListPage = () => {
             label={certificationAuthority.label}
             contactEmail={certificationAuthority.contactEmail}
             contactPhone={certificationAuthority.contactPhone}
-            onClickHref={`/candidacies/${candidacyId}/summary/multiple-certification-authorities-selection/certification-authority-details/${certificationAuthority.id}`}
+            onClickHref={`/candidacies/${candidacyId}/summary/multiple-certification-authorities-selection/certification-authorities-list/certification-authority-selection/${certificationAuthority.id}`}
           />
         )}
       </SearchList>

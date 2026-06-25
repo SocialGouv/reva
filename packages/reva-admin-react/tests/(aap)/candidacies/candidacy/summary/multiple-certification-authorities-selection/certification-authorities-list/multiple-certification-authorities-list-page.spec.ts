@@ -116,7 +116,7 @@ test.describe("Multiple certification authorities list page", () => {
       await expect(page.getByText("0607080910")).toBeVisible();
     });
 
-    test("should lead me to the certification authority details page when I click on a certification authority card", async ({
+    test("should lead me to the certification authority selection page when I click on a certification authority card", async ({
       page,
     }) => {
       await goToCertificationAuthoritiesListPage(page);
@@ -124,7 +124,7 @@ test.describe("Multiple certification authorities list page", () => {
       await page.getByText("Autorité Certificatrice Alpha").click();
 
       await expect(page).toHaveURL(
-        `/admin2/candidacies/${CANDIDACY_ID}/summary/multiple-certification-authorities-selection/certification-authority-details/cert-auth-1/`,
+        `/admin2/candidacies/${CANDIDACY_ID}/summary/multiple-certification-authorities-selection/certification-authorities-list/certification-authority-selection/cert-auth-1/`,
       );
     });
 
