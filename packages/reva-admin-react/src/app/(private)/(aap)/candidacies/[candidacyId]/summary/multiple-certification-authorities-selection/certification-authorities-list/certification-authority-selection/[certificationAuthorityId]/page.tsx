@@ -1,21 +1,34 @@
 "use client";
 
 import Button from "@codegouvfr/react-dsfr/Button";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { CertificationAuthorityCard } from "@/components/candidacy-summary/certification-authority/CertificationAuthorityCard";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { useCertificationAuthoritySelection } from "./certificationAuthoritySelection.hooks";
 
 const CertificationAuthoritySelectionPage = () => {
+  const router = useRouter();
   const { candidacyId, certificationAuthorityId } = useParams<{
     candidacyId: string;
     certificationAuthorityId: string;
   }>();
 
-  const { certificationAuthority } = useCertificationAuthoritySelection({
-    certificationAuthorityId,
-  });
+  const { certificationAuthority, updateCertificationAuthority } =
+    useCertificationAuthoritySelection({
+      certificationAuthorityId,
+    });
+
+  const handleUpdateCertificationAuthority = async () => {
+    try {
+      await updateCertificationAuthority.mutateAsync({ candidacyId });
+      successToast("Le certificateur a été mis à jour");
+      router.push(`/candidacies/${candidacyId}/summary`);
+    } catch (error) {
+      graphqlErrorToast(error);
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -34,14 +47,24 @@ const CertificationAuthoritySelectionPage = () => {
           />
         )}
       </div>
-      <Button
-        priority="secondary"
-        linkProps={{
-          href: `/candidacies/${candidacyId}/summary/multiple-certification-authorities-selection/certification-authorities-list`,
-        }}
-      >
-        Retour
-      </Button>
+      <div className="flex flex-col lg:flex-row gap-4 justify-between">
+        <Button
+          priority="secondary"
+          linkProps={{
+            href: `/candidacies/${candidacyId}/summary/multiple-certification-authorities-selection/certification-authorities-list`,
+          }}
+        >
+          Retour
+        </Button>
+        <Button
+          priority="tertiary no outline"
+          iconId="fr-icon-arrow-left-right-line"
+          onClick={handleUpdateCertificationAuthority}
+          disabled={updateCertificationAuthority.isPending}
+        >
+          Changer de certificateur
+        </Button>
+      </div>
     </div>
   );
 };

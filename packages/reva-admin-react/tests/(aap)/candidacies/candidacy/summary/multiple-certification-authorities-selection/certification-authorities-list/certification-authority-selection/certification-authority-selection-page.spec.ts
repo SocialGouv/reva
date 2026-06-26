@@ -63,7 +63,9 @@ test.describe("Certification authority selection page (multiple certification au
       ],
     });
 
-    test("should display the page title and description", async ({ page }) => {
+    test("it should display the page title and description", async ({
+      page,
+    }) => {
       await goToCertificationAuthorityDetailsPage(page);
 
       await expect(
@@ -76,7 +78,7 @@ test.describe("Certification authority selection page (multiple certification au
       ).toBeVisible();
     });
 
-    test("should display the certification authority card with its contact information", async ({
+    test("it should display the certification authority card with its contact information", async ({
       page,
     }) => {
       await goToCertificationAuthorityDetailsPage(page);
@@ -92,7 +94,7 @@ test.describe("Certification authority selection page (multiple certification au
       );
     });
 
-    test("should lead me back to the certification authorities list when I click on the 'Retour' button", async ({
+    test("it should lead me back to the certification authorities list when I click on the 'Retour' button", async ({
       page,
     }) => {
       await goToCertificationAuthorityDetailsPage(page);
@@ -121,6 +123,43 @@ test.describe("Certification authority selection page (multiple certification au
       await expect(
         page.getByTestId("certification-authority-card"),
       ).not.toBeVisible();
+    });
+  });
+
+  test.describe("when I click on the 'Changer de certificateur' button", () => {
+    test.use({
+      mswHandlers: [
+        [
+          ...createHandlers(),
+          ...aapCommonHandlers,
+          fvae.mutation(
+            "updateCertificationAuthorityForSelectionPage",
+            graphQLResolver({
+              candidacy_updateCertificationAuthority: {
+                id: CANDIDACY_ID,
+              },
+            }),
+          ),
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("it should update the certification authority and redirect me to the candidacy summary page", async ({
+      page,
+    }) => {
+      await goToCertificationAuthorityDetailsPage(page);
+
+      await page
+        .getByRole("button", { name: "Changer de certificateur" })
+        .click();
+
+      await waitGraphQL(page, "updateCertificationAuthorityForSelectionPage");
+
+      await expect(page.getByTestId("toast-success")).toBeVisible();
+      await expect(page).toHaveURL(
+        `/admin2/candidacies/${CANDIDACY_ID}/summary/`,
+      );
     });
   });
 });
