@@ -82,7 +82,6 @@ export const resolversSecurityMap = {
   "CertificationAuthorityLocalAccount.account": [
     hasRole([
       "admin",
-      "manage_candidacy",
       "manage_feasibility",
       "manage_certification_authority_local_account",
     ]),
