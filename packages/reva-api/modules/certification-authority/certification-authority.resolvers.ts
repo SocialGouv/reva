@@ -108,9 +108,20 @@ const unsafeResolvers = {
       getAccountByCertificationAuthorityId({
         certificationAuthorityId: parent.id,
       }),
-    certificationAuthorityLocalAccounts: (parent: CertificationAuthority) =>
+    certificationAuthorityLocalAccounts: (
+      parent: CertificationAuthority,
+      {
+        departmentIdFilter,
+        certificationIdFilter,
+      }: {
+        departmentIdFilter?: string;
+        certificationIdFilter?: string;
+      },
+    ) =>
       getCertificationAuthorityLocalAccountByCertificationAuthorityId({
         certificationAuthorityId: parent.id,
+        departmentId: departmentIdFilter,
+        certificationId: certificationIdFilter,
       }),
     metabaseDashboardIframeUrl: async (parent: CertificationAuthority) =>
       getMetabaseIframeUrl(parent),
