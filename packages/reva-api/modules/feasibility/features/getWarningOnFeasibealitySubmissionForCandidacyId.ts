@@ -4,6 +4,7 @@ export enum FeasibilitySubmissionWarning {
   NONE = "NONE",
   MAX_SUBMISSIONS_CROSS_CERTIFICATION_REACHED = "MAX_SUBMISSIONS_CROSS_CERTIFICATION_REACHED",
   MAX_SUBMISSIONS_UNIQUE_CERTIFICATION_REACHED = "MAX_SUBMISSIONS_UNIQUE_CERTIFICATION_REACHED",
+  PREVIOUS_FEASIBILITY_ON_CERTIFICATION_REJECTED = "PREVIOUS_FEASIBILITY_ON_CERTIFICATION_REJECTED",
 }
 
 export const getWarningOnFeasibilitySubmissionForCandidacyId = async (
@@ -58,7 +59,7 @@ export const getWarningOnFeasibilitySubmissionForCandidacyId = async (
       // If the feasibility is draft, we don't count it
       if (feasibility.decision == "DRAFT") return acc;
 
-      // If the feasibility is rejected, we don't count it
+      // If the feasibility is rejected, we don't count it - we will count it separately later
       if (feasibility.decision == "REJECTED") return acc;
 
       const feasibilityYear = new Date(
@@ -78,18 +79,36 @@ export const getWarningOnFeasibilitySubmissionForCandidacyId = async (
     {} as Record<string, number>,
   );
 
+  const totalUniqueCertification =
+    submittedFeasibilitiesPerCertificationId[candidacy.certificationId] || 0;
+
+  const hasPreviousFeasibilityRejectedForCurrentCertification =
+    candidacies.some(
+      (previousCandidacy) =>
+        previousCandidacy.certificationId ===
+          previousCandidacy.certificationId &&
+        previousCandidacy.Feasibility[0]?.decision === "REJECTED" &&
+        new Date(
+          previousCandidacy.Feasibility[0]?.feasibilityFileSentAt || "",
+        ).getFullYear() === currentYear,
+    );
+
   if (!candidacy.isCertificationPartial) {
     const totalCrossCertifications = Object.keys(
       submittedFeasibilitiesPerCertificationId,
     ).length;
+
     if (totalCrossCertifications >= 3) {
       return FeasibilitySubmissionWarning.MAX_SUBMISSIONS_CROSS_CERTIFICATION_REACHED;
+    } else if (hasPreviousFeasibilityRejectedForCurrentCertification) {
+      return FeasibilitySubmissionWarning.PREVIOUS_FEASIBILITY_ON_CERTIFICATION_REJECTED;
     }
   }
 
-  const totalUniqueCertification =
-    submittedFeasibilitiesPerCertificationId[candidacy.certificationId] || 0;
-  if (totalUniqueCertification >= 1) {
+  if (
+    totalUniqueCertification >= 1 &&
+    !hasPreviousFeasibilityRejectedForCurrentCertification
+  ) {
     return FeasibilitySubmissionWarning.MAX_SUBMISSIONS_UNIQUE_CERTIFICATION_REACHED;
   }
 

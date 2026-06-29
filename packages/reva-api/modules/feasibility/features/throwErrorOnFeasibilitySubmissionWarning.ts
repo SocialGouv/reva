@@ -12,6 +12,10 @@ export const throwErrorOnFeasibilitySubmissionWarning = (
       throw new Error(
         `Une demande de recevabilité pour cette certification visée en totalité existe déjà pour l'année ${new Date().getFullYear()}.`,
       );
+    case FeasibilitySubmissionWarning.PREVIOUS_FEASIBILITY_ON_CERTIFICATION_REJECTED:
+      throw new Error(
+        `Une demande de recevabilité pour cette certification a été rejetée pour l'année ${new Date().getFullYear()}.`,
+      );
     case FeasibilitySubmissionWarning.NONE:
       break;
   }
