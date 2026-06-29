@@ -196,6 +196,13 @@ export type CandidacyLogEventTypeAndDetails =
   | {
       eventType: "FEASIBILITY_FILE_TEMPLATE_FIRST_READ_AT_UPDATED";
       details: { feasibilityFileTemplateFirstReadAt: Date };
+    }
+  | {
+      eventType: "CANDIDACY_CERTIFICATION_AUTHORITY_UPDATED";
+      details: {
+        certificationAuthorityId: string;
+        certificationAuthorityLabel?: string;
+      };
     };
 
 export type CandidacyLog = {

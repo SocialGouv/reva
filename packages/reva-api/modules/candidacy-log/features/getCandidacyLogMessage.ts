@@ -302,6 +302,12 @@ export const getCandidacyLogMessage = ({
         format(details.feasibilityFileTemplateFirstReadAt, "dd/MM/yyyy"),
       );
 
+    case "CANDIDACY_CERTIFICATION_AUTHORITY_UPDATED":
+      return log(
+        "Certificateur de la candidature modifié",
+        details.certificationAuthorityLabel,
+      );
+
     default:
       return log("Événement inconnu");
   }
