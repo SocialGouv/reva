@@ -15,6 +15,8 @@ const fvae = graphql.link("https://reva-api/api/graphql");
 
 const CANDIDACY_ID = "fb451fbc-3218-416d-9ac9-65b13432469f";
 const CERTIFICATION_AUTHORITY_ID = "cert-auth-1";
+const CERTIFICATION_ID = "certification-1";
+const DEPARTMENT_ID = "department-1";
 
 const { aapCommonHandlers, aapCommonWait } = getAAPCommonHandlers();
 
@@ -24,6 +26,14 @@ const DEFAULT_CERTIFICATION_AUTHORITY = {
   contactFullName: "Marie Dupont",
   contactEmail: "cert@example.com",
   contactPhone: "0123456789",
+  certificationAuthorityLocalAccounts: [],
+};
+
+type LocalAccount = {
+  id: string;
+  contactFullName: string;
+  contactEmail: string | null;
+  contactPhone: string | null;
 };
 
 const createHandlers = (
@@ -33,8 +43,25 @@ const createHandlers = (
     contactFullName: string;
     contactEmail: string | null;
     contactPhone: string | null;
+    certificationAuthorityLocalAccounts?: LocalAccount[];
   } | null = DEFAULT_CERTIFICATION_AUTHORITY,
 ) => [
+  fvae.query(
+    "getCandidacyForCertificationAuthoritySelectionPage",
+    graphQLResolver({
+      getCandidacyById: {
+        certification: {
+          id: CERTIFICATION_ID,
+        },
+        candidate: {
+          id: "candidate-1",
+          department: {
+            id: DEPARTMENT_ID,
+          },
+        },
+      },
+    }),
+  ),
   fvae.query(
     "getCertificationAuthorityForSelectionPage",
     graphQLResolver({
@@ -50,6 +77,7 @@ const goToCertificationAuthorityDetailsPage = async (page: Page) => {
   );
   await Promise.all([
     aapCommonWait(page),
+    waitGraphQL(page, "getCandidacyForCertificationAuthoritySelectionPage"),
     waitGraphQL(page, "getCertificationAuthorityForSelectionPage"),
   ]);
 };
@@ -104,6 +132,45 @@ test.describe("Certification authority selection page (multiple certification au
       await expect(page).toHaveURL(
         `/admin2/candidacies/${CANDIDACY_ID}/summary/multiple-certification-authorities-selection/certification-authorities-list/`,
       );
+    });
+  });
+
+  test.describe("with certification authority local accounts", () => {
+    const localAccounts = [
+      {
+        id: "local-account-1",
+        contactFullName: "Jean Martin",
+        contactEmail: "jean.martin@example.com",
+        contactPhone: "0102030405",
+      },
+    ] satisfies LocalAccount[];
+
+    test.use({
+      mswHandlers: [
+        [
+          ...createHandlers({
+            ...DEFAULT_CERTIFICATION_AUTHORITY,
+            certificationAuthorityLocalAccounts: localAccounts,
+          }),
+          ...aapCommonHandlers,
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("it should display a local account card for each local account with its contact information", async ({
+      page,
+    }) => {
+      await goToCertificationAuthorityDetailsPage(page);
+
+      const card = page.getByTestId(
+        "certification-authority-local-account-card",
+      );
+      await expect(card).toBeVisible();
+      await expect(card).toContainText(localAccounts[0].contactFullName);
+      await expect(card).toContainText(localAccounts[0].contactEmail);
+      await expect(card).toContainText(localAccounts[0].contactPhone);
+      await expect(card).toContainText(DEFAULT_CERTIFICATION_AUTHORITY.label);
     });
   });
 

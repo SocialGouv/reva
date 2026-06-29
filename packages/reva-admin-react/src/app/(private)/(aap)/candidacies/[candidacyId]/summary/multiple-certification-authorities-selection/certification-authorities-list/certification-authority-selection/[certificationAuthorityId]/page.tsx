@@ -4,6 +4,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { useParams, useRouter } from "next/navigation";
 
 import { CertificationAuthorityCard } from "@/components/candidacy-summary/certification-authority/CertificationAuthorityCard";
+import { CertificationAuthorityLocalAccountCard } from "@/components/candidacy-summary/certification-authority/CertificationAuthorityLocalAccountCard";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { useCertificationAuthoritySelection } from "./certificationAuthoritySelection.hooks";
@@ -15,10 +16,14 @@ const CertificationAuthoritySelectionPage = () => {
     certificationAuthorityId: string;
   }>();
 
-  const { certificationAuthority, updateCertificationAuthority } =
-    useCertificationAuthoritySelection({
-      certificationAuthorityId,
-    });
+  const {
+    certificationAuthority,
+    certificationAuthorityLocalAccounts,
+    updateCertificationAuthority,
+  } = useCertificationAuthoritySelection({
+    candidacyId,
+    certificationAuthorityId,
+  });
 
   const handleUpdateCertificationAuthority = async () => {
     try {
@@ -46,6 +51,17 @@ const CertificationAuthoritySelectionPage = () => {
             contactPhone={certificationAuthority.contactPhone}
           />
         )}
+        {certificationAuthorityLocalAccounts.map((localAccount) => (
+          <CertificationAuthorityLocalAccountCard
+            key={localAccount.id}
+            label={localAccount.contactFullName ?? "Inconnu"}
+            certificationAuthorityLabel={
+              certificationAuthority?.label ?? "Inconnu"
+            }
+            contactEmail={localAccount.contactEmail ?? undefined}
+            contactPhone={localAccount.contactPhone ?? undefined}
+          />
+        ))}
       </div>
       <div className="flex flex-col lg:flex-row gap-4 justify-between">
         <Button
