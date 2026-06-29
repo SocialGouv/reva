@@ -168,6 +168,16 @@ const AapFeasibilityPage = () => {
         />
       )}
 
+      {candidacy.warningOnFeasibilitySubmission ===
+        "PREVIOUS_FEASIBILITY_ON_CERTIFICATION_REJECTED" && (
+        <Alert
+          className="mt-6 mb-12"
+          severity="error"
+          title="Une demande de recevabilité a été rejetée pour ce diplôme"
+          description={`${candidacy.candidate.lastname} ${candidacy.candidate.firstname} a déjà transmis une demande de recevabilité pour la certification ${certification?.label} en ${new Date().getFullYear()}. Cette demande a été rejetée. Vous pouvez soumettre une nouvelle demande de recevabilité partielle dès à présent, ou une demande de recevabilité totale à partir de Janvier ${new Date().getFullYear() + 1}.`}
+        />
+      )}
+
       {displayDecisionIncompleteAlert && (
         <DecisionIncompleteAlert
           decisionSentAt={decisionSentAt}
