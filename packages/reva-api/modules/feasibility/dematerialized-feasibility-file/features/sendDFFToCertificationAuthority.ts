@@ -1,5 +1,5 @@
 import { getAccountById } from "@/modules/account/features/getAccount";
-import { updateCandidacyCertificationAuthority } from "@/modules/candidacy/certification/features/updateCandidacyCertificationAuthority";
+import { updateCandidacyCertificationAuthority } from "@/modules/candidacy/features/updateCandidacyCertificationAuthority";
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "@/modules/certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";

@@ -2,7 +2,7 @@ import { CandidacyStatusStep, Prisma } from "@prisma/client";
 
 import { prismaClient } from "@/prisma/client";
 
-import { getCandidacy } from "../../features/getCandidacy";
+import { getCandidacy } from "./getCandidacy";
 
 export const updateCandidacyCertificationAuthority = async ({
   candidacyId,

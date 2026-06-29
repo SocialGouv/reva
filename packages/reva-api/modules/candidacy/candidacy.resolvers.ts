@@ -30,7 +30,7 @@ import {
   GetCandidaciesForCertificationAuthorityInput,
   SearchOrganismFilter,
 } from "./candidacy.types";
-import { updateCandidacyCertificationAuthority } from "./certification/features/updateCandidacyCertificationAuthority";
+import { updateCandidacyCertificationAuthority } from "./features/updateCandidacyCertificationAuthority";
 import { sendCandidacyArchivedEmailToCertificateur } from "./emails/sendCandidacyArchivedEmailToCertificateur";
 import { sendCandidacyDropOutEmailToCandidate } from "./emails/sendCandidacyDropOutEmailToCandidate";
 import { sendCandidacyDropOutEmailToCertificateur } from "./emails/sendCandidacyDropOutEmailToCertificateur";
