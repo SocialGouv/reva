@@ -14,7 +14,10 @@ import {
 import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
-import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
+import {
+  buildCandidacyAuditLogUserInfo,
+  logCandidacyAuditEvent,
+} from "../candidacy-log/features/logCandidacyAuditEvent";
 import { getCandidateById } from "../candidate/features/getCandidateById";
 import { CandidacySortByFilter } from "../graphql/generated/graphql";
 import { getOrganismById } from "../organism/features/getOrganism";
@@ -30,7 +33,6 @@ import {
   GetCandidaciesForCertificationAuthorityInput,
   SearchOrganismFilter,
 } from "./candidacy.types";
-import { updateCandidacyCertificationAuthority } from "./features/updateCandidacyCertificationAuthority";
 import { sendCandidacyArchivedEmailToCertificateur } from "./emails/sendCandidacyArchivedEmailToCertificateur";
 import { sendCandidacyDropOutEmailToCandidate } from "./emails/sendCandidacyDropOutEmailToCandidate";
 import { sendCandidacyDropOutEmailToCertificateur } from "./emails/sendCandidacyDropOutEmailToCertificateur";
@@ -57,6 +59,7 @@ import { getCandidacyOnCandidacyFinancingMethodsByCandidacyId } from "./features
 import { getCandidacyStatusesByCandidacyId } from "./features/getCandidacyStatusesByCandidacyId";
 import { getDropOutReasonById } from "./features/getDropOutReasonById";
 import { getExperiencesByCandidacyId } from "./features/getExperiencesByCandidacyId";
+import { manuallyUpdateCandidacyCertificationAuthority } from "./features/manuallyUpdateCandidacyCertificationAuthority";
 import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
 import { searchOrganismsForCandidacyAsAdmin } from "./features/searchOrganismsForCandidacyAsAdmin";
 import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidacy";
@@ -844,7 +847,12 @@ const unsafeResolvers = {
         candidacyId: string;
         certificationAuthorityId: string;
       },
-    ) => updateCandidacyCertificationAuthority(input),
+      context: GraphqlContext,
+    ) =>
+      manuallyUpdateCandidacyCertificationAuthority({
+        ...input,
+        userInfo: buildCandidacyAuditLogUserInfo(context),
+      }),
   },
 };
 
