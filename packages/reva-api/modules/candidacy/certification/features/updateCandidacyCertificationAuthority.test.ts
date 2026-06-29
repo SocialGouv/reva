@@ -4,9 +4,9 @@ import { prismaClient } from "@/prisma/client";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 
-import { updateCertificationAuthorityOfCandidacy } from "./updateCertificationAuthorityOfCandidacy";
+import { updateCandidacyCertificationAuthority } from "./updateCandidacyCertificationAuthority";
 
-describe("updateCertificationAuthorityOfCandidacy", () => {
+describe("updateCandidacyCertificationAuthority", () => {
   const allowedStatuses: CandidacyStatusStep[] = [
     "PRISE_EN_CHARGE",
     "PARCOURS_ENVOYE",
@@ -35,7 +35,7 @@ describe("updateCertificationAuthorityOfCandidacy", () => {
       });
       const certificationAuthority = await createCertificationAuthorityHelper();
 
-      const result = await updateCertificationAuthorityOfCandidacy({
+      const result = await updateCandidacyCertificationAuthority({
         candidacyId: candidacy.id,
         certificationAuthorityId: certificationAuthority.id,
       });
@@ -61,7 +61,7 @@ describe("updateCertificationAuthorityOfCandidacy", () => {
       const certificationAuthority = await createCertificationAuthorityHelper();
 
       await expect(
-        updateCertificationAuthorityOfCandidacy({
+        updateCandidacyCertificationAuthority({
           candidacyId: candidacy.id,
           certificationAuthorityId: certificationAuthority.id,
         }),
@@ -78,7 +78,7 @@ describe("updateCertificationAuthorityOfCandidacy", () => {
 
   test("should throw when candidacy does not exist", async () => {
     await expect(
-      updateCertificationAuthorityOfCandidacy({
+      updateCandidacyCertificationAuthority({
         candidacyId: "00000000-0000-0000-0000-000000000000",
         certificationAuthorityId: "00000000-0000-0000-0000-000000000000",
       }),
@@ -92,7 +92,7 @@ describe("updateCertificationAuthorityOfCandidacy", () => {
     const certificationAuthority = await createCertificationAuthorityHelper();
 
     await prismaClient.$transaction((tx) =>
-      updateCertificationAuthorityOfCandidacy({
+      updateCandidacyCertificationAuthority({
         candidacyId: candidacy.id,
         certificationAuthorityId: certificationAuthority.id,
         tx,

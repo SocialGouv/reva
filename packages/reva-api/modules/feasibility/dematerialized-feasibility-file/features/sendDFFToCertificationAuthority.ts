@@ -1,5 +1,5 @@
 import { getAccountById } from "@/modules/account/features/getAccount";
-import { updateCertificationAuthorityOfCandidacy } from "@/modules/candidacy/certification/features/updateCertificationAuthorityOfCandidacy";
+import { updateCandidacyCertificationAuthority } from "@/modules/candidacy/certification/features/updateCandidacyCertificationAuthority";
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "@/modules/certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
@@ -86,7 +86,7 @@ export const sendDFFToCertificationAuthority = async ({
 
   const candidacy = await prismaClient.$transaction(async (tx) => {
     //update the certification authority of the candidacy
-    await updateCertificationAuthorityOfCandidacy({
+    await updateCandidacyCertificationAuthority({
       candidacyId,
       certificationAuthorityId,
       tx,

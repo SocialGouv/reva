@@ -17,7 +17,7 @@ import { Account } from "../account/account.types";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
 import { refreshCertificationAuthorityOfCandidacy } from "../candidacy/certification/features/refreshCertificationAuthorityOfCandidacy";
-import { updateCertificationAuthorityOfCandidacy } from "../candidacy/certification/features/updateCertificationAuthorityOfCandidacy";
+import { updateCandidacyCertificationAuthority } from "../candidacy/certification/features/updateCandidacyCertificationAuthority";
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
 import { updateCandidacyFinanceModule } from "../candidacy/features/updateCandidacyFinanceModule";
 import { updateCandidacyStatus } from "../candidacy/features/updateCandidacyStatus";
@@ -325,7 +325,7 @@ export const createFeasibility = async ({
   }
 
   //update the certification authority of the candidacy
-  await updateCertificationAuthorityOfCandidacy({
+  await updateCandidacyCertificationAuthority({
     candidacyId,
     certificationAuthorityId,
   });

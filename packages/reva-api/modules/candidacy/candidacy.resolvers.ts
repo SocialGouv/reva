@@ -30,7 +30,7 @@ import {
   GetCandidaciesForCertificationAuthorityInput,
   SearchOrganismFilter,
 } from "./candidacy.types";
-import { updateCertificationAuthorityOfCandidacy } from "./certification/features/updateCertificationAuthorityOfCandidacy";
+import { updateCandidacyCertificationAuthority } from "./certification/features/updateCandidacyCertificationAuthority";
 import { sendCandidacyArchivedEmailToCertificateur } from "./emails/sendCandidacyArchivedEmailToCertificateur";
 import { sendCandidacyDropOutEmailToCandidate } from "./emails/sendCandidacyDropOutEmailToCandidate";
 import { sendCandidacyDropOutEmailToCertificateur } from "./emails/sendCandidacyDropOutEmailToCertificateur";
@@ -844,7 +844,7 @@ const unsafeResolvers = {
         candidacyId: string;
         certificationAuthorityId: string;
       },
-    ) => updateCertificationAuthorityOfCandidacy(input),
+    ) => updateCandidacyCertificationAuthority(input),
   },
 };
 

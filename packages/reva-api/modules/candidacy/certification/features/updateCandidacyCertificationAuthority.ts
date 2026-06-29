@@ -4,7 +4,7 @@ import { prismaClient } from "@/prisma/client";
 
 import { getCandidacy } from "../../features/getCandidacy";
 
-export const updateCertificationAuthorityOfCandidacy = async ({
+export const updateCandidacyCertificationAuthority = async ({
   candidacyId,
   certificationAuthorityId,
   tx,
