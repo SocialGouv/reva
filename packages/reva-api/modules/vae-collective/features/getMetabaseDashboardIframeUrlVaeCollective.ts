@@ -34,7 +34,7 @@ export const getMetabaseDashboardIframeUrlVaeCollective = async ({
   }
 
   const payload = {
-    resource: { dashboard: 186 },
+    resource: { dashboard: 262 },
     params: {
       porteur_de_projet: [commanditaireVaeCollective.raisonSociale],
     },
