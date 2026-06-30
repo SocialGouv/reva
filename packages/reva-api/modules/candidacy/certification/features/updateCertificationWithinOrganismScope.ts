@@ -9,9 +9,9 @@ import {
 } from "@/modules/shared/error/functionalError";
 import { prismaClient } from "@/prisma/client";
 
+import { refreshCertificationAuthorityOfCandidacy } from "../../features/refreshCertificationAuthorityOfCandidacy";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 
-import { refreshCertificationAuthorityOfCandidacy } from "./refreshCertificationAuthorityOfCandidacy";
 import { updateCertification } from "./updateCertification";
 
 export const updateCertificationWithinOrganismScope = async ({

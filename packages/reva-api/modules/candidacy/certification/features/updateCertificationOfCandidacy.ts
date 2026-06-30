@@ -10,11 +10,11 @@ import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
 import { canCandidateUpdateCandidacy } from "../../features/canCandidateUpdateCandidacy";
+import { refreshCertificationAuthorityOfCandidacy } from "../../features/refreshCertificationAuthorityOfCandidacy";
 import { updateCandidacyOrganism } from "../../features/updateCandidacyOrganism";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 import { resetTrainingInformation } from "../../training/features/resetTrainingInformation";
 
-import { refreshCertificationAuthorityOfCandidacy } from "./refreshCertificationAuthorityOfCandidacy";
 import { updateCertification } from "./updateCertification";
 
 export const updateCertificationOfCandidacy = async ({

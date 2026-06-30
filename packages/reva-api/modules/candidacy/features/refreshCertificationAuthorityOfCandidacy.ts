@@ -4,7 +4,7 @@ import {
 } from "@/modules/feasibility/feasibility.features";
 import { prismaClient } from "@/prisma/client";
 
-import { getCandidacy } from "../../features/getCandidacy";
+import { getCandidacy } from "./getCandidacy";
 
 // Refresh the certification authority of a candidacy.
 // Take the certification authority mapped to the certification of the candidacy and the department of the candidate and update it in the candidacy
