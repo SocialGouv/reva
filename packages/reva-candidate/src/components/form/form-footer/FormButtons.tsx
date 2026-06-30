@@ -50,7 +50,7 @@ interface FormButtonsProps {
   backLabel?: string;
   hideResetButton?: boolean;
   formState: {
-    isDirty: boolean;
+    isDirty?: boolean;
     isSubmitting: boolean;
     canSubmit?: boolean;
   };
@@ -63,7 +63,7 @@ export const FormButtons = ({
   backLabel,
   hideResetButton = false,
   submitButtonLabel = "Enregistrer",
-  formState: { isDirty, isSubmitting, canSubmit = true },
+  formState: { isDirty = true, isSubmitting, canSubmit = true },
   className,
 }: FormButtonsProps) => {
   const router = useRouter();

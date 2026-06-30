@@ -96,6 +96,15 @@ const GET_CANDIDACY_BY_ID_FOR_DASHBOARD = graphql(`
           raisonSociale
         }
       }
+      candidate {
+        niveauDeFormationLePlusEleve {
+          level
+        }
+        highestDegree {
+          level
+        }
+        highestDegreeLabel
+      }
     }
   }
 `);

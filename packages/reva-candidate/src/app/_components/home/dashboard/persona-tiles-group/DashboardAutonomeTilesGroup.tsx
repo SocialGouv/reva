@@ -4,6 +4,7 @@ import { CandidacyUseCandidateForDashboard } from "../dashboard.hooks";
 import { CertificationTile } from "../tiles/CertificationTile";
 import { DossierValidationTile } from "../tiles/DossierValidationTile";
 import { FeasibilityTile } from "../tiles/FeasibilityTile";
+import { FormationsTile } from "../tiles/FormationsTile";
 import { GoalsTile } from "../tiles/GoalsTile";
 import { TypeAccompagnementTile } from "../tiles/TypeAccompagnementTile";
 
@@ -31,6 +32,10 @@ export const DashboardAutonomeTilesGroup = ({
     feasibility?.decision === "COMPLETE" ||
     feasibility?.decision === "REJECTED";
 
+  const hasCompletedFormations =
+    !!candidacy.candidate.highestDegree &&
+    !!candidacy.candidate.niveauDeFormationLePlusEleve;
+
   return (
     <div
       className={`flex flex-col gap-y-8 ${className || ""}`}
@@ -55,6 +60,10 @@ export const DashboardAutonomeTilesGroup = ({
             <div className="grid md:grid-cols-3 grid-rows-1">
               <GoalsTile
                 hasCompletedGoals={hasCompletedGoals}
+                readOnly={readOnly}
+              />
+              <FormationsTile
+                hasCompletedFormations={hasCompletedFormations}
                 readOnly={readOnly}
               />
             </div>

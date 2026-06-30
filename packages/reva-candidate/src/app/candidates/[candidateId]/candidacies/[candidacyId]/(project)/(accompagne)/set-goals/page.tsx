@@ -107,7 +107,6 @@ export default function SetGoals() {
           formState={{
             canSubmit: !formShouldBeDisabled,
             isSubmitting,
-            isDirty: true,
           }}
           backUrl="../"
         />
