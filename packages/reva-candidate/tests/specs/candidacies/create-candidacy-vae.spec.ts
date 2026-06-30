@@ -13,6 +13,7 @@ import {
   loginAndWaitForCandidaciesInitialLoad,
 } from "@tests/helpers/handlers/candidacies/candidacies-guards.handler";
 import { graphQLResolver } from "@tests/helpers/network/msw";
+import { waitGraphQL } from "@tests/helpers/network/requests";
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
@@ -150,6 +151,20 @@ test.describe("create candidacy vae from candidacies page", () => {
     });
     await expect(rejoindreCohorteButton).toBeVisible();
     await rejoindreCohorteButton.click();
+
+    await expect(page).toHaveURL(
+      `candidates/${candidate.id}/candidacies/create/vae-collective/12345678/consent/`,
+    );
+
+    await expect(
+      page.getByRole("heading", { name: "Rejoindre une VAE collective" }),
+    ).toBeVisible();
+
+    const acceptConsentButton = page.getByRole("button", { name: "Accepter" });
+    await expect(acceptConsentButton).toBeVisible();
+    await acceptConsentButton.click();
+
+    await waitGraphQL(page, "createVaeCollectiveCandidacy");
 
     await expect(page).toHaveURL(
       `candidates/${candidate.id}/candidacies/${candidacy.id}/`,
