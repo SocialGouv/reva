@@ -35,7 +35,6 @@ export default function SetGoals() {
   }, [candidacy?.goals]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDirty, setIsDirty] = useState(false);
 
   const toggle = (goalId: string) => {
     const filteredGoals = selectedGoalIds.filter((id) => id != goalId);
@@ -83,33 +82,32 @@ export default function SetGoals() {
           },
         ]}
       />
-      <h2 className="mt-4 mb-2">Mes objectifs</h2>
-      <FormOptionalFieldsDisclaimer
-        className="mb-4"
-        label="Plusieurs choix possibles"
-      />
+      <h1 className="mt-4 mb-0">Mes objectifs</h1>
+      <FormOptionalFieldsDisclaimer className="mb-12" />
       <form onSubmit={onSubmit} className="flex flex-col">
         <Checkbox
           className="w-full"
           small
-          legend="Objectif"
+          legend="Choisir les objectifs qui motivent le passage de la VAE"
+          hintText="Plusieurs choix possibles"
           disabled={formShouldBeDisabled}
           options={goals.map((goal) => ({
             label: goal.label,
             nativeInputProps: {
               checked: selectedGoalIds.indexOf(goal.id) != -1,
               onChange: () => {
-                setIsDirty(true);
                 toggle(goal.id);
               },
             },
           }))}
         />
         <FormButtons
+          className="mt-6"
+          hideResetButton
           formState={{
             canSubmit: !formShouldBeDisabled,
             isSubmitting,
-            isDirty,
+            isDirty: true,
           }}
           backUrl="../"
         />

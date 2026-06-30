@@ -41,7 +41,10 @@ export const NonVaeCollectiveDashboard = ({
     <div className="flex flex-col-reverse lg:flex-row gap-8 mt-20">
       <div className="basis-2/3 flex flex-col gap-8">
         {candidacyIsAutonome && (
-          <DashboardAutonomeTilesGroup candidacy={candidacy} />
+          <DashboardAutonomeTilesGroup
+            candidacy={candidacy}
+            hasCompletedGoals={hasCompletedGoals}
+          />
         )}
         {candidacyIsAccompagne && (
           <DashboardAccompagneTilesGroup
