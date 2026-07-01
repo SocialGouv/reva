@@ -3,9 +3,8 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useParams } from "next/navigation";
 
-import { CertificationAuthorityCard } from "@/components/candidacy-summary/certification-authority/CertificationAuthorityCard";
-import { CertificationAuthorityLocalAccountCard } from "@/components/candidacy-summary/certification-authority/CertificationAuthorityLocalAccountCard";
-
+import { CertificationAuthorityCard } from "./_components/CertificationAuthorityCard";
+import { CertificationAuthorityLocalAccountCard } from "./_components/CertificationAuthorityLocalAccountCard";
 import { useCertificationAuthorityDetails } from "./certificationAuthorityDetails.hooks";
 
 const CertificationAuthorityDetailsPage = () => {
