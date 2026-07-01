@@ -1,6 +1,7 @@
 import { Candidate, Department } from "@prisma/client";
 import { isBefore, sub } from "date-fns";
 
+import { refreshCertificationAuthorityOfCandidacy } from "@/modules/candidacy/features/refreshCertificationAuthorityOfCandidacy";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { CandidateUpdateInput } from "@/modules/candidate/candidate.types";
 import { generateAndUploadFeasibilityFileByCandidacyId } from "@/modules/feasibility/dematerialized-feasibility-file/features/generateAndUploadFeasibilityFileByCandidacyId";
@@ -178,6 +179,15 @@ export const updateCandidate = async ({
       }),
     ),
   );
+
+  //Si le candidat a changé de département on refresh la certification authority de toutes ses candidatures (le refresh ne se fera que si la candidature est dans un statut qui le permet)
+  if (candidateInput.departmentId !== candidateToUpdate.departmentId) {
+    await Promise.all(
+      candidacies.map((c) =>
+        refreshCertificationAuthorityOfCandidacy({ candidacyId: c.id }),
+      ),
+    );
+  }
 
   const candidaciesWithoutFeasibility = candidacies.filter(
     (c) => !c.Feasibility?.[0] || !c.Feasibility?.[0]?.feasibilityFileSentAt,
