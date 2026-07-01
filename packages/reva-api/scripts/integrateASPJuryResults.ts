@@ -187,7 +187,6 @@ const dryRun = async (
   const candidacyIdsIgnored = new Set([
     ...missingCandidacyIds,
     ...candidacyIdsWithActiveJury,
-    ...candidacyIdsWithOnlyInactiveJuries,
     ...candidacyIdsWithoutActiveDossierDeValidation,
   ]);
   const ignoredRowsCount = duplicatedRowsCount + candidacyIdsIgnored.size;
@@ -213,7 +212,7 @@ const dryRun = async (
     `Dont ${candidacyIdsWithActiveJuryWithResult.length} avec résultat déjà renseigné.`,
   );
   console.log(
-    `${candidacyIdsWithOnlyInactiveJuries.length} candidature(s) avec uniquement des jurys inactifs seront ignorée(s).`,
+    `${candidacyIdsWithOnlyInactiveJuries.length} candidature(s) ont uniquement des jurys inactifs ; elles restent importables si elles passent les autres contrôles.`,
   );
   console.log(
     `${candidacyIdsWithoutActiveDossierDeValidation.length} candidature(s) sans dossier de validation actif seront ignorée(s).`,
@@ -292,6 +291,7 @@ const applyJuryResults = async (candidacies: ASPJuryResult[]) => {
           SELECT 1
           FROM jury
           WHERE jury.candidacy_id = target.candidacy_id
+          AND jury.is_active = true
         )
       ),
       inserted_juries AS (
