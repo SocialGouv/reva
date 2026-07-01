@@ -3,6 +3,7 @@ import { useFeatureFlipping } from "@/components/feature-flipping/featureFlippin
 import { CandidacyUseCandidateForDashboard } from "../dashboard.hooks";
 import { CertificationTile } from "../tiles/CertificationTile";
 import { DossierValidationTile } from "../tiles/DossierValidationTile";
+import { ExperiencesTile } from "../tiles/ExperiencesTile";
 import { FeasibilityTile } from "../tiles/FeasibilityTile";
 import { FormationsTile } from "../tiles/FormationsTile";
 import { GoalsTile } from "../tiles/GoalsTile";
@@ -64,6 +65,10 @@ export const DashboardAutonomeTilesGroup = ({
               />
               <FormationsTile
                 hasCompletedFormations={hasCompletedFormations}
+                readOnly={readOnly}
+              />
+              <ExperiencesTile
+                experiences={candidacy.experiences}
                 readOnly={readOnly}
               />
             </div>

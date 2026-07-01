@@ -12,6 +12,10 @@ const GET_CANDIDACY_BY_ID_FOR_EXPERIENCES_PAGE = graphql(`
     getCandidacyById(id: $candidacyId) {
       id
       status
+      certification {
+        id
+        codeRncp
+      }
       candidacyDropOut {
         status
       }

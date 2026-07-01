@@ -117,7 +117,7 @@ const CandidateProfilePage = () => {
             </div>
 
             <div className="col-span-1">
-              <div className="flex flex-col px-4 pt-6 bg-dsfr-light-decisions-background-background-alt-blue-france">
+              <div className="flex flex-col px-4 pt-4 pb-2 bg-dsfr-light-decisions-background-background-alt-blue-france">
                 <h6>Ressources :</h6>
 
                 <div>

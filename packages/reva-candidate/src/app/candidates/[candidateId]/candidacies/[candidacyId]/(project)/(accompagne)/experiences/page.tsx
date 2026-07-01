@@ -30,7 +30,7 @@ export default function ExperiencesPage() {
 
   return (
     <Panel>
-      <div className="flex flex-col w-full gap-6">
+      <div className="flex flex-col w-full">
         <Breadcrumb
           currentPageLabel="Mes expériences"
           className="mb-0"
@@ -43,48 +43,107 @@ export default function ExperiencesPage() {
             },
           ]}
         />
-        <h1>Mes expériences</h1>
-        <p>
-          Complétez cette section avec vos différentes expériences
-          professionnelles (salarié, entrepreneur, stage...) ou activités
-          extra-professionnelles (bénévole).
+        <h1 className="mt-2 mb-6">Mes expériences</h1>
+        <p className="text-xl mb-12">
+          Présentez les expériences (professionnelles, personnelles, bénévoles…)
+          réalisées. Présentez l’ensemble des expériences en lien avec la
+          certification visée et vous permettant de démontrer les compétences
+          attendues.
         </p>
-        <div className="flex flex-col gap-4 w-full">
-          {experiences?.map((experience) => (
-            <Card
-              key={experience.id}
-              background
-              border
-              desc={experience.description}
-              enlargeLink
-              footer={`${format(experience.startedAt, "MM/yyyy")} - ${durationToString[experience.duration]}`}
-              linkProps={{
-                href: `./${experience.id}`,
-              }}
-              size="small"
-              title={experience.title}
-              titleAs="h3"
-            />
-          ))}
-        </div>
-        {canEditCandidacy && !candidacyAlreadySubmitted && (
-          <>
-            <hr />
-            <div>
-              <Link
-                href="./add"
-                className="flex items-center gap-2 mb-6 fr-link w-fit bg-none"
-              >
-                <span className="fr-icon-add-line fr-icon--sm" />
-                <span className="text-sm">Ajouter une expérience</span>
-              </Link>
-            </div>
-          </>
+
+        {(!experiences || experiences.length === 0) && (
+          <div className="">
+            <ResourcesSection codeRncp={candidacy?.certification?.codeRncp} />
+          </div>
         )}
-        <Button priority="secondary" linkProps={{ href: "../" }}>
+
+        <div className="grid grid-cols-4 gap-6">
+          <div className="col-span-3 flex flex-col">
+            <div className="flex flex-col w-full">
+              {experiences?.map((experience) => (
+                <Card
+                  key={experience.id}
+                  className="mb-6"
+                  background
+                  border
+                  desc={experience.description}
+                  enlargeLink
+                  footer={`${format(experience.startedAt, "MM/yyyy")} - ${durationToString[experience.duration]}`}
+                  linkProps={{
+                    href: `./${experience.id}`,
+                  }}
+                  size="small"
+                  title={experience.title}
+                  titleAs="h3"
+                />
+              ))}
+            </div>
+
+            {canEditCandidacy && !candidacyAlreadySubmitted && (
+              <>
+                <hr className="mb-0 pb-4" />
+                <div>
+                  <Link
+                    href="./add"
+                    className="flex items-center gap-2 fr-link w-fit bg-none"
+                  >
+                    <span className="fr-icon-add-line fr-icon--sm" />
+                    <span className="text-sm">Ajouter une expérience</span>
+                  </Link>
+                </div>
+              </>
+            )}
+          </div>
+
+          {experiences && experiences.length > 0 && (
+            <div className="col-span-1">
+              <ResourcesSection codeRncp={candidacy?.certification?.codeRncp} />
+            </div>
+          )}
+        </div>
+
+        <Button
+          className="mt-12"
+          priority="secondary"
+          linkProps={{ href: "../" }}
+        >
           Retour
         </Button>
       </div>
     </Panel>
   );
 }
+
+const ResourcesSection = ({ codeRncp }: { codeRncp?: string }) => (
+  <div className="mb-6 flex flex-col px-4 pb-2 pt-6 bg-dsfr-light-decisions-background-background-alt-blue-france">
+    <h6>Ressources :</h6>
+
+    <div>
+      <p className="font-medium mb-2">Besoin d'aide ?</p>
+      <p className="mb-1">
+        Consultez la partie "Résumé de la certification" sur la fiche de la
+        certification :<br />
+        <a
+          className="fr-link"
+          href={`https://www.francecompetences.fr/recherche/rncp/${codeRncp}`}
+          target="_blank"
+        >
+          www.francecompetences.fr
+        </a>
+      </p>
+
+      <p>Vous y trouverez les activités liées à la certification.</p>
+
+      <hr />
+      <p>
+        <a
+          className="fr-link"
+          href="https://scribehow.com/viewer/Tutoriel__Candidat_sans_accompagnement_autonome__0NQyq175SDaI0Epy7bdyLA?referrer=documents&mode=edit"
+          target="_blank"
+        >
+          Consultez le guide pas à pas
+        </a>
+      </p>
+    </div>
+  </div>
+);

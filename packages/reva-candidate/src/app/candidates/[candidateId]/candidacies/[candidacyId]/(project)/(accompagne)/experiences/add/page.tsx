@@ -68,7 +68,7 @@ export default function AddExperience() {
     register,
     handleSubmit,
     reset,
-    formState: { isDirty, isSubmitting, errors },
+    formState: { isSubmitting, errors },
   } = useForm<ExperienceForm>({
     resolver: zodResolver(schema),
     defaultValues,
@@ -121,12 +121,18 @@ export default function AddExperience() {
           },
         ]}
       />
-      <h2 className="mt-6 mb-2">Nouvelle expérience</h2>
+      <h1 className="mt-2 mb-0">Nouvelle expérience</h1>
       <FormOptionalFieldsDisclaimer
-        className="mb-4"
-        label="Il peut s'agir d'une expérience professionnelle, bénévole, d'un stage ou
-        d'une activité extra-professionnelle."
+        className="mb-6"
+        label="Sauf mention contraire “optionnel” dans le label, tous les champs sont obligatoires."
       />
+
+      <p className="text-xl mb-12">
+        Ces informations seront envoyées au certificateur avec le dossier de
+        faisabilité. Il est donc important d'être très précis : décrivez les
+        tâches réalisées et le contexte de travail (lieu, équipe, outils
+        utilisés…).
+      </p>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -136,69 +142,112 @@ export default function AddExperience() {
         }}
         className="flex flex-col"
       >
-        <fieldset>
-          <legend>
-            <h2 className="mt-2 mb-4 text-lg">Nouvelle expérience</h2>
-          </legend>
+        <div className="grid grid-cols-4 gap-6">
+          <div className="col-span-3 flex flex-col">
+            <fieldset>
+              <Input
+                label="Intitulé du poste ou de l'activité"
+                hintText="Exemple : Agent d'entretien, service à domicile, commercial, etc."
+                nativeInputProps={register("title")}
+                state={errors.title ? "error" : "default"}
+                stateRelatedMessage={errors.title?.message}
+                disabled={inputShouldBeDisabled}
+              />
+              <div className="flex gap-6">
+                <Input
+                  label="Date de début"
+                  nativeInputProps={{
+                    type: "date",
+                    ...register("startedAt"),
+                  }}
+                  state={errors.startedAt ? "error" : "default"}
+                  stateRelatedMessage={errors.startedAt?.message}
+                  disabled={inputShouldBeDisabled}
+                />
 
-          <Input
-            label="Intitulé du poste ou de l'activité"
-            hintText="Exemple : Agent d'entretien ; Service à domicile ; Commercial ; etc."
-            nativeInputProps={register("title")}
-            state={errors.title ? "error" : "default"}
-            stateRelatedMessage={errors.title?.message}
-            disabled={inputShouldBeDisabled}
-          />
-          <div className="flex gap-6">
-            <Input
-              label="Date de début"
-              nativeInputProps={{
-                type: "date",
-                ...register("startedAt"),
-              }}
-              state={errors.startedAt ? "error" : "default"}
-              stateRelatedMessage={errors.startedAt?.message}
-              disabled={inputShouldBeDisabled}
-            />
+                <Select
+                  label="Durée"
+                  nativeSelectProps={register("duration")}
+                  state={errors.duration ? "error" : "default"}
+                  stateRelatedMessage={errors.duration?.message}
+                  disabled={inputShouldBeDisabled}
+                >
+                  <option value="" disabled hidden>
+                    Sélectionner une option
+                  </option>
+                  {durationOptions.map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
+                  ))}
+                </Select>
+              </div>
 
-            <Select
-              label="Durée"
-              nativeSelectProps={register("duration")}
-              state={errors.duration ? "error" : "default"}
-              stateRelatedMessage={errors.duration?.message}
-              disabled={inputShouldBeDisabled}
-            >
-              <option value="" disabled hidden>
-                Sélectionner une option
-              </option>
-              {durationOptions.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </Select>
+              <Input
+                textArea
+                label="Description du poste ou de l’activité extra-professionnelle"
+                hintText={
+                  <span>
+                    Décrivez précisément les activités réalisées (par exemple :
+                    gestion des stocks, entretien des locaux, accueil du public,
+                    etc). <br />
+                    Décrivez aussi l’environnement de travail : type
+                    d’entreprise ou de structure, travail seul ou en équipe,
+                    niveau d’autonomie.
+                  </span>
+                }
+                nativeTextAreaProps={{
+                  rows: 3,
+                  ...register("description"),
+                }}
+                state={errors.description ? "error" : "default"}
+                stateRelatedMessage={errors.description?.message}
+                disabled={inputShouldBeDisabled}
+              />
+            </fieldset>
           </div>
 
-          <Input
-            textArea
-            label="Description du poste ou de l'activité extra-professionnelle"
-            nativeTextAreaProps={{
-              rows: 5,
-              ...register("description"),
-            }}
-            state={errors.description ? "error" : "default"}
-            stateRelatedMessage={errors.description?.message}
-            disabled={inputShouldBeDisabled}
-          />
-        </fieldset>
+          <div className="col-span-1">
+            <div className="mb-6 flex flex-col px-4 pb-2 pt-6 bg-dsfr-light-decisions-background-background-alt-blue-france">
+              <h6>Ressources :</h6>
+
+              <div>
+                <p className="font-medium mb-2">Besoin d'aide ?</p>
+                <p className="mb-1">
+                  Consultez la partie "Résumé de la certification" sur la fiche
+                  de la certification :<br />
+                  <a
+                    className="fr-link"
+                    href={`https://www.francecompetences.fr/recherche/rncp/${candidacy?.certification?.codeRncp}`}
+                    target="_blank"
+                  >
+                    www.francecompetences.fr
+                  </a>
+                </p>
+
+                <p>Vous y trouverez les activités liées à la certification.</p>
+
+                <hr />
+                <p>
+                  <a
+                    className="fr-link"
+                    href="https://scribehow.com/viewer/Tutoriel__Candidat_sans_accompagnement_autonome__0NQyq175SDaI0Epy7bdyLA?referrer=documents&mode=edit"
+                    target="_blank"
+                  >
+                    Consultez le guide pas à pas
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
         <FormButtons
+          hideResetButton
           backUrl={backUrl}
           formState={{
-            isDirty,
             isSubmitting,
             canSubmit: canEditCandidacy,
           }}
-          submitButtonLabel="Ajouter votre expérience"
         />
       </form>
     </Panel>
