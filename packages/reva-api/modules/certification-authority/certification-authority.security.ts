@@ -12,7 +12,6 @@ import {
   isAdminOrIsCertificationAuthorityStructureRegistryManagerMember,
   isAdminOrManager,
   isAnyone,
-  isOwnerOrCanManageCandidacy,
 } from "@/modules/shared/security/presets";
 
 export const resolversSecurityMap = {
@@ -80,13 +79,8 @@ export const resolversSecurityMap = {
 
   "CertificationAuthorityLocalAccount.certificationAuthority":
     isAdminOrIsCertificationAuthorityAccountOrLocalAccountStructureMember,
-  "CertificationAuthorityLocalAccount.account": [
-    hasRole([
-      "admin",
-      "manage_feasibility",
-      "manage_certification_authority_local_account",
-    ]),
-  ],
+  "CertificationAuthorityLocalAccount.account":
+    isAdminOrCertificationAuthorityLocalAccountManagerOrCertificationAuthorityLocalAccountOwner,
 
   "Certification.certificationAuthorityStructure": isAnyone,
 
@@ -104,6 +98,4 @@ export const resolversSecurityMap = {
 
   "Mutation.certification_authority_updateParcoursForCertificationAndCertificationAuthority":
     isAdminOrCertificationAuthorityOwner,
-  "Candidacy.isCandidacyCertificationAuthorityUpdatable":
-    isOwnerOrCanManageCandidacy,
 };
