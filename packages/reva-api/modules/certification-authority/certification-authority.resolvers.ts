@@ -55,6 +55,7 @@ import { getLastProfessionalCguCertificateur } from "./features/getLastProfessio
 import { getMetabaseIframeUrl } from "./features/getMetabaseIframeUrl";
 import { getPaginatedCertifications } from "./features/getPaginatedCertifications";
 import { getParcoursForCertificationAndCertificationAuthority } from "./features/getParcoursForCertificationAndCertificationAuthority";
+import { isCandidacyCertificationAuthorityUpdatable } from "./features/isCandidacyCertificationAuthorityUpdatable";
 import { searchCertificationAuthoritiesAndLocalAccounts } from "./features/searchCertificationAuthoritiesAndLocalAccounts";
 import { transferCandidacyToAnotherCertificationAuthority } from "./features/transferCandidacyToAnotherCertificationAuthority";
 import { transferCandidacyToCertificationAuthorityLocalAccount } from "./features/transferCandidacyToCertificationAuthorityLocalAccount";
@@ -86,6 +87,10 @@ const unsafeResolvers = {
       getCandidacyCertificationAuthorityLocalAccounts({ candidacyId }),
     certificationAuthority: ({ id: candidacyId }: Candidacy) =>
       getCertificationAuthorityByCandidacyId({ candidacyId }),
+    isCandidacyCertificationAuthorityUpdatable: ({
+      id: candidacyId,
+    }: Candidacy) =>
+      isCandidacyCertificationAuthorityUpdatable({ candidacyId }),
   },
   CertificationAuthority: {
     departments: (parent: CertificationAuthority) =>

@@ -1,7 +1,5 @@
-import {
-  getActiveFeasibilityByCandidacyid,
-  getCertificationAuthorities,
-} from "@/modules/feasibility/feasibility.features";
+import { isCandidacyCertificationAuthorityUpdatable } from "@/modules/certification-authority/features/isCandidacyCertificationAuthorityUpdatable";
+import { getCertificationAuthorities } from "@/modules/feasibility/feasibility.features";
 import { prismaClient } from "@/prisma/client";
 
 import { getCandidacy } from "./getCandidacy";
@@ -21,16 +19,10 @@ export const refreshCertificationAuthorityOfCandidacy = async ({
     throw new Error("Candidature non trouvée");
   }
 
-  const feasibility = await getActiveFeasibilityByCandidacyid({ candidacyId });
-
-  const feasibilityDecisionAsString = feasibility?.decision || "";
-
-  const certificationAuthorityUpdatable = ![
-    "PENDING",
-    "REJECTED",
-    "ADMISSIBLE",
-    "COMPLETE",
-  ].includes(feasibilityDecisionAsString);
+  const certificationAuthorityUpdatable =
+    await isCandidacyCertificationAuthorityUpdatable({
+      candidacyId,
+    });
 
   if (certificationAuthorityUpdatable) {
     let newCertificationAuthority = null;

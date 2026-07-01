@@ -197,6 +197,7 @@ type CandidacyCertificationAuthorityLocalAccount {
 type Candidacy {
   certificationAuthorityLocalAccounts: [CandidacyCertificationAuthorityLocalAccount!]!
   certificationAuthority: CertificationAuthority
+  isCandidacyCertificationAuthorityUpdatable: Boolean!
 }
 
 type Query {

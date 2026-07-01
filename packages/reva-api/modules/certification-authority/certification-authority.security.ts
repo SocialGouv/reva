@@ -12,6 +12,7 @@ import {
   isAdminOrIsCertificationAuthorityStructureRegistryManagerMember,
   isAdminOrManager,
   isAnyone,
+  isOwnerOrCanManageCandidacy,
 } from "@/modules/shared/security/presets";
 
 export const resolversSecurityMap = {
@@ -103,4 +104,6 @@ export const resolversSecurityMap = {
 
   "Mutation.certification_authority_updateParcoursForCertificationAndCertificationAuthority":
     isAdminOrCertificationAuthorityOwner,
+  "Candidacy.isCandidacyCertificationAuthorityUpdatable":
+    isOwnerOrCanManageCandidacy,
 };
