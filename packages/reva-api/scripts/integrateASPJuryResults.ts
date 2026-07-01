@@ -46,7 +46,7 @@ const main = async () => {
     return;
   }
 
-  await applyJuryResults(candidacies, duplicatedCandidacyIds);
+  await applyJuryResults(candidacies);
 };
 
 const dryRun = async (
@@ -190,9 +190,15 @@ const dryRun = async (
     ...candidacyIdsWithOnlyInactiveJuries,
     ...candidacyIdsWithoutActiveDossierDeValidation,
   ]);
+  const ignoredRowsCount = duplicatedRowsCount + candidacyIdsIgnored.size;
   const juriesToCreateCount =
     candidaciesToAnalyze.length - candidacyIdsIgnored.size;
 
+  console.log("");
+  console.log(`Total ignoré: ${ignoredRowsCount} ligne(s).`);
+  console.log(
+    `Total à créer: ${juriesToCreateCount} jury(s) et ${juriesToCreateCount} log(s) admin.`,
+  );
   console.log("");
   console.log(
     `${duplicatedRowsCount} ligne(s) avec candidacy_id en doublon seront ignorée(s).`,
@@ -217,10 +223,7 @@ const dryRun = async (
   );
 };
 
-const applyJuryResults = async (
-  candidacies: ASPJuryResult[],
-  duplicatedCandidacyIds: Set<string>,
-) => {
+const applyJuryResults = async (candidacies: ASPJuryResult[]) => {
   const adminKeycloakId = process.env.ASP_IMPORT_ADMIN_KEYCLOAK_ID;
   const adminEmail = process.env.ASP_IMPORT_ADMIN_EMAIL;
 
@@ -232,12 +235,6 @@ const applyJuryResults = async (
 
   console.log(
     `APPLY: ${candidacies.length} ligne(s) de résultats ASP à traiter`,
-  );
-  const duplicatedRowsCount = candidacies.filter((candidacy) =>
-    duplicatedCandidacyIds.has(candidacy.candidacy_id),
-  ).length;
-  console.log(
-    `${duplicatedRowsCount} ligne(s) avec candidacy_id en doublon seront ignorée(s).`,
   );
 
   const result = await prismaClient.$transaction(async (tx) => {
@@ -397,6 +394,10 @@ const applyJuryResults = async (
     return result;
   });
 
+  const ignoredRowsCount =
+    Number(result.json_rows_count) - Number(result.inserted_juries_count);
+
+  console.log(`Lignes ignorées: ${ignoredRowsCount}`);
   console.log(`Jurys à créer: ${Number(result.expected_juries_count)}`);
   console.log(`Jurys créés: ${Number(result.inserted_juries_count)}`);
   console.log(`Logs admin créés: ${Number(result.inserted_logs_count)}`);
