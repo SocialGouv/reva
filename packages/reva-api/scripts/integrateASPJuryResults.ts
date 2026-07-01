@@ -1,10 +1,22 @@
 import { readFileSync } from "fs";
 import path from "path";
 
-import { parse } from "date-fns";
+import { Prisma } from "@prisma/client";
 
-import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { prismaClient } from "@/prisma/client";
+
+type ASPJuryResult = {
+  candidacy_id: string;
+  "resultat fvae": string;
+  date_convocation_jury_plenier: string;
+  date_passage_jury_plenier: string;
+};
+
+type ApplyResult = {
+  source_count: bigint;
+  inserted_juries_count: bigint;
+  inserted_logs_count: bigint;
+};
 
 const main = async () => {
   const apply = process.argv.includes("--apply");
@@ -13,78 +25,17 @@ const main = async () => {
     "utf8",
   );
 
-  const candidacies = JSON.parse(candidaciesFile);
+  const candidacies: ASPJuryResult[] = JSON.parse(candidaciesFile);
 
   if (!apply) {
     await dryRun(candidacies);
     return;
   }
 
-  for (const candidacy of candidacies) {
-    try {
-      console.log(`Processing candidacy ${candidacy.candidacy_id}`);
-
-      const juryResult = candidacy["resultat fvae"];
-      await prismaClient.jury.create({
-        data: {
-          candidacyId: candidacy.candidacy_id as string,
-          result: juryResult,
-          isResultTemporary: true,
-          certificationAuthorityId: "<CERTIFICATION_AUTHORITY_ID>",
-          dateOfSession: parse(
-            candidacy.date_convocation_jury_plenier,
-            "dd/MM/yyyy",
-            new Date(),
-          ),
-          dateOfResult: parse(
-            candidacy.date_passage_jury_plenier,
-            "dd/MM/yyyy",
-            new Date(),
-          ),
-          isActive: true,
-        },
-      });
-
-      await logCandidacyAuditEvent({
-        candidacyId: candidacy.candidacy_id as string,
-        tx: prismaClient,
-        eventType: "JURY_RESULT_UPDATED",
-        details: {
-          result: juryResult,
-        },
-        userKeycloakId: "<KEYCLOAK_ID>",
-        userEmail: "<EMAIL>",
-        userRoles: ["admin"],
-      });
-
-      const juries = await prismaClient.jury.findMany({
-        where: {
-          candidacyId: candidacy.candidacy_id as string,
-          isActive: true,
-        },
-        orderBy: {
-          createdAt: "asc",
-        },
-      });
-
-      if (juries.length > 1) {
-        console.log(
-          `Multiple juries found for candidacy ${candidacy.candidacy_id}`,
-        );
-        await prismaClient.jury.update({
-          where: { id: juries[0].id },
-          data: { isActive: false },
-        });
-      }
-    } catch (error) {
-      console.error(
-        `Error processing candidacy ${candidacy.candidacy_id}: ${error}`,
-      );
-    }
-  }
+  await applyJuryResults(candidacies);
 };
 
-const dryRun = async (candidacies: { candidacy_id: string }[]) => {
+const dryRun = async (candidacies: ASPJuryResult[]) => {
   const missingCandidacyIds: string[] = [];
   const candidacyIdsWithActiveJury: string[] = [];
   const candidacyIdsWithActiveJuryWithResult: string[] = [];
@@ -218,6 +169,119 @@ const dryRun = async (candidacies: { candidacy_id: string }[]) => {
   console.log(
     `Relancer avec --apply pour écrire ${candidacyIdsToWrite} candidature(s).`,
   );
+};
+
+const applyJuryResults = async (candidacies: ASPJuryResult[]) => {
+  const adminKeycloakId = process.env.ASP_IMPORT_ADMIN_KEYCLOAK_ID;
+  const adminEmail = process.env.ASP_IMPORT_ADMIN_EMAIL;
+
+  if (!adminKeycloakId || !adminEmail) {
+    throw new Error(
+      "ASP_IMPORT_ADMIN_KEYCLOAK_ID et ASP_IMPORT_ADMIN_EMAIL sont requis pour --apply.",
+    );
+  }
+
+  console.log(`APPLY: ${candidacies.length} résultats ASP à intégrer`);
+
+  const [result] = await prismaClient.$transaction(async (tx) =>
+    tx.$queryRaw<ApplyResult[]>(Prisma.sql`
+      WITH source AS (
+        SELECT *
+        FROM jsonb_to_recordset(${JSON.stringify(candidacies)}::jsonb) AS s(
+          candidacy_id uuid,
+          "resultat fvae" text,
+          date_convocation_jury_plenier text,
+          date_passage_jury_plenier text
+        )
+      ),
+      data AS (
+        SELECT DISTINCT ON (candidacy_id)
+          candidacy_id,
+          "resultat fvae" AS result,
+          to_date(date_convocation_jury_plenier, 'DD/MM/YYYY')::timestamptz AS date_of_session,
+          CASE
+            WHEN NULLIF(date_passage_jury_plenier, '') IS NULL THEN NULL
+            ELSE to_date(date_passage_jury_plenier, 'DD/MM/YYYY')::timestamptz
+          END AS date_of_result
+        FROM source
+      ),
+      target AS (
+        SELECT DISTINCT ON (data.candidacy_id)
+          data.candidacy_id,
+          data.result,
+          data.date_of_session,
+          data.date_of_result,
+          dossier_de_validation.certification_authority_id
+        FROM data
+        JOIN candidacy ON candidacy.id = data.candidacy_id
+        JOIN dossier_de_validation
+          ON dossier_de_validation.candidacy_id = data.candidacy_id
+          AND dossier_de_validation.is_active = true
+        ORDER BY data.candidacy_id, dossier_de_validation.created_at DESC
+      ),
+      inserted_juries AS (
+        INSERT INTO jury (
+          candidacy_id,
+          certification_authority_id,
+          result,
+          date_of_session,
+          date_of_result,
+          is_active,
+          is_result_temporary,
+          created_at,
+          updated_at
+        )
+        SELECT
+          target.candidacy_id,
+          target.certification_authority_id,
+          target.result,
+          target.date_of_session,
+          target.date_of_result,
+          true,
+          false,
+          now(),
+          now()
+        FROM target
+        WHERE NOT EXISTS (
+          SELECT 1
+          FROM jury
+          WHERE jury.candidacy_id = target.candidacy_id
+        )
+        RETURNING candidacy_id
+      ),
+      inserted_logs AS (
+        INSERT INTO candidacy_log (
+          user_keycloak_id,
+          user_email,
+          user_profile,
+          candidacy_id,
+          event_type,
+          details,
+          created_at,
+          updated_at
+        )
+        SELECT
+          ${adminKeycloakId}::uuid,
+          ${adminEmail},
+          'ADMIN',
+          candidacy_id,
+          'ADMIN_CUSTOM_ACTION',
+          jsonb_build_object('message', 'Ajout des informations de jury via le batch ASP'),
+          now(),
+          now()
+        FROM inserted_juries
+        RETURNING candidacy_id
+      )
+      SELECT
+        (SELECT COUNT(*) FROM source) AS source_count,
+        (SELECT COUNT(*) FROM inserted_juries) AS inserted_juries_count,
+        (SELECT COUNT(*) FROM inserted_logs) AS inserted_logs_count
+    `),
+  );
+
+  console.log(`Résultats ASP lus: ${Number(result.source_count)}`);
+  console.log(`Jurys insérés: ${Number(result.inserted_juries_count)}`);
+  console.log(`Logs admin insérés: ${Number(result.inserted_logs_count)}`);
 };
 
 const printDryRunResult = (label: string, candidacyIds: string[]) => {
