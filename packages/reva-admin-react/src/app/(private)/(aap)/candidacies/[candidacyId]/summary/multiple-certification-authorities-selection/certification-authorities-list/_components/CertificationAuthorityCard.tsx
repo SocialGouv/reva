@@ -5,14 +5,13 @@ export const CertificationAuthorityCard = ({
   label,
   contactEmail,
   contactPhone,
-  onClickHref,
   onClick,
 }: {
   label: string;
   contactEmail?: string | null;
   contactPhone?: string | null;
   onClickHref?: string;
-  onClick?: () => void;
+  onClick: () => void;
 }) => (
   <Card
     data-testid="certification-authority-card"
@@ -29,8 +28,6 @@ export const CertificationAuthorityCard = ({
       </span>
     }
     endDetail="Choisir"
-    enlargeLink
-    linkProps={{ href: onClickHref ?? "" }}
-    nativeDivProps={onClick ? { onClick } : undefined}
+    nativeDivProps={{ onClick }}
   />
 );
