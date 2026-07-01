@@ -116,18 +116,6 @@ test.describe("Multiple certification authorities list page", () => {
       await expect(page.getByText("0607080910")).toBeVisible();
     });
 
-    test("should lead me to the certification authority selection page when I click on a certification authority card", async ({
-      page,
-    }) => {
-      await goToCertificationAuthoritiesListPage(page);
-
-      await page.getByText("Autorité Certificatrice Alpha").click();
-
-      await expect(page).toHaveURL(
-        `/admin2/candidacies/${CANDIDACY_ID}/summary/multiple-certification-authorities-selection/certification-authorities-list/certification-authority-selection/cert-auth-1/`,
-      );
-    });
-
     test("should lead me back to the candidacy summary page when I click on the 'Retour' button", async ({
       page,
     }) => {
@@ -235,6 +223,51 @@ test.describe("Multiple certification authorities list page", () => {
       await expect(
         page.getByRole("heading", { name: "Aucun résultat trouvé" }),
       ).toBeVisible();
+    });
+  });
+
+  test.describe("when I click on a certification authority card", () => {
+    test.use({
+      mswHandlers: [
+        [
+          ...createCertificationAuthoritiesListHandlers([
+            {
+              id: "cert-auth-1",
+              label: "Autorité Certificatrice Alpha",
+              contactEmail: "alpha@example.com",
+              contactPhone: "0102030405",
+            },
+          ]),
+          ...aapCommonHandlers,
+          fvae.mutation(
+            "updateCertificationAuthorityForMultipleCertificationAuthoritiesListPage",
+            graphQLResolver({
+              candidacy_updateCertificationAuthority: {
+                id: CANDIDACY_ID,
+              },
+            }),
+          ),
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("should update the certification authority and redirect to the certification authority details page", async ({
+      page,
+    }) => {
+      await goToCertificationAuthoritiesListPage(page);
+
+      await page.getByText("Autorité Certificatrice Alpha").click();
+
+      await waitGraphQL(
+        page,
+        "updateCertificationAuthorityForMultipleCertificationAuthoritiesListPage",
+      );
+
+      await expect(page.getByTestId("toast-success")).toBeVisible();
+      await expect(page).toHaveURL(
+        `/admin2/candidacies/${CANDIDACY_ID}/summary/certification-authority-details/`,
+      );
     });
   });
 });

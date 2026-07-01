@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
@@ -21,6 +21,21 @@ const getCandidacyById = graphql(`
     }
   }
 `);
+
+const updateCertificationAuthorityMutation = graphql(`
+  mutation updateCertificationAuthorityForMultipleCertificationAuthoritiesListPage(
+    $candidacyId: UUID!
+    $certificationAuthorityId: UUID!
+  ) {
+    candidacy_updateCertificationAuthority(
+      candidacyId: $candidacyId
+      certificationAuthorityId: $certificationAuthorityId
+    ) {
+      id
+    }
+  }
+`);
+
 export const useMultipleCertificationAuthoritiesListPage = ({
   candidacyId,
   currentPage,
@@ -31,6 +46,27 @@ export const useMultipleCertificationAuthoritiesListPage = ({
   searchFilter: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
+
+  const updateCertificationAuthority = useMutation({
+    mutationFn: ({
+      certificationAuthorityId,
+    }: {
+      certificationAuthorityId: string;
+    }) =>
+      graphqlClient.request(updateCertificationAuthorityMutation, {
+        candidacyId,
+        certificationAuthorityId,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          candidacyId,
+          "getCandidacyForMultipleCertificationAuthoritiesListPage",
+        ],
+      });
+    },
+  });
 
   const {
     data: getCandidacyForMultipleCertificationAuthoritiesListPageResponse,
@@ -70,5 +106,6 @@ export const useMultipleCertificationAuthoritiesListPage = ({
 
   return {
     certificationAuthoritiesPage,
+    updateCertificationAuthority,
   };
 };

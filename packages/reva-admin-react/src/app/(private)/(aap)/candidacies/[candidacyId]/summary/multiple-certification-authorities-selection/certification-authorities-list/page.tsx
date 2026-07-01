@@ -1,9 +1,10 @@
 "use client";
 
 import Button from "@codegouvfr/react-dsfr/Button";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import { SearchList } from "@/components/search/search-list/SearchList";
+import { successToast, graphqlErrorToast } from "@/components/toast/toast";
 
 import { CertificationAuthorityCard } from "./_components/CertificationAuthorityCard";
 import { useMultipleCertificationAuthoritiesListPage } from "./multipleCertificationAuthoritiesList.hooks";
@@ -13,17 +14,37 @@ const MultipleCertificationAuthoritiesListPage = () => {
     candidacyId: string;
   }>();
 
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   const searchParamsPage = searchParams.get("page");
   const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
   const searchFilter = searchParams.get("search") ?? "";
 
-  const { certificationAuthoritiesPage } =
+  const { certificationAuthoritiesPage, updateCertificationAuthority } =
     useMultipleCertificationAuthoritiesListPage({
       candidacyId,
       currentPage,
       searchFilter,
     });
+
+  const handleUpdateCertificationAuthority = async ({
+    certificationAuthorityId,
+  }: {
+    certificationAuthorityId: string;
+  }) => {
+    try {
+      await updateCertificationAuthority.mutateAsync({
+        certificationAuthorityId,
+      });
+      successToast("Le certificateur a été mis à jour");
+      router.push(
+        `/candidacies/${candidacyId}/summary/certification-authority-details`,
+      );
+    } catch (error) {
+      graphqlErrorToast(error);
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -44,7 +65,11 @@ const MultipleCertificationAuthoritiesListPage = () => {
             label={certificationAuthority.label}
             contactEmail={certificationAuthority.contactEmail}
             contactPhone={certificationAuthority.contactPhone}
-            onClickHref={`/candidacies/${candidacyId}/summary/multiple-certification-authorities-selection/certification-authorities-list/certification-authority-selection/${certificationAuthority.id}`}
+            onClick={() =>
+              handleUpdateCertificationAuthority({
+                certificationAuthorityId: certificationAuthority.id,
+              })
+            }
           />
         )}
       </SearchList>
