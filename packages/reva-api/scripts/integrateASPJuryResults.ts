@@ -237,8 +237,9 @@ const applyJuryResults = async (candidacies: ASPJuryResult[]) => {
     `APPLY: ${candidacies.length} ligne(s) de résultats ASP à traiter`,
   );
 
-  const result = await prismaClient.$transaction(async (tx) => {
-    const [result] = await tx.$queryRaw<ApplyResult[]>(Prisma.sql`
+  const result = await prismaClient.$transaction(
+    async (tx) => {
+      const [result] = await tx.$queryRaw<ApplyResult[]>(Prisma.sql`
       WITH json_rows AS (
         SELECT *
         FROM jsonb_to_recordset(${JSON.stringify(candidacies)}::jsonb) AS s(
@@ -356,43 +357,45 @@ const applyJuryResults = async (candidacies: ASPJuryResult[]) => {
         (SELECT COUNT(*) FROM inserted_logs) AS inserted_logs_count
     `);
 
-    if (!result) {
-      throw new Error("L'import ASP n'a retourné aucun résultat.");
-    }
+      if (!result) {
+        throw new Error("L'import ASP n'a retourné aucun résultat.");
+      }
 
-    const expectedJuriesCount = Number(result.expected_juries_count);
-    const transactionJuriesCount = Number(result.inserted_juries_count);
-    const transactionLogsCount = Number(result.inserted_logs_count);
-    const jsonRowsCount = Number(result.json_rows_count);
-    const duplicatedCandidaciesCount = Number(
-      result.duplicated_candidacies_count,
-    );
-    const duplicatedRowsCount = Number(result.duplicated_rows_count);
-    const candidacyRowsToImportCount = Number(
-      result.candidacy_rows_to_import_count,
-    );
-
-    if (
-      jsonRowsCount - duplicatedRowsCount !== candidacyRowsToImportCount ||
-      transactionJuriesCount !== expectedJuriesCount ||
-      transactionLogsCount !== transactionJuriesCount
-    ) {
-      throw new Error(
-        [
-          "L'import ASP a échoué: les compteurs ne correspondent pas.",
-          `Lignes JSON lues: ${jsonRowsCount}`,
-          `Candidatures en doublon ignorées: ${duplicatedCandidaciesCount}`,
-          `Lignes ignorées car candidacy_id en doublon: ${duplicatedRowsCount}`,
-          `Lignes non dupliquées: ${candidacyRowsToImportCount}`,
-          `Jurys à créer: ${expectedJuriesCount}`,
-          `Jurys préparés dans la transaction: ${transactionJuriesCount}`,
-          `Logs admin préparés dans la transaction: ${transactionLogsCount}`,
-        ].join("\n"),
+      const expectedJuriesCount = Number(result.expected_juries_count);
+      const transactionJuriesCount = Number(result.inserted_juries_count);
+      const transactionLogsCount = Number(result.inserted_logs_count);
+      const jsonRowsCount = Number(result.json_rows_count);
+      const duplicatedCandidaciesCount = Number(
+        result.duplicated_candidacies_count,
       );
-    }
+      const duplicatedRowsCount = Number(result.duplicated_rows_count);
+      const candidacyRowsToImportCount = Number(
+        result.candidacy_rows_to_import_count,
+      );
 
-    return result;
-  });
+      if (
+        jsonRowsCount - duplicatedRowsCount !== candidacyRowsToImportCount ||
+        transactionJuriesCount !== expectedJuriesCount ||
+        transactionLogsCount !== transactionJuriesCount
+      ) {
+        throw new Error(
+          [
+            "L'import ASP a échoué: les compteurs ne correspondent pas.",
+            `Lignes JSON lues: ${jsonRowsCount}`,
+            `Candidatures en doublon ignorées: ${duplicatedCandidaciesCount}`,
+            `Lignes ignorées car candidacy_id en doublon: ${duplicatedRowsCount}`,
+            `Lignes non dupliquées: ${candidacyRowsToImportCount}`,
+            `Jurys à créer: ${expectedJuriesCount}`,
+            `Jurys préparés dans la transaction: ${transactionJuriesCount}`,
+            `Logs admin préparés dans la transaction: ${transactionLogsCount}`,
+          ].join("\n"),
+        );
+      }
+
+      return result;
+    },
+    { maxWait: 10_000, timeout: 60_000 },
+  );
 
   const ignoredRowsCount =
     Number(result.json_rows_count) - Number(result.inserted_juries_count);
