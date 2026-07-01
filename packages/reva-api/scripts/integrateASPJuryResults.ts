@@ -13,7 +13,9 @@ type ASPJuryResult = {
 };
 
 type ApplyResult = {
-  source_count: bigint;
+  json_rows_count: bigint;
+  unique_candidacy_rows_count: bigint;
+  expected_juries_count: bigint;
   inserted_juries_count: bigint;
   inserted_logs_count: bigint;
 };
@@ -26,16 +28,41 @@ const main = async () => {
   );
 
   const candidacies: ASPJuryResult[] = JSON.parse(candidaciesFile);
+  const uniqueCandidacyIds = new Set<string>();
+  const duplicatedCandidacyIds = new Set<string>();
+
+  for (const { candidacy_id } of candidacies) {
+    if (uniqueCandidacyIds.has(candidacy_id)) {
+      duplicatedCandidacyIds.add(candidacy_id);
+    }
+
+    uniqueCandidacyIds.add(candidacy_id);
+  }
+
+  if (apply && candidacies.length !== uniqueCandidacyIds.size) {
+    throw new Error(
+      [
+        "Incohérence dans le fichier: les compteurs ne correspondent pas.",
+        `Lignes JSON lues: ${candidacies.length}`,
+        `Candidatures uniques dans le fichier: ${uniqueCandidacyIds.size}`,
+        "Candidatures en doublon:",
+        ...duplicatedCandidacyIds,
+      ].join("\n"),
+    );
+  }
 
   if (!apply) {
-    await dryRun(candidacies);
+    await dryRun(candidacies, [...duplicatedCandidacyIds]);
     return;
   }
 
   await applyJuryResults(candidacies);
 };
 
-const dryRun = async (candidacies: ASPJuryResult[]) => {
+const dryRun = async (
+  candidacies: ASPJuryResult[],
+  duplicatedCandidacyIds: string[],
+) => {
   const missingCandidacyIds: string[] = [];
   const candidacyIdsWithActiveJury: string[] = [];
   const candidacyIdsWithActiveJuryWithResult: string[] = [];
@@ -44,9 +71,28 @@ const dryRun = async (candidacies: ASPJuryResult[]) => {
   const candidacyIdsWithOnlyInactiveJuriesAndResult: string[] = [];
   const candidacyIdsWithOnlyInactiveJuriesWithoutResult: string[] = [];
   const candidacyIdsWithoutActiveDossierDeValidation: string[] = [];
-  const candidacyIds = candidacies.map((candidacy) => candidacy.candidacy_id);
+  const candidaciesById = new Map(
+    candidacies.map((candidacy) => [candidacy.candidacy_id, candidacy]),
+  );
+  const uniqueCandidacies = [...candidaciesById.values()];
+  const candidacyIds = uniqueCandidacies.map(
+    (candidacy) => candidacy.candidacy_id,
+  );
 
-  console.log(`DRY RUN: ${candidacies.length} résultats ASP trouvés`);
+  console.log(
+    `DRY RUN: ${candidacies.length} ligne(s) de résultats ASP lue(s)`,
+  );
+
+  if (duplicatedCandidacyIds.length > 0) {
+    printDryRunResult(
+      "Candidatures en doublon dans le fichier",
+      duplicatedCandidacyIds,
+    );
+    console.log(
+      `Le dry run continue sur ${uniqueCandidacies.length} candidature(s) unique(s).`,
+    );
+  }
+
   console.log(
     "Chargement des candidatures, jurys et dossiers de validation actifs en base...",
   );
@@ -70,7 +116,7 @@ const dryRun = async (candidacies: ASPJuryResult[]) => {
 
   console.log(`${existingCandidacies.length} candidature(s) trouvée(s).`);
 
-  for (const candidacy of candidacies) {
+  for (const candidacy of uniqueCandidacies) {
     const existingCandidacy = existingCandidaciesById.get(
       candidacy.candidacy_id,
     );
@@ -148,7 +194,8 @@ const dryRun = async (candidacies: ASPJuryResult[]) => {
     ...candidacyIdsWithOnlyInactiveJuries,
     ...candidacyIdsWithoutActiveDossierDeValidation,
   ]);
-  const candidacyIdsToWrite = candidacies.length - candidacyIdsIgnored.size;
+  const juriesToCreateCount =
+    uniqueCandidacies.length - candidacyIdsIgnored.size;
 
   console.log("");
   console.log(
@@ -167,7 +214,7 @@ const dryRun = async (candidacies: ASPJuryResult[]) => {
     `${candidacyIdsWithoutActiveDossierDeValidation.length} candidature(s) sans dossier de validation actif seront ignorée(s).`,
   );
   console.log(
-    `Relancer avec --apply pour écrire ${candidacyIdsToWrite} candidature(s).`,
+    `Relancer avec --apply pour créer ${juriesToCreateCount} jury(s) et ${juriesToCreateCount} log(s) admin.`,
   );
 };
 
@@ -181,11 +228,13 @@ const applyJuryResults = async (candidacies: ASPJuryResult[]) => {
     );
   }
 
-  console.log(`APPLY: ${candidacies.length} résultats ASP à intégrer`);
+  console.log(
+    `APPLY: ${candidacies.length} ligne(s) de résultats ASP à traiter`,
+  );
 
-  const [result] = await prismaClient.$transaction(async (tx) =>
-    tx.$queryRaw<ApplyResult[]>(Prisma.sql`
-      WITH source AS (
+  const result = await prismaClient.$transaction(async (tx) => {
+    const [result] = await tx.$queryRaw<ApplyResult[]>(Prisma.sql`
+      WITH json_rows AS (
         SELECT *
         FROM jsonb_to_recordset(${JSON.stringify(candidacies)}::jsonb) AS s(
           candidacy_id uuid,
@@ -194,7 +243,7 @@ const applyJuryResults = async (candidacies: ASPJuryResult[]) => {
           date_passage_jury_plenier text
         )
       ),
-      data AS (
+      unique_candidacy_rows AS (
         SELECT DISTINCT ON (candidacy_id)
           candidacy_id,
           "resultat fvae" AS result,
@@ -203,21 +252,31 @@ const applyJuryResults = async (candidacies: ASPJuryResult[]) => {
             WHEN NULLIF(date_passage_jury_plenier, '') IS NULL THEN NULL
             ELSE to_date(date_passage_jury_plenier, 'DD/MM/YYYY')::timestamptz
           END AS date_of_result
-        FROM source
+        FROM json_rows
       ),
       target AS (
-        SELECT DISTINCT ON (data.candidacy_id)
-          data.candidacy_id,
-          data.result,
-          data.date_of_session,
-          data.date_of_result,
+        SELECT DISTINCT ON (unique_candidacy_rows.candidacy_id)
+          unique_candidacy_rows.candidacy_id,
+          unique_candidacy_rows.result,
+          unique_candidacy_rows.date_of_session,
+          unique_candidacy_rows.date_of_result,
           dossier_de_validation.certification_authority_id
-        FROM data
-        JOIN candidacy ON candidacy.id = data.candidacy_id
+        FROM unique_candidacy_rows
+        JOIN candidacy ON candidacy.id = unique_candidacy_rows.candidacy_id
         JOIN dossier_de_validation
-          ON dossier_de_validation.candidacy_id = data.candidacy_id
+          ON dossier_de_validation.candidacy_id = unique_candidacy_rows.candidacy_id
           AND dossier_de_validation.is_active = true
-        ORDER BY data.candidacy_id, dossier_de_validation.created_at DESC
+        ORDER BY unique_candidacy_rows.candidacy_id, dossier_de_validation.created_at DESC
+      ),
+      juries_to_insert AS (
+        SELECT target.*
+        FROM target
+        WHERE NOT EXISTS (
+          SELECT 1
+          FROM jury
+          WHERE jury.candidacy_id = target.candidacy_id
+        )
+        AND (SELECT COUNT(*) FROM json_rows) = (SELECT COUNT(*) FROM unique_candidacy_rows)
       ),
       inserted_juries AS (
         INSERT INTO jury (
@@ -241,12 +300,7 @@ const applyJuryResults = async (candidacies: ASPJuryResult[]) => {
           false,
           now(),
           now()
-        FROM target
-        WHERE NOT EXISTS (
-          SELECT 1
-          FROM jury
-          WHERE jury.candidacy_id = target.candidacy_id
-        )
+        FROM juries_to_insert AS target
         RETURNING candidacy_id
       ),
       inserted_logs AS (
@@ -273,15 +327,47 @@ const applyJuryResults = async (candidacies: ASPJuryResult[]) => {
         RETURNING candidacy_id
       )
       SELECT
-        (SELECT COUNT(*) FROM source) AS source_count,
+        (SELECT COUNT(*) FROM json_rows) AS json_rows_count,
+        (SELECT COUNT(*) FROM unique_candidacy_rows) AS unique_candidacy_rows_count,
+        (SELECT COUNT(*) FROM juries_to_insert) AS expected_juries_count,
         (SELECT COUNT(*) FROM inserted_juries) AS inserted_juries_count,
         (SELECT COUNT(*) FROM inserted_logs) AS inserted_logs_count
-    `),
-  );
+    `);
 
-  console.log(`Résultats ASP lus: ${Number(result.source_count)}`);
-  console.log(`Jurys insérés: ${Number(result.inserted_juries_count)}`);
-  console.log(`Logs admin insérés: ${Number(result.inserted_logs_count)}`);
+    if (!result) {
+      throw new Error("L'import ASP n'a retourné aucun résultat.");
+    }
+
+    const expectedJuriesCount = Number(result.expected_juries_count);
+    const transactionJuriesCount = Number(result.inserted_juries_count);
+    const transactionLogsCount = Number(result.inserted_logs_count);
+    const jsonRowsCount = Number(result.json_rows_count);
+    const uniqueCandidacyRowsCount = Number(result.unique_candidacy_rows_count);
+
+    if (
+      jsonRowsCount !== uniqueCandidacyRowsCount ||
+      transactionJuriesCount !== expectedJuriesCount ||
+      transactionLogsCount !== transactionJuriesCount
+    ) {
+      throw new Error(
+        [
+          "L'import ASP a échoué: les compteurs ne correspondent pas.",
+          `Lignes JSON lues: ${jsonRowsCount}`,
+          `Candidatures uniques dans le fichier: ${uniqueCandidacyRowsCount}`,
+          `Jurys à créer: ${expectedJuriesCount}`,
+          `Jurys préparés dans la transaction: ${transactionJuriesCount}`,
+          `Logs admin préparés dans la transaction: ${transactionLogsCount}`,
+        ].join("\n"),
+      );
+    }
+
+    return result;
+  });
+
+  console.log(`Jurys à créer: ${Number(result.expected_juries_count)}`);
+  console.log(`Jurys créés: ${Number(result.inserted_juries_count)}`);
+  console.log(`Logs admin créés: ${Number(result.inserted_logs_count)}`);
+  console.log("Import ASP terminé: les compteurs jurys/logs correspondent.");
 };
 
 const printDryRunResult = (label: string, candidacyIds: string[]) => {
