@@ -20,9 +20,11 @@ function createSummaryHandlers({
     label: CERTIFICATION_AUTHORITY_LABEL,
   },
   certificationAuthorities = [],
+  isCandidacyCertificationAuthorityUpdatable = false,
 }: {
   certificationAuthority?: { id: string; label: string } | null;
   certificationAuthorities?: { id: string }[];
+  isCandidacyCertificationAuthorityUpdatable?: boolean;
 } = {}) {
   return [
     fvae.query(
@@ -67,6 +69,7 @@ function createSummaryHandlers({
           feasibilityFormat: "DEMATERIALIZED",
           feasibility: null,
           certificationAuthority,
+          isCandidacyCertificationAuthorityUpdatable,
         },
       }),
     ),
@@ -135,6 +138,88 @@ test.describe("Certification authority card V2 (feature flag active)", () => {
       await expect(page).toHaveURL(
         `/admin2/candidacies/${CANDIDACY_ID}/summary/certification-authority-details/`,
       );
+    });
+  });
+
+  test.describe("with a certification authority, updatable, and multiple authorities available", () => {
+    test.use({
+      mswHandlers: [
+        [
+          ...createSummaryHandlers({
+            isCandidacyCertificationAuthorityUpdatable: true,
+            certificationAuthorities: [
+              { id: "cert-auth-1" },
+              { id: "cert-auth-2" },
+            ],
+          }),
+          ...aapCommonHandlers,
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("should display a 'Modifier' button instead of 'Consulter'", async ({
+      page,
+    }) => {
+      await login({ role: "aap", page });
+      await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/summary/`);
+      await Promise.all([
+        aapCommonWait(page),
+        waitGraphQL(page, "getCandidacySummaryById"),
+      ]);
+
+      const card = page.getByTestId("certification-authority-summary-card");
+      await expect(card.getByRole("button", { name: "Modifier" })).toBeVisible();
+      await expect(card.getByRole("button", { name: "Consulter" })).not.toBeVisible();
+    });
+
+    test("should lead to the certification authority details page when clicking 'Modifier'", async ({
+      page,
+    }) => {
+      await login({ role: "aap", page });
+      await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/summary/`);
+      await Promise.all([
+        aapCommonWait(page),
+        waitGraphQL(page, "getCandidacySummaryById"),
+      ]);
+
+      const modifierButton = page
+        .getByTestId("certification-authority-summary-card")
+        .getByRole("button", { name: "Modifier" });
+      await modifierButton.click();
+      await expect(page).toHaveURL(
+        `/admin2/candidacies/${CANDIDACY_ID}/summary/certification-authority-details/`,
+      );
+    });
+  });
+
+  test.describe("with a certification authority, updatable, but only one authority available", () => {
+    test.use({
+      mswHandlers: [
+        [
+          ...createSummaryHandlers({
+            isCandidacyCertificationAuthorityUpdatable: true,
+            certificationAuthorities: [{ id: "cert-auth-1" }],
+          }),
+          ...aapCommonHandlers,
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("should still display 'Consulter' when only one authority is available", async ({
+      page,
+    }) => {
+      await login({ role: "aap", page });
+      await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/summary/`);
+      await Promise.all([
+        aapCommonWait(page),
+        waitGraphQL(page, "getCandidacySummaryById"),
+      ]);
+
+      const card = page.getByTestId("certification-authority-summary-card");
+      await expect(card.getByRole("button", { name: "Consulter" })).toBeVisible();
+      await expect(card.getByRole("button", { name: "Modifier" })).not.toBeVisible();
     });
   });
 

@@ -120,6 +120,7 @@ const getCandidacyById = graphql(`
         id
         label
       }
+      isCandidacyCertificationAuthorityUpdatable
     }
   }
 `);

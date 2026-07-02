@@ -82,9 +82,12 @@ const CandidacySummaryPage = () => {
     let certificationAuthoritySummaryCardType: "empty" | "multiple" | "single" =
       "empty";
 
+    const multipleCertificationAuthoritiesAvailable =
+      candidacy.certificationAuthorities.length > 1;
+
     if (candidacy.certificationAuthority) {
       certificationAuthoritySummaryCardType = "single";
-    } else if (candidacy.certificationAuthorities.length > 1) {
+    } else if (multipleCertificationAuthoritiesAvailable) {
       certificationAuthoritySummaryCardType = "multiple";
     }
     switch (certificationAuthoritySummaryCardType) {
@@ -95,6 +98,10 @@ const CandidacySummaryPage = () => {
           <CertificationAuthoritySummaryCardV2
             label={candidacy.certificationAuthority?.label}
             viewCertificationAuthorityDetailsHref={`/candidacies/${candidacyId}/summary/certification-authority-details`}
+            isEditable={
+              candidacy.isCandidacyCertificationAuthorityUpdatable &&
+              multipleCertificationAuthoritiesAvailable
+            }
           />
         );
       case "multiple":
