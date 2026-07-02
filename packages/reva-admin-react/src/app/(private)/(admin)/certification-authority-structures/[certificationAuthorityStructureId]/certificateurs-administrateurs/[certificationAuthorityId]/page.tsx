@@ -49,7 +49,7 @@ const CertificationAuthorityAdminComponent = ({
 
   return (
     <div
-      className="flex flex-col flex-1"
+      className="flex flex-col flex-1 min-w-0"
       data-testid="certification-authority-admin-page"
     >
       <SettingsPageHeader
@@ -69,6 +69,22 @@ const CertificationAuthorityAdminComponent = ({
           />
         }
         title={certificationAuthority.label}
+        actions={
+          <>
+            <Impersonate accountId={certificationAuthority?.account?.id} />
+            <div>
+              <Button
+                priority="secondary"
+                linkProps={{
+                  href: candidaciesUrl,
+                  target: "_blank",
+                }}
+              >
+                Voir les candidatures
+              </Button>
+            </div>
+          </>
+        }
         chapo={
           <>
             Il s’occupe des candidatures (dossier de validation, jury...) et
@@ -77,21 +93,6 @@ const CertificationAuthorityAdminComponent = ({
           </>
         }
       />
-      <div className="flex justify-end items-start gap-4 w-full mb-4">
-        <Impersonate accountId={certificationAuthority?.account?.id} />
-
-        <div>
-          <Button
-            priority="secondary"
-            linkProps={{
-              href: candidaciesUrl,
-              target: "_blank",
-            }}
-          >
-            Voir les candidatures
-          </Button>
-        </div>
-      </div>
       <div className="flex flex-col gap-y-6">
         <GeneralInformationCard
           hrefPrefix={`/certification-authority-structures/${certificationAuthority.certificationAuthorityStructures[0].id}/certificateurs-administrateurs/${certificationAuthority.id}`}
