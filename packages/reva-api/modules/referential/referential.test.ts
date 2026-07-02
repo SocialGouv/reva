@@ -96,7 +96,7 @@ const particulierEmployeurCertifications = [
 /**
  * Test search certifications by a candidate
  */
-test("should have 208 certifications available in total", async () => {
+test("doit avoir au moins 208 certifications disponibles au total", async () => {
   const resp = await searchCertificationsForCandidate({});
   const obj = resp.json();
   expect(
@@ -108,7 +108,7 @@ test("should have 208 certifications available in total", async () => {
  * Test search certifications by an organism for reorientation purpose
  */
 
-test("should have only certifications handle by expertBranche", async () => {
+test("doit renvoyer uniquement les certifications gérées par un expertBranche", async () => {
   await createCertifications();
 
   const particulierEmployeur =
@@ -141,7 +141,7 @@ describe("VAE collective", () => {
   /**
    * Test search certifications by a candidate restricted by a VAE collective cohort
    */
-  test("should return all certifications when searching with a VAE collective cohort without any certification restriction", async () => {
+  test("doit renvoyer toutes les certifications lors d'une recherche avec une cohorte VAE collective sans restriction de certification", async () => {
     const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
 
     const candidacy = await createCandidacyHelper({
@@ -159,7 +159,7 @@ describe("VAE collective", () => {
   /**
    * Test search certifications by a candidate restricted by a VAE collective cohort
    */
-  test("should only return certifications available for the candidacy's VAE collective cohort", async () => {
+  test("doit renvoyer uniquement les certifications disponibles pour la cohorte VAE collective de la candidature", async () => {
     const certificationVaeCollective = await createCertificationHelper();
     const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
       certificationCohorteVaeCollectives: {
@@ -180,7 +180,7 @@ describe("VAE collective", () => {
   /**
    * Test search certifications with a cohorte VAE collective ID filter
    */
-  test("should only return certifications available for the VAE collective cohort", async () => {
+  test("doit renvoyer uniquement les certifications disponibles pour la cohorte VAE collective", async () => {
     const certificationVaeCollective = await createCertificationHelper();
     const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
       certificationCohorteVaeCollectives: {
@@ -197,7 +197,7 @@ describe("VAE collective", () => {
 });
 
 describe("Parcours certification", () => {
-  test("should return all parcours certifications for a certification and only those parcours", async () => {
+  test("doit renvoyer tous les parcours d'une certification et uniquement ces parcours", async () => {
     const certification = await createCertificationHelper();
     const parcoursCertification = await createParcoursCertificationHelper({
       certificationId: certification.id,
@@ -212,7 +212,7 @@ describe("Parcours certification", () => {
     ]);
   });
 
-  test("should return all parcours certifications for a certification matching the search filter", async () => {
+  test("doit renvoyer tous les parcours d'une certification correspondant au filtre de recherche", async () => {
     const certification = await createCertificationHelper();
     const parcoursCertification = await createParcoursCertificationHelper({
       certificationId: certification.id,
@@ -238,7 +238,7 @@ describe("Parcours certification", () => {
     ]);
   });
 
-  test("should not return a certification if it has parcours but no certification authority is linked", async () => {
+  test("ne doit pas renvoyer une certification si elle a des parcours mais aucune autorité de certification rattachée", async () => {
     const certification = await createCertificationHelper({
       label: "Certif without authority",
     });
@@ -253,7 +253,7 @@ describe("Parcours certification", () => {
     expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(0);
   });
 
-  test("should return a certification if it has parcours and a certification authority is linked to at least one parcours", async () => {
+  test("doit renvoyer une certification si elle a des parcours et qu'une autorité de certification est rattachée à au moins un parcours", async () => {
     const certificationWithAuthority = await createCertificationHelper({
       label: "Certif with authority and parcours",
     });
@@ -279,5 +279,61 @@ describe("Parcours certification", () => {
     });
     const obj = resp.json();
     expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(1);
+  });
+
+  test("doit renvoyer une certification trouvée uniquement via son rncpObjectifsContexte (Résumé du métier)", async () => {
+    const certification = await createCertificationHelper({
+      label: "Certif sans le mot distinctif dans le titre",
+      rncpObjectifsContexte: "zephyrologie",
+    });
+    const parcoursCertification = await createParcoursCertificationHelper({
+      certificationId: certification.id,
+    });
+    await createCertificationAuthorityHelper({
+      certificationAuthorityOnCertification: {
+        create: {
+          certificationId: certification.id,
+          certificationAuthorityOnCertificationOnParcoursCertifications: {
+            create: {
+              parcoursCertificationId: parcoursCertification.id,
+            },
+          },
+        },
+      },
+    });
+
+    const resp = await searchCertificationsForCandidate({
+      searchText: "zephyrologie",
+    });
+    const obj = resp.json();
+    expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(1);
+  });
+
+  test("ne doit pas renvoyer de certification pour un mot absent du titre et du rncpObjectifsContexte", async () => {
+    const certification = await createCertificationHelper({
+      label: "Certif sans le mot distinctif dans le titre",
+      rncpObjectifsContexte: "zephyrologie",
+    });
+    const parcoursCertification = await createParcoursCertificationHelper({
+      certificationId: certification.id,
+    });
+    await createCertificationAuthorityHelper({
+      certificationAuthorityOnCertification: {
+        create: {
+          certificationId: certification.id,
+          certificationAuthorityOnCertificationOnParcoursCertifications: {
+            create: {
+              parcoursCertificationId: parcoursCertification.id,
+            },
+          },
+        },
+      },
+    });
+
+    const resp = await searchCertificationsForCandidate({
+      searchText: "hydrospeleologie",
+    });
+    const obj = resp.json();
+    expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(0);
   });
 });
