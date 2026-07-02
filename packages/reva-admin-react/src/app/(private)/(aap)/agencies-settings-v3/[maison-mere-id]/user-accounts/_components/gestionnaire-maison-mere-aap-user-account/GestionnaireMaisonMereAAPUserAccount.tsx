@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { Impersonate } from "@/components/impersonate/Impersonate.component";
 import { graphqlErrorToast } from "@/components/toast/toast";
 
 import { DisableCompteCollaborateurAAPTile } from "../disable-compte-collaborateur-aap-tile/DisableCompteCollaborateurAAPTile";
@@ -17,10 +18,12 @@ export const GestionnaireMaisonMereAAPUserAccount = ({
   maisonMereAAPId,
   userAccountId,
   backUrl,
+  isAdmin,
 }: {
   maisonMereAAPId: string;
   userAccountId: string;
   backUrl: string;
+  isAdmin: boolean;
 }) => {
   const { userAccount, disableUserAccount } =
     useGestionnaireMaisonMereAAPUserAccount({
@@ -47,9 +50,13 @@ export const GestionnaireMaisonMereAAPUserAccount = ({
         currentPageLabel={`${userAccount?.lastname} ${userAccount?.firstname} `}
         maisonMereAAPId={maisonMereAAPId}
       />
-      <h1>
-        {userAccount?.lastname} {userAccount?.firstname}
-      </h1>
+
+      <div className="flex justify-between">
+        <h1>
+          {userAccount?.lastname} {userAccount?.firstname}
+        </h1>
+        {isAdmin && <Impersonate accountId={userAccount?.id} />}
+      </div>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">
         Le collaborateur ajouté recevra un mail pour finaliser son compte. Il

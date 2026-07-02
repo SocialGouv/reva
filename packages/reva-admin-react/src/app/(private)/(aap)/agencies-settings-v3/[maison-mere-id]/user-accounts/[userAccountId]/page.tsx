@@ -22,6 +22,7 @@ const UpdateUserAccountPage = () => {
       maisonMereAAPId={maisonMereAAPId}
       userAccountId={userAccountId}
       backUrl={backUrl}
+      isAdmin={isAdmin}
     />
   ) : null;
 };
