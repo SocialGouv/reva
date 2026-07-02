@@ -89,11 +89,9 @@ test.describe("local account settings general information page", () => {
         name: "Informations générales",
       }),
     ).toBeVisible();
-    await expect(
-      pageRoot.getByRole("note", {
-        name: "Informations sur les champs grisés",
-      }),
-    ).toBeVisible();
+    await expect(pageRoot).toContainText(
+      "Les champs grisés sont gérés par le gestionnaire de candidatures de votre structure",
+    );
     const certificationAuthorityInput =
       pageRoot.getByLabel("Gestionnaire de candidatures");
     await expect(certificationAuthorityInput).toHaveValue(
