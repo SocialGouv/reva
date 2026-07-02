@@ -18,6 +18,9 @@ const getCandidacyByIdForAddExperience = graphql(`
       candidacyDropOut {
         status
       }
+      certification {
+        codeRncp
+      }
     }
   }
 `);
