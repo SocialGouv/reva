@@ -4,10 +4,11 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
+import { getAdminCertificationAuthorityBreadcrumbSegments } from "@/components/certification-authority/settings-breadcrumb-segments/adminCertificationAuthorityBreadcrumbSegments";
 import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 import { graphqlErrorToast } from "@/components/toast/toast";
-
-import { CertificationAuthorityStructureBreadcrumb } from "../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 
 import { useCertificationsPage } from "./certifications.hooks";
 
@@ -93,24 +94,34 @@ const CertificationAuthorityCertificationsPage = () => {
   return (
     <div className="flex flex-col flex-1">
       <div className="flex flex-col">
-        <CertificationAuthorityStructureBreadcrumb
-          certificationAuthorityStructureId={certificationAuthorityStructureId}
-          certificationAuthorityStructureLabel={
-            certificationAuthority.certificationAuthorityStructures.find(
-              (s) => s.id === certificationAuthorityStructureId,
-            )?.label || "inconnu"
+        <SettingsPageHeader
+          breadcrumb={
+            <SettingsBreadcrumb
+              currentPageLabel="Certifications gérées"
+              homeLinkProps={{
+                href: `/`,
+              }}
+              segments={getAdminCertificationAuthorityBreadcrumbSegments({
+                certificationAuthorityStructureId,
+                certificationAuthorityStructureLabel:
+                  certificationAuthority.certificationAuthorityStructures.find(
+                    (s) => s.id === certificationAuthorityStructureId,
+                  )?.label || "inconnu",
+                certificationAuthorityId,
+                certificationAuthorityLabel: certificationAuthority.label,
+              })}
+            />
           }
-          certificationAuthorityId={certificationAuthorityId}
-          certificationAuthoritylabel={certificationAuthority.label}
-          pageLabel="Certifications gérées"
+          title="Certifications gérées"
+          chapo={
+            <>
+              Ajouter toutes les certifications gérées depuis les certifications
+              attribuées à la structure certificatrice. Vous pouvez ajouter une
+              certification en dehors de la structure en utilisant l’option
+              “afficher les certifications non gérées par la structure”.
+            </>
+          }
         />
-        <h1>Certifications gérées</h1>
-        <p className="text-xl">
-          Ajouter toutes les certifications gérées depuis les certifications
-          attribuées à la structure certificatrice. Vous pouvez ajouter une
-          certification en dehors de la structure en utilisant l’option
-          “afficher les certifications non gérées par la structure”.
-        </p>
         <MultiSelectList
           pageItems={certificationPage?.rows.map((c) => ({
             id: c.id,

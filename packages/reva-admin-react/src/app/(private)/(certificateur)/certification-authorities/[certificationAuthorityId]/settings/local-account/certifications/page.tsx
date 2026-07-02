@@ -1,8 +1,9 @@
 "use client";
-import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useParams, useSearchParams } from "next/navigation";
 
 import { SearchList } from "@/components/search/search-list/SearchList";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 
 import { GenericCertificationCard } from "./_components/GenericCertificationCard";
 import { useCertificationsLocalAccountPage } from "./certificationsLocalAccountPage.hook";
@@ -30,22 +31,29 @@ export default function CertificationsPage() {
       className="flex flex-col h-full"
       data-testid="certifications-local-account-page"
     >
-      <Breadcrumb
-        segments={[
-          {
-            label: "Paramètres",
-            linkProps: {
-              href: `/certification-authorities/${certificationAuthorityId}/settings/local-account`,
-            },
-          },
-        ]}
-        currentPageLabel="Certifications gérées"
+      <SettingsPageHeader
+        breadcrumb={
+          <SettingsBreadcrumb
+            segments={[
+              {
+                label: "Paramètres",
+                linkProps: {
+                  href: `/certification-authorities/${certificationAuthorityId}/settings/local-account`,
+                },
+              },
+            ]}
+            currentPageLabel="Certifications gérées"
+          />
+        }
+        title="Certifications gérées"
+        chapo={
+          <>
+            Toutes les certifications sélectionnées pour ce compte local. Pour
+            toute modification, rapprochez vous de votre gestionnaire de
+            candidatures.
+          </>
+        }
       />
-      <h1>Certifications gérées</h1>
-      <p className="mb-12">
-        Toutes les certifications sélectionnées pour ce compte local. Pour toute
-        modification, rapprochez vous de votre gestionnaire de candidatures.
-      </p>
       <SearchList
         searchResultsPage={certificationsPage}
         searchFilter={searchFilter}

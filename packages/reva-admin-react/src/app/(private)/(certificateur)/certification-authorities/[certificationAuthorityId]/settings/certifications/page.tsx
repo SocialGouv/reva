@@ -1,9 +1,10 @@
 "use client";
 
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useParams, useSearchParams } from "next/navigation";
 
 import { SearchList } from "@/components/search/search-list/SearchList";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 
 import { NoParcoursCertificationCard } from "./_components/NoParcoursCertificationCard";
 import { WithParcoursCertificationCard } from "./_components/WithParcoursCertificationCard";
@@ -30,23 +31,29 @@ const CertificationAuthorityCertificationsPage = () => {
   return (
     <div className="flex flex-col flex-1">
       <div className="flex flex-col">
-        <Breadcrumb
-          segments={[
-            {
-              label: "Paramètres",
-              linkProps: {
-                href: `/certification-authorities/${certificationAuthorityId}/settings/`,
-              },
-            },
-          ]}
-          currentPageLabel="Certifications gérées"
+        <SettingsPageHeader
+          breadcrumb={
+            <SettingsBreadcrumb
+              segments={[
+                {
+                  label: "Paramètres",
+                  linkProps: {
+                    href: `/certification-authorities/${certificationAuthorityId}/settings/`,
+                  },
+                },
+              ]}
+              currentPageLabel="Certifications gérées"
+            />
+          }
+          title="Certifications gérées"
+          chapo={
+            <>
+              Voici toutes les certifications sélectionnées pour ce compte
+              gestionnaire de candidatures. Pour toutes modifications,
+              rapprochez vous de l’administration de France VAE.
+            </>
+          }
         />
-        <h1>Certifications gérées</h1>
-        <p className="text-xl">
-          Voici toutes les certifications sélectionnées pour ce compte
-          gestionnaire de candidatures. Pour toutes modifications, rapprochez
-          vous de l’administration de France VAE.
-        </p>
         <SearchList
           searchResultsPage={certificationAndParcoursPage}
           searchFilter={searchFilter}

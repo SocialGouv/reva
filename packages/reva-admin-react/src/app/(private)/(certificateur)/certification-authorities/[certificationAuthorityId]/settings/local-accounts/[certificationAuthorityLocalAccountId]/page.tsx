@@ -1,6 +1,5 @@
 "use client";
 
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal/Modal";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
@@ -9,6 +8,8 @@ import { useParams, useRouter } from "next/navigation";
 import LocalAccountGeneralInformationSummaryCard from "@/components/certification-authority/local-account/summary-cards/general-information-card/LocalAccountGeneralInformationSummaryCard";
 import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { useUpdateLocalAccountPage } from "./updateLocalAccountPage.hook";
@@ -98,21 +99,23 @@ export default function UpdateLocalAccountPage() {
       >
         <p>Cette action est irréversible.</p>
       </deleteConfirmationModal.Component>
-      <Breadcrumb
-        segments={[
-          {
-            label: "Paramètres",
-            linkProps: {
-              href: `/certification-authorities/${certificationAuthorityId}/settings/`,
-            },
-          },
-        ]}
-        currentPageLabel={localAccountLabel}
+      <SettingsPageHeader
+        breadcrumb={
+          <SettingsBreadcrumb
+            segments={[
+              {
+                label: "Paramètres",
+                linkProps: {
+                  href: `/certification-authorities/${certificationAuthorityId}/settings/`,
+                },
+              },
+            ]}
+            currentPageLabel={localAccountLabel}
+          />
+        }
+        title={localAccountLabel}
+        chapo="Retrouvez l’ensemble des informations liées à ce compte local."
       />
-      <h1>{localAccountLabel}</h1>
-      <p className="mb-12">
-        Retrouvez l’ensemble des informations liées à ce compte local.
-      </p>
       <Button
         className="ml-auto mb-4"
         priority="tertiary no outline"

@@ -3,8 +3,9 @@
 import { useParams } from "next/navigation";
 
 import { CertificationAuthorityGeneralInfoForm } from "@/components/certification-authority/forms/certification-authority-general-info/CertificationAuthorityGeneralInfoForm";
-
-import { CertificationAuthorityStructureBreadcrumb } from "../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
+import { getAdminCertificationAuthorityBreadcrumbSegments } from "@/components/certification-authority/settings-breadcrumb-segments/adminCertificationAuthorityBreadcrumbSegments";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 
 import { useCertificationAuthority } from "./certificationAuthorityGeneralInfo.hooks";
 
@@ -25,23 +26,33 @@ const CertificationAuthorityGeneralInfoAdminPage = () => {
 
   return (
     <div className="flex flex-col flex-1">
-      <CertificationAuthorityStructureBreadcrumb
-        certificationAuthorityStructureId={certificationAuthorityStructureId}
-        certificationAuthorityStructureLabel={
-          certificationAuthority.certificationAuthorityStructures.find(
-            (s) => s.id === certificationAuthorityStructureId,
-          )?.label || "inconnu"
+      <SettingsPageHeader
+        breadcrumb={
+          <SettingsBreadcrumb
+            currentPageLabel="Informations générales"
+            homeLinkProps={{
+              href: `/`,
+            }}
+            segments={getAdminCertificationAuthorityBreadcrumbSegments({
+              certificationAuthorityStructureId,
+              certificationAuthorityStructureLabel:
+                certificationAuthority.certificationAuthorityStructures.find(
+                  (s) => s.id === certificationAuthorityStructureId,
+                )?.label || "inconnu",
+              certificationAuthorityId: certificationAuthority.id,
+              certificationAuthorityLabel: certificationAuthority.label,
+            })}
+          />
         }
-        certificationAuthoritylabel={certificationAuthority.label}
-        certificationAuthorityId={certificationAuthority.id}
-        pageLabel="Informations générales"
+        title="Informations générales"
+        showOptionalFieldsDisclaimer
+        chapo={
+          <>
+            Consultez les identifiants de connexion de votre compte et complétez
+            les coordonnées du contact référent de votre structure.
+          </>
+        }
       />
-      <h1 className="flex-1">Informations générales</h1>
-
-      <p className="text-xl">
-        Consultez les identifiants de connexion de votre compte et complétez les
-        coordonnées du contact référent de votre structure.
-      </p>
       <CertificationAuthorityGeneralInfoForm
         certificationAuthority={certificationAuthority}
         backUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}/`}

@@ -6,6 +6,7 @@ import Tag from "@codegouvfr/react-dsfr/Tag";
 import { useParams } from "next/navigation";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 
 import { useLocalAccountSettingsPage } from "./localAccountSettingsPage.hook";
 
@@ -41,12 +42,16 @@ export default function LocalAccountSettingsPage() {
 
   return (
     <div className="flex flex-col" data-testid="local-account-settings-page">
-      <h1>Paramètres</h1>
-      <p className="mb-12">
-        Retrouvez l'ensemble des informations liées à ce compte local. Pour
-        toute modification, rapprochez vous de votre gestionnaire de
-        candidatures.
-      </p>
+      <SettingsPageHeader
+        title="Paramètres"
+        chapo={
+          <>
+            Retrouvez l'ensemble des informations liées à ce compte local. Pour
+            toute modification, rapprochez vous de votre gestionnaire de
+            candidatures.
+          </>
+        }
+      />
       <div className="w-full flex flex-col gap-8">
         <EnhancedSectionCard
           data-testid="local-account-general-information-summary-card"

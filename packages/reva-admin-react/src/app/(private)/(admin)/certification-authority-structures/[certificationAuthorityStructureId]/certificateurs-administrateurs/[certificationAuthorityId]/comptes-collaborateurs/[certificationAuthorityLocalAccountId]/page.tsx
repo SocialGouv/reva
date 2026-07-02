@@ -6,12 +6,13 @@ import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { useParams, useRouter } from "next/navigation";
 
 import LocalAccountGeneraInformationCard from "@/components/certification-authority/local-account/summary-cards/general-information-card/LocalAccountGeneralInformationSummaryCard";
+import { getAdminCertificationAuthorityBreadcrumbSegments } from "@/components/certification-authority/settings-breadcrumb-segments/adminCertificationAuthorityBreadcrumbSegments";
 import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
 import { Impersonate } from "@/components/impersonate/Impersonate.component";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-
-import { CertificationAuthorityStructureBreadcrumb } from "../../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 
 import { useComptesCollaborateursPage } from "./comptesCollaborateurs.hooks";
 
@@ -89,33 +90,36 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
     >
       {certificationAuthorityLocalAccount && (
         <div className="flex flex-col">
-          <CertificationAuthorityStructureBreadcrumb
-            certificationAuthorityStructureId={
-              certificationAuthorityStructureId
+          <SettingsPageHeader
+            breadcrumb={
+              <SettingsBreadcrumb
+                currentPageLabel={
+                  certificationAuthorityLocalAccount.account.firstname +
+                  " " +
+                  certificationAuthorityLocalAccount.account.lastname
+                }
+                homeLinkProps={{
+                  href: `/`,
+                }}
+                segments={getAdminCertificationAuthorityBreadcrumbSegments({
+                  certificationAuthorityStructureId,
+                  certificationAuthorityStructureLabel:
+                    certificationAuthorityLocalAccount.certificationAuthority.certificationAuthorityStructures.find(
+                      (s) => s.id === certificationAuthorityStructureId,
+                    )?.label || "inconnu",
+                  certificationAuthorityId:
+                    certificationAuthorityLocalAccount.certificationAuthority
+                      .id,
+                  certificationAuthorityLabel:
+                    certificationAuthorityLocalAccount.certificationAuthority
+                      .label,
+                })}
+              />
             }
-            certificationAuthorityStructureLabel={
-              certificationAuthorityLocalAccount.certificationAuthority.certificationAuthorityStructures.find(
-                (s) => s.id === certificationAuthorityStructureId,
-              )?.label || "inconnu"
-            }
-            certificationAuthorityId={
-              certificationAuthorityLocalAccount.certificationAuthority.id
-            }
-            certificationAuthoritylabel={
-              certificationAuthorityLocalAccount.certificationAuthority.label
-            }
-            pageLabel={
-              certificationAuthorityLocalAccount.account.firstname +
-              " " +
-              certificationAuthorityLocalAccount.account.lastname
-            }
+            title={`${certificationAuthorityLocalAccount.account.firstname} ${certificationAuthorityLocalAccount.account.lastname}`}
+            chapo="Il s’occupe des candidatures (dossier de validation, jury...)"
           />
-          <div className="flex justify-between gap-4 w-full">
-            <h1 className="flex-1">
-              {certificationAuthorityLocalAccount.account.firstname}{" "}
-              {certificationAuthorityLocalAccount.account.lastname}
-            </h1>
-
+          <div className="flex justify-end items-start gap-4 w-full mb-4">
             <Impersonate
               accountId={certificationAuthorityLocalAccount?.account?.id}
             />
@@ -132,10 +136,6 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
               </Button>
             </div>
           </div>
-
-          <p className="text-xl mb-12">
-            Il s’occupe des candidatures (dossier de validation, jury...)
-          </p>
           <div className="flex flex-col gap-12">
             <deleteConfirmationModal.Component
               title="Vous allez supprimer ce compte."

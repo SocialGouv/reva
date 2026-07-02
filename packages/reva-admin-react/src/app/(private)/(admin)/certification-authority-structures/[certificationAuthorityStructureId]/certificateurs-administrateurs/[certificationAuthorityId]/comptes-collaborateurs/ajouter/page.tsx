@@ -1,11 +1,13 @@
 "use client";
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 import { AddCertificationAuthorityLocalAccountPageContent } from "@/components/certification-authority/local-account/add-local-account-page-content/AddCertificationAuthorityLocalAccountPageContent";
+import { getAdminCertificationAuthorityBreadcrumbSegments } from "@/components/certification-authority/settings-breadcrumb-segments/adminCertificationAuthorityBreadcrumbSegments";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 
 import { graphql } from "@/graphql/generated";
 
@@ -54,43 +56,35 @@ export default function AddLocalAccountPage() {
   });
 
   const certificationAuthorityStructureLabel =
-    data?.certification_authority_getCertificationAuthorityStructure?.label;
+    data?.certification_authority_getCertificationAuthorityStructure?.label ||
+    "";
 
   const certificationAuthorityLabel =
-    data?.certification_authority_getCertificationAuthority?.label;
+    data?.certification_authority_getCertificationAuthority?.label || "";
 
   return (
     <div
       className="flex flex-col w-full"
       data-testid="add-certification-authority-local-account-page"
     >
-      <Breadcrumb
-        segments={[
-          {
-            label: "Structures certificatrices",
-            linkProps: {
-              href: `/certification-authority-structures/`,
-            },
-          },
-          {
-            label: certificationAuthorityStructureLabel,
-            linkProps: {
-              href: `/certification-authority-structures/${certificationAuthorityStructureId}/`,
-            },
-          },
-          {
-            label: certificationAuthorityLabel,
-            linkProps: {
-              href: `/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/`,
-            },
-          },
-        ]}
-        currentPageLabel="Nouveau compte local"
+      <SettingsPageHeader
+        breadcrumb={
+          <SettingsBreadcrumb
+            currentPageLabel="Nouveau compte local"
+            homeLinkProps={{
+              href: `/`,
+            }}
+            segments={getAdminCertificationAuthorityBreadcrumbSegments({
+              certificationAuthorityStructureId,
+              certificationAuthorityStructureLabel,
+              certificationAuthorityId,
+              certificationAuthorityLabel,
+            })}
+          />
+        }
+        title="Nouveau compte local"
+        chapo="Retrouvez l’ensemble des informations liées à ce compte local."
       />
-      <h1>Nouveau compte local</h1>
-      <p className="mb-12">
-        Retrouvez l’ensemble des informations liées à ce compte local.
-      </p>
       <AddCertificationAuthorityLocalAccountPageContent
         generalInformationPageUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/comptes-collaborateurs/ajouter/informations-generales`}
       />

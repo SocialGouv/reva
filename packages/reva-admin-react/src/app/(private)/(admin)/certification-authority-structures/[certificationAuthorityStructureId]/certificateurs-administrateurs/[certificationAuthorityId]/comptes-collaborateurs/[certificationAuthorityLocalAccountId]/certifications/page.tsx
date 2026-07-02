@@ -3,11 +3,11 @@
 import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { getAdminCertificationAuthorityLocalAccountBreadcrumbSegments } from "@/components/certification-authority/settings-breadcrumb-segments/adminCertificationAuthorityBreadcrumbSegments";
 import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 import { graphqlErrorToast } from "@/components/toast/toast";
-
-import { AdminCertificationAuthorityLocalAccountBreadcrumb } from "../_components/admin-certification-authority-local-account-breadcrumb/AdminCertificationAuthorityLocalAccountBreadcrumb";
 
 import { useUpdateLocalAccountCertificationsPage } from "./updateLocalAccountCertificationsPage.hook";
 
@@ -90,34 +90,41 @@ export default function InterventionAreaPage() {
       className="flex flex-col h-full"
       data-testid="update-certification-authority-local-account-certifications-page"
     >
-      <AdminCertificationAuthorityLocalAccountBreadcrumb
-        certificationAuthorityStructureId={certificationAuthorityStructureId}
-        certificationAuthorityStructureLabel={
-          certificationAuthorityStructure?.label || ""
+      <SettingsPageHeader
+        breadcrumb={
+          <SettingsBreadcrumb
+            currentPageLabel="Certifications gérées"
+            homeLinkProps={{
+              href: `/`,
+            }}
+            segments={getAdminCertificationAuthorityLocalAccountBreadcrumbSegments(
+              {
+                certificationAuthorityStructureId,
+                certificationAuthorityStructureLabel:
+                  certificationAuthorityStructure?.label || "",
+                certificationAuthorityId,
+                certificationAuthorityLabel:
+                  certificationAuthorityLocalAccount?.certificationAuthority
+                    ?.label || "",
+                certificationAuthorityLocalAccountId,
+                certificationAuthorityLocalAccountLabel:
+                  certificationAuthorityLocalAccount?.account.firstname +
+                  " " +
+                  certificationAuthorityLocalAccount?.account.lastname,
+              },
+            )}
+          />
         }
-        certificationAuthorityId={certificationAuthorityId}
-        certificationAuthoritylabel={
-          certificationAuthorityLocalAccount?.certificationAuthority?.label ||
-          ""
+        title="Certifications gérées"
+        showOptionalFieldsDisclaimer
+        chapo={
+          <>
+            Cochez les certifications proposées par ce compte local. Vous pouvez
+            choisir une ou plusieurs certifications. Vous pourrez ajuster cette
+            sélection en tout temps.
+          </>
         }
-        certificationAuthorityLocalAccountId={
-          certificationAuthorityLocalAccountId
-        }
-        certificationAuthorityLocalAccountLabel={
-          certificationAuthorityLocalAccount?.account.firstname +
-          " " +
-          certificationAuthorityLocalAccount?.account.lastname
-        }
-        pageLabel="Certifications gérées"
       />
-
-      <h1>Certifications gérées</h1>
-      <FormOptionalFieldsDisclaimer />
-      <p className="mb-12">
-        Cochez les certifications proposées par ce compte local. Vous pouvez
-        choisir une ou plusieurs certifications. Vous pourrez ajuster cette
-        sélection en tout temps.
-      </p>
       <MultiSelectList
         pageItems={
           certificationPage?.rows.map((c) => ({
