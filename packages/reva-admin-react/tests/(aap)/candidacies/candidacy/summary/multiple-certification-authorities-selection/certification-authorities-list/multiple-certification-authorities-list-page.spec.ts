@@ -257,12 +257,14 @@ test.describe("Multiple certification authorities list page", () => {
     }) => {
       await goToCertificationAuthoritiesListPage(page);
 
-      await page.getByText("Autorité Certificatrice Alpha").click();
-
-      await waitGraphQL(
+      const mutationPromise = waitGraphQL(
         page,
         "updateCertificationAuthorityForMultipleCertificationAuthoritiesListPage",
       );
+
+      await page.getByText("Autorité Certificatrice Alpha").click();
+
+      await mutationPromise;
 
       await expect(page.getByTestId("toast-success")).toBeVisible();
       await expect(page).toHaveURL(
