@@ -7,11 +7,12 @@ import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { getCertificationAuthorityStructureBreadcrumbSegments } from "@/components/certification-authority/settings-breadcrumb-segments/adminCertificationAuthorityBreadcrumbSegments";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { sanitizedText } from "@/utils/input-sanitization";
-
-import { CertificationAuthorityStructureBreadcrumb } from "../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 
 import { useInformationGeneralesPage } from "./informationsGenerales.hooks";
 
@@ -75,21 +76,29 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
     <div className="flex flex-col flex-1">
       {certificationAuthorityStructure && (
         <div className="flex flex-col">
-          <CertificationAuthorityStructureBreadcrumb
-            certificationAuthorityStructureId={
-              certificationAuthorityStructureId
+          <SettingsPageHeader
+            breadcrumb={
+              <SettingsBreadcrumb
+                currentPageLabel="Informations générales"
+                homeLinkProps={{
+                  href: `/`,
+                }}
+                segments={getCertificationAuthorityStructureBreadcrumbSegments({
+                  certificationAuthorityStructureId,
+                  certificationAuthorityStructureLabel:
+                    certificationAuthorityStructure.label,
+                })}
+              />
             }
-            certificationAuthorityStructureLabel={
-              certificationAuthorityStructure.label
+            title="Informations générales"
+            chapo={
+              <>
+                Retrouvez ici les informations liées à la structure
+                certificatrice. Vous pouvez signaler un changement au support si
+                elles ne sont plus à jour.
+              </>
             }
-            pageLabel={"Informations générales"}
           />
-          <h1>Informations générales</h1>
-          <p className="text-xl">
-            Retrouvez ici les informations liées à la structure certificatrice.
-            Vous pouvez signaler un changement au support si elles ne sont plus
-            à jour.
-          </p>
           <form
             className="flex flex-col mt-4"
             onSubmit={handleFormSubmit}
