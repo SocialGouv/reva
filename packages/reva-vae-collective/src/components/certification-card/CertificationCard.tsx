@@ -13,10 +13,8 @@ export const CertificationCard = ({
       label: string;
     } | null;
     domains: {
-      children: {
-        id: string;
-        label: string;
-      }[];
+      id: string;
+      label: string;
     }[];
   };
   detailsHref: string;
@@ -28,17 +26,11 @@ export const CertificationCard = ({
     start={
       <div className="flex flex-col gap-2">
         <div className="flex gap-2">
-          {certification.domains.flatMap((d) =>
-            d.children.map((sd) => (
-              <Tag
-                key={sd.id}
-                small
-                className="text-dsfr-light-text-label-grey"
-              >
-                {sd.label}
-              </Tag>
-            )),
-          )}
+          {certification.domains.map((d) => (
+            <Tag key={d.id} small className="text-dsfr-light-text-label-grey">
+              {d.label}
+            </Tag>
+          ))}
         </div>
         <div className="flex items-center gap-1 text-xs text-dsfr-light-text-mention-grey">
           <span className="ri-verified-badge-line fr-icon--sm" />

@@ -31,10 +31,6 @@ const getCohorteCertificationsSelectionneesQuery = graphql(`
           domains {
             id
             label
-            children {
-              id
-              label
-            }
           }
         }
       }
