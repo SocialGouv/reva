@@ -66,7 +66,7 @@ export default function InterventionAreaPage() {
       <SettingsPageHeader
         breadcrumb={
           <SettingsBreadcrumb
-            currentPageLabel="Informations générales"
+            currentPageLabel="Zone d'intervention"
             homeLinkProps={{
               href: `/`,
             }}
