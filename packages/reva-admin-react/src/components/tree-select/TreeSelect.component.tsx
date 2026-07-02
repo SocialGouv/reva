@@ -11,7 +11,6 @@ import {
 import { TreeSelectItem } from "./TreeSelect.types";
 
 interface Props {
-  title: string;
   label: string;
   items: TreeSelectItem[];
   onClickSelectAll: (checked: boolean) => void;
@@ -25,7 +24,6 @@ interface Props {
 
 export const TreeSelect = (props: Props) => {
   const {
-    title,
     label,
     items,
     onClickSelectAll,
@@ -109,7 +107,6 @@ export const TreeSelect = (props: Props) => {
     <div
       className={`flex-1 flex flex-col gap-4 ${fullWidth ? "w-full" : "max-w-[450px]"}`}
     >
-      {title && <div>{title}</div>}
       <SearchBar
         renderInput={({ className, id, placeholder, type }) => (
           <input
