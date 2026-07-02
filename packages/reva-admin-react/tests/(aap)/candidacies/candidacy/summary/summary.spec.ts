@@ -155,20 +155,6 @@ for (const feasibilityFormat of [
         ],
       });
 
-      test("should display alert block when funding not available", async ({
-        page,
-      }) => {
-        await visitSummary({ page });
-        await Promise.all([
-          aapCommonWait(page),
-          waitGraphQL(page, "getCandidacySummaryById"),
-        ]);
-
-        await expect(
-          page.getByTestId("funding-request-not-available-alert"),
-        ).toBeVisible();
-      });
-
       test("should display a specific tag when funding not available", async ({
         page,
       }) => {
@@ -230,21 +216,6 @@ test.describe("Candidacy summary page", () => {
       [...createHandlers(), ...aapCommonHandlers],
       { scope: "test" },
     ],
-  });
-
-  test("should not display alert block when funding is available", async ({
-    page,
-  }) => {
-    await visitSummary({ page });
-    await Promise.all([
-      aapCommonWait(page),
-      waitGraphQL(page, "getCandidacySummaryById"),
-    ]);
-
-    await expect(page.getByTestId("candidate-information")).toBeVisible();
-    await expect(
-      page.getByTestId("funding-request-not-available-alert"),
-    ).not.toBeVisible();
   });
 
   test("should display editable candidate information and profile when feasibility is dematerialized", async ({

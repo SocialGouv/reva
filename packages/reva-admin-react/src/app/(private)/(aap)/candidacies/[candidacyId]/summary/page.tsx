@@ -1,6 +1,5 @@
 "use client";
 
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { toDate } from "date-fns";
 import { useParams } from "next/navigation";
@@ -67,8 +66,6 @@ const CandidacySummaryPage = () => {
     "highestDegree",
     "niveauDeFormationLePlusEleve",
   ]);
-
-  const showFundingAlert = candidacy.financeModule === "hors_plateforme";
 
   const isCandidateEditable =
     candidacy.feasibilityFormat === "DEMATERIALIZED" &&
@@ -144,25 +141,6 @@ const CandidacySummaryPage = () => {
           Vous pouvez compléter ou modifier ces informations jusqu'à l'envoi du
           dossier de faisabilité.
         </p>
-        {showFundingAlert && (
-          <Alert
-            data-testid="funding-request-not-available-alert"
-            severity="warning"
-            title="Ce parcours n’est plus finançable via France VAE "
-            description={
-              <div>
-                <p>
-                  En revanche, il peut en partie être financé par le Compte
-                  Personnel de Formation du candidat.
-                </p>
-                <p>
-                  Ce dernier peut consulter ses droits depuis la plateforme Mon
-                  Compte Formation.
-                </p>
-              </div>
-            }
-          />
-        )}
       </div>
       {!!candidate && (
         <>
