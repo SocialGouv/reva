@@ -104,7 +104,7 @@ export const FeasibilityTile = ({
 }: {
   feasibility: FeasibilityUseCandidateForDashboard;
   candidacyIsAutonome: boolean;
-  feasibilityFileResourceFirstRead: boolean;
+  feasibilityFileResourceFirstRead?: boolean;
 }) => {
   const router = useRouter();
 
