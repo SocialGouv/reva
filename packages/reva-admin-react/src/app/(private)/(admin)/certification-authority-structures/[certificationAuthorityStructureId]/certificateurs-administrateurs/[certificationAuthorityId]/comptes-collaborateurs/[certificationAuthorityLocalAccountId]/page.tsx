@@ -85,11 +85,11 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
 
   return (
     <div
-      className="flex flex-col flex-1"
+      className="flex flex-col flex-1 min-w-0"
       data-testid="update-certification-authority-local-account-page"
     >
       {certificationAuthorityLocalAccount && (
-        <div className="flex flex-col">
+        <div className="flex flex-col min-w-0">
           <SettingsPageHeader
             breadcrumb={
               <SettingsBreadcrumb
@@ -117,25 +117,26 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
               />
             }
             title={`${certificationAuthorityLocalAccount.account.firstname} ${certificationAuthorityLocalAccount.account.lastname}`}
+            actions={
+              <>
+                <Impersonate
+                  accountId={certificationAuthorityLocalAccount?.account?.id}
+                />
+                <div>
+                  <Button
+                    priority="secondary"
+                    linkProps={{
+                      href: candidaciesUrl,
+                      target: "_blank",
+                    }}
+                  >
+                    Voir les candidatures
+                  </Button>
+                </div>
+              </>
+            }
             chapo="Il s’occupe des candidatures (dossier de validation, jury...)"
           />
-          <div className="flex justify-end items-start gap-4 w-full mb-4">
-            <Impersonate
-              accountId={certificationAuthorityLocalAccount?.account?.id}
-            />
-
-            <div>
-              <Button
-                priority="secondary"
-                linkProps={{
-                  href: candidaciesUrl,
-                  target: "_blank",
-                }}
-              >
-                Voir les candidatures
-              </Button>
-            </div>
-          </div>
           <div className="flex flex-col gap-12">
             <deleteConfirmationModal.Component
               title="Vous allez supprimer ce compte."
