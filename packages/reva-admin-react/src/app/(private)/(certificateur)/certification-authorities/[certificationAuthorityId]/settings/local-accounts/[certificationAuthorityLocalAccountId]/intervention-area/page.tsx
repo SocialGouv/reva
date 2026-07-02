@@ -1,11 +1,11 @@
 "use client";
 
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useParams, useRouter } from "next/navigation";
 
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { InterventionAreaForm } from "@/components/intervention-area-form/InterventionAreaForm";
 import { InterventionAreaFormData } from "@/components/intervention-area-form/InterventionAreaForm.hook";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { useUpdateLocalAccountInterventionAreaPage } from "./updateLocalAccountInterventionAreaPage.hook";
@@ -55,26 +55,30 @@ export default function InterventionAreaPage() {
       className="flex flex-col h-full"
       data-testid="update-certification-authority-local-account-intervention-area-page"
     >
-      <Breadcrumb
-        segments={[
-          {
-            label: "Paramètres",
-            linkProps: {
-              href: `/certification-authorities/${certificationAuthorityId}/settings/`,
-            },
-          },
-          {
-            label: `${certificationAuthorityLocalAccount?.account.firstname} ${certificationAuthorityLocalAccount?.account.lastname}`,
-            linkProps: {
-              href: `/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
-            },
-          },
-        ]}
-        currentPageLabel="Zone d'intervention"
+      <SettingsPageHeader
+        breadcrumb={
+          <SettingsBreadcrumb
+            segments={[
+              {
+                label: "Paramètres",
+                linkProps: {
+                  href: `/certification-authorities/${certificationAuthorityId}/settings/`,
+                },
+              },
+              {
+                label: `${certificationAuthorityLocalAccount?.account.firstname} ${certificationAuthorityLocalAccount?.account.lastname}`,
+                linkProps: {
+                  href: `/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
+                },
+              },
+            ]}
+            currentPageLabel="Zone d'intervention"
+          />
+        }
+        title="Zone d’intervention"
+        showOptionalFieldsDisclaimer
+        chapo="Cocher les régions ou départements gérés."
       />
-      <h1>Zone d’intervention</h1>
-      <FormOptionalFieldsDisclaimer />
-      <p className="mb-12">Cocher les régions ou départements gérés.</p>
       <InterventionAreaForm
         backUrl={`/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}`}
         entityDepartments={

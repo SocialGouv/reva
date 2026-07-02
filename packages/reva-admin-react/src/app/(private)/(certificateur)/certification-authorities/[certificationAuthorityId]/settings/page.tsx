@@ -6,6 +6,7 @@ import { CertificationAuthorityLocalAccountsSummaryCard } from "@/components/cer
 import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 import GeneralInformationCard from "@/components/certification-authority/summary-cards/general-information-card/GeneralInformationCard";
 import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 
 import { useCertificationAuthoritySettings } from "./certificationAuthoritySettingsPage.hook";
 
@@ -29,12 +30,16 @@ export default function CertificationAuthoritySettingsPage() {
       className="flex flex-col"
       data-testid="certification-authority-settings-page"
     >
-      <h1>Paramètres</h1>
-      <p className="mb-12">
-        Accédez à toutes les informations liées au suivi de vos candidatures et
-        à l'administration des comptes locaux associés, pour une gestion
-        optimale et simplifiée de vos candidatures.
-      </p>
+      <SettingsPageHeader
+        title="Paramètres"
+        chapo={
+          <>
+            Accédez à toutes les informations liées au suivi de vos candidatures
+            et à l'administration des comptes locaux associés, pour une gestion
+            optimale et simplifiée de vos candidatures.
+          </>
+        }
+      />
       <div className="flex flex-col gap-y-6">
         <GeneralInformationCard
           hrefPrefix={`/certification-authorities/${certificationAuthorityId}/settings`}

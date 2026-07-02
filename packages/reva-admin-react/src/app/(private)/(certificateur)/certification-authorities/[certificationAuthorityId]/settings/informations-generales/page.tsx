@@ -2,6 +2,7 @@
 import { useParams } from "next/navigation";
 
 import { CertificationAuthorityGeneralInfoForm } from "@/components/certification-authority/forms/certification-authority-general-info/CertificationAuthorityGeneralInfoForm";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 
 import { useCertificationAuthority } from "./certificationAuthorityGeneralInfo.hooks";
 
@@ -22,17 +23,17 @@ const CertificationAuthorityGeneralInfoAdminPage = () => {
 
   return (
     <div className="flex flex-col flex-1">
-      <h1
-        className="flex-1"
-        data-testid="certification-authority-general-info-page-title"
-      >
-        Informations générales
-      </h1>
-
-      <p className="text-xl">
-        Consultez les identifiants de connexion de votre compte et complétez les
-        coordonnées du contact référent de votre structure.
-      </p>
+      <SettingsPageHeader
+        title="Informations générales"
+        titleTestId="certification-authority-general-info-page-title"
+        showOptionalFieldsDisclaimer
+        chapo={
+          <>
+            Consultez les identifiants de connexion de votre compte et complétez
+            les coordonnées du contact référent de votre structure.
+          </>
+        }
+      />
       <CertificationAuthorityGeneralInfoForm
         certificationAuthority={certificationAuthority}
         backUrl={`/certification-authorities/${certificationAuthorityId}/settings`}

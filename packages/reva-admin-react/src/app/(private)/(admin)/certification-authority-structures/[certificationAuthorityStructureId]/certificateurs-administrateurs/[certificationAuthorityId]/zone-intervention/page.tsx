@@ -3,11 +3,12 @@
 import { useParams } from "next/navigation";
 import { useCallback } from "react";
 
+import { getAdminCertificationAuthorityBreadcrumbSegments } from "@/components/certification-authority/settings-breadcrumb-segments/adminCertificationAuthorityBreadcrumbSegments";
 import { InterventionAreaForm } from "@/components/intervention-area-form/InterventionAreaForm";
 import { InterventionAreaFormData } from "@/components/intervention-area-form/InterventionAreaForm.hook";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-
-import { CertificationAuthorityStructureBreadcrumb } from "../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 
 import { useCertificationAuthority } from "./zone-intervention.hook";
 
@@ -50,16 +51,27 @@ const CertificationAuthorityComponent = ({
 
   return (
     <div className="flex flex-col flex-1">
-      <CertificationAuthorityStructureBreadcrumb
-        certificationAuthorityStructureId={certificationAuthorityStructureId}
-        certificationAuthorityStructureLabel={
-          certificationAuthority.certificationAuthorityStructures.find(
-            (s) => s.id === certificationAuthorityStructureId,
-          )?.label || "inconnu"
+      <SettingsPageHeader
+        breadcrumb={
+          <SettingsBreadcrumb
+            currentPageLabel="Zone d'intervention"
+            homeLinkProps={{
+              href: `/`,
+            }}
+            segments={getAdminCertificationAuthorityBreadcrumbSegments({
+              certificationAuthorityStructureId,
+              certificationAuthorityStructureLabel:
+                certificationAuthority.certificationAuthorityStructures.find(
+                  (s) => s.id === certificationAuthorityStructureId,
+                )?.label || "inconnu",
+              certificationAuthorityId,
+              certificationAuthorityLabel: certificationAuthority.label,
+            })}
+          />
         }
-        certificationAuthorityId={certificationAuthorityId}
-        certificationAuthoritylabel={certificationAuthority.label}
-        pageLabel={"Zone d'intervention"}
+        title="Zone d’intervention"
+        showOptionalFieldsDisclaimer
+        chapo="Cocher les régions ou départements gérés."
       />
       <InterventionAreaForm
         backUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}`}

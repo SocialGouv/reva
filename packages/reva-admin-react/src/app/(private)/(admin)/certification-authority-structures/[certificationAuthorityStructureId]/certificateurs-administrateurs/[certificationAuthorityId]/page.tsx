@@ -3,13 +3,14 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useParams } from "next/navigation";
 
+import { getCertificationAuthorityStructureBreadcrumbSegments } from "@/components/certification-authority/settings-breadcrumb-segments/adminCertificationAuthorityBreadcrumbSegments";
 import { CertificationAuthorityLocalAccountsSummaryCard } from "@/components/certification-authority/summary-cards/certification-authority-local-accounts-summary-card/CertificationAuthorityLocalAccountsSummaryCard";
 import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 import GeneralInformationCard from "@/components/certification-authority/summary-cards/general-information-card/GeneralInformationCard";
 import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
 import { Impersonate } from "@/components/impersonate/Impersonate.component";
-
-import { CertificationAuthorityStructureBreadcrumb } from "../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 
 import { useCertificationAuthority } from "./certificationAuthority.hooks";
 
@@ -51,18 +52,32 @@ const CertificationAuthorityAdminComponent = ({
       className="flex flex-col flex-1"
       data-testid="certification-authority-admin-page"
     >
-      <CertificationAuthorityStructureBreadcrumb
-        certificationAuthorityStructureId={certificationAuthorityStructureId}
-        certificationAuthorityStructureLabel={
-          certificationAuthority.certificationAuthorityStructures.find(
-            (s) => s.id === certificationAuthorityStructureId,
-          )?.label || "inconnu"
+      <SettingsPageHeader
+        breadcrumb={
+          <SettingsBreadcrumb
+            currentPageLabel={certificationAuthority.label}
+            homeLinkProps={{
+              href: `/`,
+            }}
+            segments={getCertificationAuthorityStructureBreadcrumbSegments({
+              certificationAuthorityStructureId,
+              certificationAuthorityStructureLabel:
+                certificationAuthority.certificationAuthorityStructures.find(
+                  (s) => s.id === certificationAuthorityStructureId,
+                )?.label || "inconnu",
+            })}
+          />
         }
-        pageLabel={certificationAuthority.label}
+        title={certificationAuthority.label}
+        chapo={
+          <>
+            Il s’occupe des candidatures (dossier de validation, jury...) et
+            peut ajouter des comptes collaborateurs. L’ajout d’un certificateur
+            administrateur est obligatoire pour la gestion des candidatures.
+          </>
+        }
       />
-      <div className="flex justify-between gap-4 w-full">
-        <h1 className="flex-1">{certificationAuthority.label}</h1>
-
+      <div className="flex justify-end items-start gap-4 w-full mb-4">
         <Impersonate accountId={certificationAuthority?.account?.id} />
 
         <div>
@@ -77,12 +92,6 @@ const CertificationAuthorityAdminComponent = ({
           </Button>
         </div>
       </div>
-
-      <p className="text-xl">
-        Il s’occupe des candidatures (dossier de validation, jury...) et peut
-        ajouter des comptes collaborateurs. L’ajout d’un certificateur
-        administrateur est obligatoire pour la gestion des candidatures.
-      </p>
       <div className="flex flex-col gap-y-6">
         <GeneralInformationCard
           hrefPrefix={`/certification-authority-structures/${certificationAuthority.certificationAuthorityStructures[0].id}/certificateurs-administrateurs/${certificationAuthority.id}`}

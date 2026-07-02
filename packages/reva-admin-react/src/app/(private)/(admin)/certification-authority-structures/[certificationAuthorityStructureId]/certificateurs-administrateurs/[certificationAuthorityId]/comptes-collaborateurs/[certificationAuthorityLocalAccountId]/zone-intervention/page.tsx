@@ -2,12 +2,12 @@
 
 import { useParams, useRouter } from "next/navigation";
 
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { getAdminCertificationAuthorityLocalAccountBreadcrumbSegments } from "@/components/certification-authority/settings-breadcrumb-segments/adminCertificationAuthorityBreadcrumbSegments";
 import { InterventionAreaForm } from "@/components/intervention-area-form/InterventionAreaForm";
 import { InterventionAreaFormData } from "@/components/intervention-area-form/InterventionAreaForm.hook";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-
-import { AdminCertificationAuthorityLocalAccountBreadcrumb } from "../_components/admin-certification-authority-local-account-breadcrumb/AdminCertificationAuthorityLocalAccountBreadcrumb";
 
 import { useUpdateLocalAccountInterventionAreaPage } from "./updateLocalAccountInterventionAreaPage.hook";
 
@@ -63,29 +63,35 @@ export default function InterventionAreaPage() {
       className="flex flex-col w-full h-full"
       data-testid="update-certification-authority-local-account-intervention-area-page"
     >
-      <AdminCertificationAuthorityLocalAccountBreadcrumb
-        certificationAuthorityStructureId={certificationAuthorityStructureId}
-        certificationAuthorityStructureLabel={
-          certificationAuthorityStructure?.label || ""
+      <SettingsPageHeader
+        breadcrumb={
+          <SettingsBreadcrumb
+            currentPageLabel="Informations générales"
+            homeLinkProps={{
+              href: `/`,
+            }}
+            segments={getAdminCertificationAuthorityLocalAccountBreadcrumbSegments(
+              {
+                certificationAuthorityStructureId,
+                certificationAuthorityStructureLabel:
+                  certificationAuthorityStructure?.label || "",
+                certificationAuthorityId,
+                certificationAuthorityLabel:
+                  certificationAuthorityLocalAccount?.certificationAuthority
+                    ?.label || "",
+                certificationAuthorityLocalAccountId,
+                certificationAuthorityLocalAccountLabel:
+                  certificationAuthorityLocalAccount?.account.firstname +
+                  " " +
+                  certificationAuthorityLocalAccount?.account.lastname,
+              },
+            )}
+          />
         }
-        certificationAuthorityId={certificationAuthorityId}
-        certificationAuthoritylabel={
-          certificationAuthorityLocalAccount?.certificationAuthority?.label ||
-          ""
-        }
-        certificationAuthorityLocalAccountId={
-          certificationAuthorityLocalAccountId
-        }
-        certificationAuthorityLocalAccountLabel={
-          certificationAuthorityLocalAccount?.account.firstname +
-          " " +
-          certificationAuthorityLocalAccount?.account.lastname
-        }
-        pageLabel="Informations générales"
+        title="Zone d’intervention"
+        showOptionalFieldsDisclaimer
+        chapo="Cocher les régions ou départements gérés."
       />
-      <h1>Zone d’intervention</h1>
-      <FormOptionalFieldsDisclaimer />
-      <p className="mb-12">Cocher les régions ou départements gérés.</p>
       <InterventionAreaForm
         backUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/comptes-collaborateurs/${certificationAuthorityLocalAccountId}`}
         entityDepartments={

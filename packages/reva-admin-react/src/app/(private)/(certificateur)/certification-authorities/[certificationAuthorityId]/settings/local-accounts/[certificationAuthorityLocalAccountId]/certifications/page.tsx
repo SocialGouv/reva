@@ -1,12 +1,12 @@
 "use client";
 
 import Badge from "@codegouvfr/react-dsfr/Badge";
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 import { graphqlErrorToast } from "@/components/toast/toast";
 
 import { useUpdateLocalAccountCertificationsPage } from "./updateLocalAccountCertificationsPage.hook";
@@ -81,30 +81,36 @@ export default function InterventionAreaPage() {
       className="flex flex-col h-full"
       data-testid="update-certification-authority-local-account-certifications-page"
     >
-      <Breadcrumb
-        segments={[
-          {
-            label: "Paramètres",
-            linkProps: {
-              href: `/certification-authorities/${certificationAuthorityId}/settings/`,
-            },
-          },
-          {
-            label: `${certificationAuthorityLocalAccount?.account.firstname} ${certificationAuthorityLocalAccount?.account.lastname}`,
-            linkProps: {
-              href: `/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
-            },
-          },
-        ]}
-        currentPageLabel="Certifications gérées"
+      <SettingsPageHeader
+        breadcrumb={
+          <SettingsBreadcrumb
+            segments={[
+              {
+                label: "Paramètres",
+                linkProps: {
+                  href: `/certification-authorities/${certificationAuthorityId}/settings/`,
+                },
+              },
+              {
+                label: `${certificationAuthorityLocalAccount?.account.firstname} ${certificationAuthorityLocalAccount?.account.lastname}`,
+                linkProps: {
+                  href: `/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
+                },
+              },
+            ]}
+            currentPageLabel="Certifications gérées"
+          />
+        }
+        title="Certifications gérées"
+        showOptionalFieldsDisclaimer
+        chapo={
+          <>
+            Cochez les certifications proposées par ce compte local. Vous pouvez
+            choisir une ou plusieurs certifications. Vous pourrez ajuster cette
+            sélection en tout temps.
+          </>
+        }
       />
-      <h1>Certifications gérées</h1>
-      <FormOptionalFieldsDisclaimer />
-      <p className="mb-12">
-        Cochez les certifications proposées par ce compte local. Vous pouvez
-        choisir une ou plusieurs certifications. Vous pourrez ajuster cette
-        sélection en tout temps.
-      </p>
       <MultiSelectList
         pageItems={certificationsAndParcoursPage?.rows
           .map((cap) => cap.certification)

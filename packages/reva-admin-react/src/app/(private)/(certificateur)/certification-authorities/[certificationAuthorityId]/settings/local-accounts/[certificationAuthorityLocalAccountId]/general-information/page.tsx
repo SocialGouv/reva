@@ -1,6 +1,5 @@
 "use client";
 
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { useParams, useRouter } from "next/navigation";
 
@@ -8,7 +7,8 @@ import {
   CertificationAuthorityLocalAccountGeneralInformationForm,
   LocalAccountFormData,
 } from "@/components/certification-authority/local-account/general-information-form/CertificationAuthorityLocalAccountGeneralInformationForm";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { useUpdateLocalAccountGeneralInformationPage } from "./updateLocalAccountGeneralInformationPage.hook";
@@ -58,30 +58,36 @@ export default function AddLocalAccountPage() {
       className="flex flex-col h-full"
       data-testid="update-certification-authority-local-account-general-information-page"
     >
-      <Breadcrumb
-        segments={[
-          {
-            label: "Paramètres",
-            linkProps: {
-              href: `/certification-authorities/${certificationAuthorityId}/settings/`,
-            },
-          },
-          {
-            label: `${certificationAuthorityLocalAccount?.account.firstname} ${certificationAuthorityLocalAccount?.account.lastname}`,
-            linkProps: {
-              href: `/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
-            },
-          },
-        ]}
-        currentPageLabel="Informations générales"
+      <SettingsPageHeader
+        breadcrumb={
+          <SettingsBreadcrumb
+            segments={[
+              {
+                label: "Paramètres",
+                linkProps: {
+                  href: `/certification-authorities/${certificationAuthorityId}/settings/`,
+                },
+              },
+              {
+                label: `${certificationAuthorityLocalAccount?.account.firstname} ${certificationAuthorityLocalAccount?.account.lastname}`,
+                linkProps: {
+                  href: `/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
+                },
+              },
+            ]}
+            currentPageLabel="Informations générales"
+          />
+        }
+        title="Informations générales"
+        showOptionalFieldsDisclaimer
+        chapo={
+          <>
+            Voici les informations liées à un compte local : consultez les
+            identifiants de connexion et complétez ou modifiez les coordonnées
+            de la structure référente locale.
+          </>
+        }
       />
-      <h1>Informations générales</h1>
-      <FormOptionalFieldsDisclaimer />
-      <p className="mb-12">
-        Voici les informations liées à un compte local : consultez les
-        identifiants de connexion et complétez ou modifiez les coordonnées de la
-        structure référente locale.
-      </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6  mb-8">
         <Input
           data-testid="certification-authority-label-input"

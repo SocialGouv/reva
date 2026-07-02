@@ -1,10 +1,11 @@
 "use client";
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useParams, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
 import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 import { graphqlErrorToast } from "@/components/toast/toast";
 
 import { useParcoursCertificationPage } from "./parcoursCertification.hooks";
@@ -67,29 +68,35 @@ export default function ParcoursPage() {
 
   return (
     <div className="flex flex-col h-full">
-      <Breadcrumb
-        segments={[
-          {
-            label: "Paramètres",
-            linkProps: {
-              href: `/certification-authorities/${certificationAuthorityId}/settings/`,
-            },
-          },
-          {
-            label: "Certifications gérées",
-            linkProps: {
-              href: `/certification-authorities/${certificationAuthorityId}/settings/certifications`,
-            },
-          },
-        ]}
-        currentPageLabel={certification.label}
+      <SettingsPageHeader
+        breadcrumb={
+          <SettingsBreadcrumb
+            segments={[
+              {
+                label: "Paramètres",
+                linkProps: {
+                  href: `/certification-authorities/${certificationAuthorityId}/settings/`,
+                },
+              },
+              {
+                label: "Certifications gérées",
+                linkProps: {
+                  href: `/certification-authorities/${certificationAuthorityId}/settings/certifications`,
+                },
+              },
+            ]}
+            currentPageLabel={certification.label}
+          />
+        }
+        title={certification.label}
+        chapo={
+          <>
+            Sélectionnez les parcours que votre établissement propose pour cette
+            mention. Ces parcours apparaîtront sur la fiche certification
+            consultée par les candidats.
+          </>
+        }
       />
-      <h1>{certification.label}</h1>
-      <p className="mb-12">
-        Sélectionnez les parcours que votre établissement propose pour cette
-        mention. Ces parcours apparaîtront sur la fiche certification consultée
-        par les candidats.
-      </p>
       <MultiSelectList
         pageItems={certification.parcours.rows.map((parcours) => ({
           id: parcours.id,
