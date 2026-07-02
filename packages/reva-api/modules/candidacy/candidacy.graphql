@@ -82,6 +82,7 @@ type Candidacy {
   endAccompagnementReason: EndAccompagnementReason
   endAccompagnementCandidateDropOutReason: DropOutReason
   candidateInfo: CandidacyCandidateInfo
+  feasibilityFileResourceFirstRead: Boolean!
 }
 
 type CandidacyCandidateInfo {
@@ -489,5 +490,8 @@ type Mutation {
   candidacy_updateCertificationAuthority(
     candidacyId: UUID!
     certificationAuthorityId: UUID!
+  ): Candidacy!
+  candidacy_markFeasibilityFileResourceFirstAsRead(
+    candidacyId: UUID!
   ): Candidacy!
 }

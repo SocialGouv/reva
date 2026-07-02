@@ -276,6 +276,7 @@ model Candidacy {
   candidacyCandidateInfo                        CandidacyCandidateInfo?
   certificationAuthority                        CertificationAuthority?                         @relation(fields: [certificationAuthorityId], references: [id], onDelete: Restrict)
   certificationAuthorityId                      String?                                         @map("certification_authority_id") @db.Uuid
+  feasibilityFileResourceFirstReadAt            DateTime?                                       @map("feasibility_file_resource_first_read_at") @db.Timestamptz(6)
 
   @@index([organismId])
   @@index([candidateId])

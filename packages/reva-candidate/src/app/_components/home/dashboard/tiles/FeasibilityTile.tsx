@@ -3,12 +3,14 @@ import Tile from "@codegouvfr/react-dsfr/Tile";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import {
   hasFreshCandidateConfirmation,
   isSentToCandidateOutdatedAfterIncomplete,
 } from "@/utils/feasibilityIncompleteOutdated.util";
 
 import { FeasibilityUseCandidateForDashboard } from "../dashboard.hooks";
+
 const FeasibilityBadge = ({
   feasibility,
   candidacyIsAutonome,
@@ -98,11 +100,17 @@ const FeasibilityBadge = ({
 export const FeasibilityTile = ({
   feasibility,
   candidacyIsAutonome,
+  feasibilityFileResourceFirstRead,
 }: {
   feasibility: FeasibilityUseCandidateForDashboard;
   candidacyIsAutonome: boolean;
+  feasibilityFileResourceFirstRead: boolean;
 }) => {
   const router = useRouter();
+
+  const { isFeatureActive } = useFeatureFlipping();
+  const isDfDematAutonomeEnabled = isFeatureActive("DF_DEMAT_AUTONOME");
+
   const isFeasibilityDemat =
     feasibility?.feasibilityFormat === "DEMATERIALIZED";
   const feasibilityIsPdf = feasibility?.feasibilityFormat === "UPLOADED_PDF";
@@ -139,9 +147,15 @@ export const FeasibilityTile = ({
     isIncompleteNotResentToCandidate,
   ]);
 
-  const feasibilityUrl = isFeasibilityDemat
+  let feasibilityUrl = isFeasibilityDemat
     ? "./validate-feasibility"
     : "./feasibility";
+
+  if (candidacyIsAutonome && isDfDematAutonomeEnabled) {
+    feasibilityUrl = feasibilityFileResourceFirstRead
+      ? "./feasibility-demat-autonome"
+      : "./feasibility-demat-autonome-resources";
+  }
 
   return (
     <Tile

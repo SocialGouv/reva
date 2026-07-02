@@ -81,4 +81,6 @@ export const resolversSecurityMap = {
     isAdminOrOwnerOfCandidacy,
   "Mutation.candidacy_updateCertificationAuthority":
     isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_markFeasibilityFileResourceFirstAsRead":
+    isAdminOrOwnerOfCandidacy,
 };

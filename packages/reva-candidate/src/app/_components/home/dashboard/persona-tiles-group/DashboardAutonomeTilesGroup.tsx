@@ -94,7 +94,10 @@ export const DashboardAutonomeTilesGroup = ({
         <div className="grid grid-flow-row md:grid-flow-col md:grid-cols-2 grid-rows-1">
           <FeasibilityTile
             feasibility={feasibility}
-            candidacyIsAutonome={true}
+            candidacyIsAutonome
+            feasibilityFileResourceFirstRead={
+              candidacy.feasibilityFileResourceFirstRead
+            }
           />
           <DossierValidationTile
             feasibility={candidacy.feasibility}

@@ -60,6 +60,7 @@ import { getCandidacyStatusesByCandidacyId } from "./features/getCandidacyStatus
 import { getDropOutReasonById } from "./features/getDropOutReasonById";
 import { getExperiencesByCandidacyId } from "./features/getExperiencesByCandidacyId";
 import { manuallyUpdateCandidacyCertificationAuthority } from "./features/manuallyUpdateCandidacyCertificationAuthority";
+import { markFeasibilityFileResourceFirstAsRead } from "./features/markFeasibilityFileResourceFirstAsRead";
 import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
 import { searchOrganismsForCandidacyAsAdmin } from "./features/searchOrganismsForCandidacyAsAdmin";
 import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidacy";
@@ -110,6 +111,9 @@ const unsafeResolvers = {
     endAccompagnementCandidateDropOutReason: ({
       endAccompagnementCandidateDropOutReasonId: dropOutReasonId,
     }: Candidacy) => getDropOutReasonById({ dropOutReasonId }),
+    feasibilityFileResourceFirstRead: ({
+      feasibilityFileResourceFirstReadAt,
+    }: Candidacy) => !!feasibilityFileResourceFirstReadAt,
   },
   CandidacyOnCandidacyFinancingMethod: {
     candidacyFinancingMethod: ({
@@ -852,6 +856,15 @@ const unsafeResolvers = {
       manuallyUpdateCandidacyCertificationAuthority({
         ...input,
         userInfo: buildCandidacyAuditLogUserInfo(context),
+      }),
+    candidacy_markFeasibilityFileResourceFirstAsRead: async (
+      _parent: unknown,
+      input: {
+        candidacyId: string;
+      },
+    ) =>
+      markFeasibilityFileResourceFirstAsRead({
+        ...input,
       }),
   },
 };
