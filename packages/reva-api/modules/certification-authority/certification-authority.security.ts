@@ -1,4 +1,3 @@
-import { hasRole } from "@/modules/shared/security/middlewares";
 import {
   defaultSecurity,
   isAdmin,
@@ -12,6 +11,8 @@ import {
   isAdminOrIsCertificationAuthorityStructureRegistryManagerMember,
   isAdminOrManager,
   isAnyone,
+  isOwnerOrCanManageCandidacy,
+  isRegistryManagerOrLocalAccountCertificationAuthorityStructureMember,
 } from "@/modules/shared/security/presets";
 
 export const resolversSecurityMap = {
@@ -64,10 +65,8 @@ export const resolversSecurityMap = {
   "Mutation.certification_authority_createCertificationAuthority": isAdmin,
   "Mutation.certification_authority_updateCertificationAuthorityDepartments":
     isAdmin,
-  "Mutation.certification_authority_acceptCgu": hasRole([
-    "manage_certification_registry",
-    "manage_certification_authority_local_account",
-  ]),
+  "Mutation.certification_authority_acceptCgu":
+    isRegistryManagerOrLocalAccountCertificationAuthorityStructureMember,
   "Mutation.certification_authority_createCertificationAuthorityStructure":
     isAdmin,
 
@@ -98,4 +97,6 @@ export const resolversSecurityMap = {
 
   "Mutation.certification_authority_updateParcoursForCertificationAndCertificationAuthority":
     isAdminOrCertificationAuthorityOwner,
+  "Candidacy.isCandidacyCertificationAuthorityUpdatable":
+    isOwnerOrCanManageCandidacy,
 };
