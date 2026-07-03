@@ -114,6 +114,28 @@ export const resultatJuryInputSchema = {
       description: "Informations supplémentaires sur le résultat",
       example: "Validation totale sous réserve de présentation de l’AFGSU.",
     },
+    blocsDeCompetences: {
+      type: "array",
+      description:
+        "Résultat par bloc de compétences (optionnel). Les `competenceBlocId` s'obtiennent via le dossier de faisabilité (champ `blocsDeCompetences`). La cohérence avec le `resultat` global est validée par le backend.",
+      items: {
+        type: "object",
+        properties: {
+          competenceBlocId: {
+            type: "string",
+            format: "uuid",
+            description: "Identifiant interne du bloc de compétences",
+            example: "3a1b9c7e-1234-4a2b-8c9d-0e1f2a3b4c5d",
+          },
+          estValide: {
+            type: "boolean",
+            description: "Le bloc de compétences est-il validé ?",
+            example: true,
+          },
+        },
+        required: ["competenceBlocId", "estValide"],
+      },
+    },
   },
   required: ["resultat"],
 } as const;

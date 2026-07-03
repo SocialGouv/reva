@@ -13,6 +13,15 @@ const getJuryResultByCandidacyIdQuery = graphql(`
         result
         dateOfResult
         informationOfResult
+        juryResultByCompetenceBlocs {
+          id
+          competenceBloc {
+            id
+            code
+            label
+          }
+          isCompetenceBlocValidated
+        }
       }
     }
   }
@@ -46,13 +55,16 @@ const resultatMapFromInteropToGql: Record<
   CANDIDAT_ABSENT: "CANDIDATE_ABSENT",
 };
 
+type UpdateJuryResultParams = {
+  resultat: (typeof resultatJurySchema)["enum"][number];
+  commentaire?: string;
+  blocs?: { competenceBlocId: string; estValide: boolean }[];
+};
+
 export const updateJuryResultByCandidacyId = async (
   graphqlClient: Client,
   candidacyId: string,
-  params: {
-    resultat: (typeof resultatJurySchema)["enum"][number];
-    commentaire?: string;
-  },
+  params: UpdateJuryResultParams,
 ) => {
   const response = await graphqlClient.query(
     getJuryResultByCandidacyIdQuery,
@@ -98,18 +110,19 @@ export const updateJuryResultByCandidacyId = async (
 const updateJuryResult = async (
   graphqlClient: Client,
   juryId: string,
-  params: {
-    resultat: (typeof resultatJurySchema)["enum"][number];
-    commentaire?: string;
-  },
+  params: UpdateJuryResultParams,
 ) => {
-  const { resultat, commentaire } = params;
+  const { resultat, commentaire, blocs } = params;
 
   const r = await graphqlClient.mutation(updateJuryResultMutation, {
     juryId,
     input: {
       result: resultatMapFromInteropToGql[resultat],
       informationOfResult: commentaire,
+      juryResultByCompetenceBlocs: blocs?.map((b) => ({
+        competenceBlocId: b.competenceBlocId,
+        isCompetenceBlocValidated: b.estValide,
+      })),
     },
   });
   if (r.error) {

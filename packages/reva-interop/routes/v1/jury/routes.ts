@@ -350,7 +350,7 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       },
       handler: async (request, reply) => {
         const { candidatureId } = request.params;
-        const { resultat, commentaire } = request.body;
+        const { resultat, commentaire, blocsDeCompetences } = request.body;
 
         const candidacy = await updateJuryResultByCandidacyId(
           request.graphqlClient,
@@ -358,6 +358,7 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           {
             resultat: resultat,
             commentaire: commentaire,
+            blocs: blocsDeCompetences,
           },
         );
 

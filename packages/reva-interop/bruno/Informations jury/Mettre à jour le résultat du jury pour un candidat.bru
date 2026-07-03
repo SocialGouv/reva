@@ -21,6 +21,20 @@ auth:bearer {
 body:json {
   {
     "resultat": "",
-    "commentaire": ""
+    "commentaire": "",
+    "blocsDeCompetences": [
+      { "competenceBlocId": "", "estValide": true }
+    ]
   }
+}
+
+docs {
+  ## Mettre à jour le résultat du jury
+
+  Le champ `blocsDeCompetences` est **optionnel** : l'omettre laisse le comportement inchangé (résultat global uniquement).
+
+  - `competenceBlocId` : identifiant interne du bloc, obtenu via `GET .../dossierDeFaisabilite` (champ `blocsDeCompetences[].id`).
+  - `estValide` : `true` si le bloc est validé par le jury.
+
+  La cohérence entre `resultat` et les blocs est validée côté backend. Une valeur incohérente ou un `competenceBlocId` inexistant renvoie un `409`.
 }
