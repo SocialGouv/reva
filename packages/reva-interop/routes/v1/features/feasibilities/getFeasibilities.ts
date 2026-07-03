@@ -60,6 +60,13 @@ const getFeasibilitiesQuery = graphql(`
           }
         }
         dematerializedFeasibilityFile {
+          blocsDeCompetences {
+            certificationCompetenceBloc {
+              id
+              code
+              label
+            }
+          }
           dffFile {
             name
             mimeType

@@ -18,6 +18,7 @@ import {
   pageInfoSchema,
 } from "../responseSchemas.js";
 import {
+  blocDeCompetenceSchema,
   candidacyIdSchema,
   dossierDeFaisabiliteDecisionSchema,
   dossierDeFaisabiliteSchema,
@@ -230,6 +231,7 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
             typeof experienceSchema,
             typeof dossierDeFaisabiliteSchema,
             typeof statutDossierDeFaisabiliteSchema,
+            typeof blocDeCompetenceSchema,
           ];
         };
       }>
