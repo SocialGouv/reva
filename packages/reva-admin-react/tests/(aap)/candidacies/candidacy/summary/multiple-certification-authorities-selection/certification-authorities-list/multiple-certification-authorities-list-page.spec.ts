@@ -24,13 +24,29 @@ type CertificationAuthority = {
 
 const createCertificationAuthoritiesListHandlers = (
   certificationAuthorities: CertificationAuthority[],
+  options?: {
+    certificationAuthority?: { id: string; label: string } | null;
+    certification?: {
+      id: string;
+      codeRncp: string;
+      label: string;
+    } | null;
+    candidate?: {
+      id: string;
+      firstname: string;
+      lastname: string;
+    } | null;
+  },
 ) => [
   fvae.query(
     "getCandidacyForMultipleCertificationAuthoritiesListPage",
     graphQLResolver({
       getCandidacyById: {
         id: CANDIDACY_ID,
+        certificationAuthority: options?.certificationAuthority ?? null,
         certificationAuthorities,
+        certification: options?.certification ?? null,
+        candidate: options?.candidate ?? null,
       },
     }),
   ),
@@ -226,7 +242,7 @@ test.describe("Multiple certification authorities list page", () => {
     });
   });
 
-  test.describe("when I click on a certification authority card", () => {
+  test.describe("when I click on a certification authority card and no current certification authority is set", () => {
     test.use({
       mswHandlers: [
         [
@@ -263,6 +279,125 @@ test.describe("Multiple certification authorities list page", () => {
       );
 
       await page.getByText("Autorité Certificatrice Alpha").click();
+
+      await mutationPromise;
+
+      await expect(page.getByTestId("toast-success")).toBeVisible();
+      await expect(page).toHaveURL(
+        `/admin2/candidacies/${CANDIDACY_ID}/summary/certification-authority-details/`,
+      );
+    });
+  });
+
+  test.describe("when a certification authority is already set", () => {
+    const certificationAuthority = {
+      id: "cert-auth-0",
+      label: "Ancien Certificateur",
+    };
+
+    const certificationAuthorities: CertificationAuthority[] = [
+      {
+        id: "cert-auth-1",
+        label: "Autorité Certificatrice Alpha",
+        contactEmail: "alpha@example.com",
+        contactPhone: "0102030405",
+      },
+    ];
+
+    const candidate = {
+      id: "candidate-1",
+      firstname: "Jean",
+      lastname: "Dupont",
+    };
+
+    const certification = {
+      id: "cert-1",
+      codeRncp: "RNCP12345",
+      label: "Certification Test",
+    };
+
+    test.use({
+      mswHandlers: [
+        [
+          ...createCertificationAuthoritiesListHandlers(
+            certificationAuthorities,
+            { certificationAuthority, certification, candidate },
+          ),
+          ...aapCommonHandlers,
+          fvae.mutation(
+            "updateCertificationAuthorityForMultipleCertificationAuthoritiesListPage",
+            graphQLResolver({
+              candidacy_updateCertificationAuthority: {
+                id: CANDIDACY_ID,
+              },
+            }),
+          ),
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("should open a confirmation modal when clicking on a certification authority card", async ({
+      page,
+    }) => {
+      await goToCertificationAuthoritiesListPage(page);
+
+      await page.getByText("Autorité Certificatrice Alpha").click();
+
+      await expect(
+        page.getByText("Confirmation du choix du certificateur"),
+      ).toBeVisible();
+    });
+
+    test("should display candidate, certification, and both authority names in the modal", async ({
+      page,
+    }) => {
+      await goToCertificationAuthoritiesListPage(page);
+
+      await page.getByText("Autorité Certificatrice Alpha").click();
+
+      await expect(
+        page.getByText(/Dupont Jean/, { exact: false }),
+      ).toBeVisible();
+      await expect(page.getByText(/RNCP12345/, { exact: false })).toBeVisible();
+      await expect(
+        page.getByText(/Certification Test/, { exact: false }),
+      ).toBeVisible();
+      await expect(page.getByText("Ancien Certificateur")).toBeVisible();
+      await expect(
+        page.getByText("Confirmez vous ce changement ?"),
+      ).toBeVisible();
+    });
+
+    test("should close the modal without updating when clicking 'Annuler'", async ({
+      page,
+    }) => {
+      await goToCertificationAuthoritiesListPage(page);
+
+      await page.getByText("Autorité Certificatrice Alpha").click();
+      await page.getByRole("button", { name: "Annuler" }).click();
+
+      await expect(
+        page.getByText("Confirmation du choix du certificateur"),
+      ).not.toBeVisible();
+      await expect(page.getByTestId("toast-success")).not.toBeVisible();
+      await expect(page).toHaveURL(
+        `/admin2/candidacies/${CANDIDACY_ID}/summary/multiple-certification-authorities-selection/certification-authorities-list/`,
+      );
+    });
+
+    test("should update the certification authority and redirect when clicking 'Confirmer'", async ({
+      page,
+    }) => {
+      await goToCertificationAuthoritiesListPage(page);
+
+      const mutationPromise = waitGraphQL(
+        page,
+        "updateCertificationAuthorityForMultipleCertificationAuthoritiesListPage",
+      );
+
+      await page.getByText("Autorité Certificatrice Alpha").click();
+      await page.getByRole("button", { name: "Confirmer" }).click();
 
       await mutationPromise;
 

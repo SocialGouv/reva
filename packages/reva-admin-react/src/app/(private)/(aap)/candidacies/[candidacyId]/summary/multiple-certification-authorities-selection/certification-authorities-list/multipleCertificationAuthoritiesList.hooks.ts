@@ -12,11 +12,25 @@ const getCandidacyById = graphql(`
   ) {
     getCandidacyById(id: $candidacyId) {
       id
+      certificationAuthority {
+        id
+        label
+      }
       certificationAuthorities {
         id
         label
         contactEmail
         contactPhone
+      }
+      certification {
+        id
+        codeRncp
+        label
+      }
+      candidate {
+        id
+        firstname
+        lastname
       }
     }
   }
@@ -92,6 +106,17 @@ export const useMultipleCertificationAuthoritiesListPage = ({
   const totalRows = filteredCertificationAuthorities.length;
   const totalPages = Math.max(1, Math.ceil(totalRows / RECORDS_PER_PAGE));
 
+  const currentCertificationAuthority =
+    getCandidacyForMultipleCertificationAuthoritiesListPageResponse
+      ?.getCandidacyById?.certificationAuthority;
+
+  const certification =
+    getCandidacyForMultipleCertificationAuthoritiesListPageResponse
+      ?.getCandidacyById?.certification;
+  const candidate =
+    getCandidacyForMultipleCertificationAuthoritiesListPageResponse
+      ?.getCandidacyById?.candidate;
+
   const certificationAuthoritiesPage = {
     rows: filteredCertificationAuthorities.slice(
       (currentPage - 1) * RECORDS_PER_PAGE,
@@ -106,6 +131,9 @@ export const useMultipleCertificationAuthoritiesListPage = ({
 
   return {
     certificationAuthoritiesPage,
+    currentCertificationAuthority,
+    certification,
+    candidate,
     updateCertificationAuthority,
   };
 };
