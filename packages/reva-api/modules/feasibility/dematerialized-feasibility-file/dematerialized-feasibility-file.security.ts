@@ -14,7 +14,7 @@ export const resolversSecurityMap = {
   "Mutation.*": defaultSecurity,
 
   "Mutation.dematerialized_feasibility_file_createOrUpdateCertificationInfo":
-    isAdminOrCandidacyCompanion,
+    isOwnerOrCanManageCandidacy,
 
   "Mutation.dematerialized_feasibility_file_createOrUpdateCertificationCompetenceDetails":
     isAdminOrCandidacyCompanion,

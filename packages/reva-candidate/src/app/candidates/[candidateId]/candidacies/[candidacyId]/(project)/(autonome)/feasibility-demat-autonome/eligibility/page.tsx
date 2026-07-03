@@ -184,7 +184,7 @@ export default function EligibilityPage() {
           ]}
         />
 
-        <h1>Recevabilité déjà acquise</h1>
+        <h1 className="mb-0">Recevabilité déjà acquise</h1>
         <FormOptionalFieldsDisclaimer />
         <p className="text-xl mb-12">
           Si une recevabilité a déjà été obtenue sur cette certification,
