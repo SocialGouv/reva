@@ -11,6 +11,15 @@ const getJuryResultByCandidacyIdQuery = graphql(`
         result
         dateOfResult
         informationOfResult
+        juryResultByCompetenceBlocs {
+          id
+          competenceBloc {
+            id
+            code
+            label
+          }
+          isCompetenceBlocValidated
+        }
       }
     }
   }

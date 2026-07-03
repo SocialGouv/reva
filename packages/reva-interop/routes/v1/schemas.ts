@@ -453,6 +453,40 @@ export const dossierDeFaisabiliteSchema = {
       $ref: "http://vae.gouv.fr/components/schemas/StatutDossierDeFaisabilite",
       nullable: true,
     },
+    blocsDeCompetences: {
+      type: "array",
+      description:
+        "Blocs de compétences visés par la certification. Certains blocs peuvent avoir déjà été validés lors d'une session de jury précédente. Le `id` sert de `competenceBlocId` pour l'envoi d'un résultat de jury.",
+      items: {
+        $ref: "http://vae.gouv.fr/components/schemas/BlocDeCompetence",
+      },
+      nullable: true,
+    },
+  },
+} as const;
+
+export const blocDeCompetenceSchema = {
+  $id: "http://vae.gouv.fr/components/schemas/BlocDeCompetence",
+  type: "object",
+  required: ["id", "libelle"],
+  properties: {
+    id: {
+      type: "string",
+      format: "uuid",
+      description: "Identifiant interne du bloc de compétences",
+      example: "3a1b9c7e-1234-4a2b-8c9d-0e1f2a3b4c5d",
+    },
+    code: {
+      type: "string",
+      description: "Code RNCP du bloc de compétences",
+      example: "RNCP35830BC01",
+      nullable: true,
+    },
+    libelle: {
+      type: "string",
+      description: "Libellé du bloc de compétences",
+      example: "Accompagnement et soins de la personne",
+    },
   },
 } as const;
 
@@ -678,6 +712,43 @@ export const resultatSessionJurySchema = {
       description: "Informations supplémentaires sur le résultat",
       example: "Validation totale sous réserve de présentation de l’AFGSU.",
     },
+    blocs: {
+      type: "array",
+      description: "Résultat enregistré par bloc de compétences",
+      items: {
+        $ref: "http://vae.gouv.fr/components/schemas/ResultatBloc",
+      },
+    },
+  },
+} as const;
+
+export const resultatBlocSchema = {
+  $id: "http://vae.gouv.fr/components/schemas/ResultatBloc",
+  type: "object",
+  required: ["competenceBlocId", "libelle", "estValide"],
+  properties: {
+    competenceBlocId: {
+      type: "string",
+      format: "uuid",
+      description: "Identifiant interne du bloc de compétences",
+      example: "3a1b9c7e-1234-4a2b-8c9d-0e1f2a3b4c5d",
+    },
+    code: {
+      type: "string",
+      description: "Code RNCP du bloc de compétences",
+      example: "RNCP35830BC01",
+      nullable: true,
+    },
+    libelle: {
+      type: "string",
+      description: "Libellé du bloc de compétences",
+      example: "Accompagnement et soins de la personne",
+    },
+    estValide: {
+      type: "boolean",
+      description: "Le bloc de compétences est-il validé ?",
+      example: true,
+    },
   },
 } as const;
 
@@ -750,6 +821,8 @@ const schemas = [
   informationJurySchema,
   sessionJurySchema,
   resultatSessionJurySchema,
+  resultatBlocSchema,
+  blocDeCompetenceSchema,
   dossierDeFaisabiliteSchema,
   statutDossierDeFaisabiliteSchema,
   decisionDossierDeFaisabiliteSchema,

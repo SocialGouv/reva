@@ -4,6 +4,7 @@ import { Duration } from "../../../../graphql/generated/graphql.js";
 import { GetGqlResponseType } from "../../../../utils/types.js";
 import { dossierDeFaisabiliteResponseSchema } from "../../responseSchemas.js";
 import {
+  blocDeCompetenceSchema,
   candidacyIdSchema,
   dossierDeFaisabiliteSchema,
   dureeExperienceSchema,
@@ -26,6 +27,7 @@ type MappedFeasibilityResponse = FromSchema<
       typeof experienceSchema,
       typeof dossierDeFaisabiliteSchema,
       typeof statutDossierDeFaisabiliteSchema,
+      typeof blocDeCompetenceSchema,
     ];
   }
 >;
@@ -40,6 +42,7 @@ type MappedFeasibility = FromSchema<
       typeof dureeExperienceSchema,
       typeof experienceSchema,
       typeof statutDossierDeFaisabiliteSchema,
+      typeof blocDeCompetenceSchema,
     ];
   }
 >;
@@ -123,9 +126,24 @@ const mapFeasibility = (
     };
   }[] = [];
 
+  const blocsDeCompetences: {
+    id: string;
+    code?: string | null;
+    libelle: string;
+  }[] = [];
+
   if (feasibilityFormat == "DEMATERIALIZED" && dematerializedFeasibilityFile) {
     const { dffFile, attachments, swornStatementFile } =
       dematerializedFeasibilityFile;
+
+    for (const bloc of dematerializedFeasibilityFile.blocsDeCompetences) {
+      const { certificationCompetenceBloc } = bloc;
+      blocsDeCompetences.push({
+        id: certificationCompetenceBloc.id,
+        code: certificationCompetenceBloc.code,
+        libelle: certificationCompetenceBloc.label,
+      });
+    }
 
     if (dffFile && dffFile.previewUrl) {
       documents.push({
@@ -229,6 +247,7 @@ const mapFeasibility = (
       dateDemarrage: new Date(experience.startedAt).toISOString(),
     })),
     documents,
+    blocsDeCompetences,
   };
 };
 

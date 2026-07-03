@@ -37,6 +37,13 @@ const getFeasibilityByCandidacyIdQuery = graphql(`
           }
         }
         dematerializedFeasibilityFile {
+          blocsDeCompetences {
+            certificationCompetenceBloc {
+              id
+              code
+              label
+            }
+          }
           swornStatementFile {
             name
             mimeType

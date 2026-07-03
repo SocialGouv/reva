@@ -4,6 +4,7 @@ import { JuryResult } from "../../../../graphql/generated/graphql.js";
 import { GetGqlResponseType } from "../../../../utils/types.js";
 import { resultatSessionJuryResponseSchema } from "../../responseSchemas.js";
 import {
+  resultatBlocSchema,
   resultatJurySchema,
   resultatSessionJurySchema,
 } from "../../schemas.js";
@@ -13,14 +14,18 @@ import { getJuryResultByCandidacyId } from "./getJuryResultByCandidacyId.js";
 type MappedResultatSessionJuryResponse = FromSchema<
   typeof resultatSessionJuryResponseSchema,
   {
-    references: [typeof resultatSessionJurySchema, typeof resultatJurySchema];
+    references: [
+      typeof resultatSessionJurySchema,
+      typeof resultatJurySchema,
+      typeof resultatBlocSchema,
+    ];
   }
 >;
 
 type MappedResultatSessionJury = FromSchema<
   typeof resultatSessionJurySchema,
   {
-    references: [typeof resultatJurySchema];
+    references: [typeof resultatJurySchema, typeof resultatBlocSchema];
   }
 >;
 
@@ -60,6 +65,12 @@ const mapJuryResultat = (
     resultat: resultatMapFromGqlToInterop[result],
     dateEnvoi: new Date(dateOfResult).toISOString(),
     commentaire: informationOfResult || "",
+    blocs: jury.juryResultByCompetenceBlocs?.map((b) => ({
+      competenceBlocId: b.competenceBloc.id,
+      code: b.competenceBloc.code,
+      libelle: b.competenceBloc.label,
+      estValide: b.isCompetenceBlocValidated,
+    })),
   };
 };
 
