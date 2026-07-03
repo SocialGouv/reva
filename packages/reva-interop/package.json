@@ -18,7 +18,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:generate:migration": "prisma migrate dev --create-only",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
     "lint": "npm run graphql:generate && eslint --color routes utils",
     "postinstall": "npm ci --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts"
   },
@@ -38,7 +38,8 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.22.4",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.34.0"
+    "typescript-eslint": "^8.34.0",
+    "vitest": "^4.1.2"
   },
   "dependencies": {
     "@eslint/compat": "^1.2.9",
