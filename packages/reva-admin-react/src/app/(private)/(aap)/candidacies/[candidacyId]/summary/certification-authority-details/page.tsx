@@ -12,8 +12,11 @@ const CertificationAuthorityDetailsPage = () => {
     candidacyId: string;
   }>();
 
-  const { certificationAuthority, certificationAuthorityLocalAccounts } =
-    useCertificationAuthorityDetails({ candidacyId });
+  const {
+    certificationAuthority,
+    isCandidacyCertificationAuthorityUpdatable,
+    certificationAuthorityLocalAccounts,
+  } = useCertificationAuthorityDetails({ candidacyId });
 
   return (
     <div className="flex flex-col">
@@ -42,12 +45,25 @@ const CertificationAuthorityDetailsPage = () => {
             />
           ))}
       </div>
-      <Button
-        priority="secondary"
-        linkProps={{ href: `/candidacies/${candidacyId}/summary` }}
-      >
-        Retour
-      </Button>
+      <div className="flex flex-row gap-4 justify-between">
+        <Button
+          priority="secondary"
+          linkProps={{ href: `/candidacies/${candidacyId}/summary` }}
+        >
+          Retour
+        </Button>
+        {isCandidacyCertificationAuthorityUpdatable && (
+          <Button
+            priority="tertiary no outline"
+            iconId="fr-icon-arrow-left-right-line"
+            linkProps={{
+              href: `/candidacies/${candidacyId}/summary/multiple-certification-authorities-selection/certification-authorities-list`,
+            }}
+          >
+            Changer de certificateur
+          </Button>
+        )}
+      </div>
     </div>
   );
 };

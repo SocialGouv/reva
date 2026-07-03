@@ -3,12 +3,13 @@ import {
   graphql,
   test,
 } from "next/experimental/testmode/playwright/msw";
-import type { Page } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "../../../../shared/helpers/auth/login";
 import { getAAPCommonHandlers } from "../../../../shared/helpers/common-handlers/aap/getAapCommon.handlers";
 import { graphQLResolver } from "../../../../shared/helpers/network/msw";
 import { waitGraphQL } from "../../../../shared/helpers/network/requests";
+
+import type { Page } from "next/experimental/testmode/playwright/msw";
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
@@ -29,6 +30,7 @@ const DEFAULT_CERTIFICATION_AUTHORITY = {
 function createHandlers({
   certificationAuthority = DEFAULT_CERTIFICATION_AUTHORITY,
   certificationAuthorityLocalAccounts = [],
+  isCandidacyCertificationAuthorityUpdatable = false,
 }: {
   certificationAuthority?: {
     id: string;
@@ -42,6 +44,7 @@ function createHandlers({
     contactEmail: string | null;
     contactPhone: string | null;
   }[];
+  isCandidacyCertificationAuthorityUpdatable?: boolean;
 } = {}) {
   return [
     fvae.query(
@@ -50,6 +53,7 @@ function createHandlers({
         getCandidacyById: {
           certificationAuthority,
           certificationAuthorityLocalAccounts,
+          isCandidacyCertificationAuthorityUpdatable,
         },
       }),
     ),
@@ -172,9 +176,7 @@ test.describe("Certification authority details page", () => {
     }) => {
       await visitPage(page);
       await expect(
-        page
-          .getByTestId("certification-authority-local-account-card")
-          .nth(0),
+        page.getByTestId("certification-authority-local-account-card").nth(0),
       ).toContainText(LOCAL_ACCOUNTS[0].contactFullName);
     });
 
@@ -183,9 +185,7 @@ test.describe("Certification authority details page", () => {
     }) => {
       await visitPage(page);
       await expect(
-        page
-          .getByTestId("certification-authority-local-account-card")
-          .nth(0),
+        page.getByTestId("certification-authority-local-account-card").nth(0),
       ).toContainText(DEFAULT_CERTIFICATION_AUTHORITY.label);
     });
 
@@ -205,9 +205,7 @@ test.describe("Certification authority details page", () => {
     }) => {
       await visitPage(page);
       await expect(
-        page
-          .getByTestId("certification-authority-local-account-card")
-          .nth(1),
+        page.getByTestId("certification-authority-local-account-card").nth(1),
       ).toContainText(LOCAL_ACCOUNTS[1].contactFullName);
     });
 
@@ -269,6 +267,64 @@ test.describe("Certification authority details page", () => {
       await expect(page).toHaveURL(
         `/admin2/candidacies/${CANDIDACY_ID}/summary/`,
       );
+    });
+  });
+
+  test.describe("when certification authority is updatable", () => {
+    test.use({
+      mswHandlers: [
+        [
+          ...createHandlers({
+            isCandidacyCertificationAuthorityUpdatable: true,
+          }),
+          ...aapCommonHandlers,
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("should display the 'Changer de certificateur' button", async ({
+      page,
+    }) => {
+      await visitPage(page);
+      await expect(
+        page.getByRole("link", { name: "Changer de certificateur" }),
+      ).toBeVisible();
+    });
+
+    test("'Changer de certificateur' links to the certification authorities list page", async ({
+      page,
+    }) => {
+      await visitPage(page);
+      await expect(
+        page.getByRole("link", { name: "Changer de certificateur" }),
+      ).toHaveAttribute(
+        "href",
+        `/admin2/candidacies/${CANDIDACY_ID}/summary/multiple-certification-authorities-selection/certification-authorities-list/`,
+      );
+    });
+  });
+
+  test.describe("when certification authority is not updatable", () => {
+    test.use({
+      mswHandlers: [
+        [
+          ...createHandlers({
+            isCandidacyCertificationAuthorityUpdatable: false,
+          }),
+          ...aapCommonHandlers,
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("should not display the 'Changer de certificateur' button", async ({
+      page,
+    }) => {
+      await visitPage(page);
+      await expect(
+        page.getByRole("link", { name: "Changer de certificateur" }),
+      ).not.toBeVisible();
     });
   });
 });

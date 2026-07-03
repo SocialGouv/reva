@@ -19,6 +19,7 @@ const getCertificationAuthorityDetailsQuery = graphql(`
         contactEmail
         contactPhone
       }
+      isCandidacyCertificationAuthorityUpdatable
     }
   }
 `);
@@ -44,9 +45,13 @@ export const useCertificationAuthorityDetails = ({
   const certificationAuthorityLocalAccounts =
     getCertificationAuthorityDetailsResponse?.getCandidacyById
       ?.certificationAuthorityLocalAccounts;
+  const isCandidacyCertificationAuthorityUpdatable =
+    getCertificationAuthorityDetailsResponse?.getCandidacyById
+      ?.isCandidacyCertificationAuthorityUpdatable;
 
   return {
     certificationAuthority,
     certificationAuthorityLocalAccounts,
+    isCandidacyCertificationAuthorityUpdatable,
   };
 };
