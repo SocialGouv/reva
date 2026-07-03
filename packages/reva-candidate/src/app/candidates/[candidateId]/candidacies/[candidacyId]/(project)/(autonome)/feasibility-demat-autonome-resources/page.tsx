@@ -113,15 +113,13 @@ export default function FeasibilityDematAutonomeResourcesPage() {
               certificateur :
             </p>
 
-            <p>
-              <ol>
-                <li>
-                  <strong>le dossier de faisabilité</strong>
-                </li>
-                <li>le dossier de validation</li>
-                <li>le passage devant le jury</li>
-              </ol>
-            </p>
+            <ol>
+              <li>
+                <strong>le dossier de faisabilité</strong>
+              </li>
+              <li>le dossier de validation</li>
+              <li>le passage devant le jury</li>
+            </ol>
 
             <p>
               Vous êtes ici à{" "}

@@ -8,7 +8,7 @@ module.exports = {
         "spin-slow": "spin 3s linear infinite",
       },
       colors: {
-        blue: { 600: "#0078f3" },
+        blue: { "light-text-default-info": "#0063CB", 600: "#0078f3" },
         gray: { 450: "#8C8E97" },
         neutral: {
           100: "#F6F6F6",
