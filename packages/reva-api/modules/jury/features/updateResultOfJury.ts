@@ -188,6 +188,24 @@ const validateJuryResultWithBlocks = async (
         ),
     ) || [];
 
+  // Rejette tout competenceBlocId absent du dossier de faisabilité de la
+  // candidature (bloque l'écriture cross-dossier via interop).
+  const validBlocIds = new Set(
+    feasibility?.dematerializedFeasibilityFile?.dffCertificationCompetenceBlocs.map(
+      (block) => block.certificationCompetenceBlocId,
+    ) ?? [],
+  );
+
+  const invalidBlocIds = (juryInfo.juryResultByCompetenceBlocs ?? [])
+    .filter((block) => !validBlocIds.has(block.competenceBlocId))
+    .map((block) => block.competenceBlocId);
+
+  if (invalidBlocIds.length > 0) {
+    throw new Error(
+      "Un ou plusieurs blocs de compétences ne font pas partie du dossier de cette candidature",
+    );
+  }
+
   const schema = z
     .object({
       result: z.enum(ALL_JURY_RESULTS),

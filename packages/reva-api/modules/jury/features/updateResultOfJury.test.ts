@@ -166,7 +166,7 @@ const failedJuryResults: JuryResult[] = [
 ];
 
 failedJuryResults.forEach((failedResult) => {
-  test(`should reset ready jury estimated date when submitting failed jury result ${failedResult}`, async () => {
+  test(`devrait réinitialiser la date de jury estimée lors de la soumission d'un résultat de jury en échec ${failedResult}`, async () => {
     const { jury, certificationAuthorityLocalAccount } =
       await createJuryAndDependenciesHelper();
 
@@ -196,7 +196,7 @@ const successfulJuryResults: JuryResult[] = [
 ];
 
 successfulJuryResults.forEach((successfulResult) => {
-  test(`should keep ready jury estimated date when submitting full jury result ${successfulResult}`, async () => {
+  test(`devrait conserver la date de jury estimée lors de la soumission d'un résultat de jury en réussite totale ${successfulResult}`, async () => {
     const { jury, certificationAuthorityLocalAccount } =
       await createJuryAndDependenciesHelper();
 
@@ -222,7 +222,7 @@ successfulJuryResults.forEach((successfulResult) => {
   });
 });
 
-test("should save jury result without errors", async () => {
+test("devrait enregistrer le résultat de jury sans erreur", async () => {
   const { jury, certificationAuthorityLocalAccount } =
     await createJuryAndDependenciesHelper();
 
@@ -242,7 +242,7 @@ test("should save jury result without errors", async () => {
   expect(juryUpdated?.isResultTemporary).toEqual(false);
 });
 
-test("should save jury result by competence blocs", async () => {
+test("devrait enregistrer le résultat de jury par bloc de compétences", async () => {
   const { jury, certificationAuthorityLocalAccount } =
     await createJuryAndDependenciesHelper();
   if (!jury.candidacy.certificationId) {
@@ -284,7 +284,46 @@ test("should save jury result by competence blocs", async () => {
   );
 });
 
-test("should reject successful result by block when no bloc is validated", async () => {
+test("devrait rejeter un résultat par bloc lorsqu'un bloc de compétences ne fait pas partie du dossier de la candidature", async () => {
+  const { jury, certificationAuthorityLocalAccount } =
+    await createJuryAndDependenciesHelper();
+  if (!jury.candidacy.certificationId) {
+    throw new Error("Certification id is not defined");
+  }
+
+  const [bloc1] = await setupJuryResultByBlockContext(
+    jury.candidacyId,
+    jury.candidacy.certificationId,
+  );
+
+  const blocOutsideDossier =
+    await prismaClient.certificationCompetenceBloc.create({
+      data: {
+        certificationId: jury.candidacy.certificationId,
+        label: "Bloc hors dossier",
+      },
+    });
+
+  await expect(
+    graphqlUpdateJuryResult({
+      role: "manage_feasibility",
+      account: certificationAuthorityLocalAccount.account,
+      juryId: jury.id,
+      result: "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+      juryResultByCompetenceBlocs: [
+        { competenceBlocId: bloc1.id, isCompetenceBlocValidated: true },
+        {
+          competenceBlocId: blocOutsideDossier.id,
+          isCompetenceBlocValidated: false,
+        },
+      ],
+    }),
+  ).rejects.toThrow(
+    "Un ou plusieurs blocs de compétences ne font pas partie du dossier de cette candidature",
+  );
+});
+
+test("devrait rejeter un résultat de réussite par bloc lorsqu'aucun bloc n'est validé", async () => {
   const { jury, certificationAuthorityLocalAccount } =
     await createJuryAndDependenciesHelper();
   if (!jury.candidacy.certificationId) {
@@ -310,7 +349,7 @@ test("should reject successful result by block when no bloc is validated", async
   ).rejects.toThrow("Vous devez valider au moins un bloc pour ce résultat");
 });
 
-test("should reject partial success result when all blocs are validated", async () => {
+test("devrait rejeter un résultat de réussite partielle lorsque tous les blocs sont validés", async () => {
   const { jury, certificationAuthorityLocalAccount } =
     await createJuryAndDependenciesHelper();
   if (!jury.candidacy.certificationId) {
@@ -338,7 +377,7 @@ test("should reject partial success result when all blocs are validated", async 
   );
 });
 
-test("should send jury result to candidate", async () => {
+test("devrait envoyer le résultat de jury au candidat", async () => {
   const sendJuryResultCandidateEmailSpy = vi.spyOn(
     SendJuryResultCandidateEmailModule,
     "sendJuryResultCandidateEmail",
@@ -360,7 +399,7 @@ test("should send jury result to candidate", async () => {
   expect(sendJuryResultCandidateEmailSpy).toHaveBeenCalledTimes(1);
 });
 
-test("should send jury result to organism", async () => {
+test("devrait envoyer le résultat de jury à l'organisme", async () => {
   const sendJuryResultAAPEmailSpy = vi.spyOn(
     SendJuryResultAAPEmailModule,
     "sendJuryResultAAPEmail",
@@ -408,7 +447,7 @@ const finalJuryResults: JuryResult[] = [
 ];
 
 finalJuryResults.forEach((result) => {
-  test(`should allow an admin to send a ${result} result with pending confirmation`, async () => {
+  test(`devrait autoriser un administrateur à envoyer un résultat ${result} en attente de confirmation`, async () => {
     const { jury } = await createJuryAndDependenciesHelper();
 
     const res = await graphqlUpdateJuryResult({
