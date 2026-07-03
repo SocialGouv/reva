@@ -1,13 +1,30 @@
 import { prismaClient } from "@/prisma/client";
 
-export const getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId = ({
-  candidacyId,
-}: {
-  candidacyId: string;
-}) =>
-  prismaClient.dematerializedFeasibilityFile.findFirst({
-    where: { feasibility: { candidacyId, isActive: true } },
-    include: {
-      prerequisites: true,
-    },
-  });
+import { createDFFIfNotExistsByCandidacyId } from "./createDefaultDFF";
+
+export const getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId =
+  async ({ candidacyId }: { candidacyId: string }) => {
+    const dff = await prismaClient.dematerializedFeasibilityFile.findFirst({
+      where: { feasibility: { candidacyId, isActive: true } },
+      include: {
+        prerequisites: true,
+      },
+    });
+
+    const isDfDematAutonomeActive = await prismaClient.feature.findFirst({
+      where: { key: "DF_DEMAT_AUTONOME", isActive: true },
+    });
+
+    if (isDfDematAutonomeActive && !dff) {
+      await createDFFIfNotExistsByCandidacyId({ candidacyId });
+
+      return prismaClient.dematerializedFeasibilityFile.findFirst({
+        where: { feasibility: { candidacyId, isActive: true } },
+        include: {
+          prerequisites: true,
+        },
+      });
+    }
+
+    return dff;
+  };
