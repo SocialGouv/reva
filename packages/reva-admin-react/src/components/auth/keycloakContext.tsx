@@ -113,6 +113,7 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
         setReady(true);
       },
       tokens: initialTokens,
+      useCheckSso: isImpersonationLanding(),
       onUpdateTokens: (tokens) => {
         saveTokens(tokens);
         setTokens(tokens);
@@ -177,20 +178,34 @@ type InitKeycloakParams = {
   tokens?: Tokens;
   onUpdateTokens?: (tokens: Tokens) => void;
   onLogout?: () => void;
+  // Only true during impersonation landing: KEYCLOAK_IDENTITY is set by the
+  // impersonation API, so check-sso can pick it up via the Cookie authenticator.
+  // For all other loads we skip check-sso to avoid a 400 from Keycloak when the
+  // browser flow is cookie-only and there is no active session.
+  useCheckSso?: boolean;
 };
 
 const initKeycloak = async (params: InitKeycloakParams) => {
-  const { keycloakInstance, onInit, tokens, onUpdateTokens, onLogout } = params;
+  const {
+    keycloakInstance,
+    onInit,
+    tokens,
+    onUpdateTokens,
+    onLogout,
+    useCheckSso,
+  } = params;
 
   let config: KeycloakInitOptions = {
     enableLogging: process.env.NODE_ENV !== "production",
-    onLoad: "check-sso",
-    silentCheckSsoRedirectUri: `${window.location.origin}/admin2/silent-check-sso.html`,
     // Disabled: Keycloak's iframe-based session check conflicts with Next.js
     // navigation and CSP headers. Cross-tab logout detection is sacrificed
     // in favour of reliable init. Users must log out explicitly per tab.
     checkLoginIframe: false,
     pkceMethod: "S256",
+    ...(useCheckSso && {
+      onLoad: "check-sso",
+      silentCheckSsoRedirectUri: `${window.location.origin}/admin2/silent-check-sso.html`,
+    }),
   };
 
   if (tokens) {

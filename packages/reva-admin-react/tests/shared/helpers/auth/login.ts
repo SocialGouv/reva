@@ -6,6 +6,13 @@ import adminToken from "./tokens/adminToken.json";
 import certificateurRegistryManagerToken from "./tokens/certificateurRegistryManagerToken.json";
 import certificateurToken from "./tokens/certificateurToken.json";
 
+// Cookie names must match keycloak.utils.ts
+const STORAGE_KEY = "REVA_ADMIN_AUTH_TOKENS";
+const ACCESS_TOKEN_COOKIE = `${STORAGE_KEY}_ACCESS_TOKEN`;
+const REFRESH_TOKEN_COOKIE = `${STORAGE_KEY}_REFRESH_TOKEN`;
+const ID_TOKEN_COOKIE = `${STORAGE_KEY}_ID_TOKEN`;
+const COOKIE_PATH = "/admin2";
+
 export const login = async ({
   page,
   role,
@@ -20,44 +27,7 @@ export const login = async ({
     | "certificateurRegistryManager";
   loginRequired?: boolean;
 }) => {
-  await page.route(
-    "**/auth/realms/reva/protocol/openid-connect/3p-cookies/step1.html",
-    async (route) => {
-      await route.fulfill({
-        path: "tests/shared/helpers/auth/pages/step1.html",
-      });
-    },
-  );
-  await page.route(
-    "**/realms/reva/protocol/openid-connect/login-status-iframe.html",
-    async (route) => {
-      await route.fulfill({
-        path: "tests/shared/helpers/auth/pages/status-iframe.html",
-      });
-    },
-  );
-  await page.route("**/admin2/silent-check-sso.html", async (route) => {
-    if (loginRequired) {
-      await route.fulfill({
-        path: `tests/shared/helpers/auth/pages/silent-check-sso-with-login-required.html`,
-      });
-    } else {
-      await route.fulfill({
-        path: `tests/shared/helpers/auth/pages/silent-check-sso.html`,
-      });
-    }
-  });
-
-  await page.route(
-    "**/realms/reva/protocol/openid-connect/auth**",
-    async (route) => {
-      await route.fulfill({
-        path: `tests/shared/helpers/auth/pages/mock-redirect-to-silent-check-sso.html`,
-      });
-    },
-  );
-
-  let tokens = {};
+  let tokens: typeof aapToken = aapToken;
 
   switch (role) {
     case "aap":
@@ -85,4 +55,29 @@ export const login = async ({
       });
     },
   );
+
+  // The new auth flow reads tokens from cookies (check-sso is no longer used
+  // except during impersonation). Set cookies so getTokens() returns them.
+  if (!loginRequired) {
+    await page.context().addCookies([
+      {
+        name: ACCESS_TOKEN_COOKIE,
+        value: tokens.access_token,
+        path: COOKIE_PATH,
+        domain: "localhost",
+      },
+      {
+        name: REFRESH_TOKEN_COOKIE,
+        value: tokens.refresh_token,
+        path: COOKIE_PATH,
+        domain: "localhost",
+      },
+      {
+        name: ID_TOKEN_COOKIE,
+        value: tokens.id_token,
+        path: COOKIE_PATH,
+        domain: "localhost",
+      },
+    ]);
+  }
 };
