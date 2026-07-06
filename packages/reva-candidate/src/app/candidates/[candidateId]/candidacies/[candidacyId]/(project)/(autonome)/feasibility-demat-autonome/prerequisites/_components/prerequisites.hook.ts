@@ -11,13 +11,6 @@ const feasibilityWithDematerializedFeasibilityFileByCandidacyId = graphql(`
     $candidacyId: ID!
   ) {
     feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
-      candidacy {
-        candidate {
-          givenName
-          lastname
-          firstname
-        }
-      }
       dematerializedFeasibilityFile {
         prerequisitesPartComplete
         prerequisitesComment
@@ -94,8 +87,6 @@ export const usePrerequisites = () => {
   const prerequisitesPartComplete =
     data?.feasibility_getActiveFeasibilityByCandidacyId
       ?.dematerializedFeasibilityFile?.prerequisitesPartComplete;
-  const candidate =
-    data?.feasibility_getActiveFeasibilityByCandidacyId?.candidacy?.candidate;
 
   return {
     prerequisitesComment,
@@ -103,6 +94,5 @@ export const usePrerequisites = () => {
     prerequisitesPartComplete,
     createOrUpdatePrerequisitesMutation,
     isLoadingPrerequisites,
-    candidate,
   };
 };

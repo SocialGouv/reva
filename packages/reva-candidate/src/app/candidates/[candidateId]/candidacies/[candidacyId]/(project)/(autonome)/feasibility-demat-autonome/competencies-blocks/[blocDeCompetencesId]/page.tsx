@@ -55,11 +55,6 @@ const getBlocDeCompetencesQuery = graphql(`
   ) {
     feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
       candidacy {
-        candidate {
-          givenName
-          lastname
-          firstname
-        }
         certification {
           codeRncp
         }
@@ -131,10 +126,6 @@ const CompetenciesBlockPage = () => {
         input,
       }),
   });
-
-  const candidate =
-    getBlocDeCompetencesResponse?.feasibility_getActiveFeasibilityByCandidacyId
-      ?.candidacy?.candidate;
 
   const dematerializedFile =
     getBlocDeCompetencesResponse?.feasibility_getActiveFeasibilityByCandidacyId
@@ -213,19 +204,20 @@ const CompetenciesBlockPage = () => {
     <Panel>
       <div className="flex flex-col">
         <Breadcrumb
-          className="mb-4"
-          currentPageLabel="Blocs de compétences"
+          currentPageLabel={`Blocs de compétences - ${block?.code}`}
+          className="mb-0"
           segments={[
             {
-              label: (
-                <span>
-                  {candidate?.givenName
-                    ? candidate.givenName
-                    : candidate?.lastname}{" "}
-                  {candidate?.firstname}
-                </span>
-              ),
-              linkProps: { href: "../../" },
+              label: "Ma candidature",
+              linkProps: {
+                href: "../../../",
+              },
+            },
+            {
+              label: "Dossier de faisabilité",
+              linkProps: {
+                href: "../../",
+              },
             },
           ]}
         />

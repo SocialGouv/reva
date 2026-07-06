@@ -89,12 +89,8 @@ const eligibilityRequirementMap = (
 
 export default function EligibilityPage() {
   const router = useRouter();
-  const {
-    certification,
-    createOrUpdateEligibilityRequirement,
-    feasibility,
-    candidate,
-  } = useEligibility();
+  const { certification, createOrUpdateEligibilityRequirement, feasibility } =
+    useEligibility();
 
   const defaultValues = useMemo(() => {
     return {
@@ -167,19 +163,20 @@ export default function EligibilityPage() {
     <Panel>
       <div className="flex flex-col">
         <Breadcrumb
-          className="mb-4"
-          currentPageLabel="Recevabilité du candidat"
+          currentPageLabel="Recevabilité déjà acquise"
+          className="mb-0"
           segments={[
             {
-              label: (
-                <span>
-                  {candidate?.givenName
-                    ? candidate.givenName
-                    : candidate?.lastname}{" "}
-                  {candidate?.firstname}
-                </span>
-              ),
-              linkProps: { href: "../" },
+              label: "Ma candidature",
+              linkProps: {
+                href: "../../",
+              },
+            },
+            {
+              label: "Dossier de faisabilité",
+              linkProps: {
+                href: "../",
+              },
             },
           ]}
         />

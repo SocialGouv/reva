@@ -11,11 +11,6 @@ const getCandidacyById = graphql(`
       id
       status
       isCertificationPartial
-      candidate {
-        givenName
-        lastname
-        firstname
-      }
       certification {
         id
         label
@@ -101,13 +96,11 @@ export const useCertificationPageLogic = () => {
   const certification = candidacy?.certification;
   const dematerializedFeasibilityFile =
     candidacy?.feasibility?.dematerializedFeasibilityFile;
-  const candidate = candidacy?.candidate;
 
   return {
     candidacy,
     certification,
     dematerializedFeasibilityFile,
     updateFeasibilityCertification,
-    candidate,
   };
 };

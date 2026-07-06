@@ -65,7 +65,7 @@ export default function FeasibilityDematAutonomeResourcesPage() {
     <Panel>
       <div className="flex flex-col w-full">
         <Breadcrumb
-          currentPageLabel="Mes expériences"
+          currentPageLabel="Dossier de faisabilité"
           className="mb-0"
           segments={[
             {

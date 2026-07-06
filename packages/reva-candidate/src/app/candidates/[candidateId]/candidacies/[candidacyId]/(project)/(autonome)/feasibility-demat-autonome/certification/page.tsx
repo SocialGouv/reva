@@ -52,7 +52,6 @@ const CertificationPage = () => {
     certification,
     dematerializedFeasibilityFile,
     updateFeasibilityCertification,
-    candidate,
   } = useCertificationPageLogic();
 
   const defaultValues = useMemo(
@@ -148,19 +147,20 @@ const CertificationPage = () => {
     <Panel>
       <div className="flex flex-col">
         <Breadcrumb
-          className="mb-4"
           currentPageLabel="Certification visée"
+          className="mb-0"
           segments={[
             {
-              label: (
-                <span>
-                  {candidate?.givenName
-                    ? candidate.givenName
-                    : candidate?.lastname}{" "}
-                  {candidate?.firstname}
-                </span>
-              ),
-              linkProps: { href: "../" },
+              label: "Ma candidature",
+              linkProps: {
+                href: "../../",
+              },
+            },
+            {
+              label: "Dossier de faisabilité",
+              linkProps: {
+                href: "../",
+              },
             },
           ]}
         />
