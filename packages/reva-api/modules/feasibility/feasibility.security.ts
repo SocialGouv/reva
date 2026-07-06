@@ -1,7 +1,6 @@
 import {
   defaultSecurity,
   isAdmin,
-  isAdminCandidacyCompanionOrFeasibilityManager,
   isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
   isAnyone,
   isAdminOrOwnerOfCandidacy,
@@ -13,7 +12,7 @@ export const resolversSecurityMap = {
   "Query.*": isAnyone,
 
   "Query.feasibility_getActiveFeasibilityByCandidacyId":
-    isAdminCandidacyCompanionOrFeasibilityManager,
+    isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
 
   "Mutation.*": defaultSecurity,
 
@@ -25,5 +24,6 @@ export const resolversSecurityMap = {
   "Candidacy.feasibility":
     isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
 
-  "Feasibility.candidacy": isAdminCandidacyCompanionOrFeasibilityManager,
+  "Feasibility.candidacy":
+    isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
 };

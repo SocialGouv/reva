@@ -60,6 +60,7 @@ export const isAdminOrCertificationAuthority = [
   hasRole(["admin", "manage_feasibility"]),
 ];
 
+// eslint-disable-next-line import/no-unused-modules
 export const isAdminCandidacyCompanionOrFeasibilityManager = [
   hasRole(["admin", "manage_candidacy", "manage_feasibility"]),
   whenHasRole("manage_candidacy", isCandidacyOwner),
