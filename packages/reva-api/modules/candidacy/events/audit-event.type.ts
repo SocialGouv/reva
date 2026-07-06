@@ -1,3 +1,0 @@
-export enum AuditEventType {
-  CANCEL_CANDIDACY_DROP_OUT = "CANCEL_CANDIDACY_DROP_OUT",
-}

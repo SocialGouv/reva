@@ -36,7 +36,6 @@ import {
 import { sendCandidacyArchivedEmailToCertificateur } from "./emails/sendCandidacyArchivedEmailToCertificateur";
 import { sendCandidacyDropOutEmailToCandidate } from "./emails/sendCandidacyDropOutEmailToCandidate";
 import { sendCandidacyDropOutEmailToCertificateur } from "./emails/sendCandidacyDropOutEmailToCertificateur";
-import { cancelDropOutCandidacyEvent } from "./events/cancel-drop-out.audit-event";
 import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
 import { canAccessCandidacy } from "./features/canAccessCandidacy";
@@ -687,14 +686,7 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
       });
 
-      // Save candidacyDropOut as AuditEvent
-      const accountId = context.auth.userInfo?.sub;
-
       const candidacyDropOut = result.candidacyDropOut;
-
-      if (accountId && candidacyDropOut) {
-        await cancelDropOutCandidacyEvent(accountId, candidacyDropOut);
-      }
 
       logCandidacyEvent({
         candidacyId: payload.candidacyId,
