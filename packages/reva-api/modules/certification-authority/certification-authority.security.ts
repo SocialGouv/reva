@@ -12,8 +12,9 @@ import {
   isAdminOrManager,
   isAnyone,
   isOwnerOrCanManageCandidacy,
-  isRegistryManagerOrLocalAccountCertificationAuthorityStructureMember,
 } from "@/modules/shared/security/presets";
+
+import { hasRole } from "../shared/security/middlewares/hasRole";
 
 export const resolversSecurityMap = {
   "Mutation.*": defaultSecurity, // forbidden
@@ -65,8 +66,10 @@ export const resolversSecurityMap = {
   "Mutation.certification_authority_createCertificationAuthority": isAdmin,
   "Mutation.certification_authority_updateCertificationAuthorityDepartments":
     isAdmin,
-  "Mutation.certification_authority_acceptCgu":
-    isRegistryManagerOrLocalAccountCertificationAuthorityStructureMember,
+  "Mutation.certification_authority_acceptCgu": hasRole([
+    "manage_certification_registry",
+    "manage_certification_authority_local_account",
+  ]),
   "Mutation.certification_authority_createCertificationAuthorityStructure":
     isAdmin,
 
