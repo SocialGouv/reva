@@ -42,7 +42,7 @@ function auth({ url, token }: { url: string; token: string }) {
 
       // win.cookieStore.set(
       //   "tarteaucitron",
-      //   "!matomotm=false!crisp=false!produktly=false",
+      //   "!matomotm=false!crisp=false",
       // );
       // const originalLocalStorageRemoveItem = win.localStorage.removeItem;
 

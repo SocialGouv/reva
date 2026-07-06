@@ -6778,36 +6778,3 @@ tarteaucitron.services.klaviyo = {
     }
 };
 
-// Produktly
-tarteaucitron.services.produktly = {
-    "key": "produktly",
-    "type": "api",
-    "name": "Produktly",
-    "readmoreLink": "https://www.produktly.com/privacy",
-    "uri": "https://www.produktly.com",
-    "needConsent": true,
-    "cookies": ["__stripe_mid","__stripe_sid","_ga","sessionId"],
-    "js": function () {
-        "use strict";
-        const produktlyClientToken = tarteaucitron.user.produktlyClientToken;
-
-        if (produktlyClientToken === undefined) {
-            return;
-        }
-
-        tarteaucitron.addScript('', 'produktly-script', function () {
-            console.log("Produktly script loaded");
-            const initProduktly = function (w, d, f) {
-                w.Produktly=w.Produktly||new Proxy(()=>{},{get:function(_,n){return(...a)=>{w.ProduktlyQ=(w.ProduktlyQ||[]).concat([[n,a]])}},apply:function(_,__,a){w.ProduktlyQ=(w.ProduktlyQ||[]).concat([["apply",a]])}})
-                var a = d.getElementsByTagName('head')[0];
-                var s = d.createElement('script');
-                s.async = 1;
-                s.src = f;
-                s.setAttribute('id', 'produktlyScript');
-                s.dataset.clientToken = produktlyClientToken;
-                a.appendChild(s);
-              }
-            initProduktly(window, document, "https://public.produktly.com/js/main.js");
-        },false);
-    }
-};

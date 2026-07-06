@@ -17,13 +17,8 @@ import { Toaster } from "react-hot-toast";
 import { AuthGuard } from "@/components/auth/authGuard";
 import { KeycloakProvider } from "@/components/auth/keycloakContext";
 import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
-import { Produktly } from "@/components/script/Produktly";
 import { tarteaucitronScript } from "@/components/script/Tarteaucitron";
-import {
-  MATOMO_CONTAINER_NAME,
-  MATOMO_URL,
-  PRODUKTLY_CLIENT_TOKEN,
-} from "@/config/config";
+import { MATOMO_CONTAINER_NAME, MATOMO_URL } from "@/config/config";
 
 const queryClient = new QueryClient();
 
@@ -44,7 +39,6 @@ export default function RootLayout({
     >
       <head>
         <StartDsfrOnHydration />
-        {PRODUKTLY_CLIENT_TOKEN && <Produktly />}
         <title>France VAE</title>
       </head>
       <body>

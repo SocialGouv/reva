@@ -10,7 +10,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 const consentCookie = {
   name: "tarteaucitron",
-  value: "!matomotm=false!crisp=false!produktly=false",
+  value: "!matomotm=false!crisp=false",
   domain: "localhost",
   path: "/",
   expires: -1,

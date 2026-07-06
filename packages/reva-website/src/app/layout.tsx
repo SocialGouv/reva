@@ -14,7 +14,6 @@ import Script from "next/script";
 import { Toaster } from "react-hot-toast";
 
 import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
-import { PRODUKTLY_CLIENT_TOKEN } from "@/config/config";
 
 import { DsfrProvider, StartDsfrOnHydration } from "./_components/dsfr";
 // import { getHtmlAttributes } from "./_components/dsfr/server-only-index";
@@ -51,7 +50,6 @@ export default function RootLayout({
           <Script strategy="beforeInteractive" id="tarteaucitron-wrapper">
             {tarteaucitronScript({
               matomoUrl: `${matomoBaseUrl}/js/container_${matomoContainerName}.js`,
-              produktlyClientToken: PRODUKTLY_CLIENT_TOKEN,
             })}
           </Script>
         )}
