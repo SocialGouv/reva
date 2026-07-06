@@ -83,6 +83,13 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       summary:
         "Crée un compte d'utilisateur rattaché au gestionnaire de candidature passé en paramètre",
       tags: ["Authentification"],
+      headers: {
+        type: "object",
+        properties: {
+          "auth-api-key": { type: "string" },
+        },
+        required: ["auth-api-key"],
+      },
       body: {
         type: "object",
         properties: {
@@ -126,9 +133,9 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       },
     },
     handler: async (request, reply) => {
-      const { auth_api_key } = request.headers;
+      const authApiKey = request.headers["auth-api-key"] as string;
 
-      if (!secureApiKeyCheck(auth_api_key as string)) {
+      if (!secureApiKeyCheck(authApiKey)) {
         reply.status(401).send();
         return;
       }
@@ -156,9 +163,9 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       headers: {
         type: "object",
         properties: {
-          auth_api_key: { type: "string" },
+          "auth-api-key": { type: "string" },
         },
-        required: ["auth_api_key"],
+        required: ["auth-api-key"],
       },
       body: {
         type: "object",
@@ -188,9 +195,9 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       },
     },
     handler: async (request, reply) => {
-      const { auth_api_key } = request.headers;
+      const authApiKey = request.headers["auth-api-key"] as string;
 
-      if (!secureApiKeyCheck(auth_api_key as string)) {
+      if (!secureApiKeyCheck(authApiKey)) {
         reply.status(401).send();
         return;
       }
@@ -215,9 +222,9 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       headers: {
         type: "object",
         properties: {
-          auth_api_key: { type: "string" },
+          "auth-api-key": { type: "string" },
         },
-        required: ["auth_api_key"],
+        required: ["auth-api-key"],
       },
       body: {
         type: "object",
@@ -239,9 +246,9 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       },
     },
     handler: async (request, reply) => {
-      const { auth_api_key } = request.headers;
+      const authApiKey = request.headers["auth-api-key"] as string;
 
-      if (!secureApiKeyCheck(auth_api_key as string)) {
+      if (!secureApiKeyCheck(authApiKey)) {
         reply.status(401).send();
         return;
       }
