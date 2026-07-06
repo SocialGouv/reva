@@ -25,7 +25,7 @@ const getStateFromCompetence = ({
 const BadgeState = ({
   state,
 }: {
-  state: DffCertificationCompetenceDetailsState | "TO_COMPLETE";
+  state: DffCertificationCompetenceDetailsState;
 }) => {
   if (state === "YES") {
     return (
@@ -49,21 +49,11 @@ const BadgeState = ({
     );
   }
 
-  if (state === "TO_COMPLETE") {
-    return (
-      <Badge severity="warning" noIcon small>
-        À compléter
-      </Badge>
-    );
-  }
-
   return null;
 };
 
 const CertificationCompetenceRow = ({ label }: { label: string }) => (
-  <div
-    className={`px-4 py-3 text-dsfr-blue-france-sun-113 font-medium border-b-[1px] border-neutral-200`}
-  >
+  <div className={`px-4 py-3 font-medium border-b-[1px] border-neutral-200`}>
     {label}
   </div>
 );
@@ -85,7 +75,15 @@ export const CertificationCompetenceAccordion = ({
     ? `${competenceBloc.code} - ${competenceBloc.label}`
     : competenceBloc.label;
 
-  if (hideAccordionContent) {
+  const allCompetenceBlockDetailsCompleted = competenceBloc.competences.every(
+    (competence) =>
+      getStateFromCompetence({
+        competence,
+        competenceDetails,
+      }) !== "TO_COMPLETE",
+  );
+
+  if (hideAccordionContent || !allCompetenceBlockDetailsCompleted) {
     return <CertificationCompetenceRow label={label} />;
   }
 
@@ -94,10 +92,12 @@ export const CertificationCompetenceAccordion = ({
       {competenceBloc.competences.map((competence) => (
         <div key={competence.id}>
           <BadgeState
-            state={getStateFromCompetence({
-              competence,
-              competenceDetails,
-            })}
+            state={
+              getStateFromCompetence({
+                competence,
+                competenceDetails,
+              }) as DffCertificationCompetenceDetailsState
+            }
           />
           <p>
             <span className="font-bold">{competence.label}</span>

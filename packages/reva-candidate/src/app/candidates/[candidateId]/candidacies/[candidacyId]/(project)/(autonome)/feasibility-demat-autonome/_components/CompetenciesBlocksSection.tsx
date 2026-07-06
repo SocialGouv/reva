@@ -66,34 +66,37 @@ export const CompetenciesBlocksSection = ({
     data-testid="competencies-blocks-section"
   >
     <ul className="list-none flex flex-col gap-2">
-      {blocsDeCompetences?.map((bloc) => (
-        <li
-          key={bloc.certificationCompetenceBloc.id}
-          className="flex flex-row justify-between items-start pb-0 gap-6"
-        >
-          <CertificationCompetenceAccordion
+      <div className="fr-accordions-group">
+        {blocsDeCompetences?.map((bloc) => (
+          <li
             key={bloc.certificationCompetenceBloc.id}
-            competenceBloc={bloc.certificationCompetenceBloc}
-            competenceBlocText={bloc.text}
-            competenceDetails={certificationCompetenceDetails}
-            hideAccordionContent={isEligibilityRequirementPartial}
-          />
-          {!disabled && isEditable && (
-            <Button
-              className="w-[120px] flex-none mt-1 border-t-[1px]"
-              priority={bloc.complete ? "secondary" : "primary"}
-              linkProps={{
-                href: `./competencies-blocks/${bloc.certificationCompetenceBloc.id}`,
-              }}
-              data-testid="competencies-blocks-section-button"
-            >
-              <span className="mx-auto">
-                {bloc.complete ? "Modifier" : "Compléter"}
-              </span>
-            </Button>
-          )}
-        </li>
-      ))}
+            className="flex flex-row justify-between items-start pb-0 gap-6"
+          >
+            <CertificationCompetenceAccordion
+              key={bloc.certificationCompetenceBloc.id}
+              competenceBloc={bloc.certificationCompetenceBloc}
+              competenceBlocText={bloc.text}
+              competenceDetails={certificationCompetenceDetails}
+              hideAccordionContent={isEligibilityRequirementPartial}
+            />
+            {!disabled && isEditable && (
+              <Button
+                className="w-[120px] flex-none mt-1 border-t-[1px]"
+                priority={bloc.complete ? "secondary" : "primary"}
+                linkProps={{
+                  href: `./competencies-blocks/${bloc.certificationCompetenceBloc.id}`,
+                }}
+                size="small"
+                data-testid="competencies-blocks-section-button"
+              >
+                <span className="mx-auto">
+                  {bloc.complete ? "Modifier" : "Compléter"}
+                </span>
+              </Button>
+            )}
+          </li>
+        ))}
+      </div>
       {showComplementExperienceParcoursVise && (
         <li className="pb-0">
           <ComplementExperienceParcoursViseAccordion
