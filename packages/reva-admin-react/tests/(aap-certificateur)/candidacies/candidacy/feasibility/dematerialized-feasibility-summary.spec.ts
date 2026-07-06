@@ -105,6 +105,13 @@ const dematerializedFeasibilityFile = {
         label: "Mettre en place des outils de suivi en temps réel",
       },
     },
+    {
+      state: "PARTIALLY",
+      certificationCompetence: {
+        id: "526ef5b3-3fde-4ad2-8a4f-4c95bdc30744",
+        label: "Superviser l'intégration des données",
+      },
+    },
   ],
   attachments: [
     {
@@ -674,7 +681,7 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
       await expect(
         bloc2.getByText("Superviser l'intégration des données"),
       ).toBeVisible();
-      await expect(bloc2.getByText("À compléter")).toBeVisible();
+      await expect(bloc2.getByText("Partiellement")).toBeVisible();
       await expect(
         bloc2.getByText(
           "Compétences à confirmer sur la digitalisation des flux.",
