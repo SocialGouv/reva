@@ -307,7 +307,21 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
         ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
         eligibilityRequirement: DFF_FULL_ELIGIBILITY,
         certificationPartComplete: true,
-        blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES,
+        competenceBlocsPartCompletion: "COMPLETED",
+        blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES.map((bloc) => ({
+          ...bloc,
+          complete: true,
+        })),
+        certificationCompetenceDetails:
+          DEFAULT_BLOCS_COMPETENCES[0].certificationCompetenceBloc.competences.map(
+            (competence) => ({
+              state: "YES",
+              certificationCompetence: {
+                id: competence.id,
+                label: competence.label,
+              },
+            }),
+          ),
       },
     };
 
