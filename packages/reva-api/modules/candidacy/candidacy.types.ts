@@ -6,11 +6,6 @@ import {
   JuryResultFilter,
 } from "../graphql/generated/graphql";
 
-export interface CandidacyDropOut {
-  status: CandidacyStatusStep;
-  otherReasonContent?: string | null;
-}
-
 export interface Candidacy {
   id: string;
   isCertificationPartial?: boolean | null;
