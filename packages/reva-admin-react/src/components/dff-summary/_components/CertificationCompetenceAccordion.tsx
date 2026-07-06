@@ -75,15 +75,7 @@ export const CertificationCompetenceAccordion = ({
     ? `${competenceBloc.code} - ${competenceBloc.label}`
     : competenceBloc.label;
 
-  const allCompetenceBlockDetailsCompleted = competenceBloc.competences.every(
-    (competence) =>
-      getStateFromCompetence({
-        competence,
-        competenceDetails,
-      }) !== "TO_COMPLETE",
-  );
-
-  if (hideAccordionContent || !allCompetenceBlockDetailsCompleted) {
+  if (hideAccordionContent) {
     return <CertificationCompetenceRow label={label} />;
   }
 

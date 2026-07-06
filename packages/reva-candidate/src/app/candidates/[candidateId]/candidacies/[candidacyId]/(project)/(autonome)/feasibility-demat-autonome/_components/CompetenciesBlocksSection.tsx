@@ -77,7 +77,9 @@ export const CompetenciesBlocksSection = ({
               competenceBloc={bloc.certificationCompetenceBloc}
               competenceBlocText={bloc.text}
               competenceDetails={certificationCompetenceDetails}
-              hideAccordionContent={isEligibilityRequirementPartial}
+              hideAccordionContent={
+                isEligibilityRequirementPartial || !bloc.complete
+              }
             />
             {!disabled && isEditable && (
               <Button
