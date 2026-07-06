@@ -312,16 +312,6 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
           ...bloc,
           complete: true,
         })),
-        certificationCompetenceDetails:
-          DEFAULT_BLOCS_COMPETENCES[0].certificationCompetenceBloc.competences.map(
-            (competence) => ({
-              state: "YES",
-              certificationCompetence: {
-                id: competence.id,
-                label: competence.label,
-              },
-            }),
-          ),
       },
     };
 
