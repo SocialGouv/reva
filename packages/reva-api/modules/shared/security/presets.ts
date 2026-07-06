@@ -188,19 +188,3 @@ export const isAdminOrCertificationAuthorityLocalAccountManagerOrCertificationAu
       isCertificationAuthorityLocalAccountOwner,
     ),
   ];
-
-export const isRegistryManagerOrLocalAccountCertificationAuthorityStructureMember =
-  [
-    hasRole([
-      "manage_certification_registry",
-      "manage_certification_authority_local_account",
-    ]),
-    whenHasRole(
-      "manage_certification_registry",
-      getIsCertificationAuthorityStructureRegistryManagerMember,
-    ),
-    whenHasRole(
-      "manage_certification_authority_local_account",
-      getIsCertificationAuthorityStructureMember,
-    ),
-  ];
