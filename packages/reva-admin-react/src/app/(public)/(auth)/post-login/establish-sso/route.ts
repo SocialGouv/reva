@@ -3,13 +3,9 @@ import { NextRequest } from "next/server";
 
 import { REST_API_URL } from "@/config/config";
 
-import {
-  POST_LOGIN_TOKENS_COOKIE,
-  POST_LOGIN_TOKENS_COOKIE_PATH,
-} from "../../_lib/post-login-cookie";
+import { POST_LOGIN_TOKENS_COOKIE } from "../../_lib/post-login-cookie";
 
 const DEFAULT_REDIRECT = "/admin2/post-login";
-const CLEAR_TOKENS_COOKIE = `${POST_LOGIN_TOKENS_COOKIE}=; Path=${POST_LOGIN_TOKENS_COOKIE_PATH}; Max-Age=0; HttpOnly; SameSite=Lax`;
 
 // Anti-open-redirect : parse pour neutraliser ../, %2F, scheme absolu, etc.
 const isSafeAdminRedirect = (next: string): boolean => {
@@ -55,14 +51,9 @@ export async function GET(request: NextRequest) {
     for (const raw of setCookies) {
       response.headers.append("set-cookie", raw);
     }
-    // Clear post_login_tokens UNIQUEMENT si impersonation a posé un cookie :
-    // bloque le re-trigger pour les super-admins. Pour les autres rôles
-    // (manage_candidacy, manage_feasibility, ...) establishSsoSession retourne
-    // [] côté API, et /post-login a besoin du cookie survivant pour injecter
-    // les tokens via PostLoginClient.resetKeycloakInstance.
-    if (setCookies.length > 0) {
-      response.headers.append("set-cookie", CLEAR_TOKENS_COOKIE);
-    }
+    // post_login_tokens is intentionally not cleared here: /post-login needs
+    // it to inject tokens into PostLoginClient.resetKeycloakInstance for all
+    // roles, including admins. The cookie expires naturally (max-age=60s).
     return response;
   } catch (error) {
     console.error("establish-sso route handler: fetch reva-api failed", error);
