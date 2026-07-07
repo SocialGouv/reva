@@ -205,7 +205,7 @@ const CompetenciesBlockPage = () => {
       <div className="flex flex-col">
         <Breadcrumb
           currentPageLabel={`Blocs de compétences - ${block?.code}`}
-          className="mb-0"
+          className="mb-2"
           segments={[
             {
               label: "Ma candidature",
@@ -222,7 +222,7 @@ const CompetenciesBlockPage = () => {
           ]}
         />
 
-        <h1>Blocs de compétences</h1>
+        <h1 className="mb-0">Blocs de compétences</h1>
         <FormOptionalFieldsDisclaimer />
         <p className="text-xl mb-12">
           Pour chaque bloc, décrivez les activités réalisées et le contexte dans

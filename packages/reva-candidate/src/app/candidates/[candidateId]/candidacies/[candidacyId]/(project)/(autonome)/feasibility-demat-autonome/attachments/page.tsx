@@ -254,24 +254,24 @@ export default function AttachmentsPage() {
       <div className="flex flex-col">
         <Breadcrumb
           currentPageLabel="Pièces jointes"
-          className="mb-0"
+          className="mb-2"
           segments={[
             {
               label: "Ma candidature",
               linkProps: {
-                href: "../../../",
+                href: "../../",
               },
             },
             {
               label: "Dossier de faisabilité",
               linkProps: {
-                href: "../../",
+                href: "../",
               },
             },
           ]}
         />
 
-        <h1>Pièces jointes</h1>
+        <h1 className="mb-0">Pièces jointes</h1>
         <FormOptionalFieldsDisclaimer />
         <p className="text-xl mb-12">
           Veillez à bien transmettre toutes les pièces justificatives qui

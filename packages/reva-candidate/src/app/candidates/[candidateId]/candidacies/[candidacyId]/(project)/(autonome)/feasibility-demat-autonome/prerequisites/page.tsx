@@ -160,7 +160,7 @@ export default function PrerequisitesPage() {
       <div className="flex flex-col">
         <Breadcrumb
           currentPageLabel="Pré-requis obligatoires"
-          className="mb-0"
+          className="mb-2"
           segments={[
             {
               label: "Ma candidature",
@@ -177,7 +177,7 @@ export default function PrerequisitesPage() {
           ]}
         />
 
-        <h1>Pré-requis obligatoires</h1>
+        <h1 className="mb-0">Pré-requis obligatoires</h1>
         <FormOptionalFieldsDisclaimer />
         <p className="text-xl mb-12">
           Les pré-requis sont{" "}

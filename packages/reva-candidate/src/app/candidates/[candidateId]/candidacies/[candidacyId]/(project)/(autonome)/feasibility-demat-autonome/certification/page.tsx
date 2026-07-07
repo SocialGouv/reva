@@ -148,7 +148,7 @@ const CertificationPage = () => {
       <div className="flex flex-col">
         <Breadcrumb
           currentPageLabel="Certification visée"
-          className="mb-0"
+          className="mb-2"
           segments={[
             {
               label: "Ma candidature",

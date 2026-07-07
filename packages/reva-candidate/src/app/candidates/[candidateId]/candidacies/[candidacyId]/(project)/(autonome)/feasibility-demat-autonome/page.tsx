@@ -20,6 +20,7 @@ import { CertificationSection } from "./_components/CertificationSection";
 import { CompetenciesBlocksSection } from "./_components/CompetenciesBlocksSection";
 import { EligibilitySection } from "./_components/EligibilitySection";
 import { PrerequisitesSection } from "./_components/PrerequisitesSection";
+import { SwornStatementSection } from "./_components/SwornStatementSection";
 import { useFeasibilityDematAutonomePage } from "./feasibility-demat-autonome.hook";
 
 const modalWhatIsTheFeasibilityFile = createModal({
@@ -66,7 +67,7 @@ export default function FeasibilityDematAutonomeResourcesPage() {
       <div className="flex flex-col w-full">
         <Breadcrumb
           currentPageLabel="Dossier de faisabilité"
-          className="mb-0"
+          className="mb-2"
           segments={[
             {
               label: "Ma candidature",
@@ -76,7 +77,7 @@ export default function FeasibilityDematAutonomeResourcesPage() {
             },
           ]}
         />
-        <h1 className="mt-2 mb-6">Dossier de faisabilité</h1>
+        <h1 className="mb-6">Dossier de faisabilité</h1>
         <p className="text-xl mb-12">
           Complétez toutes les sections du dossier de faisabilité avant de
           l'envoyer au certificateur.
@@ -156,6 +157,11 @@ export default function FeasibilityDematAutonomeResourcesPage() {
               attachments={
                 dematerializedFeasibilityFile?.attachments as DffAttachment[]
               }
+            />
+
+            <SwornStatementSection
+              isCompleted={!!dematerializedFeasibilityFile?.swornStatementFile}
+              isEditable={isFeasibilityEditable}
             />
           </div>
 

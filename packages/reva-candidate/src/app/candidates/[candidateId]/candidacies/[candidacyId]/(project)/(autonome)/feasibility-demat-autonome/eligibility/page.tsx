@@ -164,7 +164,7 @@ export default function EligibilityPage() {
       <div className="flex flex-col">
         <Breadcrumb
           currentPageLabel="Recevabilité déjà acquise"
-          className="mb-0"
+          className="mb-2"
           segments={[
             {
               label: "Ma candidature",
