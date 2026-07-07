@@ -25,6 +25,7 @@ export const FancyUpload = ({
   stateRelatedMessage,
   defaultFile,
   onClickDelete,
+  dataTest,
 }: {
   title: string;
   description?: ReactNode;
@@ -38,6 +39,7 @@ export const FancyUpload = ({
   stateRelatedMessage?: ReactNode;
   defaultFile?: { name: string; url: string; mimeType: string };
   onClickDelete?: () => void;
+  dataTest?: string;
 }) => {
   const [filePreview, setFilePreview] = useState<File | null>(null);
   const urlPreview = useMemo(
@@ -98,7 +100,7 @@ export const FancyUpload = ({
   }
 
   return (
-    <div className={`relative ${className || ""}`}>
+    <div className={`relative ${className || ""}`} data-testid={dataTest}>
       <Upload
         className={`border bg-dsfrGray-50 p-8`}
         label={
