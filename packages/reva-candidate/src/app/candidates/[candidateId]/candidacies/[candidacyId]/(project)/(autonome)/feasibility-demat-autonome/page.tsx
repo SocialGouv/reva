@@ -20,6 +20,7 @@ import { CertificationSection } from "./_components/CertificationSection";
 import { CompetenciesBlocksSection } from "./_components/CompetenciesBlocksSection";
 import { EligibilitySection } from "./_components/EligibilitySection";
 import { PrerequisitesSection } from "./_components/PrerequisitesSection";
+import { SendFileCertificationAuthoritySection } from "./_components/SendFileCertificateurSection";
 import { SwornStatementSection } from "./_components/SwornStatementSection";
 import { useFeasibilityDematAutonomePage } from "./feasibility-demat-autonome.hook";
 
@@ -162,6 +163,17 @@ export default function FeasibilityDematAutonomeResourcesPage() {
             <SwornStatementSection
               isCompleted={!!dematerializedFeasibilityFile?.swornStatementFile}
               isEditable={isFeasibilityEditable}
+            />
+
+            <SendFileCertificationAuthoritySection
+              sentToCertificationAuthorityAt={
+                feasibilityFileSentAt ? toDate(feasibilityFileSentAt) : null
+              }
+              isReadyToBeSentToCertificationAuthority={
+                !!dematerializedFeasibilityFile?.isReadyToBeSentToCertificationAuthority
+              }
+              disabled={candidacy.warningOnFeasibilitySubmission !== "NONE"}
+              isIncomplete={feasibilityDecisionIsIncomplete}
             />
           </div>
 

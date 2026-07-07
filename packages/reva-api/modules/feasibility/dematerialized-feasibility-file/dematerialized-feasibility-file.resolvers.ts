@@ -116,7 +116,11 @@ const unsafeResolvers = {
     ) => {
       const feasibility = await prismaClient.feasibility.findUnique({
         where: { id: dff.feasibilityId },
-        select: { decision: true, decisionSentAt: true },
+        select: {
+          decision: true,
+          decisionSentAt: true,
+          candidacy: { select: { typeAccompagnement: true } },
+        },
       });
 
       return checkIsDFFReadyToBeSentToCertificationAuthorityById({
@@ -130,6 +134,7 @@ const unsafeResolvers = {
         candidateConfirmationAt: dff.candidateConfirmationAt,
         feasibilityDecision: feasibility?.decision,
         feasibilityDecisionSentAt: feasibility?.decisionSentAt,
+        typeAccompagnement: feasibility?.candidacy?.typeAccompagnement,
       });
     },
     swornStatementFile: ({

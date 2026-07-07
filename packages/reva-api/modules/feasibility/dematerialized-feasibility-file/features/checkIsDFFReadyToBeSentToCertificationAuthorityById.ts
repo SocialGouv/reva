@@ -3,6 +3,7 @@ import {
   DFFDecision,
   DFFEligibilityRequirement,
   FeasibilityStatus,
+  CandidacyTypeAccompagnement,
 } from "@prisma/client";
 
 type CheckIsDFFReadyToBeSentToCertificationAuthorityByIdArgs = {
@@ -16,6 +17,7 @@ type CheckIsDFFReadyToBeSentToCertificationAuthorityByIdArgs = {
   candidateConfirmationAt: Date | null;
   feasibilityDecision?: FeasibilityStatus | null;
   feasibilityDecisionSentAt?: Date | null;
+  typeAccompagnement?: CandidacyTypeAccompagnement | null;
 };
 
 export const checkIsDFFReadyToBeSentToCertificationAuthorityById = async ({
@@ -29,6 +31,7 @@ export const checkIsDFFReadyToBeSentToCertificationAuthorityById = async ({
   candidateConfirmationAt,
   feasibilityDecision,
   feasibilityDecisionSentAt,
+  typeAccompagnement = "ACCOMPAGNE",
 }: CheckIsDFFReadyToBeSentToCertificationAuthorityByIdArgs) => {
   // Apres une decision INCOMPLETE, bloquer tant que le candidat n'a pas re-confirme (comparaison temporelle)
   if (
@@ -45,8 +48,12 @@ export const checkIsDFFReadyToBeSentToCertificationAuthorityById = async ({
     certificationPartComplete &&
     prerequisitesPartComplete &&
     !!eligibilityRequirement &&
-    !!swornStatementFileId &&
-    !!candidateConfirmationAt;
+    !!swornStatementFileId;
+
+  if (typeAccompagnement === "ACCOMPAGNE") {
+    isDFFReadyToBeSentToCertificationAuthority =
+      isDFFReadyToBeSentToCertificationAuthority && !!candidateConfirmationAt;
+  }
 
   const isEligibilityTotal =
     eligibilityRequirement === "FULL_ELIGIBILITY_REQUIREMENT";
@@ -54,8 +61,12 @@ export const checkIsDFFReadyToBeSentToCertificationAuthorityById = async ({
   if (isEligibilityTotal) {
     isDFFReadyToBeSentToCertificationAuthority =
       isDFFReadyToBeSentToCertificationAuthority &&
-      competenceBlocsPartCompletion === "COMPLETED" &&
-      !!aapDecision;
+      competenceBlocsPartCompletion === "COMPLETED";
+
+    if (typeAccompagnement === "ACCOMPAGNE") {
+      isDFFReadyToBeSentToCertificationAuthority =
+        isDFFReadyToBeSentToCertificationAuthority && !!aapDecision;
+    }
   }
 
   return isDFFReadyToBeSentToCertificationAuthority;
