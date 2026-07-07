@@ -1,4 +1,10 @@
+import { FeasibilityStatus } from "@prisma/client";
+
 import { getActiveFeasibilityByCandidacyid } from "@/modules/feasibility/feasibility.features";
+
+// Feasibility decisions past which the certification authority is already handling the candidacy.
+export const FEASIBILITY_DECISIONS_LOCKING_CERTIFICATION_AUTHORITY: FeasibilityStatus[] =
+  ["PENDING", "REJECTED", "ADMISSIBLE", "COMPLETE"];
 
 export const isCandidacyCertificationAuthorityUpdatable = async ({
   candidacyId,
@@ -14,12 +20,10 @@ export const isCandidacyCertificationAuthorityUpdatable = async ({
   } else {
     const feasibilityDecisionAsString = feasibility?.decision || "";
 
-    certificationAuthorityUpdatable = ![
-      "PENDING",
-      "REJECTED",
-      "ADMISSIBLE",
-      "COMPLETE",
-    ].includes(feasibilityDecisionAsString);
+    certificationAuthorityUpdatable =
+      !FEASIBILITY_DECISIONS_LOCKING_CERTIFICATION_AUTHORITY.includes(
+        feasibilityDecisionAsString as FeasibilityStatus,
+      );
   }
 
   return certificationAuthorityUpdatable;

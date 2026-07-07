@@ -2,6 +2,8 @@ import { CertificationAuthority } from "@prisma/client";
 
 import { prismaClient } from "@/prisma/client";
 
+import { refreshCertificationAuthorityOfCandidacies } from "./refreshCertificationAuthorityOfCandidacies";
+
 export const updateCertificationAuthorityDepartments = async ({
   certificationAuthorityId,
   departmentIds,
@@ -31,6 +33,18 @@ export const updateCertificationAuthorityDepartments = async ({
       where: { id: certificationAuthorityId },
     }),
   ]);
+
+  const certificationIds = (
+    await prismaClient.certificationAuthorityOnCertification.findMany({
+      where: { certificationAuthorityId },
+      select: { certificationId: true },
+    })
+  ).map(({ certificationId }) => certificationId);
+
+  await refreshCertificationAuthorityOfCandidacies({
+    certificationIds,
+    departmentIds,
+  });
 
   return result[3] as CertificationAuthority;
 };

@@ -2,6 +2,8 @@ import { CertificationAuthority } from "@prisma/client";
 
 import { prismaClient } from "@/prisma/client";
 
+import { refreshCertificationAuthorityOfCandidacies } from "./refreshCertificationAuthorityOfCandidacies";
+
 export const updateCertificationAuthorityDepartmentsAndCertifications = async ({
   certificationAuthorityId,
   certificationIds,
@@ -50,6 +52,11 @@ export const updateCertificationAuthorityDepartmentsAndCertifications = async ({
       where: { id: certificationAuthorityId },
     }),
   ]);
+
+  await refreshCertificationAuthorityOfCandidacies({
+    certificationIds,
+    departmentIds,
+  });
 
   return result[6] as CertificationAuthority;
 };
