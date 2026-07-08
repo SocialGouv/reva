@@ -25,6 +25,13 @@ const feasibilityWithDematerializedFeasibilityFileWithSwornStatementByCandidacyI
       $candidacyId: ID!
     ) {
       feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
+        candidacy {
+          candidate {
+            givenName
+            lastname
+            firstname
+          }
+        }
         dematerializedFeasibilityFile {
           swornStatementFile {
             name
@@ -63,8 +70,11 @@ export const useSwornStatement = () => {
     getCandidacyByIdResponse?.feasibility_getActiveFeasibilityByCandidacyId;
   const swornStatementFile =
     candidacy?.dematerializedFeasibilityFile?.swornStatementFile;
+  const candidate = candidacy?.candidacy?.candidate;
+
   return {
     swornStatementFile,
     queryStatus: getCandidacyByIdStatus,
+    candidate,
   };
 };

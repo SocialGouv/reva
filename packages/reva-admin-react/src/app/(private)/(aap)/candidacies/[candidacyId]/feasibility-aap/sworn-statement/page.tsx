@@ -1,12 +1,13 @@
 "use client";
 
-import Download from "@codegouvfr/react-dsfr/Download";
+import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { DownloadTile } from "@/components/download-tile/DownloadTile";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
@@ -40,7 +41,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function SwornStatementPage() {
   const { candidacyId } = useParams<{ candidacyId: string }>();
-  const { swornStatementFile } = useSwornStatement();
+  const { swornStatementFile, candidate } = useSwornStatement();
   const urqlClient = useUrqlClient();
   const router = useRouter();
   const [swornStatement, setSwornStatement] = useState<GQLFile | undefined>();
@@ -67,7 +68,7 @@ export default function SwornStatementPage() {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isDirty, isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues,
@@ -118,27 +119,39 @@ export default function SwornStatementPage() {
 
   return (
     <div className="flex flex-col">
-      <h1>Validation du candidat</h1>
+      <Breadcrumb
+        className="mb-4"
+        currentPageLabel="Attestation sur l’honneur"
+        segments={[
+          {
+            label: (
+              <span>
+                {candidate?.givenName
+                  ? candidate.givenName
+                  : candidate?.lastname}{" "}
+                {candidate?.firstname}
+              </span>
+            ),
+            linkProps: { href: "../" },
+          },
+        ]}
+      />
+
+      <h1>Attestation sur l’honneur</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">
-        L'attestation sur l'honneur est un document que doit fournir le candidat
-        pour valider son dossier de faisabilité. Vous pouvez aussi télécharger
-        notre modèle et le faire avec lui.
+        Une attestation sur l’honneur signée est obligatoire pour valider le
+        dossier de faisabilité. Vous devez télécharger ce modèle d’attestation,
+        le compléter, le signer et le joindre.
       </p>
-      <h2 className="mb-0">Modèle d'attestation sur l'honneur</h2>
-      <p className="text-xl mb-0">
-        Ce modèle (aussi disponible sur l'espace candidat) est à remplir avec le
-        candidat. Pensez à lui faire signer le document avant de le joindre.
-      </p>
-      <Download
-        details="PDF - 1455 Ko"
-        label="Modèle d'attestation sur l'honneur"
-        linkProps={{
-          title: "Attestation_sur_l_honneur_modèle",
-          href: "/files/attestation_sur_l_honneur_modele.pdf",
-          target: "_blank",
-        }}
+
+      <DownloadTile
+        name="Modèle d'attestation sur l'honneur (PDF)"
+        url="/files/attestation_sur_l_honneur_modele.pdf"
+        mimeType="application/pdf"
+        fileSizeInBytes={984064}
       />
+
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
         onReset={(e) => {
@@ -153,7 +166,6 @@ export default function SwornStatementPage() {
           hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
           defaultFile={swornStatementDefaultFile}
           nativeInputProps={{
-            required: true,
             ...register("swornStatement"),
             accept: ".pdf, .jpg, .jpeg, .png",
           }}
@@ -162,9 +174,9 @@ export default function SwornStatementPage() {
         />
 
         <FormButtons
+          hideResetButton
           backUrl={feasibilitySummaryUrl}
           formState={{
-            isDirty,
             isSubmitting,
           }}
         />
