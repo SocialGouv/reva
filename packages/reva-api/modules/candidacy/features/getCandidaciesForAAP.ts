@@ -353,7 +353,14 @@ export const getCandidaciesForAAP = async ({
     ) {
       dossierDeValidationWhereInput.push({
         dossierDeValidation: {
-          decision: "PENDING",
+          OR: [
+            {
+              decision: "PENDING",
+            },
+            {
+              decision: "COMPLETE",
+            },
+          ],
         },
       });
     }
