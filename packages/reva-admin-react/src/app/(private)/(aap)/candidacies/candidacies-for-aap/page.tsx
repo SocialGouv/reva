@@ -134,10 +134,9 @@ export default function AnnuairePage() {
                 if (e.key !== "Enter") {
                   return;
                 }
-
-                onSearchFilterChange(localSearchFilter);
                 e.preventDefault();
                 e.stopPropagation();
+                onSearchFilterChange(localSearchFilter);
               }}
             />
           )}
