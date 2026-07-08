@@ -1,7 +1,6 @@
 import { prismaClient } from "@/prisma/client";
 
 import { FEASIBILITY_DECISIONS_LOCKING_CERTIFICATION_AUTHORITY } from "./isCandidacyCertificationAuthorityUpdatable";
-import { refreshCertificationAuthorityOfCandidacy } from "./refreshCertificationAuthorityOfCandidacy";
 
 // Refresh the certification authority of candidacies affected by a change to a
 // certification authority's covered certifications/departments:
@@ -37,10 +36,76 @@ export const refreshCertificationAuthorityOfCandidacies = async ({
         { certificationAuthorityId: updatedCertificationAuthorityId },
       ],
     },
-    select: { id: true },
+    select: {
+      id: true,
+      certificationId: true,
+      candidate: { select: { departmentId: true } },
+    },
   });
 
-  for (const { id: candidacyId } of candidacies) {
-    await refreshCertificationAuthorityOfCandidacy({ candidacyId });
+  // Resolve, once per distinct (certificationId, departmentId) pair rather
+  // than once per candidacy, which single certification authority (if any)
+  // covers it.
+  const pairs = new Map<
+    string,
+    { certificationId: string; departmentId: string }
+  >();
+  for (const { certificationId, candidate } of candidacies) {
+    if (!certificationId || !candidate) continue;
+    pairs.set(`${certificationId}|${candidate.departmentId}`, {
+      certificationId,
+      departmentId: candidate.departmentId,
+    });
   }
+
+  const resolvedAuthorityIdByPairKey = new Map<string, string | null>();
+  await Promise.all(
+    [...pairs.entries()].map(
+      async ([key, { certificationId, departmentId }]) => {
+        const matchingAuthorities =
+          await prismaClient.certificationAuthority.findMany({
+            where: {
+              certificationAuthorityOnDepartment: { some: { departmentId } },
+              certificationAuthorityOnCertification: {
+                some: { certificationId },
+              },
+            },
+            select: { id: true },
+          });
+        resolvedAuthorityIdByPairKey.set(
+          key,
+          matchingAuthorities.length === 1 ? matchingAuthorities[0].id : null,
+        );
+      },
+    ),
+  );
+
+  // Group candidacies by their resolved certification authority so each
+  // group can be updated in a single query.
+  const candidacyIdsByResolvedAuthorityId = new Map<string | null, string[]>();
+  for (const { id, certificationId, candidate } of candidacies) {
+    const resolvedAuthorityId =
+      certificationId && candidate
+        ? (resolvedAuthorityIdByPairKey.get(
+            `${certificationId}|${candidate.departmentId}`,
+          ) ?? null)
+        : null;
+
+    const group = candidacyIdsByResolvedAuthorityId.get(resolvedAuthorityId);
+    if (group) {
+      group.push(id);
+    } else {
+      candidacyIdsByResolvedAuthorityId.set(resolvedAuthorityId, [id]);
+    }
+  }
+
+  await Promise.all(
+    [...candidacyIdsByResolvedAuthorityId.entries()].map(
+      ([resolvedAuthorityId, candidacyIds]) =>
+        prismaClient.candidacy.updateMany({
+          where: { id: { in: candidacyIds } },
+          data: { certificationAuthorityId: resolvedAuthorityId },
+        }),
+    ),
+  );
 };
