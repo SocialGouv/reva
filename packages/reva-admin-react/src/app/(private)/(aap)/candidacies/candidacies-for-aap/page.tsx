@@ -5,7 +5,7 @@ import DsfrPagination from "@codegouvfr/react-dsfr/Pagination";
 import SearchBar from "@codegouvfr/react-dsfr/SearchBar";
 import { toDate } from "date-fns";
 import { redirect, usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { useAuth } from "@/components/auth/auth";
 import { CandidacyCard } from "@/components/card/candidacy-card/CandidacyCard";
@@ -56,6 +56,13 @@ export default function AnnuairePage() {
   } = useAnnuaire();
 
   const [localSearchFilter, setLocalSearchFilter] = useState(searchFilter);
+  const [prevSearchFilter, setPrevSearchFilter] = useState(searchFilter);
+
+  if (searchFilter !== prevSearchFilter) {
+    setPrevSearchFilter(searchFilter);
+    setLocalSearchFilter(searchFilter);
+  }
+
   const emptyResult = useMemo(
     () => candidacies?.info?.totalRows === 0,
     [candidacies],
@@ -78,10 +85,6 @@ export default function AnnuairePage() {
 
     return queryString ? `${pathname}?${queryString}` : pathname;
   };
-
-  useEffect(() => {
-    setLocalSearchFilter(searchFilter);
-  }, [searchFilter]);
 
   const getPathnameWithoutMaisonMereAAPId = (): string => {
     const currentParams = new URLSearchParams(searchParams);
