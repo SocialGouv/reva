@@ -54,6 +54,7 @@ export const updateCertificationAuthorityDepartmentsAndCertifications = async ({
   ]);
 
   await refreshCertificationAuthorityOfCandidacies({
+    updatedCertificationAuthorityId: certificationAuthorityId,
     certificationIds,
     departmentIds,
   });

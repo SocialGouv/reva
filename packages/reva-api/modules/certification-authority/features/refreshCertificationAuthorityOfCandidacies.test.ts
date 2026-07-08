@@ -39,6 +39,7 @@ describe("refreshCertificationAuthorityOfCandidacies", () => {
     const ca = await createMatchingCertificationAuthority(candidacy);
 
     await refreshCertificationAuthorityOfCandidacies({
+      updatedCertificationAuthorityId: ca.id,
       certificationIds: [candidacy.certificationId!],
       departmentIds: [candidacy.candidate!.departmentId],
     });
@@ -51,10 +52,11 @@ describe("refreshCertificationAuthorityOfCandidacies", () => {
 
   test("should leave the candidacy unassigned when more than one certification authority matches", async () => {
     const candidacy = await createCandidacyHelper();
-    await createMatchingCertificationAuthority(candidacy);
+    const ca = await createMatchingCertificationAuthority(candidacy);
     await createMatchingCertificationAuthority(candidacy);
 
     await refreshCertificationAuthorityOfCandidacies({
+      updatedCertificationAuthorityId: ca.id,
       certificationIds: [candidacy.certificationId!],
       departmentIds: [candidacy.candidate!.departmentId],
     });
@@ -65,7 +67,7 @@ describe("refreshCertificationAuthorityOfCandidacies", () => {
     expect(updated?.certificationAuthorityId).toBeNull();
   });
 
-  test("should not touch a candidacy that already has a certification authority, even if it no longer matches", async () => {
+  test("should not touch a candidacy mapped to a different certification authority", async () => {
     const candidacy = await createCandidacyHelper();
     const existingCa = await createCertificationAuthorityHelper();
     await prismaClient.candidacy.update({
@@ -73,9 +75,10 @@ describe("refreshCertificationAuthorityOfCandidacies", () => {
       data: { certificationAuthorityId: existingCa.id },
     });
     // A different, unrelated CA whose coverage happens to match this candidacy.
-    await createMatchingCertificationAuthority(candidacy);
+    const matchingCa = await createMatchingCertificationAuthority(candidacy);
 
     await refreshCertificationAuthorityOfCandidacies({
+      updatedCertificationAuthorityId: matchingCa.id,
       certificationIds: [candidacy.certificationId!],
       departmentIds: [candidacy.candidate!.departmentId],
     });
@@ -88,9 +91,10 @@ describe("refreshCertificationAuthorityOfCandidacies", () => {
 
   test("should not assign a candidacy whose certification or department is outside the given coverage", async () => {
     const candidacy = await createCandidacyHelper();
-    await createMatchingCertificationAuthority(candidacy);
+    const ca = await createMatchingCertificationAuthority(candidacy);
 
     await refreshCertificationAuthorityOfCandidacies({
+      updatedCertificationAuthorityId: ca.id,
       certificationIds: [randomUUID()],
       departmentIds: [candidacy.candidate!.departmentId],
     });
@@ -99,6 +103,86 @@ describe("refreshCertificationAuthorityOfCandidacies", () => {
       where: { id: candidacy.id },
     });
     expect(updated?.certificationAuthorityId).toBeNull();
+  });
+
+  describe("removing a stale mapping", () => {
+    test("should remove the certification authority from a candidacy currently mapped to it that no longer falls within its coverage", async () => {
+      const candidacy = await createCandidacyHelper();
+      const ca = await createMatchingCertificationAuthority(candidacy);
+      await prismaClient.candidacy.update({
+        where: { id: candidacy.id },
+        data: { certificationAuthorityId: ca.id },
+      });
+
+      // Simulate the CA's coverage having shrunk (as the update mutations do
+      // before calling this function): the real links no longer match.
+      await prismaClient.certificationAuthorityOnCertification.deleteMany({
+        where: { certificationAuthorityId: ca.id },
+      });
+      await prismaClient.certificationAuthorityOnDepartment.deleteMany({
+        where: { certificationAuthorityId: ca.id },
+      });
+
+      await refreshCertificationAuthorityOfCandidacies({
+        updatedCertificationAuthorityId: ca.id,
+        certificationIds: [],
+        departmentIds: [],
+      });
+
+      const updated = await prismaClient.candidacy.findUnique({
+        where: { id: candidacy.id },
+      });
+      expect(updated?.certificationAuthorityId).toBeNull();
+    });
+
+    test("should keep the certification authority on a candidacy currently mapped to it that still falls within its coverage", async () => {
+      const candidacy = await createCandidacyHelper();
+      const ca = await createMatchingCertificationAuthority(candidacy);
+      await prismaClient.candidacy.update({
+        where: { id: candidacy.id },
+        data: { certificationAuthorityId: ca.id },
+      });
+
+      await refreshCertificationAuthorityOfCandidacies({
+        updatedCertificationAuthorityId: ca.id,
+        certificationIds: [candidacy.certificationId!],
+        departmentIds: [candidacy.candidate!.departmentId],
+      });
+
+      const updated = await prismaClient.candidacy.findUnique({
+        where: { id: candidacy.id },
+      });
+      expect(updated?.certificationAuthorityId).toEqual(ca.id);
+    });
+
+    test("should not remove the certification authority from a candidacy locked by a blocking feasibility decision", async () => {
+      const candidacy = await createCandidacyHelper();
+      const ca = await createMatchingCertificationAuthority(candidacy);
+      await prismaClient.candidacy.update({
+        where: { id: candidacy.id },
+        data: { certificationAuthorityId: ca.id },
+      });
+      await createActiveFeasibilityWithDecision(candidacy.id, "PENDING");
+
+      // Simulate the CA's coverage having shrunk: the real links no longer match.
+      await prismaClient.certificationAuthorityOnCertification.deleteMany({
+        where: { certificationAuthorityId: ca.id },
+      });
+      await prismaClient.certificationAuthorityOnDepartment.deleteMany({
+        where: { certificationAuthorityId: ca.id },
+      });
+
+      await refreshCertificationAuthorityOfCandidacies({
+        updatedCertificationAuthorityId: ca.id,
+        certificationIds: [],
+        departmentIds: [],
+      });
+
+      const updated = await prismaClient.candidacy.findUnique({
+        where: { id: candidacy.id },
+      });
+      expect(updated?.certificationAuthorityId).toEqual(ca.id);
+    });
   });
 
   describe("feasibility decision guard", () => {
@@ -112,10 +196,11 @@ describe("refreshCertificationAuthorityOfCandidacies", () => {
     blockingDecisions.forEach((decision) => {
       test(`should not select a candidacy whose active feasibility decision is ${decision}`, async () => {
         const candidacy = await createCandidacyHelper();
-        await createMatchingCertificationAuthority(candidacy);
+        const ca = await createMatchingCertificationAuthority(candidacy);
         await createActiveFeasibilityWithDecision(candidacy.id, decision);
 
         await refreshCertificationAuthorityOfCandidacies({
+          updatedCertificationAuthorityId: ca.id,
           certificationIds: [candidacy.certificationId!],
           departmentIds: [candidacy.candidate!.departmentId],
         });
@@ -133,6 +218,7 @@ describe("refreshCertificationAuthorityOfCandidacies", () => {
       await createActiveFeasibilityWithDecision(candidacy.id, "INCOMPLETE");
 
       await refreshCertificationAuthorityOfCandidacies({
+        updatedCertificationAuthorityId: ca.id,
         certificationIds: [candidacy.certificationId!],
         departmentIds: [candidacy.candidate!.departmentId],
       });

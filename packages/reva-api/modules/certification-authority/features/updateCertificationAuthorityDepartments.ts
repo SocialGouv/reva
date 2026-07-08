@@ -42,6 +42,7 @@ export const updateCertificationAuthorityDepartments = async ({
   ).map(({ certificationId }) => certificationId);
 
   await refreshCertificationAuthorityOfCandidacies({
+    updatedCertificationAuthorityId: certificationAuthorityId,
     certificationIds,
     departmentIds,
   });
