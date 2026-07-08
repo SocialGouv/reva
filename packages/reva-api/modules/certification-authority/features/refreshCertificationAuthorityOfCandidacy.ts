@@ -1,8 +1,8 @@
-import { isCandidacyCertificationAuthorityUpdatable } from "@/modules/certification-authority/features/isCandidacyCertificationAuthorityUpdatable";
+import { getCandidacy } from "@/modules/candidacy/features/getCandidacy";
 import { getCertificationAuthorities } from "@/modules/feasibility/feasibility.features";
 import { prismaClient } from "@/prisma/client";
 
-import { getCandidacy } from "./getCandidacy";
+import { isCandidacyCertificationAuthorityUpdatable } from "./isCandidacyCertificationAuthorityUpdatable";
 
 // Refresh the certification authority of a candidacy.
 // Take the certification authority mapped to the certification of the candidacy and the department of the candidate and update it in the candidacy

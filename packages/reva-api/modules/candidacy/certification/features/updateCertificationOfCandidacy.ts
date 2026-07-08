@@ -1,6 +1,7 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { refreshCertificationAuthorityOfCandidacy } from "@/modules/certification-authority/features/refreshCertificationAuthorityOfCandidacy";
 import { getCertificationById } from "@/modules/referential/features/getCertificationById";
 import {
   FunctionalCodeError,
@@ -10,7 +11,6 @@ import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
 import { canCandidateUpdateCandidacy } from "../../features/canCandidateUpdateCandidacy";
-import { refreshCertificationAuthorityOfCandidacy } from "../../features/refreshCertificationAuthorityOfCandidacy";
 import { updateCandidacyOrganism } from "../../features/updateCandidacyOrganism";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 import { resetTrainingInformation } from "../../training/features/resetTrainingInformation";

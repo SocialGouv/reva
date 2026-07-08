@@ -1,7 +1,7 @@
-import { refreshCertificationAuthorityOfCandidacy } from "@/modules/candidacy/features/refreshCertificationAuthorityOfCandidacy";
 import { prismaClient } from "@/prisma/client";
 
 import { FEASIBILITY_DECISIONS_LOCKING_CERTIFICATION_AUTHORITY } from "./isCandidacyCertificationAuthorityUpdatable";
+import { refreshCertificationAuthorityOfCandidacy } from "./refreshCertificationAuthorityOfCandidacy";
 
 // Assign a certification authority to previously-unassigned candidacies whose
 // certification and department now fall within its coverage.

@@ -1,9 +1,9 @@
 import { Candidate, Department } from "@prisma/client";
 import { isBefore, sub } from "date-fns";
 
-import { refreshCertificationAuthorityOfCandidacy } from "@/modules/candidacy/features/refreshCertificationAuthorityOfCandidacy";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { CandidateUpdateInput } from "@/modules/candidate/candidate.types";
+import { refreshCertificationAuthorityOfCandidacy } from "@/modules/certification-authority/features/refreshCertificationAuthorityOfCandidacy";
 import { generateAndUploadFeasibilityFileByCandidacyId } from "@/modules/feasibility/dematerialized-feasibility-file/features/generateAndUploadFeasibilityFileByCandidacyId";
 import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";

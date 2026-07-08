@@ -17,7 +17,6 @@ import { Account } from "../account/account.types";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
-import { refreshCertificationAuthorityOfCandidacy } from "../candidacy/features/refreshCertificationAuthorityOfCandidacy";
 import { updateCandidacyCertificationAuthority } from "../candidacy/features/updateCandidacyCertificationAuthority";
 import { updateCandidacyFinanceModule } from "../candidacy/features/updateCandidacyFinanceModule";
 import { updateCandidacyStatus } from "../candidacy/features/updateCandidacyStatus";
@@ -26,6 +25,7 @@ import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAu
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "../certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
 import { getAccountByCertificationAuthorityId } from "../certification-authority/features/getAccountByCertificationAuthorityId";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
+import { refreshCertificationAuthorityOfCandidacy } from "../certification-authority/features/refreshCertificationAuthorityOfCandidacy";
 import { UploadedFile } from "../shared/file/file.interface";
 import {
   S3File,

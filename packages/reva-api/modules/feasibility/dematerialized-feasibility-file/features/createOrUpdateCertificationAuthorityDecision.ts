@@ -1,9 +1,9 @@
 import { FeasibilityDecision, FeasibilityStatus } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 
-import { refreshCertificationAuthorityOfCandidacy } from "@/modules/candidacy/features/refreshCertificationAuthorityOfCandidacy";
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { refreshCertificationAuthorityOfCandidacy } from "@/modules/certification-authority/features/refreshCertificationAuthorityOfCandidacy";
 import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
 import { UploadedFile } from "@/modules/shared/file/file.interface";
