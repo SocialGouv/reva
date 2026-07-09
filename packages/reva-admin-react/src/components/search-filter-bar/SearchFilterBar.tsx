@@ -1,5 +1,5 @@
 import { SearchBar } from "@codegouvfr/react-dsfr/SearchBar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export const SearchFilterBar = ({
   className,
@@ -17,9 +17,13 @@ export const SearchFilterBar = ({
   placeholder?: string;
 }) => {
   const [searchFilter, setSearchFilter] = useState(defaultSearchFilter);
-  useEffect(() => {
+  const [prevDefaultSearchFilter, setPrevDefaultSearchFilter] =
+    useState(defaultSearchFilter);
+
+  if (defaultSearchFilter !== prevDefaultSearchFilter) {
+    setPrevDefaultSearchFilter(defaultSearchFilter);
     setSearchFilter(defaultSearchFilter);
-  }, [defaultSearchFilter]);
+  }
 
   return (
     <div className={`flex flex-col ${className ?? ""}`}>
