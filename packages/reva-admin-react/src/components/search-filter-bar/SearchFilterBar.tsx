@@ -40,20 +40,6 @@ export const SearchFilterBar = ({
               type={type}
               value={searchFilter}
               onChange={(event) => setSearchFilter(event.currentTarget.value)}
-              onKeyDown={(event) => {
-                if (event.key !== "Enter") {
-                  return;
-                }
-
-                if (event.currentTarget.value !== "") {
-                  return;
-                }
-
-                event.preventDefault();
-                event.stopPropagation();
-
-                onSearchFilterChange("");
-              }}
             />
           )}
         />

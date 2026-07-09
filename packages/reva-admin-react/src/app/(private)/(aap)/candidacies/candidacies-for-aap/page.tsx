@@ -133,14 +133,6 @@ export default function AnnuairePage() {
               type={type}
               value={localSearchFilter}
               onChange={(e) => setLocalSearchFilter(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key !== "Enter") {
-                  return;
-                }
-                e.preventDefault();
-                e.stopPropagation();
-                onSearchFilterChange(localSearchFilter);
-              }}
             />
           )}
         />
