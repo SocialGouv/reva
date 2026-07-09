@@ -38,6 +38,7 @@ function createHandlers({
     contactFullName: string;
     contactEmail: string | null;
     contactPhone: string | null;
+    certificationAuthorityStructures?: { id: string }[];
   } | null;
   certificationAuthorityLocalAccounts?: {
     contactFullName: string;
@@ -60,8 +61,8 @@ function createHandlers({
   ];
 }
 
-async function visitPage(page: Page) {
-  await login({ role: "aap", page });
+async function visitPage(page: Page, role: "aap" | "admin" = "aap") {
+  await login({ role, page });
   await page.goto(
     `/admin2/candidacies/${CANDIDACY_ID}/summary/certification-authority-details/`,
   );
@@ -325,6 +326,57 @@ test.describe("Certification authority details page", () => {
       await expect(
         page.getByRole("link", { name: "Changer de certificateur" }),
       ).not.toBeVisible();
+    });
+  });
+
+  test.describe("when logged in as a non-admin user", () => {
+    test.use({
+      mswHandlers: [
+        [...createHandlers(), ...aapCommonHandlers],
+        { scope: "test" },
+      ],
+    });
+
+    test("should not render the certification authority card as a link", async ({
+      page,
+    }) => {
+      await visitPage(page, "aap");
+      await expect(
+        page.getByTestId("certification-authority-card").getByRole("link"),
+      ).toHaveCount(0);
+    });
+  });
+
+  test.describe("when logged in as an admin user", () => {
+    const CERTIFICATION_AUTHORITY_STRUCTURE_ID = "structure-1";
+
+    test.use({
+      mswHandlers: [
+        [
+          ...createHandlers({
+            certificationAuthority: {
+              ...DEFAULT_CERTIFICATION_AUTHORITY,
+              certificationAuthorityStructures: [
+                { id: CERTIFICATION_AUTHORITY_STRUCTURE_ID },
+              ],
+            },
+          }),
+          ...aapCommonHandlers,
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("should render the certification authority card as a link to the certification authority structure's local account page", async ({
+      page,
+    }) => {
+      await visitPage(page, "admin");
+      await expect(
+        page.getByTestId("certification-authority-card").getByRole("link"),
+      ).toHaveAttribute(
+        "href",
+        `/admin2/certification-authority-structures/${CERTIFICATION_AUTHORITY_STRUCTURE_ID}/certificateurs-administrateurs/${DEFAULT_CERTIFICATION_AUTHORITY.id}/`,
+      );
     });
   });
 });

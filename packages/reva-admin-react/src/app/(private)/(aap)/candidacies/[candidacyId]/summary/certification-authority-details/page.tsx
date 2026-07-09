@@ -3,6 +3,8 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useParams } from "next/navigation";
 
+import { useAuth } from "@/components/auth/auth";
+
 import { CertificationAuthorityCard } from "./_components/CertificationAuthorityCard";
 import { CertificationAuthorityLocalAccountCard } from "./_components/CertificationAuthorityLocalAccountCard";
 import { useCertificationAuthorityDetails } from "./certificationAuthorityDetails.hooks";
@@ -12,11 +14,13 @@ const CertificationAuthorityDetailsPage = () => {
     candidacyId: string;
   }>();
 
+  const { isAdmin } = useAuth();
+
   const {
     certificationAuthority,
     isCandidacyCertificationAuthorityUpdatable,
     certificationAuthorityLocalAccounts,
-  } = useCertificationAuthorityDetails({ candidacyId });
+  } = useCertificationAuthorityDetails({ candidacyId, isAdmin });
 
   return (
     <div className="flex flex-col">
@@ -32,6 +36,11 @@ const CertificationAuthorityDetailsPage = () => {
             label={certificationAuthority?.label}
             contactEmail={certificationAuthority.contactEmail}
             contactPhone={certificationAuthority.contactPhone}
+            href={
+              isAdmin
+                ? `/certification-authority-structures/${certificationAuthority.certificationAuthorityStructures?.[0]?.id}/certificateurs-administrateurs/${certificationAuthority.id}`
+                : undefined
+            }
           />
         )}
         {certificationAuthority &&

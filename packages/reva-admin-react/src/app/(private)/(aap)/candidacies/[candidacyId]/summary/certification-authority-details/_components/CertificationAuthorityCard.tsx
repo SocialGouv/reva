@@ -5,10 +5,12 @@ export const CertificationAuthorityCard = ({
   label,
   contactEmail,
   contactPhone,
+  href,
 }: {
   label: string;
   contactEmail?: string | null;
   contactPhone?: string | null;
+  href?: string;
 }) => (
   <Card
     data-testid="certification-authority-card"
@@ -25,5 +27,8 @@ export const CertificationAuthorityCard = ({
         {contactPhone && <span>{contactPhone}</span>}
       </span>
     }
+    {...(href
+      ? { linkProps: { href }, enlargeLink: true }
+      : { enlargeLink: false })}
   />
 );

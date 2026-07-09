@@ -5,10 +5,16 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 
 const getCertificationAuthorityDetailsQuery = graphql(`
-  query getCertificationAuthorityDetails($candidacyId: ID!) {
+  query getCertificationAuthorityDetails(
+    $candidacyId: ID!
+    $isAdmin: Boolean!
+  ) {
     getCandidacyById(id: $candidacyId) {
       certificationAuthority {
         id
+        certificationAuthorityStructures @include(if: $isAdmin) {
+          id
+        }
         label
         contactFullName
         contactEmail
@@ -26,8 +32,10 @@ const getCertificationAuthorityDetailsQuery = graphql(`
 
 export const useCertificationAuthorityDetails = ({
   candidacyId,
+  isAdmin,
 }: {
   candidacyId: string;
+  isAdmin: boolean;
 }) => {
   const { graphqlClient } = useGraphQlClient();
 
@@ -36,6 +44,7 @@ export const useCertificationAuthorityDetails = ({
     queryFn: () =>
       graphqlClient.request(getCertificationAuthorityDetailsQuery, {
         candidacyId,
+        isAdmin,
       }),
   });
 
