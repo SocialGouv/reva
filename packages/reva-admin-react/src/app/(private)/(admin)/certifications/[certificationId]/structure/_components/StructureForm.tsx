@@ -7,8 +7,8 @@ import { useCallback, useEffect } from "react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { sanitizedText } from "@/utils/input-sanitization";
 
