@@ -5,9 +5,11 @@ import {
 } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "../../../../shared/helpers/auth/login";
+import { getAAPCommonHandlers } from "../../../../shared/helpers/common-handlers/aap/getAapCommon.handlers";
 import { graphQLResolver } from "../../../../shared/helpers/network/msw";
 
 const fvae = graphql.link("https://reva-api/api/graphql");
+const { aapCommonHandlers } = getAAPCommonHandlers();
 
 const CERTIFICATION_ID = "certification-id";
 const CERTIFICATION_PATH = `/admin2/certifications/${CERTIFICATION_ID}/structure`;
@@ -62,6 +64,7 @@ test.describe("page admin de mise à jour de la structure de certification", () 
           },
         ],
       }),
+      ...aapCommonHandlers,
     );
 
     await login({ role: "admin", page });
@@ -88,7 +91,7 @@ test.describe("page admin de mise à jour de la structure de certification", () 
     page,
     msw,
   }) => {
-    msw.use(...createHandlers({ certificateurs: [] }));
+    msw.use(...createHandlers({ certificateurs: [] }), ...aapCommonHandlers);
 
     await login({ role: "admin", page });
     await page.goto(CERTIFICATION_PATH);
