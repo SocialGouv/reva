@@ -6,7 +6,49 @@ import { createFormaCodeHelper } from "@/test/helpers/entities/create-formacode-
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 import * as SendNewCertificationAvailableToCertificationRegistryManagerEmailModule from "./emails/sendNewCertificationAvailableToCertificationRegistryManagerEmail";
-import { RNCPReferential } from "./rncp/referential";
+import { mapToRNCPCertification, RNCPReferential } from "./rncp/referential";
+
+it("devrait mapper les CERTIFICATEURS FC (nom uniquement) depuis une fiche brute", () => {
+  const certification = mapToRNCPCertification({
+    ID_FICHE: "39839",
+    NUMERO_FICHE: "RNCP39839",
+    INTITULE: "Test",
+    CERTIFICATEURS: [
+      {
+        SIRET_CERTIFICATEUR: "78471719100018",
+        NOM_CERTIFICATEUR:
+          "UNION DES INDUSTRIES ET DES METIERS DE LA METALLURGIE - UIMM",
+      },
+      {
+        SIRET_CERTIFICATEUR: "-",
+        NOM_CERTIFICATEUR:
+          "Commission Paritaire Nationale de l'Emploi de la Métallurgie",
+      },
+      { SIRET_CERTIFICATEUR: "00000000000000" },
+    ],
+  });
+
+  expect(certification.CERTIFICATEURS).toEqual([
+    {
+      NOM_CERTIFICATEUR:
+        "UNION DES INDUSTRIES ET DES METIERS DE LA METALLURGIE - UIMM",
+    },
+    {
+      NOM_CERTIFICATEUR:
+        "Commission Paritaire Nationale de l'Emploi de la Métallurgie",
+    },
+  ]);
+});
+
+it("devrait renvoyer un tableau CERTIFICATEURS vide lorsqu'ils sont absents", () => {
+  const certification = mapToRNCPCertification({
+    ID_FICHE: "1",
+    NUMERO_FICHE: "RNCP1",
+    INTITULE: "Test",
+  });
+
+  expect(certification.CERTIFICATEURS).toEqual([]);
+});
 
 it("should create a new certification in the 'BROUILLON' status", async () => {
   const myFormaCode = await createFormaCodeHelper();

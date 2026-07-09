@@ -200,6 +200,10 @@ type FCFormacode {
   LIBELLE: String!
 }
 
+type FCCertificateur {
+  NOM_CERTIFICATEUR: String!
+}
+
 type FCAbrege {
   CODE: String!
   LIBELLE: String!
@@ -222,6 +226,7 @@ type FCCertification {
   DATE_DE_PUBLICATION: Timestamp
   BLOCS_COMPETENCES: [BlocCompetence!]!
   FORMACODES: [FCFormacode!]!
+  CERTIFICATEURS: [FCCertificateur!]!
   DOMAINS: [Domain!]!
   OBJECTIFS_CONTEXTE: String
 }

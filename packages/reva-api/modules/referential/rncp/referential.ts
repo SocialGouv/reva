@@ -37,6 +37,9 @@ export type RNCPCertification = {
     CODE: string;
     LIBELLE: string;
   }[];
+  CERTIFICATEURS: {
+    NOM_CERTIFICATEUR: string;
+  }[];
   PREREQUIS: { LISTE_PREREQUIS: string; PARSED_PREREQUIS: string[] };
   OBJECTIFS_CONTEXTE?: string;
 };
@@ -226,7 +229,7 @@ function splitString(value: string): string[] {
   return [];
 }
 
-function mapToRNCPCertification(data: any): RNCPCertification {
+export function mapToRNCPCertification(data: any): RNCPCertification {
   try {
     const certification: RNCPCertification = {
       ID_FICHE: data.ID_FICHE,
@@ -275,6 +278,13 @@ function mapToRNCPCertification(data: any): RNCPCertification {
           LIBELLE: formacode.LIBELLE,
         };
       }),
+      CERTIFICATEURS: ((data.CERTIFICATEURS || []) as any[])
+        .filter((certificateur) => certificateur.NOM_CERTIFICATEUR)
+        .map((certificateur) => {
+          return {
+            NOM_CERTIFICATEUR: certificateur.NOM_CERTIFICATEUR,
+          };
+        }),
       PREREQUIS: {
         LISTE_PREREQUIS: data.PREREQUIS_VALIDATION_CERTIFICATION,
         PARSED_PREREQUIS: splitString(
