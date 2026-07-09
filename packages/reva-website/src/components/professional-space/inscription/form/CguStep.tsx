@@ -60,8 +60,11 @@ export const CguStep = ({
       </ul>
       <p>
         Et si vous n’avez pas obtenu toutes les réponses à vos questions, nous
-        restons disponibles à l’adresse{" "}
-        <a href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</a>.
+        restons disponibles via le{" "}
+        <a href="https://francevae.crisp.help/fr/?contact" target="_blank">
+          formulaire de contact
+        </a>
+        .
       </p>
     </>
   );
