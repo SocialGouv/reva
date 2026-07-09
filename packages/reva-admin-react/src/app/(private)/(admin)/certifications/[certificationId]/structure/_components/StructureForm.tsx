@@ -2,12 +2,14 @@ import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 import { useCallback, useEffect } from "react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { sanitizedText } from "@/utils/input-sanitization";
 
 import { NoCertificationAuthorityAlert } from "./NoCertificationAuthorityAlert";
@@ -17,11 +19,14 @@ import { useStructureForm } from "./structureForm.hook";
 type CertificationForForm = {
   id: string;
   label: string;
+  codeRncp: string;
   certificationAuthorityStructure?: { id: string; label: string } | null;
   certificationAuthorities: { id: string }[];
 };
 
 type StructureForForm = { id: string; label: string };
+
+type FCCertificateurForForm = { NOM_CERTIFICATEUR: string };
 
 const certificationStructureFormSchema = z.object({
   certificationAuthorityStructureId: sanitizedText(),
@@ -37,10 +42,12 @@ export type CertificationStructureFormData = z.infer<
 export const StructureForm = ({
   certification,
   availableStructures,
+  fcCertificateurs,
   onSubmit,
 }: {
   certification: CertificationForForm;
   availableStructures: StructureForForm[];
+  fcCertificateurs: FCCertificateurForForm[];
   onSubmit(data: CertificationStructureFormData): Promise<void>;
 }) => {
   const {
@@ -142,6 +149,37 @@ export const StructureForm = ({
         candidatures. Il est également possible de la relier au gestionnaire des
         candidatures d’une autre structure.
       </p>
+      {fcCertificateurs.length > 0 && (
+        <div
+          data-testid="fc-certificateurs"
+          className="bg-dsfr-light-neutral-grey-1000 p-6 rounded my-12"
+        >
+          <h2 className="mb-0">
+            Informations liées à la certification RNCP {certification.codeRncp}
+          </h2>
+          <div className="my-8 px-4 py-2 border-y border-dsfr-light-decisions-border-border-default-grey flex">
+            <p className="mb-0 min-w-[164px]">Certificateurs :</p>
+            <ul className="mb-0 font-medium mt-0">
+              {fcCertificateurs.map((c, index) => (
+                <li key={index}>{c.NOM_CERTIFICATEUR}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <SmallNotice>
+              Les informations affichées ci-dessus sont issues de France
+              compétences via le numéro RNCP de la certification.
+            </SmallNotice>
+            <Image
+              className="shrink-0"
+              src="/admin2/logos/logo-france-competences.svg"
+              alt="France compétences"
+              width={142}
+              height={40}
+            />
+          </div>
+        </div>
+      )}
       <form
         onSubmit={handleFormSubmit}
         onReset={(e) => {
@@ -163,6 +201,7 @@ export const StructureForm = ({
             </option>
           ))}
         </Select>
+
         {!certificationRegistryManagerPresent && (
           <NoCertificationRegistryManagerAlert className="my-4" />
         )}

@@ -11,6 +11,7 @@ const getCertificationStructureAndGestionnairesQuery = graphql(`
     getCertification(certificationId: $certificationId) {
       id
       label
+      codeRncp
       certificationAuthorityStructure {
         id
         label
@@ -23,6 +24,16 @@ const getCertificationStructureAndGestionnairesQuery = graphql(`
       rows {
         id
         label
+      }
+    }
+  }
+`);
+
+const getFCCertificateursQuery = graphql(`
+  query getFCCertificateursForUpdateCertificationStructurePage($rncp: ID!) {
+    getFCCertification(rncp: $rncp) {
+      CERTIFICATEURS {
+        NOM_CERTIFICATEUR
       }
     }
   }
@@ -92,14 +103,33 @@ export const useUpdateCertificationStructurePage = ({
   const certification =
     getCertificationStructureAndGestionnairesResponse?.getCertification;
 
+  const codeRncp = certification?.codeRncp;
+
+  const { data: getFCCertificateursResponse } = useQuery({
+    queryKey: [
+      codeRncp,
+      "structure",
+      "getFCCertificateursForUpdateCertificationStructurePage",
+    ],
+    queryFn: () =>
+      graphqlClient.request(getFCCertificateursQuery, {
+        rncp: codeRncp as string,
+      }),
+    enabled: !!codeRncp,
+  });
+
   const availableStructures =
     getCertificationStructureAndGestionnairesResponse
       ?.certification_authority_getCertificationAuthorityStructures.rows || [];
+
+  const fcCertificateurs =
+    getFCCertificateursResponse?.getFCCertification?.CERTIFICATEURS || [];
 
   return {
     getCertificationStructureAndGestionnairesQueryStatus,
     certification,
     availableStructures,
+    fcCertificateurs,
     updateCertificationStructure,
   };
 };

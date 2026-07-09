@@ -21,6 +21,7 @@ export default function UpdateCertificationStructurePage() {
   const {
     certification,
     availableStructures,
+    fcCertificateurs,
     getCertificationStructureAndGestionnairesQueryStatus,
     updateCertificationStructure,
   } = useUpdateCertificationStructurePage({ certificationId });
@@ -45,6 +46,7 @@ export default function UpdateCertificationStructurePage() {
     <StructureForm
       certification={certification}
       availableStructures={availableStructures}
+      fcCertificateurs={fcCertificateurs}
       onSubmit={handleFormSubmit}
     />
   ) : null;
