@@ -1,7 +1,9 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
+import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
@@ -57,6 +59,55 @@ test.each([
     });
   },
 );
+
+test("le passage à 'autonome' doit archiver un DF dématérialisé actif non recevable et basculer le format de la candidature en UPLOADED_PDF", async () => {
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus: "PROJET",
+    candidacyArgs: { typeAccompagnement: "ACCOMPAGNE" },
+  });
+  const feasibility = await createFeasibilityDematerializedHelper({
+    candidacyId: candidacy.id,
+    decision: "DRAFT",
+  });
+
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "candidate",
+        keycloakId: candidacy.candidate?.keycloakId,
+      }),
+    },
+  });
+
+  const candidacy_updateTypeAccompagnement = graphql(`
+    mutation candidacy_updateTypeAccompagnement_archives_demat_feasibility(
+      $candidacyId: UUID!
+      $typeAccompagnement: TypeAccompagnement!
+    ) {
+      candidacy_updateTypeAccompagnement(
+        candidacyId: $candidacyId
+        typeAccompagnement: $typeAccompagnement
+      ) {
+        id
+      }
+    }
+  `);
+
+  await graphqlClient.request(candidacy_updateTypeAccompagnement, {
+    candidacyId: candidacy.id,
+    typeAccompagnement: "AUTONOME",
+  });
+
+  const updatedCandidacy = await prismaClient.candidacy.findUnique({
+    where: { id: candidacy.id },
+  });
+  const updatedFeasibility = await prismaClient.feasibility.findUnique({
+    where: { id: feasibility.id },
+  });
+
+  expect(updatedCandidacy?.feasibilityFormat).toBe("UPLOADED_PDF");
+  expect(updatedFeasibility?.isActive).toBe(false);
+});
 
 test("candidate should be able to change it's type_accompagnement to 'accompagne' when the candidacy status is 'PROJET'", async () => {
   const candidacy = await createCandidacyHelper({

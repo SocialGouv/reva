@@ -59,6 +59,23 @@ export const updateCandidacyTypeAccompagnement = async ({
 
   return prismaClient.$transaction(async (tx) => {
     await updateCandidacyStatus({ candidacyId, status: "PROJET", tx });
+
+    // Fin d'accompagnement : on archive un éventuel DF dématérialisé pas encore
+    // recevable pour que le candidat autonome reparte sur un dépôt de DF au format
+    // PDF (sinon la tuile continue de router vers l'écran démat). Un DF déjà
+    // recevable (ADMISSIBLE) est conservé tel quel.
+    if (typeAccompagnement === "AUTONOME") {
+      await tx.feasibility.updateMany({
+        where: {
+          candidacyId,
+          isActive: true,
+          feasibilityFormat: "DEMATERIALIZED",
+          decision: { not: "ADMISSIBLE" },
+        },
+        data: { isActive: false },
+      });
+    }
+
     return tx.candidacy.update({
       where: { id: candidacyId },
       data: {
