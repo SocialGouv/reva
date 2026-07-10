@@ -8,6 +8,8 @@
   },
   "scripts": {
     "dev": "npm-run-all --print-label --parallel \"dev --prefix packages/reva-api\" \"dev --prefix packages/reva-candidate\" \"dev --prefix packages/reva-admin-react\" \"dev --prefix packages/reva-website\" \"dev --prefix packages/reva-vae-collective\"",
+    "dev:webpack": "npm run dev:webpack --prefix packages/reva-admin-react",
+    "dev:win": "npm-run-all --print-label --parallel \"dev --prefix packages/reva-api\" \"dev --prefix packages/reva-candidate\" \"dev:webpack --prefix packages/reva-admin-react\" \"dev --prefix packages/reva-website\" \"dev --prefix packages/reva-vae-collective\"",
     "front-apps": "npm-run-all --print-label --parallel \"dev --prefix packages/reva-candidate\" \"dev --prefix packages/reva-admin-react\" \"dev --prefix packages/reva-website\" \"dev --prefix packages/reva-vae-collective\"",
     "start": "npm run start --prefix packages/reva-api",
     "cron": "npm run cron --prefix packages/reva-api",
