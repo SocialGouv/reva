@@ -4,7 +4,7 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format, toDate } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
 import { DffSummary } from "@/components/dff-summary/DffSummary";
@@ -90,9 +90,17 @@ export default function SendFileCertificationAuthorityPage() {
   }, [candidacy?.certificationAuthorities]);
 
   const [
-    certificationAuthoritySelectedId,
+    selectedCertificationAuthorityId,
     setCertificationAuthoritySelectedId,
-  ] = useState<string>("");
+  ] = useState<string | null>(null);
+
+  // If there is only one certification authority choice available, use it as the default
+  const defaultCertificationAuthorityId =
+    certificationAuthorities.length === 1 ? certificationAuthorities[0].id : "";
+
+  // if no certification authority is selected, use the default one (if available)
+  const certificationAuthoritySelectedId =
+    selectedCertificationAuthorityId ?? defaultCertificationAuthorityId;
 
   const [
     certificationAuthoritySelectError,
@@ -142,15 +150,6 @@ export default function SendFileCertificationAuthorityPage() {
       setIsSubmitting(false);
     }
   };
-
-  useEffect(() => {
-    if (
-      !certificationAuthoritySelectedId &&
-      certificationAuthorities.length === 1
-    ) {
-      setCertificationAuthoritySelectedId(certificationAuthorities[0].id);
-    }
-  }, [certificationAuthorities, certificationAuthoritySelectedId]);
 
   return (
     <div>
