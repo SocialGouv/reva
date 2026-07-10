@@ -5,6 +5,7 @@ interface SearchBarProps {
   searchFilter: string;
   onSearchFilterChange: (filter: string) => void;
   className?: string;
+  debounceMs?: number;
 }
 
 export const SearchBar = ({
@@ -12,11 +13,25 @@ export const SearchBar = ({
   searchFilter: defaultSearchFilter,
   onSearchFilterChange,
   className,
+  debounceMs,
 }: SearchBarProps) => {
   const [searchFilter, setSearchFilter] = useState(defaultSearchFilter);
   useEffect(() => {
     setSearchFilter(defaultSearchFilter);
   }, [defaultSearchFilter]);
+
+  // Recherche live debouncée (opt-in) : lance la recherche après `debounceMs`
+  // sans frappe. Gardé sur la valeur courante pour éviter la boucle et le tir au montage.
+  useEffect(() => {
+    if (!debounceMs || searchFilter === defaultSearchFilter) {
+      return;
+    }
+    const timer = setTimeout(
+      () => onSearchFilterChange(searchFilter),
+      debounceMs,
+    );
+    return () => clearTimeout(timer);
+  }, [debounceMs, searchFilter, defaultSearchFilter, onSearchFilterChange]);
 
   return (
     <form

@@ -165,6 +165,7 @@ export default function SetOrganism() {
             label="Recherchez votre organisme d’accompagnement en saisissant son nom"
             searchFilter={organismSearchText}
             onSearchFilterChange={setOrganismSearchText}
+            debounceMs={200}
             className="mt-6"
           />
         </div>
