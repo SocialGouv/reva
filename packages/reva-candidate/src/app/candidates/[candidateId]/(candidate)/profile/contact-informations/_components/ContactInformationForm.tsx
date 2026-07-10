@@ -230,7 +230,7 @@ export const ContactInformationForm = ({
               </div>
             )}
 
-            <div className="grid grid-cols-3 gap-6 items-end">
+            <div className="grid grid-cols-3 gap-6 items-start">
               <Input
                 label="Adresse électronique de connexion"
                 className="col-span-2 mb-0"
