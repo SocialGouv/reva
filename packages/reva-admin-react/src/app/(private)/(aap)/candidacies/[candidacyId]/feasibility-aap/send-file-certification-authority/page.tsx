@@ -152,7 +152,6 @@ export default function SendFileCertificationAuthorityPage() {
         certificationAuthorityId: certificationAuthoritySelectedId,
       });
       successToast("Le dossier de faisabilité a été envoyé au certificateur");
-      router.push(feasibilitySummaryUrl);
     } catch (error) {
       graphqlErrorToast(error);
     } finally {
@@ -189,24 +188,26 @@ export default function SendFileCertificationAuthorityPage() {
         }
       />
 
-      <div className="flex justify-between">
-        <Button
-          priority="secondary"
-          onClick={() => router.push(feasibilitySummaryUrl)}
-        >
-          Retour
-        </Button>
-        <Button
-          onClick={handleSendFile}
-          disabled={
-            !feasibilityFileNeedsNewOrResendAction ||
-            !isReadyToBeSentToCertificationAuthority ||
-            isSubmitting
-          }
-        >
-          Envoyer au certificateur
-        </Button>
-      </div>
+      {feasibility?.decision != "PENDING" && (
+        <div className="flex justify-between">
+          <Button
+            priority="secondary"
+            onClick={() => router.push(feasibilitySummaryUrl)}
+          >
+            Retour
+          </Button>
+          <Button
+            onClick={handleSendFile}
+            disabled={
+              !feasibilityFileNeedsNewOrResendAction ||
+              !isReadyToBeSentToCertificationAuthority ||
+              isSubmitting
+            }
+          >
+            Envoyer au certificateur
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

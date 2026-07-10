@@ -112,7 +112,7 @@ const buildFeasibility = (overrides: {
   certificationAuthorities?: { id: string; label: string }[];
   isReadyToBeSentToCertificationAuthority?: boolean;
 }) => ({
-  decision: overrides.decision ?? "PENDING",
+  decision: overrides.decision ?? "DRAFT",
   decisionSentAt: overrides.decisionSentAt ?? null,
   decisionComment: overrides.decisionComment ?? null,
   feasibilityFileSentAt: overrides.feasibilityFileSentAt ?? null,
@@ -189,7 +189,7 @@ test.describe("AAP send file to certification authority page", () => {
       await mutationPromise;
 
       await expect(page.getByTestId("toast-success")).toBeVisible();
-      await expect(page).toHaveURL(SUMMARY_URL);
+      await expect(page).toHaveURL(PAGE_URL);
     });
 
     test("navigates back to the feasibility summary when clicking Retour", async ({
@@ -257,7 +257,7 @@ test.describe("AAP send file to certification authority page", () => {
       await mutationPromise;
 
       await expect(page.getByTestId("toast-success")).toBeVisible();
-      await expect(page).toHaveURL(SUMMARY_URL);
+      await expect(page).toHaveURL(PAGE_URL);
     });
   });
 
@@ -315,7 +315,7 @@ test.describe("AAP send file to certification authority page", () => {
       ).not.toBeVisible();
       await expect(
         page.getByRole("button", { name: "Envoyer au certificateur" }),
-      ).toBeDisabled();
+      ).toBeHidden();
     });
   });
 
