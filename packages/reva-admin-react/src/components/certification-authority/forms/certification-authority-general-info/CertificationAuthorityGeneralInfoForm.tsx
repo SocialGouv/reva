@@ -212,9 +212,13 @@ export const CertificationAuthorityGeneralInfoForm = ({
                 }}
                 data-testid="certification-authority-contact-full-name"
               />
-              <div className="flex flex-col md:flex-row gap-4 grow items-end">
+              <div
+                className={`flex flex-col md:flex-row gap-4 grow items-end ${
+                  errors.contactEmail ? "md:mb-6" : ""
+                }`}
+              >
                 <Input
-                  className="mb-0 w-full"
+                  className="mb-0 w-full floating-error-input"
                   label="Adresse électronique"
                   hintText="Privilégiez une adresse électronique pérenne pour faciliter les échanges avec les candidats et les AAP"
                   state={errors.contactEmail ? "error" : "default"}

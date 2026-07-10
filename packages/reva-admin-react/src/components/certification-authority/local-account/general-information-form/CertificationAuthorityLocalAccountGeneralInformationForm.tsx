@@ -93,7 +93,11 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
         des étapes clés du parcours VAE (faisabilité, validation, jury) pour
         faciliter les échanges.
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+      <div
+        className={`grid grid-cols-1 md:grid-cols-2 gap-x-6 ${
+          errors.contactEmail ? "md:mb-6" : ""
+        }`}
+      >
         <Input
           data-testid="contact-full-name-input"
           className="col-span-full"
@@ -104,7 +108,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
         />
         <Input
           data-testid="contact-email-input"
-          className="md:mb-0"
+          className="md:mb-0 floating-error-input"
           label="Adresse électronique"
           nativeInputProps={{
             autoComplete: "email",
