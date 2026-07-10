@@ -31,7 +31,9 @@ export const createCandidacy = async ({
   });
 
   const feasibilityFormat =
-    isDfDematAutonomeActive || typeAccompagnement === "ACCOMPAGNE"
+    isDfDematAutonomeActive ||
+    typeAccompagnement === "ACCOMPAGNE" ||
+    cohorteVaeCollectiveId
       ? "DEMATERIALIZED"
       : "UPLOADED_PDF";
 
