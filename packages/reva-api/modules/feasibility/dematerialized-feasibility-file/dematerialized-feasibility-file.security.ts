@@ -35,7 +35,7 @@ export const resolversSecurityMap = {
     isAdminOrCandidacyCompanion,
 
   "Mutation.dematerialized_feasibility_file_sendToCertificationAuthority":
-    isAdminOrCandidacyCompanion,
+    isOwnerOrCanManageCandidacy,
 
   "Mutation.dematerialized_feasibility_file_createOrUpdateSwornStatement":
     isOwnerOrCanManageCandidacy,

@@ -21,8 +21,10 @@ const getCandidacyByIdForFeasibilityDematAutonomePage = graphql(`
       }
       isCertificationPartial
       typology
+      typeAccompagnement
       candidate {
         gender
+        givenName
         firstname
         firstname2
         firstname3
@@ -68,6 +70,7 @@ const getCandidacyByIdForFeasibilityDematAutonomePage = graphql(`
         contactEmail
         contactPhone
         label
+        id
       }
       certificationAuthorityLocalAccounts {
         contactFullName
@@ -109,6 +112,12 @@ const getCandidacyByIdForFeasibilityDematAutonomePage = graphql(`
       }
       warningOnFeasibilitySubmission
       feasibility {
+        certificationAuthority {
+          label
+          contactFullName
+          contactEmail
+          contactPhone
+        }
         decision
         decisionSentAt
         decisionComment

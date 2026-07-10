@@ -20,7 +20,7 @@ import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOpti
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { sanitizedOptionalText } from "@/utils/input-sanitization";
 
-import { useEligibility } from "./eligibility.hook";
+import { useEligibility } from "./_components/eligibility.hook";
 
 const modal = createModal({
   id: "how-to-choose-eligibility",

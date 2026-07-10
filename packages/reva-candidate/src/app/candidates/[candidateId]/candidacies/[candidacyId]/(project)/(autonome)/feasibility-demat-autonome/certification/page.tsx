@@ -19,7 +19,7 @@ import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOpti
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { sanitizedOptionalText } from "@/utils/input-sanitization";
 
-import { useCertificationPageLogic } from "./certification.hook";
+import { useCertificationPageLogic } from "./_components/certification.hook";
 
 const modal = createModal({
   id: "how-to-choose-option",

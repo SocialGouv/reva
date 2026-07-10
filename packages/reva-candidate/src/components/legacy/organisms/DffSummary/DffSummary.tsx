@@ -28,8 +28,8 @@ import ParcoursSection from "./components/ParcoursSection";
 
 type DffSummaryProps = {
   candidacy: UseValidateFeasibilityCandidacy;
-  candidateDecisionComment: string;
-  setCandidateDecisionComment: (comment: string) => void;
+  candidateDecisionComment?: string;
+  setCandidateDecisionComment?: (comment: string) => void;
 };
 
 const eligibilityCandidateSituationMap = {
@@ -113,7 +113,10 @@ export function DffSummary({
     additionalHourCount,
     individualHourCount,
     collectiveHourCount,
+    typeAccompagnement,
   } = candidacy;
+
+  const isAccompagnementAutonome = typeAccompagnement === "AUTONOME";
 
   const isEligibilityRequirementPartial =
     eligibilityRequirement === "PARTIAL_ELIGIBILITY_REQUIREMENT";
@@ -121,6 +124,7 @@ export function DffSummary({
   return (
     <div className="flex flex-col gap-12 mt-8" data-testid="dff-summary">
       <BannerSummary
+        isAccompagnementAutonome={isAccompagnementAutonome}
         feasibilitySentToCertificationAuthorityAt={
           feasibility.feasibilityFileSentAt
         }
@@ -128,6 +132,7 @@ export function DffSummary({
         decisionSentAt={feasibility.decisionSentAt}
         decisionComment={feasibility.decisionComment}
       />
+
       <div className="flex flex-col gap-8">
         <div className="border border-gray-200 p-10">
           <h2 className="mb-6">
@@ -199,41 +204,46 @@ export function DffSummary({
           />
         </div>
 
-        <div className="border border-gray-200 p-10">
-          <h2 className="mb-6">
-            <span className="w-10 h-10 inline-block align-top mr-2 my-auto">
-              <Image
-                src="/candidat/images/pictograms/ecosystem.svg"
-                alt="Accompagnement"
-                width={40}
-                height={40}
-              />
-            </span>
-            Accompagnement proposé au candidat
-          </h2>
-          <ParcoursSection
-            basicSkills={basicSkills}
-            mandatoryTrainings={mandatoryTrainings}
-            additionalHourCount={additionalHourCount}
-            individualHourCount={individualHourCount}
-            collectiveHourCount={collectiveHourCount}
-          />
-        </div>
+        {!isAccompagnementAutonome && (
+          <div className="border border-gray-200 p-10">
+            <h2 className="mb-6">
+              <span className="w-10 h-10 inline-block align-top mr-2 my-auto">
+                <Image
+                  src="/candidat/images/pictograms/ecosystem.svg"
+                  alt="Accompagnement"
+                  width={40}
+                  height={40}
+                />
+              </span>
+              Accompagnement proposé au candidat
+            </h2>
+            <ParcoursSection
+              basicSkills={basicSkills}
+              mandatoryTrainings={mandatoryTrainings}
+              additionalHourCount={additionalHourCount}
+              individualHourCount={individualHourCount}
+              collectiveHourCount={collectiveHourCount}
+            />
+          </div>
+        )}
 
         <div className="border border-gray-200 p-10">
           <h2 className="mb-6">
             <span className="w-10 h-10 inline-block align-top mr-2 my-auto">
               {PICTOGRAMS.contractSmall}
             </span>
-            Avis et documents
+            {isAccompagnementAutonome ? "Documents" : "Avis et documents"}
           </h2>
-          <DecisionSection
-            decision={aapDecision}
-            decisionComment={aapDecisionComment}
-            candidateDecisionComment={candidateDecisionComment}
-            setCandidateDecisionComment={setCandidateDecisionComment}
-            candidateDecisionCommentDisabled={!!candidateConfirmationAt}
-          />
+          {candidateDecisionComment !== undefined &&
+            setCandidateDecisionComment !== undefined && (
+              <DecisionSection
+                decision={aapDecision}
+                decisionComment={aapDecisionComment}
+                candidateDecisionComment={candidateDecisionComment}
+                setCandidateDecisionComment={setCandidateDecisionComment}
+                candidateDecisionCommentDisabled={!!candidateConfirmationAt}
+              />
+            )}
           {candidateDecisionComment && (
             <CandidateDecisionCommentSection
               candidateDecisionComment={candidateDecisionComment}
@@ -245,6 +255,7 @@ export function DffSummary({
           />
         </div>
       </div>
+
       {candidacy.feasibility?.certificationAuthority && (
         <div className="mb-4">
           <ContactInfosSection

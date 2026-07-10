@@ -43,11 +43,13 @@ export function BannerSummary({
   decision,
   decisionSentAt,
   decisionComment,
+  isAccompagnementAutonome = false,
 }: {
   feasibilitySentToCertificationAuthorityAt?: number | null;
   decision?: FeasibilityDecision | null;
   decisionSentAt?: number | null;
   decisionComment?: string | null;
+  isAccompagnementAutonome?: boolean;
 }) {
   if (
     decision &&
@@ -69,6 +71,10 @@ export function BannerSummary({
         title=""
       />
     );
+  }
+
+  if (isAccompagnementAutonome) {
+    return null;
   }
 
   return (

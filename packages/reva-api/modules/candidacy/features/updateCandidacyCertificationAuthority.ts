@@ -25,6 +25,14 @@ export const updateCandidacyCertificationAuthority = async ({
     throw new Error("Candidature non trouvée");
   }
 
+  const isDfDematAutonomeActive = await prismaClient.feature.findFirst({
+    where: { key: "DF_DEMAT_AUTONOME", isActive: true },
+  });
+
+  if (isDfDematAutonomeActive && candidacy.typeAccompagnement === "AUTONOME") {
+    allowedCandidacyStatuses.push("PROJET");
+  }
+
   if (!allowedCandidacyStatuses.includes(candidacy.status)) {
     throw new Error(
       "Le statut de la candidature ne permet pas de changer de certificateur",

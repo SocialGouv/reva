@@ -185,6 +185,7 @@ const AapFeasibilityPage = () => {
           history={history || []}
         />
       )}
+
       {queryStatus === "success" && (
         <ul className="flex flex-col gap-8">
           <EligibilitySection

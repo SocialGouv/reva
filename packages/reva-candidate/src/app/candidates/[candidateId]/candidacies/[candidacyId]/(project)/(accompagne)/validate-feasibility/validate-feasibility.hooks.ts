@@ -11,6 +11,7 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_VALIDATE_FEASIBILITY = graphql(`
   query getCandidacyByIdWithCandidateForValidateFeasibility($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
+      typeAccompagnement
       candidateInfo {
         street
         city

@@ -37,6 +37,7 @@ export const sendDFFToCertificationAuthority = async ({
   const existingFeasibility = await prismaClient.feasibility.findFirst({
     where: { candidacyId, isActive: true },
     include: {
+      candidacy: { select: { typeAccompagnement: true } },
       dematerializedFeasibilityFile: true,
     },
   });
@@ -53,15 +54,18 @@ export const sendDFFToCertificationAuthority = async ({
     );
   }
 
-  if (existingFeasibility.decision === "INCOMPLETE") {
-    if (
-      !existingDff.candidateConfirmationAt ||
-      !existingFeasibility.decisionSentAt ||
-      existingDff.candidateConfirmationAt <= existingFeasibility.decisionSentAt
-    ) {
-      throw new Error(
-        "Impossible d'envoyer le dossier au certificateur : le dossier doit être corrigé et re-validé par le candidat",
-      );
+  if (existingFeasibility.candidacy?.typeAccompagnement === "ACCOMPAGNE") {
+    if (existingFeasibility.decision === "INCOMPLETE") {
+      if (
+        !existingDff.candidateConfirmationAt ||
+        !existingFeasibility.decisionSentAt ||
+        existingDff.candidateConfirmationAt <=
+          existingFeasibility.decisionSentAt
+      ) {
+        throw new Error(
+          "Impossible d'envoyer le dossier au certificateur : le dossier doit être corrigé et re-validé par le candidat",
+        );
+      }
     }
   }
 
@@ -77,7 +81,9 @@ export const sendDFFToCertificationAuthority = async ({
       candidateConfirmationAt: existingDff.candidateConfirmationAt,
       feasibilityDecision: existingFeasibility.decision,
       feasibilityDecisionSentAt: existingFeasibility.decisionSentAt,
+      typeAccompagnement: existingFeasibility.candidacy?.typeAccompagnement,
     });
+
   if (!isReadyToBeSentToCertificationAuthority) {
     throw new Error(
       "Le dossier de faisabilité n'est pas prêt à être envoyé au certificateur",

@@ -29,6 +29,7 @@
       "conventionCollective": {
         "label": "Convention collective des logistiques"
       },
+      "typeAccompagnement": "ACCOMPAGNE",
       "typology": "SALARIE_PRIVE",
       "candidate": {
         "id": "b6c027bf-4e24-4402-b7fa-01a4f46cb0e2",

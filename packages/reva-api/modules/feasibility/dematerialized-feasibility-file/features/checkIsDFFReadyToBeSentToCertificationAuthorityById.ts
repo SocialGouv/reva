@@ -34,13 +34,16 @@ export const checkIsDFFReadyToBeSentToCertificationAuthorityById = async ({
   typeAccompagnement = "ACCOMPAGNE",
 }: CheckIsDFFReadyToBeSentToCertificationAuthorityByIdArgs) => {
   // Apres une decision INCOMPLETE, bloquer tant que le candidat n'a pas re-confirme (comparaison temporelle)
-  if (
-    feasibilityDecision === "INCOMPLETE" &&
-    (!candidateConfirmationAt ||
-      !feasibilityDecisionSentAt ||
-      candidateConfirmationAt <= feasibilityDecisionSentAt)
-  ) {
-    return false;
+  if (feasibilityDecision === "INCOMPLETE") {
+    if (typeAccompagnement === "ACCOMPAGNE") {
+      if (
+        !candidateConfirmationAt ||
+        !feasibilityDecisionSentAt ||
+        candidateConfirmationAt <= feasibilityDecisionSentAt
+      ) {
+        return false;
+      }
+    }
   }
 
   let isDFFReadyToBeSentToCertificationAuthority =

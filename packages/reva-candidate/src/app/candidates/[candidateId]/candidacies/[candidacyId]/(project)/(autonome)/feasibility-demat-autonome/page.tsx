@@ -1,10 +1,16 @@
 "use client";
+
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { isBefore, toDate } from "date-fns";
+import { format, isBefore, toDate } from "date-fns";
+import { deburr } from "lodash";
+import { useRouter } from "next/navigation";
 
 import { Panel } from "@/components/layout/Panel";
+import { PdfLink } from "@/components/legacy/organisms/DffSummary/components/PdfLink";
+import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary";
 
 import {
   Certification,
@@ -13,16 +19,18 @@ import {
   DffAttachment,
   DffCertificationCompetenceBloc,
   Prerequisite,
+  Candidacy,
 } from "@/graphql/generated/graphql";
 
 import { AttachmentsSection } from "./_components/AttachmentsSection";
 import { CertificationSection } from "./_components/CertificationSection";
 import { CompetenciesBlocksSection } from "./_components/CompetenciesBlocksSection";
+import { DecisionIncompleteAlert } from "./_components/DecisionIncompleteAlert";
 import { EligibilitySection } from "./_components/EligibilitySection";
+import { useFeasibilityDematAutonomePage } from "./_components/feasibility-demat-autonome.hook";
 import { PrerequisitesSection } from "./_components/PrerequisitesSection";
 import { SendFileCertificationAuthoritySection } from "./_components/SendFileCertificateurSection";
 import { SwornStatementSection } from "./_components/SwornStatementSection";
-import { useFeasibilityDematAutonomePage } from "./feasibility-demat-autonome.hook";
 
 const modalWhatIsTheFeasibilityFile = createModal({
   id: "what-is-the-feasibility-file",
@@ -35,6 +43,7 @@ const modalWhatToPayAttentionTo = createModal({
 });
 
 export default function FeasibilityDematAutonomeResourcesPage() {
+  const router = useRouter();
   const { candidacy } = useFeasibilityDematAutonomePage();
 
   if (!candidacy) {
@@ -47,21 +56,85 @@ export default function FeasibilityDematAutonomeResourcesPage() {
     feasibility?.dematerializedFeasibilityFile;
 
   const feasibilityFileSentAt = feasibility?.feasibilityFileSentAt;
+  const decision = feasibility?.decision;
+  const decisionSentAt = feasibility?.decisionSentAt;
+  const decisionComment = feasibility?.decisionComment;
+  const history = feasibility?.history;
+  const feasibilityDecisionIsIncomplete = decision === "INCOMPLETE";
   const hasCertificationRncpExpired =
     !!certification?.rncpExpiresAt &&
     isBefore(certification?.rncpExpiresAt, new Date());
-  const feasibilityDecisionIsIncomplete =
-    feasibility?.decision === "INCOMPLETE";
-
   const isFeasibilityEditable =
     (!feasibilityFileSentAt && !hasCertificationRncpExpired) ||
     feasibilityDecisionIsIncomplete;
 
+  const displayDecisionIncompleteAlert =
+    feasibilityDecisionIsIncomplete && decisionSentAt;
+
   const isEligibilityRequirementPartial =
     dematerializedFeasibilityFile?.eligibilityRequirement ===
     "PARTIAL_ELIGIBILITY_REQUIREMENT";
+
+  // ne pas afficher l'alerte d'expiration de la certification si la décision du dossier de faisabilité est incomplète
+  const showCertificationExpiredAlert =
+    hasCertificationRncpExpired &&
+    !feasibilityDecisionIsIncomplete &&
+    !feasibilityFileSentAt;
+
   const certificationAuthorityStructureHasReducedRequirements =
     !!certification?.certificationAuthorityStructure?.hasReducedRequirements;
+
+  const isFeasibilityReceivedOrRejectedOrPendingOrComplete =
+    decision === "ADMISSIBLE" ||
+    decision === "REJECTED" ||
+    decision === "PENDING" ||
+    decision === "COMPLETE";
+
+  if (isFeasibilityReceivedOrRejectedOrPendingOrComplete) {
+    const candidate = candidacy.candidate;
+    const candidateName = deburr(
+      `${candidate?.givenName ? candidate?.givenName : candidate?.lastname}_${candidate?.firstname}`,
+    ).toLowerCase();
+
+    return (
+      <Panel>
+        <div className="flex flex-col">
+          <Breadcrumb
+            currentPageLabel="Dossier de faisabilité"
+            className="mb-2"
+            segments={[
+              {
+                label: "Ma candidature",
+                linkProps: {
+                  href: "../",
+                },
+              },
+            ]}
+          />
+          <div className="flex justify-between">
+            <h1 className="mb-0">Dossier de faisabilité</h1>
+
+            {dematerializedFeasibilityFile?.dffFile ? (
+              <PdfLink
+                url={dematerializedFeasibilityFile.dffFile.url}
+                fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
+              />
+            ) : null}
+          </div>
+
+          <div className="flex flex-col gap-8">
+            <DffSummary candidacy={candidacy as Candidacy} />
+
+            <div className="flex justify-between">
+              <Button priority="secondary" onClick={() => router.push("../")}>
+                Retour
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Panel>
+    );
+  }
 
   return (
     <Panel>
@@ -83,6 +156,68 @@ export default function FeasibilityDematAutonomeResourcesPage() {
           Complétez toutes les sections du dossier de faisabilité avant de
           l'envoyer au certificateur.
         </p>
+
+        {showCertificationExpiredAlert && (
+          <Alert
+            data-testid="certification-expired-alert"
+            className="mt-6 mb-12"
+            severity="error"
+            title="La certification visée a expiré"
+            description={
+              <>
+                <p className="mb-4">
+                  La certification <em>{certification?.label}</em> a expiré le{" "}
+                  {format(certification?.rncpExpiresAt, "dd/MM/yyyy")}.
+                </p>
+                <p>
+                  Il est impossible d’envoyer le dossier de faisabilité du
+                  candidat au certificateur. Vous devez attendre le
+                  renouvellement de la certification, changer de certification
+                  ou vous pouvez contacter le certificateur en charge de la
+                  candidature.
+                </p>
+              </>
+            }
+          />
+        )}
+
+        {candidacy.warningOnFeasibilitySubmission ===
+          "MAX_SUBMISSIONS_UNIQUE_CERTIFICATION_REACHED" && (
+          <Alert
+            className="mt-6 mb-12"
+            severity="error"
+            title="Une demande de recevabilité existe déjà pour ce diplôme"
+            description={`${candidacy.candidate.lastname} ${candidacy.candidate.firstname} a déjà transmis une demande de recevabilité pour la certification ${certification?.label}, visée en totalité, en ${new Date().getFullYear()}. Vous pouvez reprendre la candidature existante si elle a été abandonnée, ou soumettre une nouvelle demande à partir de Janvier ${new Date().getFullYear() + 1}.`}
+          />
+        )}
+
+        {candidacy.warningOnFeasibilitySubmission ===
+          "MAX_SUBMISSIONS_CROSS_CERTIFICATION_REACHED" && (
+          <Alert
+            className="mt-6 mb-12"
+            severity="error"
+            title="Nombre maximum de demandes de recevabilité atteintes"
+            description={`${candidacy.candidate.lastname} ${candidacy.candidate.firstname} a déjà transmis 3 demandes de recevabilité sur des certifications visées en totalité pour l’année ${new Date().getFullYear()}. Vous pourrez soumettre le dossier de faisabilité pour la certification ${certification?.label}, visée en totalité, à partir de Janvier ${new Date().getFullYear() + 1}.`}
+          />
+        )}
+
+        {candidacy.warningOnFeasibilitySubmission ===
+          "PREVIOUS_FEASIBILITY_ON_CERTIFICATION_REJECTED" && (
+          <Alert
+            className="mt-6 mb-12"
+            severity="error"
+            title="Une demande de recevabilité a été rejetée pour ce diplôme"
+            description={`${candidacy.candidate.lastname} ${candidacy.candidate.firstname} a déjà transmis une demande de recevabilité pour la certification ${certification?.label} en ${new Date().getFullYear()}. Cette demande a été rejetée. Vous pouvez soumettre une nouvelle demande de recevabilité partielle dès à présent, ou une demande de recevabilité totale à partir de Janvier ${new Date().getFullYear() + 1}.`}
+          />
+        )}
+
+        {displayDecisionIncompleteAlert && (
+          <DecisionIncompleteAlert
+            decisionSentAt={decisionSentAt}
+            decisionComment={decisionComment || ""}
+            history={history || []}
+          />
+        )}
 
         <div className="grid grid-cols-4">
           <div className="col-span-3 flex flex-col gap-8">
