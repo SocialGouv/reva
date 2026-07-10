@@ -94,13 +94,22 @@ export default function SendFileCertificationAuthorityPage() {
     setCertificationAuthoritySelectedId,
   ] = useState<string | null>(null);
 
+  // Get the certification authority id from the candidacy.
+  // This is the certification authority that can be selected by the user in the candidacy summary early in the candidacy process.
+  const candidcayCertificationAuthorityId =
+    candidacy?.certificationAuthority?.id;
+
+  // Get the default certification authority for the candidacy.
   // If there is only one certification authority choice available, use it as the default
+  // This will be used if there is no certification authority selected for the candidacy, but only if there is only one choice available.
   const defaultCertificationAuthorityId =
     certificationAuthorities.length === 1 ? certificationAuthorities[0].id : "";
 
-  // if no certification authority is selected, use the default one (if available)
+  // if no certification authority is selected in this page, use the one from the candidacy if there is one. If not use the default one (if available)
   const certificationAuthoritySelectedId =
-    selectedCertificationAuthorityId ?? defaultCertificationAuthorityId;
+    selectedCertificationAuthorityId ??
+    candidcayCertificationAuthorityId ??
+    defaultCertificationAuthorityId;
 
   const [
     certificationAuthoritySelectError,
