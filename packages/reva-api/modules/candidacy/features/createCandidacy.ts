@@ -25,6 +25,16 @@ export const createCandidacy = async ({
   });
 
   const prisma = tx ?? prismaClient;
+
+  const isDfDematAutonomeActive = await prisma.feature.findFirst({
+    where: { key: "DF_DEMAT_AUTONOME", isActive: true },
+  });
+
+  const feasibilityFormat =
+    isDfDematAutonomeActive || typeAccompagnement === "ACCOMPAGNE"
+      ? "DEMATERIALIZED"
+      : "UPLOADED_PDF";
+
   // Row-level lock per candidate to avoid duplicate candidacies under concurrency
   // If a diffrent transaction tries to aquire the lock while the first one still holds it, it will fail and rollback
   await prisma.$queryRaw`SELECT id FROM candidate WHERE id = ${candidateId}::uuid FOR UPDATE NOWAIT`;
@@ -46,8 +56,7 @@ export const createCandidacy = async ({
       status: "PROJET",
       financeModule: "hors_plateforme",
       cohorteVaeCollectiveId,
-      feasibilityFormat:
-        typeAccompagnement === "AUTONOME" ? "UPLOADED_PDF" : "DEMATERIALIZED",
+      feasibilityFormat,
       candidacyStatuses: {
         create: {
           status: CandidacyStatusStep.PROJET,
