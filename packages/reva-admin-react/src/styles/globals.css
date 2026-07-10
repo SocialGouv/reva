@@ -30,6 +30,21 @@
     }
   }
 
+  /* Sort le message d'erreur du flux (desktop) pour ne pas décaler un input
+     voisin aligné par le bas. Sur mobile, champs empilés : flux normal. */
+  .floating-error-input {
+    @media (min-width: 48em) {
+      position: relative;
+
+      .fr-error-text {
+        position: absolute;
+        top: 100%;
+        width: 100%;
+        margin-top: 0.25rem;
+      }
+    }
+  }
+
   .side-bar-menu-add-button {
     li:last-child {
       a {
