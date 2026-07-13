@@ -12,6 +12,7 @@ import {
 } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { createCertificationAuthorityEntity } from "@tests/helpers/entities/create-certification-authority.entity";
+import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
 import { createFeasibilityEntity } from "@tests/helpers/entities/create-feasibility.entity";
 import { createOrganismEntity } from "@tests/helpers/entities/create-organism.entity";
 import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
@@ -311,6 +312,101 @@ test.describe("CertificationAuthorityContactTile", () => {
       page.getByTestId("certification-authority-contact-tile"),
     ).toHaveCount(0);
     await expect(page.getByTestId("no-contact-tile")).toBeVisible();
+  });
+});
+
+test.describe("NoCertificationAuthorityContactTile", () => {
+  test("should display when the NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature is active, a certification is selected and candidacy.certificationAuthority is missing", async ({
+    page,
+    msw,
+  }) => {
+    const candidacy = createDashboardCandidacy({
+      certification: createCertificationEntity(),
+      certificationAuthority: null,
+    });
+
+    await setupDashboard(
+      page,
+      msw,
+      candidacy,
+      [],
+      ["NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD"],
+    );
+
+    await expect(
+      page.getByTestId("no-certification-authority-contact-tile"),
+    ).toBeVisible();
+    await expect(
+      page.getByTestId("certification-authority-contact-tile"),
+    ).toHaveCount(0);
+    // NoContactTile is shown alongside it since it only checks organism/certificationAuthority
+    await expect(page.getByTestId("no-contact-tile")).toBeVisible();
+  });
+
+  test("should not display when the feature is active but no certification is selected", async ({
+    page,
+    msw,
+  }) => {
+    const candidacy = createDashboardCandidacy({
+      certification: null,
+      certificationAuthority: null,
+    });
+
+    await setupDashboard(
+      page,
+      msw,
+      candidacy,
+      [],
+      ["NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD"],
+    );
+
+    await expect(
+      page.getByTestId("no-certification-authority-contact-tile"),
+    ).toHaveCount(0);
+    await expect(page.getByTestId("no-contact-tile")).toBeVisible();
+  });
+
+  test("should not display when a certification authority is available", async ({
+    page,
+    msw,
+  }) => {
+    const candidacy = createDashboardCandidacy({
+      certification: createCertificationEntity(),
+      certificationAuthority: createCertificationAuthorityEntity({
+        label: "Candidacy Certification Authority",
+      }),
+    });
+
+    await setupDashboard(
+      page,
+      msw,
+      candidacy,
+      [],
+      ["NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD"],
+    );
+
+    await expect(
+      page.getByTestId("no-certification-authority-contact-tile"),
+    ).toHaveCount(0);
+    await expect(
+      page.getByTestId("certification-authority-contact-tile"),
+    ).toBeVisible();
+  });
+
+  test("should not display when the NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature is inactive, even without a certification authority", async ({
+    page,
+    msw,
+  }) => {
+    const candidacy = createDashboardCandidacy({
+      certification: createCertificationEntity(),
+      certificationAuthority: null,
+    });
+
+    await setupDashboard(page, msw, candidacy);
+
+    await expect(
+      page.getByTestId("no-certification-authority-contact-tile"),
+    ).toHaveCount(0);
   });
 });
 

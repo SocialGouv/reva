@@ -5,6 +5,7 @@ import TileGroup from "../../tiles/TileGroup";
 
 import { AapContactTile } from "./AapContactTile";
 import { CertificationAuthorityContactTile } from "./CertificationAuthorityContactTile";
+import { NoCertificationAuthorityContactTile } from "./NoCertificationAuthorityAvailableContactTile";
 import { NoContactTile } from "./NoContactTile";
 
 export const ContactTiles = ({
@@ -27,6 +28,12 @@ export const ContactTiles = ({
     ? candidacy.certificationAuthority
     : candidacy.feasibility?.certificationAuthority;
 
+  //only show no certification authority contact tile if the feature is active and a certification is selected but no certification authority is set
+  const showNoCertificationAuthorityContactTile =
+    isNewCertificationAuthorityCardFeatureActive &&
+    candidacy.certification &&
+    !certificationAuthority;
+
   return (
     <TileGroup icon="fr-icon-team-line" title="Mes contacts">
       {!candidacy.organism && !certificationAuthority && <NoContactTile />}
@@ -42,6 +49,10 @@ export const ContactTiles = ({
         <CertificationAuthorityContactTile
           certificationAuthority={certificationAuthority}
         />
+      )}
+
+      {showNoCertificationAuthorityContactTile && (
+        <NoCertificationAuthorityContactTile />
       )}
     </TileGroup>
   );
