@@ -27,11 +27,23 @@ const certification = createCertificationEntity({
 
 function createCertificationAuthorityContactInfoHandlers(
   candidacy: CandidacyEntity,
+  {
+    activeFeaturesForConnectedUser = [],
+    candidacyCertificationAuthority,
+  }: {
+    activeFeaturesForConnectedUser?: string[];
+    candidacyCertificationAuthority?: {
+      label: string;
+      contactEmail: string;
+      contactPhone: string;
+    } | null;
+  } = {},
 ) {
   return [
     ...createCandidaciesGuardsHandlers({
       candidate,
       candidacies: [candidacy],
+      activeFeaturesForConnectedUser,
     }),
     ...createCandidacyGuardsAndDashboardHandlers(candidacy),
     fvae.query(
@@ -43,6 +55,7 @@ function createCertificationAuthorityContactInfoHandlers(
             codeRncp: certification.codeRncp,
             label: certification.label,
           },
+          certificationAuthority: candidacyCertificationAuthority ?? null,
           certificationAuthorityLocalAccounts: [
             {
               contactFullName: "Jean Dupont",
@@ -159,5 +172,89 @@ test.describe("certification authority contact info page", () => {
     ).toBeVisible();
     await expect(card.getByText("jean.dupont@example.com")).toBeVisible();
     await expect(card.getByText("0123456789")).toBeVisible();
+  });
+});
+
+test.describe("certification authority contact info page with NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature active", () => {
+  const candidacy = createCandidacyEntity({
+    candidate,
+    certification,
+    status: "PARCOURS_CONFIRME",
+  });
+
+  test.use({
+    mswHandlers: [
+      createCertificationAuthorityContactInfoHandlers(candidacy, {
+        activeFeaturesForConnectedUser: [
+          "NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD",
+        ],
+        candidacyCertificationAuthority: {
+          label: "Candidacy Certification Authority",
+          contactEmail: "candidacy-authority@example.com",
+          contactPhone: "0611223344",
+        },
+      }),
+      { scope: "test" },
+    ],
+  });
+
+  test("shows the certification authority card from candidacy.certificationAuthority instead of feasibility.certificationAuthority", async ({
+    page,
+  }) => {
+    await loginAndWaitForCandidaciesInitialLoad(page);
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-contact-info/`,
+    );
+
+    const card = page.getByTestId("certification-authority-card");
+
+    await expect(card).toBeVisible();
+    await expect(
+      card.getByRole("heading", {
+        name: "Candidacy Certification Authority",
+      }),
+    ).toBeVisible();
+    await expect(
+      card.getByText("candidacy-authority@example.com"),
+    ).toBeVisible();
+    await expect(card.getByText("0611223344")).toBeVisible();
+
+    await expect(card.getByText("Autorité Certificatrice")).toHaveCount(0);
+  });
+});
+
+test.describe("certification authority contact info page with NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature active and no candidacy.certificationAuthority", () => {
+  const candidacy = createCandidacyEntity({
+    candidate,
+    certification,
+    status: "PARCOURS_CONFIRME",
+  });
+
+  test.use({
+    mswHandlers: [
+      createCertificationAuthorityContactInfoHandlers(candidacy, {
+        activeFeaturesForConnectedUser: [
+          "NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD",
+        ],
+        candidacyCertificationAuthority: null,
+      }),
+      { scope: "test" },
+    ],
+  });
+
+  test("renders nothing, even though feasibility.certificationAuthority is set", async ({
+    page,
+  }) => {
+    await loginAndWaitForCandidaciesInitialLoad(page);
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-contact-info/`,
+    );
+
+    await expect(
+      page.getByRole("heading", { name: "Certificateur", level: 1 }),
+    ).toHaveCount(0);
+    await expect(page.getByTestId("certification-authority-card")).toHaveCount(
+      0,
+    );
   });
 });

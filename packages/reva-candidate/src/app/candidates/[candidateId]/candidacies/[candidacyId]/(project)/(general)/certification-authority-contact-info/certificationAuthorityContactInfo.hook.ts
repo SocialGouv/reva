@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
@@ -14,6 +15,11 @@ const getCandidacyByIdForCertificationAuthorityContactInfoPage = graphql(`
         id
         codeRncp
         label
+      }
+      certificationAuthority {
+        label
+        contactEmail
+        contactPhone
       }
       certificationAuthorityLocalAccounts {
         contactFullName
@@ -33,6 +39,10 @@ const getCandidacyByIdForCertificationAuthorityContactInfoPage = graphql(`
 
 export const useCertificationAuthorityContactInfoPage = () => {
   const { graphqlClient } = useGraphQlClient();
+  const { isFeatureActive } = useFeatureFlipping();
+  const isNewCertificationAuthorityCardFeatureActive = isFeatureActive(
+    "NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD",
+  );
 
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -57,7 +67,9 @@ export const useCertificationAuthorityContactInfoPage = () => {
 
   const certification = candidacy?.certification;
 
-  const certificationAuthority = candidacy?.feasibility?.certificationAuthority;
+  const certificationAuthority = isNewCertificationAuthorityCardFeatureActive
+    ? candidacy?.certificationAuthority
+    : candidacy?.feasibility?.certificationAuthority;
 
   const certificationAuthorityLocalAccounts =
     candidacy?.certificationAuthorityLocalAccounts;
