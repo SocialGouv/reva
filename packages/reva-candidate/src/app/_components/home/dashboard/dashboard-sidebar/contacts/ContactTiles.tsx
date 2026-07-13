@@ -1,3 +1,5 @@
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+
 import { CandidacyUseCandidateForDashboard } from "../../dashboard.hooks";
 import TileGroup from "../../tiles/TileGroup";
 
@@ -14,10 +16,20 @@ export const ContactTiles = ({
     candidacy.endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
     candidacy.endAccompagnementStatus === "CONFIRMED_BY_ADMIN";
   const endAccompagnementDate = candidacy.endAccompagnementDate;
+
+  const { isFeatureActive } = useFeatureFlipping();
+
+  const isNewCertificationAuthorityCardFeatureActive = isFeatureActive(
+    "NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD",
+  );
+
+  const certificationAuthority = isNewCertificationAuthorityCardFeatureActive
+    ? candidacy.certificationAuthority
+    : candidacy.feasibility?.certificationAuthority;
+
   return (
     <TileGroup icon="fr-icon-team-line" title="Mes contacts">
-      {!candidacy.organism &&
-        !candidacy.feasibility?.certificationAuthority && <NoContactTile />}
+      {!candidacy.organism && !certificationAuthority && <NoContactTile />}
       {candidacy.organism && (
         <AapContactTile
           organism={candidacy.organism}
@@ -25,9 +37,10 @@ export const ContactTiles = ({
           endAccompagnementDate={endAccompagnementDate}
         />
       )}
-      {candidacy.feasibility?.certificationAuthority && (
+
+      {certificationAuthority && (
         <CertificationAuthorityContactTile
-          certificationAuthority={candidacy.feasibility.certificationAuthority}
+          certificationAuthority={certificationAuthority}
         />
       )}
     </TileGroup>

@@ -53,6 +53,7 @@ export type CreateCandidacyEntityOptions = {
   candidacyAlreadySubmitted?: boolean;
   feasibilityFormat?: Candidacy["feasibilityFormat"];
   certificationAuthorities?: Candidacy["certificationAuthorities"];
+  certificationAuthority?: Candidacy["certificationAuthority"];
   candidacyDropOut?: Candidacy["candidacyDropOut"];
   basicSkills?: Candidacy["basicSkills"];
   mandatoryTrainings?: Candidacy["mandatoryTrainings"];
@@ -99,6 +100,7 @@ export const createCandidacyEntity = (
     appointments,
     feasibilityFormat,
     certificationAuthorities,
+    certificationAuthority,
     candidacyDropOut,
     basicSkills,
     mandatoryTrainings,
@@ -139,6 +141,7 @@ export const createCandidacyEntity = (
     mandatoryTrainings: mandatoryTrainings ?? [],
     feasibilityFormat: feasibilityFormat || "DEMATERIALIZED",
     certificationAuthorities: certificationAuthorities || [],
+    certificationAuthority: certificationAuthority ?? null,
     createdAt: new Date().getTime(),
     feasibility,
     jury: jury || null,

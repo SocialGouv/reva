@@ -45,10 +45,11 @@ async function setupDashboard(
   msw: MswFixture,
   candidacy: CandidacyEntity,
   additionalHandlers: GraphQLHandler[] = [],
+  activeFeaturesForConnectedUser: string[] = [],
 ) {
   const { handlers, dashboardWait } = dashboardHandlers({
     candidacy,
-    activeFeaturesForConnectedUser: [],
+    activeFeaturesForConnectedUser,
   });
 
   msw.use(...handlers, ...additionalHandlers);
@@ -249,6 +250,67 @@ test.describe("CertificationAuthorityContactTile", () => {
     await expect(page).toHaveURL(
       "/candidat/candidates/1/candidacies/1/certification-authority-contact-info/",
     );
+  });
+
+  test("should display data from candidacy.certificationAuthority when the NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature is active", async ({
+    page,
+    msw,
+  }) => {
+    const candidacy = createDashboardCandidacy({
+      feasibility: createFeasibilityEntity({
+        certificationAuthority: null,
+      }),
+      certificationAuthority: createCertificationAuthorityEntity({
+        label: "Candidacy Certification Authority",
+        contactFullName: "Jane Doe",
+        contactEmail: "jane.doe@authority.test",
+      }),
+    });
+
+    await setupDashboard(
+      page,
+      msw,
+      candidacy,
+      [],
+      ["NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD"],
+    );
+
+    const certificationAuthorityContactTile = page.getByTestId(
+      "certification-authority-contact-tile",
+    );
+
+    await expect(certificationAuthorityContactTile).toBeVisible();
+    await expect(certificationAuthorityContactTile).toContainText(
+      "Candidacy Certification Authority",
+    );
+    await expect(page.getByTestId("no-contact-tile")).toHaveCount(0);
+  });
+
+  test("should not display when the NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature is active and candidacy.certificationAuthority is missing, even if feasibility.certificationAuthority is set", async ({
+    page,
+    msw,
+  }) => {
+    const candidacy = createDashboardCandidacy({
+      feasibility: createFeasibilityEntity({
+        certificationAuthority: createCertificationAuthorityEntity({
+          label: "Feasibility Certification Authority",
+        }),
+      }),
+      certificationAuthority: null,
+    });
+
+    await setupDashboard(
+      page,
+      msw,
+      candidacy,
+      [],
+      ["NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD"],
+    );
+
+    await expect(
+      page.getByTestId("certification-authority-contact-tile"),
+    ).toHaveCount(0);
+    await expect(page.getByTestId("no-contact-tile")).toBeVisible();
   });
 });
 
