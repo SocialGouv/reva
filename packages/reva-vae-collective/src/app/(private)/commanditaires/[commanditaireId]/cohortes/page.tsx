@@ -95,7 +95,7 @@ export default async function CohortesPage({
   }
 
   return (
-    <div className="fr-container flex flex-col">
+    <div className="flex flex-col">
       <RoleDependentBreadcrumb
         className="mt-0 mb-4"
         currentPageLabel="Cohortes"
