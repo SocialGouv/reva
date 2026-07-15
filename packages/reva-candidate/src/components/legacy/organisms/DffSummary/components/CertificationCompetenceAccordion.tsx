@@ -52,7 +52,9 @@ const BadgeState = ({
 };
 
 const CertificationCompetenceRow = ({ label }: { label: string }) => (
-  <div className={`px-4 py-3 font-medium border-b-[1px] border-neutral-200`}>
+  <div
+    className={`w-full px-4 py-3 font-medium border-b-[1px] border-neutral-200 mb-[-1px]`}
+  >
     {label}
   </div>
 );
@@ -87,7 +89,11 @@ export const CertificationCompetenceAccordion = ({
   }
 
   return (
-    <Accordion label={label} defaultExpanded={defaultExpanded}>
+    <Accordion
+      className="w-full"
+      label={label}
+      defaultExpanded={defaultExpanded}
+    >
       {competenceBloc.competences.map((competence) => (
         <div key={competence.id}>
           <BadgeState

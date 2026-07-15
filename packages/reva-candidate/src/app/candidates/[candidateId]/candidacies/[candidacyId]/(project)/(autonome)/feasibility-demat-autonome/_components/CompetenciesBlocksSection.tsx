@@ -65,7 +65,7 @@ export const CompetenciesBlocksSection = ({
     }
     data-testid="competencies-blocks-section"
   >
-    <ul className="list-none flex flex-col gap-2">
+    <ul className="list-none flex flex-col">
       <div className="fr-accordions-group">
         {blocsDeCompetences?.map((bloc) => (
           <li
@@ -83,7 +83,7 @@ export const CompetenciesBlocksSection = ({
             />
             {!disabled && isEditable && (
               <Button
-                className="w-[120px] flex-none mt-1 border-t-[1px]"
+                className="w-[100px] flex-none mt-1 border-t-[1px]"
                 priority={bloc.complete ? "secondary" : "primary"}
                 linkProps={{
                   href: `./competencies-blocks/${bloc.certificationCompetenceBloc.id}`,
@@ -100,7 +100,7 @@ export const CompetenciesBlocksSection = ({
         ))}
       </div>
       {showComplementExperienceParcoursVise && (
-        <li className="pb-0">
+        <li className="flex flex-row justify-between items-start py-0 gap-6">
           <ComplementExperienceParcoursViseAccordion
             complementExperienceParcoursVise={complementExperienceParcoursVise}
             disabled={disabled}
