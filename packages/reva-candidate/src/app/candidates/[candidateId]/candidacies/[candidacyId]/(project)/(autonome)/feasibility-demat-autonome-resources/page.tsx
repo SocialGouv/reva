@@ -13,19 +13,9 @@ import { graphqlErrorToast } from "@/components/toast/toast";
 
 import { useFeasibilityDematAutonomeResourcesPage } from "./feasibility-demat-autonome-resources.hook";
 
-const schema = z
-  .object({
-    feasibilityFileResourceFirstRead: z.boolean(),
-  })
-  .superRefine(({ feasibilityFileResourceFirstRead }, ctx) => {
-    if (!feasibilityFileResourceFirstRead) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["feasibilityFileResourceFirstRead"],
-        message: "Veuillez cocher la case",
-      });
-    }
-  });
+const schema = z.object({
+  feasibilityFileResourceFirstRead: z.boolean(),
+});
 
 type FeasibilityDematAutonomeResourcesForm = z.infer<typeof schema>;
 
@@ -60,15 +50,17 @@ export default function FeasibilityDematAutonomeResourcesPage() {
 
   useEffect(resetForm, [resetForm]);
 
-  const onSubmit = async (_data: FeasibilityDematAutonomeResourcesForm) => {
+  const onSubmit = async (data: FeasibilityDematAutonomeResourcesForm) => {
     if (!candidacy?.id) {
       return;
     }
 
     try {
-      await markFeasibilityFileResourceFirstAsRead.mutateAsync({
-        candidacyId: candidacy.id,
-      });
+      if (data.feasibilityFileResourceFirstRead) {
+        await markFeasibilityFileResourceFirstAsRead.mutateAsync({
+          candidacyId: candidacy.id,
+        });
+      }
 
       router.push("../feasibility-demat-autonome");
     } catch (error) {
