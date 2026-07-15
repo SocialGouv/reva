@@ -1,12 +1,9 @@
-import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 
 import { wrapKeycloakUnavailable } from "@/modules/shared/auth/wrap-keycloak-unavailable";
-import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "@/modules/shared/error/functionalError";
 import { logger } from "@/modules/shared/logger/logger";
+import { isAdmin, isAnyone } from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
 import { ClientApp } from "./account.type";
 import { createAccount } from "./features/createAccount";
@@ -16,13 +13,12 @@ import { loginWithCredentials } from "./features/loginWithCredentials";
 import { resendEmailOtp } from "./features/resendEmailOtp";
 import { resetAccountPassword } from "./features/resetAccountPassword";
 import { sendForgotPasswordEmail } from "./features/sendForgotPasswordEmail";
-import { updateAccountById } from "./features/updateAccount";
 import { verifyOtpChallenge } from "./features/verifyOtpChallenge";
 
-export const resolvers = {
+const unsafeResolvers = {
   Mutation: {
     account_createAccount: async (
-      _: any,
+      _parent: unknown,
       params: {
         account: {
           email: string;
@@ -34,52 +30,7 @@ export const resolvers = {
           certificationAuthorityId?: string;
         };
       },
-      context: {
-        reply: any;
-        auth: any;
-        app: {
-          keycloak: Keycloak.Keycloak;
-        };
-      },
-    ) => {
-      if (!context.auth.hasRole("admin")) {
-        throw new Error("Not authorized");
-      }
-      return createAccount({
-        ...params.account,
-      });
-    },
-    account_updateAccount: async (
-      _parent: unknown,
-      params: {
-        accountId: string;
-        accountData: {
-          email: string;
-          firstname: string;
-          lastname: string;
-        };
-      },
-      context: GraphqlContext,
-    ) => {
-      try {
-        if (context.auth.userInfo?.sub == undefined) {
-          throw new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
-          );
-        }
-
-        const hasRole = context.auth.hasRole;
-        if (!hasRole("admin")) {
-          throw new Error("Utilisateur non autorisé");
-        }
-
-        return updateAccountById(params);
-      } catch (e) {
-        logger.error(e);
-        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
-      }
-    },
+    ) => createAccount(params.account),
     account_loginWithCredentials: (
       _parent: unknown,
       params: {
@@ -138,22 +89,12 @@ export const resolvers = {
       context: GraphqlContext,
     ) => {
       try {
-        if (context.auth.userInfo?.sub == undefined) {
-          throw new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
-          );
+        const keycloakId = context.auth.userInfo?.sub;
+        if (!keycloakId) {
+          throw new Error("Impossible de déterminer l'utilisateur connecté.");
         }
-
-        if (!context.auth.hasRole("admin")) {
-          throw new Error("Utilisateur non autorisé");
-        }
-
         return getImpersonateUrl(
-          {
-            hasRole: context.auth.hasRole,
-            keycloakId: context.auth.userInfo?.sub,
-          },
+          { hasRole: context.auth.hasRole, keycloakId },
           params.input,
         );
       } catch (e) {
@@ -163,3 +104,18 @@ export const resolvers = {
     },
   },
 };
+
+export const resolvers = withPolicies(unsafeResolvers, {
+  Mutation: {
+    account_createAccount: isAdmin,
+    account_loginWithCredentials: isAnyone,
+    account_verifyOtpChallenge: isAnyone,
+    account_sendForgotPasswordEmail: isAnyone,
+    account_resetPassword: isAnyone,
+    account_resendEmailOtp: isAnyone,
+  },
+  Query: {
+    account_getAccountForConnectedUser: isAnyone,
+    account_getImpersonateUrl: isAdmin,
+  },
+});
