@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 
 import { useAuth } from "@/components/auth/auth";
 import { SearchList } from "@/components/search/search-list/SearchList";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
 
 import { AccountsListEmptyState } from "./AccountsListEmptyState";
 import { useCollaborateurAccountsList } from "./collaborateurAccountsList.hook";
@@ -18,10 +19,12 @@ export default function UserAccountsListPage() {
   const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
   const searchFilter = searchParams.get("search") ?? "";
   const { isAdmin } = useAuth();
+
   const {
     comptesCollaborateursPage,
     collaborateurAccountsListStatus,
     maisonMereAAPId,
+    maisonMereRaisonSociale,
   } = useCollaborateurAccountsList({
     searchFilter,
     page: currentPage,
@@ -54,8 +57,23 @@ export default function UserAccountsListPage() {
     );
   }
 
+  const backUrl = isAdmin
+    ? `/maison-mere-aap/${maisonMereAAPId}`
+    : `/agencies-settings-v3`;
+
   return (
     <div className="flex flex-col gap-4 w-full">
+      <SettingsBreadcrumb
+        currentPageLabel="Comptes collaborateurs"
+        segments={[
+          {
+            label: maisonMereRaisonSociale,
+            linkProps: {
+              href: backUrl,
+            },
+          },
+        ]}
+      />
       <h1>Comptes collaborateurs</h1>
       <SearchList
         searchFilter={searchFilter}

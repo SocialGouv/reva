@@ -14,6 +14,7 @@ const CollaborateurAccountsListQuery = graphql(`
   ) {
     organism_getMaisonMereAAPById(maisonMereAAPId: $maisonMereAAPId) {
       id
+      raisonSociale
       paginatedComptesCollaborateurs(
         offset: $offset
         limit: $limit
@@ -80,5 +81,8 @@ export const useCollaborateurAccountsList = ({
     collaborateurAccountsListStatus,
     comptesCollaborateursPage,
     maisonMereAAPId,
+    maisonMereRaisonSociale:
+      collaborateurAccountsListResponse?.organism_getMaisonMereAAPById
+        ?.raisonSociale,
   };
 };
