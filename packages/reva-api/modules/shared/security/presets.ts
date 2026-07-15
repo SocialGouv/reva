@@ -1,3 +1,4 @@
+import { accessBy, ALLOW } from "./accessBy";
 import {
   allowed,
   forbidden,
@@ -39,7 +40,7 @@ export const defaultSecurity = [forbidden];
 
 export const isAnyone = [allowed];
 
-export const isAdmin = [hasRole(["admin"])];
+export const isAdmin = accessBy({ admin: ALLOW });
 export const isAdminOrCertificationAuthorityLocalAccountOwner = [
   hasRole(["admin", "manage_certification_authority_local_account"]),
   whenHasRole(
