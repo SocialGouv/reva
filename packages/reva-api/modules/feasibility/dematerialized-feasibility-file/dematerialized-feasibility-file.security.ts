@@ -20,7 +20,7 @@ export const resolversSecurityMap = {
     isOwnerOrCanManageCandidacy,
 
   "Mutation.dematerialized_feasibility_file_createOrUpdateComplementExperienceParcoursVise":
-    isAdminOrCandidacyCompanion,
+    isOwnerOrCanManageCandidacy,
 
   "Mutation.dematerialized_feasibility_file_createOrUpdatePrerequisites":
     isOwnerOrCanManageCandidacy,

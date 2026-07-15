@@ -16,7 +16,7 @@ import { sanitizedTextAllowSpecialCharacters } from "@/utils/input-sanitization"
 import { graphql } from "@/graphql/generated";
 const schema = z.object({
   complementExperienceParcoursVise: sanitizedTextAllowSpecialCharacters({
-    minLength: 1,
+    minLength: 0,
     maxLength: 10000,
   }),
 });
@@ -101,7 +101,7 @@ const ComplementExperienceParcoursVisePage = () => {
     register,
     handleSubmit,
     reset,
-    formState: { isSubmitting, isDirty, errors },
+    formState: { isSubmitting, errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues,
@@ -158,9 +158,9 @@ const ComplementExperienceParcoursVisePage = () => {
             data-testid="block-comment-input"
           />
           <FormButtons
+            hideResetButton
             backUrl={`/candidacies/${candidacyId}/feasibility-aap`}
             formState={{
-              isDirty,
               isSubmitting,
             }}
           />

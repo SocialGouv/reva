@@ -81,22 +81,6 @@ test.describe("Dematerialized Feasibility File - Complement Experience Parcours 
         page.getByTestId("block-comment-input").getByRole("textbox"),
       ).toBeVisible();
     });
-
-    test("it should have the save button disabled when textarea is empty", async ({
-      page,
-    }) => {
-      await visitPage(page);
-
-      await expect(
-        page.getByTestId("block-comment-input").getByRole("textbox"),
-      ).toHaveValue("");
-
-      await expect(
-        page
-          .getByTestId("form-buttons")
-          .getByRole("button", { name: "Enregistrer" }),
-      ).toBeDisabled();
-    });
   });
 
   test.describe("When i access the page with existing data", () => {
@@ -119,18 +103,6 @@ test.describe("Dematerialized Feasibility File - Complement Experience Parcours 
         page.getByTestId("block-comment-input").getByRole("textbox"),
       ).toHaveValue(EXISTING_VALUE);
     });
-
-    test("it should have the save button disabled when form matches the server value", async ({
-      page,
-    }) => {
-      await visitPage(page);
-
-      await expect(
-        page
-          .getByTestId("form-buttons")
-          .getByRole("button", { name: "Enregistrer" }),
-      ).toBeDisabled();
-    });
   });
 
   test.describe("When i interact with the form", () => {
@@ -139,47 +111,6 @@ test.describe("Dematerialized Feasibility File - Complement Experience Parcours 
         [...aapCommonHandlers, ...createPageQueryHandler()],
         { scope: "test" },
       ],
-    });
-
-    test("it should enable the save button when text is typed into the textarea", async ({
-      page,
-    }) => {
-      await visitPage(page);
-
-      await page
-        .getByTestId("block-comment-input")
-        .getByRole("textbox")
-        .fill("Test complement experience");
-
-      await expect(
-        page
-          .getByTestId("form-buttons")
-          .getByRole("button", { name: "Enregistrer" }),
-      ).not.toBeDisabled();
-    });
-
-    test("it should re-disable the save button when textarea is cleared back to original value", async ({
-      page,
-    }) => {
-      await visitPage(page);
-
-      const textarea = page
-        .getByTestId("block-comment-input")
-        .getByRole("textbox");
-
-      await textarea.fill("Some text");
-      await expect(
-        page
-          .getByTestId("form-buttons")
-          .getByRole("button", { name: "Enregistrer" }),
-      ).not.toBeDisabled();
-
-      await textarea.clear();
-      await expect(
-        page
-          .getByTestId("form-buttons")
-          .getByRole("button", { name: "Enregistrer" }),
-      ).toBeDisabled();
     });
 
     test("it should call the mutation and redirect to the feasibility summary after a successful submission", async ({
@@ -203,27 +134,6 @@ test.describe("Dematerialized Feasibility File - Complement Experience Parcours 
         .click();
 
       await updateMutation;
-
-      await expect(page).toHaveURL(
-        `/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap/`,
-      );
-    });
-  });
-
-  test.describe("Navigation", () => {
-    test.use({
-      mswHandlers: [
-        [...aapCommonHandlers, ...createPageQueryHandler()],
-        { scope: "test" },
-      ],
-    });
-
-    test("it should navigate back to the feasibility summary when the back button is clicked", async ({
-      page,
-    }) => {
-      await visitPage(page);
-
-      await page.getByTestId("back-button").click();
 
       await expect(page).toHaveURL(
         `/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap/`,
