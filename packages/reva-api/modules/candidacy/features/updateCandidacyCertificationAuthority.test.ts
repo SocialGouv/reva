@@ -8,6 +8,7 @@ import { updateCandidacyCertificationAuthority } from "./updateCandidacyCertific
 
 describe("updateCandidacyCertificationAuthority", () => {
   const allowedStatuses: CandidacyStatusStep[] = [
+    "PROJET",
     "PRISE_EN_CHARGE",
     "PARCOURS_ENVOYE",
     "PARCOURS_CONFIRME",
@@ -16,7 +17,6 @@ describe("updateCandidacyCertificationAuthority", () => {
 
   const blockedStatuses: CandidacyStatusStep[] = [
     "ARCHIVE",
-    "PROJET",
     "VALIDATION",
     "DOSSIER_FAISABILITE_ENVOYE",
     "DOSSIER_FAISABILITE_COMPLET",
