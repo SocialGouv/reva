@@ -217,9 +217,15 @@ export default function AnnuairePage() {
                   <CandidacyCard
                     key={candidacy.id}
                     candidateFullName={
-                      candidacy.candidate?.firstname +
+                      (candidacy.candidate?.givenName
+                        ? `${candidacy.candidate?.givenName} (${candidacy.candidate?.lastname})`
+                        : candidacy.candidate?.lastname) +
                       " " +
-                      candidacy.candidate?.lastname
+                      candidacy.candidate?.firstname +
+                      (candidacy.candidate?.middleNames &&
+                      candidacy.candidate?.middleNames !== " "
+                        ? `, ${candidacy.candidate?.middleNames.split(" ").join(", ")}`
+                        : "")
                     }
                     cohorteVaeCollective={
                       candidacy.cohorteVaeCollective?.commanditaireVaeCollective

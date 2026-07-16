@@ -545,6 +545,7 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
       await expect(dffSummary.getByLabel("Nom de naissance")).toHaveText(
         "Durand",
       );
+      await expect(dffSummary.getByLabel("Nom d'usage")).toHaveText("Bertrand");
       await expect(dffSummary.getByLabel("Prénoms")).toHaveText(
         "Camille, Sabine",
       );

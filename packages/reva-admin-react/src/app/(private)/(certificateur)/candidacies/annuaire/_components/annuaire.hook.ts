@@ -67,6 +67,8 @@ const getCandidaciesForAnnuaire = graphql(`
         candidate {
           firstname
           lastname
+          givenName
+          middleNames
           department {
             label
           }

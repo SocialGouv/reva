@@ -22,6 +22,7 @@ const getCandidacyQuery = graphql(`
       candidate {
         firstname
         lastname
+        givenName
       }
       jury {
         dateOfSession
@@ -144,9 +145,7 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
                   <div className="flex items-center pt-1.5 mb-4">
                     <span className="fr-icon-user-fill fr-icon mr-2" />
                     <p className="font-bold text-xl capitalize">
-                      {`${candidate?.firstname || ""} ${
-                        candidate?.lastname || ""
-                      }`.toLowerCase()}
+                      {`${candidate?.givenName || ""} ${candidate?.firstname || ""}`}
                     </p>
                   </div>
                   {typeAccompagnement === "AUTONOME" && (

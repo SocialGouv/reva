@@ -82,6 +82,7 @@ export default function CandidateSection({
   const {
     firstname,
     lastname,
+    givenName,
     email,
     gender,
     firstname2,
@@ -126,6 +127,17 @@ export default function CandidateSection({
               {lastname}
             </dd>
           </dl>
+          {givenName && (
+            <dl className="w-[170px]">
+              <dt id="candidate-givenname-label">Nom d'usage</dt>
+              <dd
+                aria-labelledby="candidate-givenname-label"
+                className="font-medium"
+              >
+                {givenName}
+              </dd>
+            </dl>
+          )}
           <dl className="w-[170px]">
             <dt id="candidate-firstnames-label">Prénoms</dt>
             <dd
@@ -135,7 +147,10 @@ export default function CandidateSection({
               {firstname}
 
               {isMiddleNamesEnabled ? (
-                <> {middleNames ? `, ${middleNames}` : ""}</>
+                <>
+                  {" "}
+                  {middleNames ? `, ${middleNames.split(" ").join(", ")}` : ""}
+                </>
               ) : (
                 <>
                   {firstname2 ? `, ${firstname2}` : ""}
