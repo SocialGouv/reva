@@ -132,6 +132,9 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
           street
           zip
         }
+        certificationAuthority {
+          id
+        }
         feasibility {
           feasibilityFileSentAt
           decision

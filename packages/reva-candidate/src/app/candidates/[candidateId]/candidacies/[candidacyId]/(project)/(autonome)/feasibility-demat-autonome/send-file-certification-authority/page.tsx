@@ -3,7 +3,7 @@
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Panel } from "@/components/layout/Panel";
 import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary";
@@ -36,9 +36,26 @@ export default function SendFileCertificationAuthorityPage() {
   }, [candidacy?.certificationAuthorities]);
 
   const [
-    certificationAuthoritySelectedId,
+    selectedCertificationAuthorityId,
     setCertificationAuthoritySelectedId,
-  ] = useState<string>("");
+  ] = useState<string | null>(null);
+
+  // Get the certification authority id from the candidacy.
+  // This is the certification authority that can be selected by the user in the candidacy summary early in the candidacy process.
+  const candidcayCertificationAuthorityId =
+    candidacy?.certificationAuthority?.id;
+
+  // Get the default certification authority for the candidacy.
+  // If there is only one certification authority choice available, use it as the default
+  // This will be used if there is no certification authority selected for the candidacy, but only if there is only one choice available.
+  const defaultCertificationAuthorityId =
+    certificationAuthorities.length === 1 ? certificationAuthorities[0].id : "";
+
+  // if no certification authority is selected in this page, use the one from the candidacy if there is one. If not use the default one (if available)
+  const certificationAuthoritySelectedId =
+    selectedCertificationAuthorityId ??
+    candidcayCertificationAuthorityId ??
+    defaultCertificationAuthorityId;
 
   const [
     certificationAuthoritySelectError,
@@ -85,15 +102,6 @@ export default function SendFileCertificationAuthorityPage() {
       setIsSubmitting(false);
     }
   };
-
-  useEffect(() => {
-    if (
-      !certificationAuthoritySelectedId &&
-      certificationAuthorities.length === 1
-    ) {
-      setCertificationAuthoritySelectedId(certificationAuthorities[0].id);
-    }
-  }, [certificationAuthorities, certificationAuthoritySelectedId]);
 
   return (
     <Panel>
