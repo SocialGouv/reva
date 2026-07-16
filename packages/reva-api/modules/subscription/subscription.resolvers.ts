@@ -1,4 +1,5 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import { isAdmin, isAnyone } from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
 import { buildAAPAuditLogUserInfoFromContext } from "../aap-log/features/logAAPAuditEvent";
 import { isAccountEmailAlreadyUsed } from "../account/features/isAccountEmailAlreadyUsed";
@@ -12,7 +13,6 @@ import { getSubscriptionRequestFileNameUrlAndMimeType } from "./features/getSubs
 import { getSubscriptionRequests } from "./features/getSubscriptionRequests";
 import { rejectSubscriptionRequest } from "./features/rejectSubscriptionRequest";
 import { validateSubscriptionRequest } from "./features/validateSubscriptionRequest";
-import { resolversSecurityMap } from "./security";
 
 const unsafeResolvers = {
   SubscriptionRequest: {
@@ -126,7 +126,26 @@ const unsafeResolvers = {
   },
 };
 
-export const subscriptionRequestResolvers = composeResolvers(
-  unsafeResolvers,
-  resolversSecurityMap,
-);
+export const subscriptionRequestResolvers = withPolicies(unsafeResolvers, {
+  // Champs publics: seuls accessibles sur la demande que l'appelant vient de créer
+  // (aucune query publique ne renvoie une SubscriptionRequest par id).
+  SubscriptionRequest: {
+    attestationURSSAFFile: isAnyone,
+    justificatifIdentiteDirigeantFile: isAnyone,
+    lettreDeDelegationFile: isAnyone,
+    justificatifIdentiteDelegataireFile: isAnyone,
+    etablissement: isAnyone,
+    companySiretAlreadyUsed: isAnyone,
+    accountEmailAlreadyUsed: isAnyone,
+  },
+  Query: {
+    subscription_getSubscriptionRequests: isAdmin,
+    subscription_getSubscriptionRequest: isAdmin,
+    subscription_getSubscriptionCountByStatus: isAdmin,
+  },
+  Mutation: {
+    subscription_createSubscriptionRequest: isAnyone,
+    subscription_validateSubscriptionRequest: isAdmin,
+    subscription_rejectSubscriptionRequest: isAdmin,
+  },
+});
