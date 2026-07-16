@@ -14,6 +14,7 @@ export const updateCandidacyCertificationAuthority = async ({
   tx?: Prisma.TransactionClient; //optional transaction to use
 }) => {
   const allowedCandidacyStatuses: CandidacyStatusStep[] = [
+    "PROJET",
     "PRISE_EN_CHARGE",
     "PARCOURS_ENVOYE",
     "PARCOURS_CONFIRME",
