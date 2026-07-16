@@ -4,7 +4,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import DsfrPagination from "@codegouvfr/react-dsfr/Pagination";
 import SearchBar from "@codegouvfr/react-dsfr/SearchBar";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { useAuth } from "@/components/auth/auth";
 import { SearchResultsHeader } from "@/components/search-results-header/SearchResultsHeader";
@@ -48,6 +48,13 @@ export default function AnnuairePage() {
   } = useAnnuaire();
 
   const [localSearchFilter, setLocalSearchFilter] = useState(searchFilter);
+  const [prevSearchFilter, setPrevSearchFilter] = useState(searchFilter);
+
+  if (searchFilter !== prevSearchFilter) {
+    setPrevSearchFilter(searchFilter);
+    setLocalSearchFilter(searchFilter);
+  }
+
   const emptyResult = useMemo(
     () => candidacies?.info?.totalRows === 0,
     [candidacies],
@@ -70,10 +77,6 @@ export default function AnnuairePage() {
 
     return queryString ? `${pathname}?${queryString}` : pathname;
   };
-
-  useEffect(() => {
-    setLocalSearchFilter(searchFilter);
-  }, [searchFilter]);
 
   const getPathnameWithoutCertificationAuthorityId = (): string => {
     const currentParams = new URLSearchParams(searchParams);
