@@ -28,7 +28,10 @@ export const searchCertificationsForCandidate = async ({
     ?.replace(/[^A-Z0-9]/gi, " ")
     ?.split(" ")
     .filter((t) => t)
-    .map((t) => t + ":*")
+    // Chaque mot devient "(mot:*A|mot:B)" : préfixe accepté sur le titre/RNCP/type de
+    // diplôme (poids A), mot complet exigé sur les objectifs (poids B, texte trop long
+    // pour du préfixe). Parenthèses obligatoires : & est prioritaire sur |.
+    .map((t) => `(${t}:*A|${t}:B)`)
     .join("&");
 
   let certificationsFromCohorteVaeCollectiveIds: string[] = [];

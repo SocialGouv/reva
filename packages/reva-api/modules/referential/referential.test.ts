@@ -337,3 +337,85 @@ describe("Parcours certification", () => {
     expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(0);
   });
 });
+
+// Chaque test utilise un mot inventé qui lui est propre : la table certification n'est pas
+// vidée entre les tests (cf. DO_NOT_CLEAR_THESE_TABLES), les fixtures s'accumulent donc
+// entre elles et avec les certifications du seed.
+describe("Recherche dans les objectifs et contexte", () => {
+  test("doit renvoyer une certification dont les objectifs contiennent le mot complet recherché", async () => {
+    const certification = await createCertificationHelper({
+      label: "Certif sans mot distinctif dans le titre",
+      rncpObjectifsContexte: "Metiers de la xylotropie du bois",
+    });
+
+    const resp = await searchCertificationsForCandidate({
+      searchText: "xylotropie",
+    });
+    const obj = resp.json();
+    expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(1);
+    expect(obj.data.searchCertificationsForCandidate.rows).toEqual([
+      { label: certification.label },
+    ]);
+  });
+
+  test("ne doit pas renvoyer une certification dont les objectifs contiennent seulement un préfixe du mot recherché", async () => {
+    await createCertificationHelper({
+      label: "Certif sans mot distinctif dans le titre",
+      rncpObjectifsContexte: "Metiers de la xylotropie du bois",
+    });
+
+    const resp = await searchCertificationsForCandidate({
+      searchText: "xylotropi",
+    });
+    const obj = resp.json();
+    expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(0);
+  });
+
+  test("doit ignorer les accents et la casse pour la recherche dans les objectifs", async () => {
+    const certification = await createCertificationHelper({
+      label: "Certif sans mot distinctif dans le titre",
+      rncpObjectifsContexte: "Techniques de vergiculté",
+    });
+
+    const resp = await searchCertificationsForCandidate({
+      searchText: "VERGICULTE",
+    });
+    const obj = resp.json();
+    expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(1);
+    expect(obj.data.searchCertificationsForCandidate.rows).toEqual([
+      { label: certification.label },
+    ]);
+  });
+
+  test("doit toujours renvoyer une certification dont le libellé commence par le texte recherché", async () => {
+    const certification = await createCertificationHelper({
+      label: "Nimbostratie boulanger",
+      rncpObjectifsContexte: "Fabrication de pain",
+    });
+
+    const resp = await searchCertificationsForCandidate({
+      searchText: "nimbostrat",
+    });
+    const obj = resp.json();
+    expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(1);
+    expect(obj.data.searchCertificationsForCandidate.rows).toEqual([
+      { label: certification.label },
+    ]);
+  });
+
+  test("doit renvoyer une certification quand un terme correspond au libellé et l'autre aux objectifs", async () => {
+    const certification = await createCertificationHelper({
+      label: "Pyroglyphie boulanger",
+      rncpObjectifsContexte: "Fabrication de pain quadrifolie",
+    });
+
+    const resp = await searchCertificationsForCandidate({
+      searchText: "pyroglyph quadrifolie",
+    });
+    const obj = resp.json();
+    expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(1);
+    expect(obj.data.searchCertificationsForCandidate.rows).toEqual([
+      { label: certification.label },
+    ]);
+  });
+});
