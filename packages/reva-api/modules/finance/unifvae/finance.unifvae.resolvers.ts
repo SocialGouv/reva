@@ -1,4 +1,5 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import { isAdminOrCandidacyCompanion } from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
 import {
   createOrUpdatePaymentRequestUnifvae,
@@ -7,7 +8,6 @@ import {
 } from "./features/finance.unifvae.features";
 import { isFundingRequestUnifvaeSent } from "./features/isFundingRequestUnifvaeSent";
 import { isPaymentRequestUnifvaeSent } from "./features/isPaymentRequestUnifvaeSent";
-import { resolversSecurityMap } from "./security";
 const withSkillsAndTrainings = (f: any) =>
   f
     ? {
@@ -41,7 +41,6 @@ const unsafeResolvers = {
       isPaymentRequestUnifvaeSent({ candidacyId }),
   },
 
-  Query: {},
   Mutation: {
     candidacy_createOrUpdatePaymentRequestUnifvae: async (
       _: unknown,
@@ -60,7 +59,14 @@ const unsafeResolvers = {
   },
 };
 
-export const financeUnifvaeResolvers = composeResolvers(
-  unsafeResolvers,
-  resolversSecurityMap,
-);
+export const financeUnifvaeResolvers = withPolicies(unsafeResolvers, {
+  Candidacy: {
+    fundingRequestUnifvae: isAdminOrCandidacyCompanion,
+    paymentRequestUnifvae: isAdminOrCandidacyCompanion,
+    isFundingRequestUnifvaeSent: isAdminOrCandidacyCompanion,
+    isPaymentRequestUnifvaeSent: isAdminOrCandidacyCompanion,
+  },
+  Mutation: {
+    candidacy_createOrUpdatePaymentRequestUnifvae: isAdminOrCandidacyCompanion,
+  },
+});

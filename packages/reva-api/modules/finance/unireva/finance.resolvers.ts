@@ -1,9 +1,13 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { PaymentRequest } from "@prisma/client";
 import mercurius from "mercurius";
 
 import { Candidacy } from "@/modules/candidacy/candidacy.types";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import {
+  isAdminOrCandidacyCompanion,
+  isAdminOrManager,
+} from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
 import { confirmPaymentRequest } from "./features/confirmPaymentRequest";
 import { createOrUpdatePaymentRequestForCandidacy } from "./features/createOrUpdatePaymentRequestForCandidacy";
@@ -12,7 +16,6 @@ import { getFundingRequestByCandidacyId } from "./features/getFundingRequestByCa
 import { getPaymentRequestByCandidacyId } from "./features/getPaymentRequestByCandidacyId";
 import { isFundingRequestSent } from "./features/isFundingRequestSent";
 import { isPaymentRequestSent } from "./features/isPaymentRequestSent";
-import { resolversSecurityMap } from "./security";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -112,7 +115,18 @@ const unsafeResolvers = {
   },
 };
 
-export const financeResolvers = composeResolvers(
-  unsafeResolvers,
-  resolversSecurityMap,
-);
+export const financeResolvers = withPolicies(unsafeResolvers, {
+  Candidacy: {
+    paymentRequest: isAdminOrCandidacyCompanion,
+    fundingRequest: isAdminOrCandidacyCompanion,
+    isFundingRequestSent: isAdminOrCandidacyCompanion,
+    isPaymentRequestSent: isAdminOrCandidacyCompanion,
+  },
+  Query: {
+    candidate_getFundingRequest: isAdminOrManager,
+  },
+  Mutation: {
+    candidacy_createOrUpdatePaymentRequest: isAdminOrCandidacyCompanion,
+    candidacy_confirmPaymentRequest: isAdminOrCandidacyCompanion,
+  },
+});
