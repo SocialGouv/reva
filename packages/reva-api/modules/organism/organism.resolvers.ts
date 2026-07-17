@@ -688,12 +688,11 @@ export const organismResolvers = withPolicies(unsafeResolvers, {
       isAdminOrGestionnaireOfMaisonMereAAP,
     organism_disableCompteCollaborateur: isAdminOrGestionnaireOfMaisonMereAAP,
     organism_deleteLieuAccueil: isAdminOrGestionnaireOfMaisonMereAAP,
-    // Durcissements à venir : `isAnyone` reproduit le runtime actuel (aucune règle).
-    organism_updateOrganismAccount: isAnyone, // étape 4
-    organism_updateOrganismDegreesAndFormacodes: isAnyone, // étape 7
-    organism_updateMaisonMereOrganismsIsActive: isAnyone, // étape 5
-    organism_updateLegalInformationValidationDecision: isAnyone, // étape 5
-    organism_createLieuAccueilInfo: isAnyone, // étape 8
+    organism_updateOrganismAccount: isAnyone,
+    organism_updateOrganismDegreesAndFormacodes: isAnyone,
+    organism_updateMaisonMereOrganismsIsActive: isAnyone,
+    organism_updateLegalInformationValidationDecision: isAnyone,
+    organism_createLieuAccueilInfo: isAnyone,
   },
   Query: {
     organism_getMaisonMereAAPById: isAdminOrGestionnaireOfMaisonMereAAP,
@@ -703,6 +702,6 @@ export const organismResolvers = withPolicies(unsafeResolvers, {
     organism_getMaisonMereAAPs: isAdmin,
     organism_getOrganism:
       isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganismByIdArg,
-    organism_isOrganismAttachedToCertifications: isAnyone, // étape 3
+    organism_isOrganismAttachedToCertifications: isAnyone,
   },
 });
