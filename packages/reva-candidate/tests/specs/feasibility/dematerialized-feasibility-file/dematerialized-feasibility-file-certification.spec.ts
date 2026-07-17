@@ -1,6 +1,7 @@
 import {
   expect,
   graphql,
+  Page,
   test,
 } from "next/experimental/testmode/playwright/msw";
 
@@ -46,6 +47,18 @@ function createCertificationHandlers() {
   ];
 }
 
+async function visitCertificationPage(page: Page) {
+  await loginAndWaitForInitialLoad(page);
+
+  await page.goto(
+    `candidates/${candidate.id}/candidacies/${CANDIDACY_ID}/feasibility-demat-autonome/certification`,
+  );
+  await waitGraphQL(
+    page,
+    "getCandidacyByIdForFeasibilityDematAutonomeCertificationPage",
+  );
+}
+
 test.describe("Dematerialized Feasibility File Certification Page", () => {
   test.describe("Optional fields", () => {
     test.use({
@@ -55,15 +68,7 @@ test.describe("Dematerialized Feasibility File Certification Page", () => {
     test("should allow filling optional certification details and selecting specific competence blocs", async ({
       page,
     }) => {
-      await loginAndWaitForInitialLoad(page);
-
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${CANDIDACY_ID}/feasibility-demat-autonome/certification`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomeCertificationPage",
-      );
+      await visitCertificationPage(page);
 
       await page
         .getByTestId("certification-option-input")
