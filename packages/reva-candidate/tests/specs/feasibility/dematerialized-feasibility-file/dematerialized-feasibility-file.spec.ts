@@ -1,4 +1,4 @@
-import { expect, test } from "next/experimental/testmode/playwright/msw";
+import { expect, Page, test } from "next/experimental/testmode/playwright/msw";
 import { graphql } from "next/experimental/testmode/playwright/msw";
 
 import {
@@ -143,6 +143,15 @@ function createFeasibilityHandlers(candidacy: CandidacyEntity) {
   ];
 }
 
+async function visitFeasibilityPage(page: Page) {
+  await loginAndWaitForInitialLoad(page);
+
+  await page.goto(
+    `candidates/${candidate.id}/candidacies/${CANDIDACY_ID}/feasibility-demat-autonome/`,
+  );
+  await waitGraphQL(page, "getCandidacyByIdForFeasibilityDematAutonomePage");
+}
+
 test.describe("Candidacy Dematerialized Feasibility File Page", () => {
   test.describe("When the feasibility file is in its initial state", () => {
     const candidacy = createCandidacyHelpers();
@@ -152,15 +161,7 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
     });
 
     test("should display all sections", async ({ page }) => {
-      await loginAndWaitForInitialLoad(page);
-
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomePage",
-      );
+      await visitFeasibilityPage(page);
 
       await expect(page.getByTestId("eligibility-section")).toBeVisible();
       await expect(page.getByTestId("certification-section")).toBeVisible();
@@ -186,15 +187,7 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
     test("should display 'to complete' badges for eligibility, certification, decision, and attachments sections", async ({
       page,
     }) => {
-      await loginAndWaitForInitialLoad(page);
-
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomePage",
-      );
+      await visitFeasibilityPage(page);
 
       const eligibilitySection = page.getByTestId("eligibility-section");
       await expect(
@@ -252,15 +245,7 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
     test("should display 'completed' badge for the eligibility section", async ({
       page,
     }) => {
-      await loginAndWaitForInitialLoad(page);
-
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomePage",
-      );
+      await visitFeasibilityPage(page);
 
       const eligibilitySection = page.getByTestId("eligibility-section");
       await expect(
@@ -317,15 +302,7 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
     test("should display 'completed' badges for the certification and eligibility sections", async ({
       page,
     }) => {
-      await loginAndWaitForInitialLoad(page);
-
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomePage",
-      );
+      await visitFeasibilityPage(page);
 
       const eligibilitySection = page.getByTestId("eligibility-section");
       await expect(
@@ -387,15 +364,7 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
     test("should display 'completed' badges for certification and eligibility sections", async ({
       page,
     }) => {
-      await loginAndWaitForInitialLoad(page);
-
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomePage",
-      );
+      await visitFeasibilityPage(page);
 
       const eligibilitySection = page.getByTestId("eligibility-section");
       await expect(
@@ -463,15 +432,7 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
     test("should display 'completed' badges for all sections", async ({
       page,
     }) => {
-      await loginAndWaitForInitialLoad(page);
-
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomePage",
-      );
+      await visitFeasibilityPage(page);
 
       const eligibilitySection = page.getByTestId("eligibility-section");
       await expect(
@@ -516,15 +477,7 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
     test("the certification expired alert should not be visible", async ({
       page,
     }) => {
-      await loginAndWaitForInitialLoad(page);
-
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomePage",
-      );
+      await visitFeasibilityPage(page);
 
       await expect(
         page.getByTestId("certification-expired-alert"),
@@ -544,15 +497,7 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
       test("the certification expired alert should be visible", async ({
         page,
       }) => {
-        await loginAndWaitForInitialLoad(page);
-
-        await page.goto(
-          `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-        );
-        await waitGraphQL(
-          page,
-          "getCandidacyByIdForFeasibilityDematAutonomePage",
-        );
+        await visitFeasibilityPage(page);
 
         await expect(
           page.getByTestId("certification-expired-alert"),
@@ -590,15 +535,7 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
     test("should enable the 'send to certification authority' section if the sworn attestation is completed", async ({
       page,
     }) => {
-      await loginAndWaitForInitialLoad(page);
-
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomePage",
-      );
+      await visitFeasibilityPage(page);
 
       const eligibilitySection = page.getByTestId("eligibility-section");
       await expect(
@@ -666,11 +603,7 @@ test.describe("When the feasibility file has been sent to the certification auth
   });
 
   test("should hide all badges and section buttons", async ({ page }) => {
-    await loginAndWaitForInitialLoad(page);
-    await page.goto(
-      `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-    );
-    await waitGraphQL(page, "getCandidacyByIdForFeasibilityDematAutonomePage");
+    await visitFeasibilityPage(page);
 
     const eligibilitySection = page.getByTestId("eligibility-section");
     await expect(
@@ -741,11 +674,7 @@ test.describe("When the decision is ADMISSIBLE or REJECTED", () => {
   test("should display the contact info section with the correct information", async ({
     page,
   }) => {
-    await loginAndWaitForInitialLoad(page);
-    await page.goto(
-      `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-    );
-    await waitGraphQL(page, "getCandidacyByIdForFeasibilityDematAutonomePage");
+    await visitFeasibilityPage(page);
 
     const contactInfosSection = page.getByTestId("contact-infos-section");
     const organismContactInfoTile = contactInfosSection.getByTestId(
@@ -795,14 +724,7 @@ test.describe("When the decision is ADMISSIBLE or REJECTED", () => {
     test("should display the feasibility summary when the decision is REJECTED", async ({
       page,
     }) => {
-      await loginAndWaitForInitialLoad(page);
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomePage",
-      );
+      await visitFeasibilityPage(page);
 
       await expect(page.getByTestId("dff-summary")).toBeVisible();
     });
@@ -842,14 +764,7 @@ test.describe("When the decision is INCOMPLETE", () => {
     test("should display all sections as editable with completed badges when the file is not ready to be sent to the certification authority", async ({
       page,
     }) => {
-      await loginAndWaitForInitialLoad(page);
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomePage",
-      );
+      await visitFeasibilityPage(page);
 
       await expect(page.getByTestId("decision-incomplete-alert")).toBeVisible();
 
@@ -923,14 +838,7 @@ test.describe("When the decision is INCOMPLETE", () => {
     test("should display all sections as editable with completed badges when the file is ready to be sent to the certification authority", async ({
       page,
     }) => {
-      await loginAndWaitForInitialLoad(page);
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomePage",
-      );
+      await visitFeasibilityPage(page);
 
       const eligibilitySection = page.getByTestId("eligibility-section");
       await expect(
@@ -978,14 +886,7 @@ test.describe("ComplementExperienceParcoursViseAccordion", () => {
     });
 
     test("should not show the accordion", async ({ page }) => {
-      await loginAndWaitForInitialLoad(page);
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomePage",
-      );
+      await visitFeasibilityPage(page);
 
       await expect(
         page.getByTestId("complement-experience-parcours-vise-accordion"),
@@ -1003,14 +904,7 @@ test.describe("ComplementExperienceParcoursViseAccordion", () => {
     });
 
     test("should not show the accordion", async ({ page }) => {
-      await loginAndWaitForInitialLoad(page);
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomePage",
-      );
+      await visitFeasibilityPage(page);
 
       await expect(
         page.getByTestId("complement-experience-parcours-vise-accordion"),
@@ -1040,14 +934,8 @@ test.describe("ComplementExperienceParcoursViseAccordion", () => {
       test("it should show the accordion with a 'Compléter' button", async ({
         page,
       }) => {
-        await loginAndWaitForInitialLoad(page);
-        await page.goto(
-          `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-        );
-        await waitGraphQL(
-          page,
-          "getCandidacyByIdForFeasibilityDematAutonomePage",
-        );
+        await visitFeasibilityPage(page);
+
         await expect(
           page.getByTestId("complement-experience-parcours-vise-accordion"),
         ).toBeVisible();
@@ -1061,14 +949,8 @@ test.describe("ComplementExperienceParcoursViseAccordion", () => {
       test("it should lead me to the complement experience parcours vise page when i click on the button", async ({
         page,
       }) => {
-        await loginAndWaitForInitialLoad(page);
-        await page.goto(
-          `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-        );
-        await waitGraphQL(
-          page,
-          "getCandidacyByIdForFeasibilityDematAutonomePage",
-        );
+        await visitFeasibilityPage(page);
+
         await page
           .getByTestId("complement-experience-parcours-vise-button")
           .click();
@@ -1101,14 +983,8 @@ test.describe("ComplementExperienceParcoursViseAccordion", () => {
       test("itshould show the accordion with a 'Modifier' button", async ({
         page,
       }) => {
-        await loginAndWaitForInitialLoad(page);
-        await page.goto(
-          `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-        );
-        await waitGraphQL(
-          page,
-          "getCandidacyByIdForFeasibilityDematAutonomePage",
-        );
+        await visitFeasibilityPage(page);
+
         await expect(
           page.getByTestId("complement-experience-parcours-vise-accordion"),
         ).toBeVisible();
@@ -1138,14 +1014,8 @@ test.describe("ComplementExperienceParcoursViseAccordion", () => {
       test("it should show the accordion without a button", async ({
         page,
       }) => {
-        await loginAndWaitForInitialLoad(page);
-        await page.goto(
-          `candidates/${candidate.id}/candidacies/${candidacy.id}/feasibility-demat-autonome/`,
-        );
-        await waitGraphQL(
-          page,
-          "getCandidacyByIdForFeasibilityDematAutonomePage",
-        );
+        await visitFeasibilityPage(page);
+
         await expect(
           page.getByTestId("complement-experience-parcours-vise-accordion"),
         ).toBeVisible();
