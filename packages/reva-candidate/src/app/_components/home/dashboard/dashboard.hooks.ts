@@ -112,6 +112,9 @@ const GET_CANDIDACY_BY_ID_FOR_DASHBOARD = graphql(`
         contactPhone
         label
       }
+      certificationAuthorities {
+        id
+      }
     }
   }
 `);

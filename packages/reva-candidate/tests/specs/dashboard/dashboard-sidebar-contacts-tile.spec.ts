@@ -408,6 +408,29 @@ test.describe("NoCertificationAuthorityContactTile", () => {
       page.getByTestId("no-certification-authority-contact-tile"),
     ).toHaveCount(0);
   });
+
+  test("should not display when no certification authority is set but at least one is available for the certification", async ({
+    page,
+    msw,
+  }) => {
+    const candidacy = createDashboardCandidacy({
+      certification: createCertificationEntity(),
+      certificationAuthority: null,
+      certificationAuthorities: [createCertificationAuthorityEntity()],
+    });
+
+    await setupDashboard(
+      page,
+      msw,
+      candidacy,
+      [],
+      ["NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD"],
+    );
+
+    await expect(
+      page.getByTestId("no-certification-authority-contact-tile"),
+    ).toHaveCount(0);
+  });
 });
 
 test.describe("Multiple Contact Tiles", () => {

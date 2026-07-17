@@ -24,15 +24,21 @@ export const ContactTiles = ({
     "NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD",
   );
 
+  const availableCertificationAuthorities = candidacy.certificationAuthorities;
+
+  const noCertificationAuthorityAvailable =
+    availableCertificationAuthorities.length === 0;
+
   const certificationAuthority = isNewCertificationAuthorityCardFeatureActive
     ? candidacy.certificationAuthority
     : candidacy.feasibility?.certificationAuthority;
 
-  //only show no certification authority contact tile if the feature is active and a certification is selected but no certification authority is set
+  //only show no certification authority contact tile if the feature is active and a certification is selected but no certification authority is set and none is available
   const showNoCertificationAuthorityContactTile =
     isNewCertificationAuthorityCardFeatureActive &&
     candidacy.certification &&
-    !certificationAuthority;
+    !certificationAuthority &&
+    noCertificationAuthorityAvailable;
 
   return (
     <TileGroup icon="fr-icon-team-line" title="Mes contacts">
