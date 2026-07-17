@@ -116,13 +116,11 @@ export const DEFAULT_FEASIBILITY_FILE = {
   },
 };
 
-// eslint-disable-next-line import/no-unused-modules
 export const DF_FORMATED_DATE_6_MONTHS_FROM_NOW = format(
   addMonths(new Date(), 6),
   "yyyy-MM-dd",
 );
 
-// eslint-disable-next-line import/no-unused-modules
 export const DF_FORMATED_DATE_6_MONTHS_AGO = format(
   addMonths(new Date(), -6),
   "yyyy-MM-dd",

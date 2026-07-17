@@ -7,7 +7,9 @@ import { graphql } from "@/graphql/generated";
 import { DematerializedFeasibilityFileCreateOrUpdateEligibilityRequirementInput } from "@/graphql/generated/graphql";
 
 const getCandidacyById = graphql(`
-  query getCandidacyByIdForAapFeasibilityEligibilityPage($candidacyId: ID!) {
+  query getCandidacyByIdForFeasibilityDematAutonomeEligibilityPage(
+    $candidacyId: ID!
+  ) {
     getCandidacyById(id: $candidacyId) {
       feasibility {
         dematerializedFeasibilityFile {
@@ -45,7 +47,10 @@ export const useEligibility = () => {
   const queryClient = useQueryClient();
 
   const { data: getCandidacyByIdResponse } = useQuery({
-    queryKey: [candidacyId, "getCandidacyByIdForAapFeasibilityEligibilityPage"],
+    queryKey: [
+      candidacyId,
+      "getCandidacyByIdForFeasibilityDematAutonomeEligibilityPage",
+    ],
     queryFn: () =>
       graphqlClient.request(getCandidacyById, {
         candidacyId,

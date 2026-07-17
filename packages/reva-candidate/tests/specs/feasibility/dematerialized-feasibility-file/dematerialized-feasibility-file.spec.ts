@@ -14,8 +14,6 @@ import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.
 import { graphQLResolver } from "@tests/helpers/network/msw";
 import { waitGraphQL } from "@tests/helpers/network/requests";
 
-import { Feasibility } from "@/graphql/generated/graphql";
-
 import {
   DATE_NOW,
   DEFAULT_BLOCS_COMPETENCES,
@@ -68,7 +66,7 @@ const FEASIBILITY_ADMISSIBLE_DECISION = {
 };
 
 function createCandidacyHelpers(args?: {
-  feasibility?: Feasibility;
+  feasibility?: unknown;
   certificationExpired?: boolean;
   certificationAuthorityStructureHasReducedRequirements?: boolean;
 }): CandidacyEntity {
