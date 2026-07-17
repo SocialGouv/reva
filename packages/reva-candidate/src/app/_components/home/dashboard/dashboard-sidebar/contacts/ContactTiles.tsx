@@ -5,6 +5,7 @@ import TileGroup from "../../tiles/TileGroup";
 
 import { AapContactTile } from "./AapContactTile";
 import { CertificationAuthorityContactTile } from "./CertificationAuthorityContactTile";
+import { MultipleCertificationAuthorityAvailableContactTile } from "./MultipleCertificationAuthorityAvailableContactTile";
 import { NoCertificationAuthorityContactTile } from "./NoCertificationAuthorityAvailableContactTile";
 import { NoContactTile } from "./NoContactTile";
 
@@ -29,6 +30,9 @@ export const ContactTiles = ({
   const noCertificationAuthorityAvailable =
     availableCertificationAuthorities.length === 0;
 
+  const multipleCertificationAuthorityAvailable =
+    availableCertificationAuthorities.length > 1;
+
   const certificationAuthority = isNewCertificationAuthorityCardFeatureActive
     ? candidacy.certificationAuthority
     : candidacy.feasibility?.certificationAuthority;
@@ -39,6 +43,11 @@ export const ContactTiles = ({
     candidacy.certification &&
     !certificationAuthority &&
     noCertificationAuthorityAvailable;
+
+  const showMultipleCertificationAuthorityAvailableContactTile =
+    isNewCertificationAuthorityCardFeatureActive &&
+    !certificationAuthority &&
+    multipleCertificationAuthorityAvailable;
 
   return (
     <TileGroup icon="fr-icon-team-line" title="Mes contacts">
@@ -54,6 +63,11 @@ export const ContactTiles = ({
       {certificationAuthority && (
         <CertificationAuthorityContactTile
           certificationAuthority={certificationAuthority}
+        />
+      )}
+      {showMultipleCertificationAuthorityAvailableContactTile && (
+        <MultipleCertificationAuthorityAvailableContactTile
+          candidacyId={candidacy.id}
         />
       )}
 

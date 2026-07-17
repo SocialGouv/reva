@@ -433,6 +433,147 @@ test.describe("NoCertificationAuthorityContactTile", () => {
   });
 });
 
+test.describe("MultipleCertificationAuthorityAvailableContactTile", () => {
+  test("should display when the NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature is active, no certification authority is set and multiple are available", async ({
+    page,
+    msw,
+  }) => {
+    const candidacy = createDashboardCandidacy({
+      certificationAuthority: null,
+      certificationAuthorities: [
+        createCertificationAuthorityEntity({ id: "cert-authority-1" }),
+        createCertificationAuthorityEntity({ id: "cert-authority-2" }),
+      ],
+    });
+
+    await setupDashboard(
+      page,
+      msw,
+      candidacy,
+      [],
+      ["NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD"],
+    );
+
+    await expect(
+      page.getByTestId(
+        "multiple-certification-authority-available-contact-tile",
+      ),
+    ).toBeVisible();
+    await expect(
+      page.getByTestId("certification-authority-contact-tile"),
+    ).toHaveCount(0);
+  });
+
+  test("should link to the multiple certification authorities selection disclaimer page for the candidacy", async ({
+    page,
+    msw,
+  }) => {
+    const candidacy = createDashboardCandidacy({
+      certificationAuthority: null,
+      certificationAuthorities: [
+        createCertificationAuthorityEntity({ id: "cert-authority-1" }),
+        createCertificationAuthorityEntity({ id: "cert-authority-2" }),
+      ],
+    });
+
+    await setupDashboard(
+      page,
+      msw,
+      candidacy,
+      [],
+      ["NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD"],
+    );
+
+    const multipleCertificationAuthorityAvailableContactTile = page.getByTestId(
+      "multiple-certification-authority-available-contact-tile",
+    );
+
+    await expect(
+      multipleCertificationAuthorityAvailableContactTile.getByRole("link"),
+    ).toHaveAttribute(
+      "href",
+      `/candidat/dashboard/candidacies/${candidacy.id}/multiple-certification-authorities-selection/disclaimer/`,
+    );
+  });
+
+  test("should not display when only one certification authority is available", async ({
+    page,
+    msw,
+  }) => {
+    const candidacy = createDashboardCandidacy({
+      certificationAuthority: null,
+      certificationAuthorities: [createCertificationAuthorityEntity()],
+    });
+
+    await setupDashboard(
+      page,
+      msw,
+      candidacy,
+      [],
+      ["NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD"],
+    );
+
+    await expect(
+      page.getByTestId(
+        "multiple-certification-authority-available-contact-tile",
+      ),
+    ).toHaveCount(0);
+  });
+
+  test("should not display when a certification authority is already set, even if multiple are available", async ({
+    page,
+    msw,
+  }) => {
+    const candidacy = createDashboardCandidacy({
+      certificationAuthority: createCertificationAuthorityEntity({
+        label: "Candidacy Certification Authority",
+      }),
+      certificationAuthorities: [
+        createCertificationAuthorityEntity({ id: "cert-authority-1" }),
+        createCertificationAuthorityEntity({ id: "cert-authority-2" }),
+      ],
+    });
+
+    await setupDashboard(
+      page,
+      msw,
+      candidacy,
+      [],
+      ["NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD"],
+    );
+
+    await expect(
+      page.getByTestId(
+        "multiple-certification-authority-available-contact-tile",
+      ),
+    ).toHaveCount(0);
+    await expect(
+      page.getByTestId("certification-authority-contact-tile"),
+    ).toBeVisible();
+  });
+
+  test("should not display when the NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature is inactive, even with multiple certification authorities available", async ({
+    page,
+    msw,
+  }) => {
+    const candidacy = createDashboardCandidacy({
+      certificationAuthority: null,
+      certificationAuthorities: [
+        createCertificationAuthorityEntity({ id: "cert-authority-1" }),
+        createCertificationAuthorityEntity({ id: "cert-authority-2" }),
+      ],
+    });
+
+    await setupDashboard(page, msw, candidacy);
+
+    await expect(
+      page.getByTestId(
+        "multiple-certification-authority-available-contact-tile",
+      ),
+    ).toHaveCount(0);
+  });
+});
+
 test.describe("Multiple Contact Tiles", () => {
   test("should display both AAP and certification authority tiles when both exist", async ({
     page,
