@@ -5,6 +5,10 @@ import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandid
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { refreshCertificationAuthorityOfCandidacy } from "@/modules/certification-authority/features/refreshCertificationAuthorityOfCandidacy";
 import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
+import {
+  FAISABILITE_DEJA_ETE_MARQUEE_DOSSIER,
+  FAISABILITE_DEJA_ETE_PRONONCEE_DOSSIER,
+} from "@/modules/shared/errors/messages";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
 import { UploadedFile } from "@/modules/shared/file/file.interface";
 import {
@@ -161,7 +165,7 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
       feasibility.decision == FeasibilityStatus.ADMISSIBLE ||
       feasibility.decision == FeasibilityStatus.REJECTED
     ) {
-      throw new Error("Le faisabilité a déjà été prononcée sur ce dossier");
+      throw new Error(FAISABILITE_DEJA_ETE_PRONONCEE_DOSSIER);
     }
 
     if (
@@ -169,7 +173,7 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
         feasibility.decision == FeasibilityStatus.INCOMPLETE) &&
       ["COMPLETE", "INCOMPLETE"].includes(decision)
     ) {
-      throw new Error("Le faisabilité a déjà été marquée sur ce dossier");
+      throw new Error(FAISABILITE_DEJA_ETE_MARQUEE_DOSSIER);
     }
 
     let decisionFileForDb = null;

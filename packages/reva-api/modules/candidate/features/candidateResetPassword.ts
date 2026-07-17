@@ -7,6 +7,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
+import { CANDIDAT_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { CandidateResetPasswordInput } from "../candidate.types";
@@ -57,7 +58,7 @@ export const candidateResetPassword = async ({
   });
 
   if (!candidate) {
-    throw new Error("Candidat non trouvé");
+    throw new Error(CANDIDAT_NON_TROUVE);
   }
 
   await resetPassword(

@@ -1,4 +1,5 @@
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { CANDIDATE_NOT_FOUND } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { CandidateProfileUpdateInput } from "../candidate.types";
@@ -24,7 +25,7 @@ export const updateCandidateProfile = async ({
 }) => {
   const candidate = await getCandidateByCandidacyId({ candidacyId });
   if (!candidate) {
-    throw new Error("Candidate not found");
+    throw new Error(CANDIDATE_NOT_FOUND);
   }
   const result = await prismaClient.candidate.update({
     where: { id: candidate.id },

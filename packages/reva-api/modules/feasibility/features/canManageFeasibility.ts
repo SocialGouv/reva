@@ -2,6 +2,11 @@ import { Feasibility } from "@prisma/client";
 
 import { getAccountByKeycloakId } from "@/modules/account/features/getAccountByKeycloakId";
 import { getCertificationAuthorityLocalAccountByAccountId } from "@/modules/certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
+import {
+  COMPTE_LOCAL_AUTORITE_CERTIFICATION_NON_TROUVE,
+  COMPTE_UTILISATEUR_NON_TROUVE,
+  DOSSIER_INTROUVABLE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const canManageFeasibility = async ({
@@ -14,7 +19,7 @@ export const canManageFeasibility = async ({
   keycloakId: string;
 }) => {
   if (feasibility == null) {
-    throw new Error("Ce dossier est introuvable");
+    throw new Error(DOSSIER_INTROUVABLE);
   }
 
   //admins can manage everything
@@ -37,7 +42,7 @@ export const canManageFeasibility = async ({
     else {
       const account = await getAccountByKeycloakId({ keycloakId });
       if (!account) {
-        throw new Error("Compte utilisateur non trouvé");
+        throw new Error(COMPTE_UTILISATEUR_NON_TROUVE);
       }
       const certificationAuthorityLocalAccount =
         await getCertificationAuthorityLocalAccountByAccountId({
@@ -45,9 +50,7 @@ export const canManageFeasibility = async ({
         });
 
       if (!certificationAuthorityLocalAccount) {
-        throw new Error(
-          "Compte local de l'autorité de certification non trouvé",
-        );
+        throw new Error(COMPTE_LOCAL_AUTORITE_CERTIFICATION_NON_TROUVE);
       }
 
       const hasCandidacy =

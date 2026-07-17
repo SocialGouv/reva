@@ -14,6 +14,7 @@ import { getLastProfessionalCgu } from "@/modules/organism/features/getLastProfe
 import { getMaisonMereAapBySiretAndTypology } from "@/modules/organism/features/getMaisonMereAapBySiretAndTypology";
 import { updateOrganismOnAccountAssociation } from "@/modules/organism/features/updateOrganismOnAccountAssociation";
 import { getDegrees } from "@/modules/referential/features/getDegrees";
+import { DEMANDE_INSCRIPTION_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { deleteFile } from "@/modules/shared/file/file.service";
 import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
@@ -40,7 +41,7 @@ export const validateSubscriptionRequest = async ({
   );
 
   if (!subscriptionRequest) {
-    throw new Error("Demande d'inscription non trouvée");
+    throw new Error(DEMANDE_INSCRIPTION_NON_TROUVEE);
   }
 
   const getIamAccount = IAM.getAccount;

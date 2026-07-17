@@ -2,6 +2,7 @@ import {
   logCandidacyAuditEvent,
   CandidacyAuditLogUserInfo,
 } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { getCandidacyById } from "./getCandidacyById";
@@ -21,7 +22,7 @@ export const takeOverCandidacy = async ({
       const candidacy = await getCandidacyById({ candidacyId, tx });
 
       if (!candidacy) {
-        throw new Error("Candidature non trouvée");
+        throw new Error(CANDIDATURE_NON_TROUVEE);
       }
 
       //candidacy is already taken over or premature call

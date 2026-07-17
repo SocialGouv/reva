@@ -2,6 +2,7 @@ import {
   AAPAuditLogUserInfo,
   logAAPAuditEvent,
 } from "@/modules/aap-log/features/logAAPAuditEvent";
+import { ORGANISME_PAS_ETE_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const updateFermePourAbsenceOuConges = async ({
@@ -18,7 +19,7 @@ export const updateFermePourAbsenceOuConges = async ({
   });
 
   if (!organism) {
-    throw new Error("L'organisme n'a pas été trouvé");
+    throw new Error(ORGANISME_PAS_ETE_TROUVE);
   }
 
   const result = prismaClient.organism.update({

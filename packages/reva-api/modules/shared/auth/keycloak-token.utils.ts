@@ -1,3 +1,4 @@
+import { ADRESSE_ELECTRONIQUE_OU_MOT_PASSE_INCORRECT } from "@/modules/shared/errors/messages";
 import { logger } from "@/modules/shared/logger/logger";
 
 import { getKeycloakAdmin } from "./getKeycloakAdmin";
@@ -251,7 +252,7 @@ export const generateIAMTokenWithPasswordShared = async ({
     if (totp) {
       throw new Error("Code de vérification (OTP) invalide");
     }
-    throw new Error("Adresse électronique ou mot de passe incorrect");
+    throw new Error(ADRESSE_ELECTRONIQUE_OU_MOT_PASSE_INCORRECT);
   }
 
   // Toute autre réponse remonte comme indisponibilité (sinon le front affiche

@@ -1,5 +1,6 @@
 import { CompetenceBlocsPartCompletionEnum } from "@prisma/client";
 
+import { DOSSIER_FAISABILITE_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
@@ -26,7 +27,7 @@ export const updateCompetenceBlocsPartCompletion = async ({
   });
 
   if (!dff) {
-    throw new Error("Dossier de faisabilité non trouvé");
+    throw new Error(DOSSIER_FAISABILITE_NON_TROUVE);
   }
 
   //number of competences in selected competences blocs

@@ -1,5 +1,6 @@
 import { v4 as uuidV4 } from "uuid";
 
+import { CERTIFICATION_PAS_ETE_TROUVEE } from "@/modules/shared/errors/messages";
 import {
   allowedFileTypesMap,
   allowFileTypeByDocumentType,
@@ -37,7 +38,7 @@ export const updateCertificationAdditionalInfo = async ({
   ]);
 
   if (!certification) {
-    throw new Error("La certification n'a pas été trouvée");
+    throw new Error(CERTIFICATION_PAS_ETE_TROUVEE);
   }
 
   const { dossierDeValidationTemplate, additionalDocuments, ...otherInfo } =

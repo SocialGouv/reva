@@ -2,6 +2,7 @@ import { EndAccompagnementReason } from "@prisma/client";
 
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { getCandidateLoginUrl } from "@/modules/candidate/utils/candidate.url.helpers";
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { sendEndAccompagnementSubmittedToCandidate } from "../emails/sendEndAccompagnementSubmittedToCandidate";
@@ -35,7 +36,7 @@ export const submitEndAccompagnement = async ({
     includes: { Jury: true, candidate: true },
   });
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const juryHasFullSuccess = candidacy.Jury.find(

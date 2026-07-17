@@ -1,3 +1,4 @@
+import { DOSSIER_FAISABILITE_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput } from "../dematerialized-feasibility-file.types";
@@ -11,7 +12,7 @@ export const createOrUpdateCertificationCompetenceDetails = async ({
   competenceDetails,
 }: DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput) => {
   if (!dematerializedFeasibilityFileId) {
-    throw new Error("Dossier de faisabilité non trouvé");
+    throw new Error(DOSSIER_FAISABILITE_NON_TROUVE);
   }
 
   const dematerializedFeasibilityFile =
@@ -27,7 +28,7 @@ export const createOrUpdateCertificationCompetenceDetails = async ({
     });
 
   if (!dematerializedFeasibilityFile) {
-    throw new Error("Dossier de faisabilité non trouvé");
+    throw new Error(DOSSIER_FAISABILITE_NON_TROUVE);
   }
 
   await prismaClient.$transaction([

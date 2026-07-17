@@ -1,6 +1,7 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
+import { FICHIER_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { UploadedFile } from "@/modules/shared/file/file.interface";
 import { getDownloadLink } from "@/modules/shared/file/file.service";
 import { logger } from "@/modules/shared/logger/logger";
@@ -81,7 +82,7 @@ export const juryRoute: FastifyPluginAsync = async (server) => {
         });
 
         if (!file) {
-          throw new Error("Fichier non trouvé");
+          throw new Error(FICHIER_NON_TROUVE);
         }
 
         const fileLink = await getDownloadLink({

@@ -1,3 +1,4 @@
+import { AUTORITE_CERTIFICATION_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { CertificationAuthority } from "../certification-authority.types";
@@ -13,7 +14,7 @@ export const getCertificationAuthorityById = async (params: {
     });
 
   if (!certificationAuthority) {
-    throw new Error("Authorité de certification non trouvé");
+    throw new Error(AUTORITE_CERTIFICATION_NON_TROUVEE);
   }
 
   return certificationAuthority;

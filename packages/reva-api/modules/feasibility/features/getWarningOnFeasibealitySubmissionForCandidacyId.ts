@@ -1,3 +1,4 @@
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export enum FeasibilitySubmissionWarning {
@@ -20,7 +21,7 @@ export const getWarningOnFeasibilitySubmissionForCandidacyId = async (
   });
 
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   if (!candidacy.certificationId) {

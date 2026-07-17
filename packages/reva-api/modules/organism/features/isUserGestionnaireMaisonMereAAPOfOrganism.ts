@@ -1,4 +1,5 @@
 import { getAccountByKeycloakId } from "@/modules/account/features/getAccountByKeycloakId";
+import { ORGANISME_NON_TROUVE } from "@/modules/shared/errors/messages";
 
 import { getMaisonMereAAPById } from "./getMaisonMereAAPById";
 import { getOrganismById } from "./getOrganism";
@@ -17,7 +18,7 @@ export const isUserGestionnaireMaisonMereAAPOfOrganism = async ({
       organismId,
     });
     if (!organism) {
-      throw new Error("Organisme non trouvé");
+      throw new Error(ORGANISME_NON_TROUVE);
     }
     const maisonMere = await getMaisonMereAAPById({
       maisonMereAAPId: organism.maisonMereAAPId || "",

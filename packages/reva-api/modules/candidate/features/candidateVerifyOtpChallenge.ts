@@ -1,4 +1,8 @@
 import { decodeOtpChallengeToken } from "@/modules/shared/auth/otp-challenge.utils";
+import {
+  CANDIDAT_NON_TROUVE,
+  SESSION_VERIFICATION_EXPIREE_VEUILLEZ_VOUS_RECONNECTER,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { generateCandidateIAMTokenWithPassword } from "../utils/keycloak.utils";
@@ -14,9 +18,7 @@ export const candidateVerifyOtpChallenge = async ({
 }) => {
   const payload = decodeOtpChallengeToken(challengeToken);
   if (!payload) {
-    throw new Error(
-      "Session de vérification expirée, veuillez vous reconnecter",
-    );
+    throw new Error(SESSION_VERIFICATION_EXPIREE_VEUILLEZ_VOUS_RECONNECTER);
   }
 
   const tokens = await generateCandidateIAMTokenWithPassword(
@@ -29,7 +31,7 @@ export const candidateVerifyOtpChallenge = async ({
     keycloakId: payload.keycloakId,
   });
   if (!candidate) {
-    throw new Error("Candidat non trouvé");
+    throw new Error(CANDIDAT_NON_TROUVE);
   }
 
   // Timestamp mis à jour ici (pas à l'étape credentials): reflète le login end-to-end.

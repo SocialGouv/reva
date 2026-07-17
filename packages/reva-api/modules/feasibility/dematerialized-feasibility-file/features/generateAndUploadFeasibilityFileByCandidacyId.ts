@@ -1,6 +1,11 @@
 import { v4 } from "uuid";
 
 import {
+  CANDIDATURE_NON_TROUVEE,
+  DOSSIER_FAISABILITE_DEMATERIALISE_NON_TROUVE,
+  DOSSIER_FAISABILITE_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
+import {
   deleteFile,
   S3File,
   uploadFilesToS3,
@@ -32,17 +37,17 @@ export const generateAndUploadFeasibilityFileByCandidacyId = async (
   });
 
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const feasibility = candidacy.Feasibility[0];
   if (!feasibility) {
-    throw new Error("Dossier de faisabilité non trouvé");
+    throw new Error(DOSSIER_FAISABILITE_NON_TROUVE);
   }
 
   const { dematerializedFeasibilityFile } = feasibility;
   if (!dematerializedFeasibilityFile) {
-    throw new Error("Dossier de faisabilité dématérialisé non trouvé");
+    throw new Error(DOSSIER_FAISABILITE_DEMATERIALISE_NON_TROUVE);
   }
 
   const data = await generateFeasibilityFileByCandidacyId(candidacyId);

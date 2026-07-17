@@ -6,6 +6,11 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
+import {
+  CANDIDATURE_NON_TROUVEE,
+  CANDIDAT_NON_TROUVE,
+  DEMANDE_FINANCEMENT_NON_TROUVEE,
+} from "@/modules/shared/errors/messages";
 
 import { getFundingRequest } from "../database/fundingRequests";
 import {
@@ -35,13 +40,13 @@ export const createOrUpdatePaymentRequestForCandidacy = async ({
   });
 
   if (!fundingRequest) {
-    throw new Error("Demande de financement non trouvée");
+    throw new Error(DEMANDE_FINANCEMENT_NON_TROUVEE);
   }
 
   const candidacy = await getCandidacyById({ candidacyId });
 
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const candidate = await getCandidateById({
@@ -49,7 +54,7 @@ export const createOrUpdatePaymentRequestForCandidacy = async ({
   });
 
   if (!candidate) {
-    throw new Error("Candidat non trouvé");
+    throw new Error(CANDIDAT_NON_TROUVE);
   }
 
   validatePaymentRequest(
@@ -83,7 +88,7 @@ const validatePaymentRequest = (
   let errors: string[] = [];
 
   if (!fr) {
-    errors.push("Demande de financement non trouvée");
+    errors.push(DEMANDE_FINANCEMENT_NON_TROUVEE);
   } else {
     const hoursAndCosts = {
       diagnosisHourCount: pr.diagnosisEffectiveHourCount,

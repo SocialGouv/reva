@@ -1,3 +1,4 @@
+import { COHORTE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const deleteCohorteVAECollective = async ({
@@ -12,7 +13,7 @@ export const deleteCohorteVAECollective = async ({
   });
 
   if (!cohorte) {
-    throw new Error("Cohorte non trouvée");
+    throw new Error(COHORTE_NON_TROUVEE);
   }
 
   if (cohorte.status !== "BROUILLON") {

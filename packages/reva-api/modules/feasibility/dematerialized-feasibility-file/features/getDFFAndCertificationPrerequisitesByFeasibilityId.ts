@@ -1,3 +1,4 @@
+import { CERTIFICATION_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const getDFFAndCertificationPrerequisitesByFeasibilityId = async ({
@@ -22,7 +23,7 @@ export const getDFFAndCertificationPrerequisitesByFeasibilityId = async ({
 
   const certification = feasibility?.candidacy?.certification;
   if (!certification) {
-    throw new Error("Certification non trouvée");
+    throw new Error(CERTIFICATION_NON_TROUVEE);
   }
   const currentDffPrerequisites = await prismaClient.dFFPrerequisite.findMany({
     where: {

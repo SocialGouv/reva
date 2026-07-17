@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 
 import { getLastProfessionalCgu } from "@/modules/organism/features/getLastProfessionalCgu";
 import { Organism } from "@/modules/organism/organism.types";
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { prismaClient } from "@/prisma/client";
 
@@ -25,7 +26,7 @@ export const searchOrganismsForCandidacyAsAdmin = async ({
   });
 
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const realLimit = limit || 10;

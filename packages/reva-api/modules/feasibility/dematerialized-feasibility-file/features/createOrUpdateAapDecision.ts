@@ -1,3 +1,4 @@
+import { DOSSIER_FAISABILITE_DEMATERIALISE_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput } from "../dematerialized-feasibility-file.types";
@@ -20,7 +21,7 @@ export const createOrUpdateAapDecision = async ({
     });
 
   if (!dFF) {
-    throw new Error("Dossier de faisabilité dématérialisé non trouvé");
+    throw new Error(DOSSIER_FAISABILITE_DEMATERIALISE_NON_TROUVE);
   }
 
   await prismaClient.dematerializedFeasibilityFile.update({

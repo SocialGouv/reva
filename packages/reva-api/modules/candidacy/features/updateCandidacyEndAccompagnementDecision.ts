@@ -2,6 +2,7 @@ import { format } from "date-fns";
 
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { sendEndAccompagnementConfirmedToAap } from "../emails/sendEndAccompagnementConfirmedToAap";
@@ -30,7 +31,7 @@ export const updateCandidacyEndAccompagnementDecision = async ({
   });
 
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const endAccompagnementDate = candidacy.endAccompagnementDate!;

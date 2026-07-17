@@ -1,4 +1,8 @@
 import { getActiveCertifications } from "@/modules/referential/features/getActiveCertifications";
+import {
+  IDENTIFIANT_ORGANISME_VIDE,
+  ORGANISME_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const getOrganismCertificationsByOrganismId = async ({
@@ -7,7 +11,7 @@ export const getOrganismCertificationsByOrganismId = async ({
   organismId: string;
 }) => {
   if (!organismId) {
-    throw new Error("Identifiant d'organisme vide");
+    throw new Error(IDENTIFIANT_ORGANISME_VIDE);
   }
 
   const organism = await prismaClient.organism.findUnique({
@@ -24,7 +28,7 @@ export const getOrganismCertificationsByOrganismId = async ({
   });
 
   if (!organism) {
-    throw new Error("Organisme non trouvé");
+    throw new Error(ORGANISME_NON_TROUVE);
   }
 
   const certifications = await getActiveCertifications({

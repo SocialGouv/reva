@@ -2,6 +2,11 @@ import { Decimal } from "@prisma/client/runtime/library";
 import { isAfter, isBefore, sub } from "date-fns";
 
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import {
+  DATE_LIMITE_DEMANDE_PAIEMENT_DEPASSEE_CANDIDATURE,
+  DEMANDE_FINANCEMENT_NON_TROUVEE,
+  DEMANDE_PAIEMENT_NON_TROUVEE,
+} from "@/modules/shared/errors/messages";
 import { UploadedFile } from "@/modules/shared/file/file.interface";
 import { prismaClient } from "@/prisma/client";
 
@@ -285,9 +290,7 @@ export const confirmPaymentRequestUnifvae = async ({
   }
 
   if (candidacy.paymentRequestDeadlinePassed) {
-    throw new Error(
-      "La date limite de demande de paiement est dépassée pour cette candidature, comme spécifié dans la convention Uniformation",
-    );
+    throw new Error(DATE_LIMITE_DEMANDE_PAIEMENT_DEPASSEE_CANDIDATURE);
   }
 
   const fundingRequest = candidacy?.fundingRequestUnifvae;
@@ -392,7 +395,7 @@ const addUploadedFileToPaymentRequestUnifvae = async ({
   });
 
   if (!paymentRequest) {
-    throw new Error("Demande de paiement non trouvée");
+    throw new Error(DEMANDE_PAIEMENT_NON_TROUVEE);
   }
 
   const fundingRequest = await prismaClient.fundingRequestUnifvae.findFirst({
@@ -400,7 +403,7 @@ const addUploadedFileToPaymentRequestUnifvae = async ({
   });
 
   if (!fundingRequest) {
-    throw new Error("Demande de financement non trouvée");
+    throw new Error(DEMANDE_FINANCEMENT_NON_TROUVEE);
   }
 
   await prismaClient.fileUploadSpooler.createMany({

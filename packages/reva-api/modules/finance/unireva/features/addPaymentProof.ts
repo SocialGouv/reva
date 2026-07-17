@@ -1,3 +1,7 @@
+import {
+  DEMANDE_FINANCEMENT_NON_TROUVEE,
+  DEMANDE_PAIEMENT_NON_TROUVEE,
+} from "@/modules/shared/errors/messages";
 import { UploadedFile } from "@/modules/shared/file/file.interface";
 
 import { addFileToUploadSpooler } from "../database/fileUploadSpooler";
@@ -23,13 +27,13 @@ export const addPaymentProof = async ({
 
   const paymentRequest = await getPaymentRequestByCandidacyId({ candidacyId });
   if (!paymentRequest) {
-    throw new Error("Demande de paiement non trouvée");
+    throw new Error(DEMANDE_PAIEMENT_NON_TROUVEE);
   }
 
   const fundingRequest = await getFundingRequest({ candidacyId });
 
   if (!fundingRequest) {
-    throw new Error("Demande de financement non trouvée");
+    throw new Error(DEMANDE_FINANCEMENT_NON_TROUVEE);
   }
   const fundingRequestNumAction = fundingRequest.numAction;
 

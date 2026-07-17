@@ -1,3 +1,4 @@
+import { COHORTE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const updateCohorteVAECollectiveOrganism = async ({
@@ -18,7 +19,7 @@ export const updateCohorteVAECollectiveOrganism = async ({
     });
 
   if (!cohorteVaeCollective) {
-    throw new Error("Cohorte non trouvée");
+    throw new Error(COHORTE_NON_TROUVEE);
   }
 
   if (cohorteVaeCollective.status !== "BROUILLON") {

@@ -1,6 +1,7 @@
 import { getCandidacy } from "@/modules/candidacy/features/getCandidacy";
 import { getBasicSkillsByCandidacyId } from "@/modules/candidacy/training/features/getBasicSkillsByCandidacyId";
 import { getMandatoryTrainingsByCandidacyId } from "@/modules/candidacy/training/features/getMandatoryTrainingsByCandidacyId ";
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 
 import { getFundingRequest as getFundingRequestDb } from "../database/fundingRequests";
 
@@ -20,7 +21,7 @@ export const getFundingRequest = async ({
   });
 
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const fundingRequest = await getFundingRequestDb({ candidacyId });

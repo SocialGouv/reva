@@ -1,5 +1,9 @@
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import {
+  CANDIDATURE_PAS_ETE_TROUVEE,
+  DOSSIER_VALIDATION_PAS_ETE_TROUVE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { sendDVReportedToCandidateAutonomeEmail } from "../emails/sendDVReportedToCandidateAutonomeEmail";
@@ -25,7 +29,7 @@ export const markDossierDeValidationAsIncomplete = async ({
   });
 
   if (!dossierDeValidation) {
-    throw new Error("Le dossier de validation n'a pas été trouvé");
+    throw new Error(DOSSIER_VALIDATION_PAS_ETE_TROUVE);
   }
 
   if (!dossierDeValidation.isActive) {
@@ -62,7 +66,7 @@ export const markDossierDeValidationAsIncomplete = async ({
     },
   });
   if (!candidacy) {
-    throw new Error("La candidature n'a pas été trouvée");
+    throw new Error(CANDIDATURE_PAS_ETE_TROUVEE);
   }
 
   const feasibility = await prismaClient.feasibility.findFirst({

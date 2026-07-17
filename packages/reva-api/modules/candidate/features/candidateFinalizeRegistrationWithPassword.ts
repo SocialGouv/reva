@@ -4,6 +4,7 @@ import {
   resetPassword,
 } from "@/modules/shared/auth/auth.helper";
 import { getJWTContent } from "@/modules/shared/auth/jwt.helper";
+import { CANDIDAT_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import {
@@ -42,12 +43,12 @@ export const candidateFinalizeRegistrationWithPassword = async ({
   if (existingAccount) {
     const keycloakId = existingAccount.id;
     if (!keycloakId) {
-      throw new Error("Candidat non trouvé");
+      throw new Error(CANDIDAT_NON_TROUVE);
     }
 
     const candidate = await getCandidateByKeycloakId({ keycloakId });
     if (!candidate) {
-      throw new Error("Candidat non trouvé");
+      throw new Error(CANDIDAT_NON_TROUVE);
     }
 
     await resetPassword(keycloakId, password, realm);

@@ -1,6 +1,7 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
+import { FICHIER_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { logger } from "@/modules/shared/logger/logger";
 import {
   NOT_AUTHORIZED_CANDIDACY_MANAGE,
@@ -96,7 +97,7 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
         });
 
         if (!file) {
-          throw new Error("Fichier non trouvé");
+          throw new Error(FICHIER_NON_TROUVE);
         }
 
         const fileLink = await getDownloadLink({

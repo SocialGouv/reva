@@ -3,6 +3,7 @@ import {
   resetPassword,
 } from "@/modules/shared/auth/auth.helper";
 import { getJWTContent } from "@/modules/shared/auth/jwt.helper";
+import { COMPTE_NON_TROUVE } from "@/modules/shared/errors/messages";
 
 import { getAccountByKeycloakId } from "./getAccountByKeycloakId";
 
@@ -33,7 +34,7 @@ export const resetAccountPassword = async ({
     });
 
     if (!account) {
-      throw new Error("Compte non trouvé");
+      throw new Error(COMPTE_NON_TROUVE);
     }
 
     await resetPassword(

@@ -1,6 +1,7 @@
 import { Candidacy, CandidacyStatusStep } from "@prisma/client";
 
 import { getActiveFeasibilityByCandidacyid } from "@/modules/feasibility/feasibility.features";
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { getCandidacyById } from "./getCandidacyById";
@@ -31,7 +32,7 @@ export const setCandidacyTypeAccompagnementToAutonome = async ({
   const candidacy = await getCandidacyById({ candidacyId });
 
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   if (candidacy.typeAccompagnement === "AUTONOME") {

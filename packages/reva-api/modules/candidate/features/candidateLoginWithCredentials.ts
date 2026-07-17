@@ -4,6 +4,10 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
+import {
+  ADRESSE_ELECTRONIQUE_OU_MOT_PASSE_INCORRECT,
+  CANDIDAT_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import {
@@ -40,7 +44,7 @@ export const candidateLoginWithCredentials = async ({
   });
 
   if (!candidate) {
-    throw new Error("Candidat non trouvé");
+    throw new Error(CANDIDAT_NON_TROUVE);
   }
 
   // Valide le MDP d'abord pour distinguer un MDP incorrect d'un OTP incorrect.
@@ -49,7 +53,7 @@ export const candidateLoginWithCredentials = async ({
     password,
   );
   if (!passwordResult.ok) {
-    throw new Error("Adresse électronique ou mot de passe incorrect");
+    throw new Error(ADRESSE_ELECTRONIQUE_OU_MOT_PASSE_INCORRECT);
   }
 
   const isUserHasTotpConfigured = await candidateUserHasTotpConfigured(

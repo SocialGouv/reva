@@ -1,5 +1,11 @@
 import { Prisma } from "@prisma/client";
 
+import {
+  CANDIDATURE_NON_TROUVEE,
+  CANDIDATURE_PAS_ASSOCIEE_CERTIFICATION,
+  CANDIDATURE_PAS_DOSSIER_FAISABILITE_COURS,
+  DOSSIER_FAISABILITE_PAS_RELIE_AUTORITE_CERTIFICATION,
+} from "@/modules/shared/errors/messages";
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { prismaClient } from "@/prisma/client";
 
@@ -24,11 +30,11 @@ export const getCertificationAuthoritiesToTransferCandidacy = async ({
   });
 
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   if (!candidacy.certificationId) {
-    throw new Error("La candidature n'est pas associée à une certification");
+    throw new Error(CANDIDATURE_PAS_ASSOCIEE_CERTIFICATION);
   }
 
   const candidacyActiveFeasibility = candidacy.Feasibility.find(
@@ -36,15 +42,11 @@ export const getCertificationAuthoritiesToTransferCandidacy = async ({
   );
 
   if (!candidacyActiveFeasibility) {
-    throw new Error(
-      "La candidature n'a pas de dossier de faisabilité en cours",
-    );
+    throw new Error(CANDIDATURE_PAS_DOSSIER_FAISABILITE_COURS);
   }
 
   if (!candidacyActiveFeasibility.certificationAuthorityId) {
-    throw new Error(
-      "Le dossier de faisabilité n'est pas relié à une autorité de certification",
-    );
+    throw new Error(DOSSIER_FAISABILITE_PAS_RELIE_AUTORITE_CERTIFICATION);
   }
 
   const whereClause: Prisma.CertificationAuthorityWhereInput = {

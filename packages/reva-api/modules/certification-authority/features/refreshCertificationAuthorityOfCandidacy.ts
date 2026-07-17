@@ -1,5 +1,6 @@
 import { getCandidacy } from "@/modules/candidacy/features/getCandidacy";
 import { getCertificationAuthorities } from "@/modules/feasibility/feasibility.features";
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { isCandidacyCertificationAuthorityUpdatable } from "./isCandidacyCertificationAuthorityUpdatable";
@@ -16,7 +17,7 @@ export const refreshCertificationAuthorityOfCandidacy = async ({
 }) => {
   const candidacy = await getCandidacy({ candidacyId });
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const certificationAuthorityUpdatable =

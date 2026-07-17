@@ -6,6 +6,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
+import { ORGANISME_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
@@ -52,7 +53,7 @@ export const selectOrganismForCandidacyAsAdmin = async ({
 
   const organism = await getOrganismById({ organismId });
   if (!organism) {
-    throw new Error("Organisme non trouvé");
+    throw new Error(ORGANISME_NON_TROUVE);
   }
 
   try {

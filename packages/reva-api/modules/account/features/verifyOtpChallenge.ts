@@ -1,6 +1,10 @@
 import { AccountTokens } from "@/modules/graphql/generated/graphql";
 import { generateIAMTokenWithPasswordShared } from "@/modules/shared/auth/keycloak-token.utils";
 import { decodeOtpChallengeToken } from "@/modules/shared/auth/otp-challenge.utils";
+import {
+  COMPTE_NON_TROUVE,
+  SESSION_VERIFICATION_EXPIREE_VEUILLEZ_VOUS_RECONNECTER,
+} from "@/modules/shared/errors/messages";
 
 import { getAccountByKeycloakId } from "./getAccountByKeycloakId";
 import { verifyEmailOtp } from "./verifyEmailOtp";
@@ -14,16 +18,14 @@ export const verifyOtpChallenge = async ({
 }) => {
   const payload = decodeOtpChallengeToken(challengeToken);
   if (!payload) {
-    throw new Error(
-      "Session de vérification expirée, veuillez vous reconnecter",
-    );
+    throw new Error(SESSION_VERIFICATION_EXPIREE_VEUILLEZ_VOUS_RECONNECTER);
   }
 
   const account = await getAccountByKeycloakId({
     keycloakId: payload.keycloakId,
   });
   if (!account) {
-    throw new Error("Compte non trouvé");
+    throw new Error(COMPTE_NON_TROUVE);
   }
 
   let tokens: AccountTokens | null = null;

@@ -1,3 +1,10 @@
+import {
+  CANDIDATURE_NON_TROUVEE,
+  CANDIDATURE_PAS_ASSOCIEE_CERTIFICATION,
+  CANDIDATURE_PAS_DOSSIER_FAISABILITE_COURS,
+  CANDIDAT_ASSOCIE_CANDIDATURE_PAS_RATTACHE_DEPARTEMENT,
+  DOSSIER_FAISABILITE_PAS_RELIE_AUTORITE_CERTIFICATION,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const assignCandidacyToCertificationAuthorityLocalAccounts =
@@ -15,31 +22,25 @@ export const assignCandidacyToCertificationAuthorityLocalAccounts =
     });
 
     if (!candidacy) {
-      throw new Error("Candidature non trouvée");
+      throw new Error(CANDIDATURE_NON_TROUVEE);
     }
 
     if (!candidacy.candidate?.departmentId) {
-      throw new Error(
-        "Le candidat associé à la candidature n'est pas rattaché à un département",
-      );
+      throw new Error(CANDIDAT_ASSOCIE_CANDIDATURE_PAS_RATTACHE_DEPARTEMENT);
     }
 
     if (!candidacy.certificationId) {
-      throw new Error("La candidature n'est pas associée à une certification");
+      throw new Error(CANDIDATURE_PAS_ASSOCIEE_CERTIFICATION);
     }
 
     const feasibility = candidacy.Feasibility[0];
 
     if (!feasibility) {
-      throw new Error(
-        "La candidature n'a pas de dossier de faisabilité en cours",
-      );
+      throw new Error(CANDIDATURE_PAS_DOSSIER_FAISABILITE_COURS);
     }
 
     if (!feasibility.certificationAuthorityId) {
-      throw new Error(
-        "Le dossier de faisabilité n'est pas relié à une autorité de certification",
-      );
+      throw new Error(DOSSIER_FAISABILITE_PAS_RELIE_AUTORITE_CERTIFICATION);
     }
 
     let certificationAuthorityLocalAccounts: { id: string }[] | undefined =

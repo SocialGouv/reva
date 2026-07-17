@@ -4,6 +4,8 @@ import {
   CertificationAuthorityLocalAccount,
 } from "@prisma/client";
 
+import { COMPTE_LOCAL_AUTORITE_CERTIFICATION_NON_TROUVEE } from "@/modules/shared/errors/messages";
+
 export const getJuryListQueryWhereClauseForUserWithManageRole = ({
   account,
   isCertificationAuthorityLocalAccount,
@@ -18,9 +20,7 @@ export const getJuryListQueryWhereClauseForUserWithManageRole = ({
   // For certification authority local accounts we restric matches to the local account own departments and certifications
   if (isCertificationAuthorityLocalAccount) {
     if (!certificationAuthorityLocalAccount) {
-      throw new Error(
-        "Compte local de l'autorité de certification non trouvée",
-      );
+      throw new Error(COMPTE_LOCAL_AUTORITE_CERTIFICATION_NON_TROUVEE);
     }
 
     queryWhereClause = {

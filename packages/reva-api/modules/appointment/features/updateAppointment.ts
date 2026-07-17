@@ -1,5 +1,9 @@
 import { getCandidateAppUrl } from "@/modules/candidate/utils/candidate.url.helpers";
 import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
+import {
+  CANDIDAT_NON_TROUVE,
+  RENDEZ_VOUS_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { UpdateAppointmentInput } from "../appointment.types";
@@ -18,7 +22,7 @@ export const updateAppointment = async ({
   });
 
   if (!oldAppointment) {
-    throw new Error("Rendez-vous non trouvé");
+    throw new Error(RENDEZ_VOUS_NON_TROUVE);
   }
 
   if (getAppointmentTemporalStatus({ date: oldAppointment.date }) === "PAST") {
@@ -39,7 +43,7 @@ export const updateAppointment = async ({
   const candidate = updatedAppointment.candidacy.candidate;
 
   if (!candidate) {
-    throw new Error("Candidat non trouvé");
+    throw new Error(CANDIDAT_NON_TROUVE);
   }
 
   await sendEmailUsingTemplate({

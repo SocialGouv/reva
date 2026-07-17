@@ -8,6 +8,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
+import { CERTIFICATION_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
@@ -44,7 +45,7 @@ export const updateCertificationWithinOrganismScope = async ({
   const newCertification = await getCertificationById({ certificationId });
 
   if (!newCertification) {
-    throw new Error("Certification non trouvée");
+    throw new Error(CERTIFICATION_NON_TROUVEE);
   }
 
   if (!candidacy) {

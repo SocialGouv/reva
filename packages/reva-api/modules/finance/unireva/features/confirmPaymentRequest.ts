@@ -2,6 +2,13 @@ import { FundingRequest } from "@prisma/client";
 
 import { getCandidacy } from "@/modules/candidacy/features/getCandidacy";
 import { getOrganismById } from "@/modules/organism/features/getOrganism";
+import {
+  CANDIDATURE_NON_TROUVEE,
+  DATE_LIMITE_DEMANDE_PAIEMENT_DEPASSEE_CANDIDATURE,
+  DEMANDE_FINANCEMENT_NON_TROUVEE,
+  DEMANDE_PAIEMENT_NON_TROUVEE,
+  ORGANISME_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { createPaymentRequestBatch } from "../database/paymentRequestBatches";
@@ -18,13 +25,11 @@ export const confirmPaymentRequest = async ({
   const candidacy = await getCandidacy({ candidacyId });
 
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   if (candidacy.paymentRequestDeadlinePassed) {
-    throw new Error(
-      "La date limite de demande de paiement est dépassée pour cette candidature, comme spécifié dans la convention Uniformation",
-    );
+    throw new Error(DATE_LIMITE_DEMANDE_PAIEMENT_DEPASSEE_CANDIDATURE);
   }
 
   if (!candidacy.organismId) {
@@ -34,17 +39,17 @@ export const confirmPaymentRequest = async ({
   const organism = await getOrganismById({ organismId: candidacy.organismId });
 
   if (!organism) {
-    throw new Error("Organisme non trouvé");
+    throw new Error(ORGANISME_NON_TROUVE);
   }
 
   const fundingRequest = await getFundingRequestByCandidacyId({ candidacyId });
   if (!fundingRequest) {
-    throw new Error("Demande de financement non trouvée");
+    throw new Error(DEMANDE_FINANCEMENT_NON_TROUVEE);
   }
 
   const paymentRequest = await getPaymentRequestByCandidacyId({ candidacyId });
   if (!paymentRequest) {
-    throw new Error("Demande de paiement non trouvée");
+    throw new Error(DEMANDE_PAIEMENT_NON_TROUVEE);
   }
 
   await createPaymentRequestBatch({

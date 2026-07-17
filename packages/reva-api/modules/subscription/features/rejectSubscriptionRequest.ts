@@ -1,3 +1,4 @@
+import { DEMANDE_INSCRIPTION_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { deleteFile } from "@/modules/shared/file/file.service";
 import { prismaClient } from "@/prisma/client";
 
@@ -19,7 +20,7 @@ export const rejectSubscriptionRequest = async ({
   );
 
   if (!subscriptionRequest) {
-    throw new Error("Demande d'inscription non trouvée");
+    throw new Error(DEMANDE_INSCRIPTION_NON_TROUVEE);
   }
 
   await prismaClient.subscriptionRequest.update({

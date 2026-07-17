@@ -3,6 +3,10 @@ import {
   logAAPAuditEvent,
 } from "@/modules/aap-log/features/logAAPAuditEvent";
 import { createAccount } from "@/modules/account/features/createAccount";
+import {
+  IDENTIFIANT_MAISON_MERE_OBLIGATOIRE,
+  MAISON_MERE_PAS_ETE_TROUVEE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { CreateOrganismAccountInput } from "../organism.types";
@@ -15,7 +19,7 @@ export const createOrganismAccount = async ({
   userInfo,
 }: CreateOrganismAccountInput & { userInfo: AAPAuditLogUserInfo }) => {
   if (!maisonMereAAPId) {
-    throw new Error("L'identifiant de la maison mère est obligatoire");
+    throw new Error(IDENTIFIANT_MAISON_MERE_OBLIGATOIRE);
   }
 
   const maisonMereAAP = await prismaClient.maisonMereAAP.findUnique({
@@ -23,7 +27,7 @@ export const createOrganismAccount = async ({
   });
 
   if (!maisonMereAAP) {
-    throw new Error("La maison mère n'a pas été trouvée");
+    throw new Error(MAISON_MERE_PAS_ETE_TROUVEE);
   }
 
   const account = await createAccount({

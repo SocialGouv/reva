@@ -1,5 +1,6 @@
 import { CertificationAuthority } from "@prisma/client";
 
+import { AUTORITE_CERTIFICATION_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { refreshCertificationAuthorityOfCandidacies } from "./refreshCertificationAuthorityOfCandidacies";
@@ -16,7 +17,7 @@ export const updateCertificationAuthorityCertifications = async ({
       where: { id: certificationAuthorityId },
     });
   if (!certificationAuthority) {
-    throw new Error("Authorité de certification non trouvée");
+    throw new Error(AUTORITE_CERTIFICATION_NON_TROUVEE);
   }
 
   await prismaClient.$transaction(async (tx) => {

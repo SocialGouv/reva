@@ -9,6 +9,13 @@ import PDFDocument from "pdfkit";
 
 import { isAapAvailableForCertificationId } from "@/modules/referential/features/isAapAvailableForCertificationId";
 import { formatDateWithoutTimestamp } from "@/modules/shared/date/formatDateWithoutTimestamp";
+import {
+  CANDIDATURE_NON_TROUVEE,
+  CANDIDAT_NON_TROUVE,
+  CERTIFICATION_NON_TROUVEE,
+  DOSSIER_FAISABILITE_DEMATERIALISE_NON_TROUVE,
+  DOSSIER_FAISABILITE_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import {
@@ -81,27 +88,27 @@ export const generateFeasibilityFileByCandidacyId = async (
   });
 
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const { certification, candidate } = candidacy;
 
   if (!certification) {
-    throw new Error("Certification non trouvée");
+    throw new Error(CERTIFICATION_NON_TROUVEE);
   }
 
   if (!candidate) {
-    throw new Error("Candidat non trouvé");
+    throw new Error(CANDIDAT_NON_TROUVE);
   }
 
   const feasibility = candidacy.Feasibility[0];
   if (!feasibility) {
-    throw new Error("Dossier de faisabilité non trouvé");
+    throw new Error(DOSSIER_FAISABILITE_NON_TROUVE);
   }
 
   const { dematerializedFeasibilityFile } = feasibility;
   if (!dematerializedFeasibilityFile) {
-    throw new Error("Dossier de faisabilité dématérialisé non trouvé");
+    throw new Error(DOSSIER_FAISABILITE_DEMATERIALISE_NON_TROUVE);
   }
 
   const isDFFReady = checkIsDFFReady({

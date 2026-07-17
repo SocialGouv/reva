@@ -6,6 +6,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
+import { CANDIDAT_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { CandidateAuthenticationInput } from "../candidate.types";
@@ -49,7 +50,7 @@ const loginCandidate = async ({ email }: { email: string }) => {
   });
 
   if (!candidate) {
-    throw new Error("Candidat non trouvé");
+    throw new Error(CANDIDAT_NON_TROUVE);
   }
 
   // Track last login via magic link

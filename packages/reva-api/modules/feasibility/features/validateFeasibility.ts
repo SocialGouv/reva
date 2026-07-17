@@ -4,6 +4,10 @@ import { v4 } from "uuid";
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
+import {
+  DOSSIER_FAISABILITE_INTROUVABLE,
+  FAISABILITE_DEJA_ETE_PRONONCEE_DOSSIER,
+} from "@/modules/shared/errors/messages";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
 import { UploadedFile } from "@/modules/shared/file/file.interface";
 import { S3File, uploadFileToS3 } from "@/modules/shared/file/file.service";
@@ -39,7 +43,7 @@ export const validateFeasibility = async ({
   });
 
   if (!feasibility) {
-    throw new Error("Dossier de faisabilité introuvable");
+    throw new Error(DOSSIER_FAISABILITE_INTROUVABLE);
   }
 
   const authorized = await canManageFeasibility({
@@ -53,7 +57,7 @@ export const validateFeasibility = async ({
       feasibility.decision == FeasibilityStatus.ADMISSIBLE ||
       feasibility.decision == FeasibilityStatus.REJECTED
     ) {
-      throw new Error("Le faisabilité a déjà été prononcée sur ce dossier");
+      throw new Error(FAISABILITE_DEJA_ETE_PRONONCEE_DOSSIER);
     }
 
     let infoFileInstance: S3File | undefined;

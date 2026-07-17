@@ -1,3 +1,4 @@
+import { DEMANDE_INSCRIPTION_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { getDownloadLink } from "@/modules/shared/file/file.service";
 import {
   FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
@@ -27,7 +28,7 @@ export const getSubscriptionRequestFileNameUrlAndMimeType = async ({
   });
 
   if (!sr) {
-    throw new Error("Demande d'inscription non trouvée");
+    throw new Error(DEMANDE_INSCRIPTION_NON_TROUVEE);
   }
 
   let filename = "";

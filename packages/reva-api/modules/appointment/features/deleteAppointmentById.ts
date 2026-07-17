@@ -6,6 +6,10 @@ import { getCandidateAppUrl } from "@/modules/candidate/utils/candidate.url.help
 import { formatDateWithoutTimestamp } from "@/modules/shared/date/formatDateWithoutTimestamp";
 import { formatUTCTime } from "@/modules/shared/date/formatUTCTime";
 import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
+import {
+  CANDIDAT_NON_TROUVE,
+  RENDEZ_VOUS_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { getAppointmentTemporalStatus } from "./getAppointmentTemporalStatus";
@@ -24,7 +28,7 @@ export const deleteAppointmentById = async ({
   });
 
   if (!appointment) {
-    throw new Error("Rendez-vous non trouvé");
+    throw new Error(RENDEZ_VOUS_NON_TROUVE);
   }
 
   const appointmentTemporalStatus = getAppointmentTemporalStatus({
@@ -49,7 +53,7 @@ export const deleteAppointmentById = async ({
   const candidate = result.candidacy.candidate;
 
   if (!candidate) {
-    throw new Error("Candidat non trouvé");
+    throw new Error(CANDIDAT_NON_TROUVE);
   }
 
   const timeZone = candidate.department?.timezone || "Europe/Paris";

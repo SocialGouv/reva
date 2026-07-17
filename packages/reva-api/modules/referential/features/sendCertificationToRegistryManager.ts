@@ -1,3 +1,4 @@
+import { STATUT_CERTIFICATION_DOIT_ETRE_ETAT_BROUILLON } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { sendNewCertificationAvailableToCertificationRegistryManagerEmail } from "../emails/sendNewCertificationAvailableToCertificationRegistryManagerEmail";
@@ -31,9 +32,7 @@ export const sendCertificationToRegistryManager = async ({
   }
 
   if (certification.status != "BROUILLON") {
-    throw new Error(
-      "Le statut de la certification doit être à l'état 'Brouillon'",
-    );
+    throw new Error(STATUT_CERTIFICATION_DOIT_ETRE_ETAT_BROUILLON);
   }
 
   const updatedCertification = await prismaClient.certification.update({

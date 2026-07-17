@@ -8,6 +8,7 @@ import { getCandidateAppUrl } from "@/modules/candidate/utils/candidate.url.help
 import { formatDateWithoutTimestamp } from "@/modules/shared/date/formatDateWithoutTimestamp";
 import { formatUTCTime } from "@/modules/shared/date/formatUTCTime";
 import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
+import { CANDIDAT_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { CreateAppointmentInput } from "../appointment.types";
@@ -52,7 +53,7 @@ export const createAppointment = async ({
     });
 
   if (!candidate) {
-    throw new Error("Candidat non trouvé");
+    throw new Error(CANDIDAT_NON_TROUVE);
   }
 
   const result = await prismaClient.appointment.create({

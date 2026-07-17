@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import { getLastProfessionalCgu } from "@/modules/organism/features/getLastProfessionalCgu";
 import { Organism, RemoteZone } from "@/modules/organism/organism.types";
 import { getDepartmentById } from "@/modules/referential/features/getDepartmentById";
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { fetchCoordinatesFromZipCode } from "@/modules/shared/geocoding";
 import { prismaClient } from "@/prisma/client";
 
@@ -27,7 +28,7 @@ export const searchOrganismsForCandidacy = async ({
   });
 
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   // In case of a "VAE collective", if the cohorteVaeCollective restricts the available organisms, user search results are restricted to the organism in the cohorteVaeCollective

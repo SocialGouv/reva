@@ -2,6 +2,13 @@ import { FeasibilityStatus } from "@prisma/client";
 
 import { getAccountByKeycloakId } from "@/modules/account/features/getAccountByKeycloakId";
 import { getCertificationAuthorityLocalAccountByAccountId } from "@/modules/certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
+import {
+  CANDIDATURE_ETE_ABANDONNEE,
+  CANDIDATURE_ETE_SUPPRIMEE,
+  CANDIDATURE_PAS_ETE_TROUVEE,
+  COMPTE_UTILISATEUR_NON_TROUVE,
+  DOSSIER_FAISABILITE_PAS_RECEVABLE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const canManageJury = async ({
@@ -24,15 +31,15 @@ export const canManageJury = async ({
   });
 
   if (!candidacy) {
-    throw new Error("La candidature n'a pas été trouvée");
+    throw new Error(CANDIDATURE_PAS_ETE_TROUVEE);
   }
 
   if (candidacy.candidacyDropOut) {
-    throw new Error("La candidature a été abandonnée");
+    throw new Error(CANDIDATURE_ETE_ABANDONNEE);
   }
 
   if (candidacy.status === "ARCHIVE") {
-    throw new Error("La candidature a été supprimée");
+    throw new Error(CANDIDATURE_ETE_SUPPRIMEE);
   }
 
   const feasibility = candidacy.Feasibility[0];
@@ -41,7 +48,7 @@ export const canManageJury = async ({
   }
 
   if (feasibility.decision !== FeasibilityStatus.ADMISSIBLE) {
-    throw new Error("Le dossier de faisabilité n'est pas recevable");
+    throw new Error(DOSSIER_FAISABILITE_PAS_RECEVABLE);
   }
 
   const certificationAuthorityId = feasibility.certificationAuthorityId;
@@ -74,7 +81,7 @@ export const canManageJury = async ({
   // check if candidacy department and certification are in the local account access perimeter
   const account = await getAccountByKeycloakId({ keycloakId });
   if (!account) {
-    throw new Error("Compte utilisateur non trouvé");
+    throw new Error(COMPTE_UTILISATEUR_NON_TROUVE);
   }
 
   const certificationAuthorityLocalAccount =

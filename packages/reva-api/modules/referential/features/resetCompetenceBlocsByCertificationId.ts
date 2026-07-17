@@ -1,5 +1,6 @@
 import { CertificationCompetenceBloc } from "@prisma/client";
 
+import { STATUT_CERTIFICATION_DOIT_ETRE_ETAT_BROUILLON } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { RNCPReferential } from "../rncp/referential";
@@ -19,9 +20,7 @@ export const resetCompetenceBlocsByCertificationId = async (params: {
   }
 
   if (certification.status != "BROUILLON") {
-    throw new Error(
-      "Le statut de la certification doit être à l'état 'Brouillon'",
-    );
+    throw new Error(STATUT_CERTIFICATION_DOIT_ETRE_ETAT_BROUILLON);
   }
 
   // Delete previous blocs

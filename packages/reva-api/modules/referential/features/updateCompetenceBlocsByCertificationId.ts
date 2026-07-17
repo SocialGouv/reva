@@ -3,6 +3,7 @@ import {
   CertificationStatus,
 } from "@prisma/client";
 
+import { STATUT_CERTIFICATION_NE_PERMET_PAS_MODIFIER } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 type Competence = {
@@ -51,9 +52,7 @@ export const updateCompetenceBlocsByCertificationId = async (
   ];
 
   if (!allowedStatus.includes(certification?.status)) {
-    throw new Error(
-      "Le statut de la certification ne permet pas de modifier les blocs de compétences",
-    );
+    throw new Error(STATUT_CERTIFICATION_NE_PERMET_PAS_MODIFIER);
   }
 
   // Delete all blocs that has not been found in Params['blocs']

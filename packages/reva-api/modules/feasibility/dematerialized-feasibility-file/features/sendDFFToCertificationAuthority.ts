@@ -5,6 +5,7 @@ import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCand
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "@/modules/certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
 import { getAccountByCertificationAuthorityId } from "@/modules/certification-authority/features/getAccountByCertificationAuthorityId";
 import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
+import { DOSSIER_FAISABILITE_DEMATERIALISE_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { sendNewFeasibilitySubmittedEmail } from "../../emails/sendNewFeasibilitySubmittedEmail";
@@ -43,7 +44,7 @@ export const sendDFFToCertificationAuthority = async ({
   });
 
   if (!existingFeasibility?.dematerializedFeasibilityFile) {
-    throw new Error("Dossier de faisabilité dématérialisé non trouvé");
+    throw new Error(DOSSIER_FAISABILITE_DEMATERIALISE_NON_TROUVE);
   }
 
   const { dematerializedFeasibilityFile: existingDff } = existingFeasibility;

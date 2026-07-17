@@ -6,6 +6,7 @@ import {
 
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "@/modules/candidacy-menu/features/isCandidacyStatusEqualOrAboveGivenStatus";
 import { getCertificationById } from "@/modules/referential/features/getCertificationById";
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { getCandidacyById } from "./getCandidacyById";
@@ -24,7 +25,7 @@ export const updateCandidacyTypeAccompagnement = async ({
   });
 
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   if (candidacy.candidacyDropOut) {

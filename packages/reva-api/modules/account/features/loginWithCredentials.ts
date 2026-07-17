@@ -1,4 +1,8 @@
 import { encodeOtpChallengeToken } from "@/modules/shared/auth/otp-challenge.utils";
+import {
+  ADRESSE_ELECTRONIQUE_OU_MOT_PASSE_INCORRECT,
+  COMPTE_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
 
 import { ClientApp } from "../account.type";
 import {
@@ -23,7 +27,7 @@ export const loginWithCredentials = async ({
   const account = await getAccountByEmail(email);
 
   if (!account) {
-    throw new Error("Compte non trouvé");
+    throw new Error(COMPTE_NON_TROUVE);
   }
 
   // Valide le MDP d'abord pour distinguer un MDP incorrect d'un OTP incorrect,
@@ -33,7 +37,7 @@ export const loginWithCredentials = async ({
     password,
   );
   if (!passwordResult.ok) {
-    throw new Error("Adresse électronique ou mot de passe incorrect");
+    throw new Error(ADRESSE_ELECTRONIQUE_OU_MOT_PASSE_INCORRECT);
   }
 
   let userOtpType: "authenticator" | "email" | "none" = "none";

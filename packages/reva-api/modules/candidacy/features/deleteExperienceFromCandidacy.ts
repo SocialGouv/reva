@@ -1,4 +1,9 @@
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import {
+  AUCUNE_CANDIDATURE_ETE_TROUVEE,
+  AUCUNE_EXPERIENCE_ETE_TROUVEE,
+  IMPOSSIBLE_MODIFIER_EXPERIENCES_APRES_ENVOI_DOSSIER,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { canAAPEditExperiences } from "./canAAPEditExperiences";
@@ -24,7 +29,7 @@ export const deleteExperienceFromCandidacy = async ({
   });
 
   if (!candidacy) {
-    throw new Error("Aucune candidature n'a été trouvée");
+    throw new Error(AUCUNE_CANDIDATURE_ETE_TROUVEE);
   }
 
   if (userRoles.includes("candidate") && candidacy.status !== "PROJET") {
@@ -37,9 +42,7 @@ export const deleteExperienceFromCandidacy = async ({
     userRoles.includes("manage_candidacy") &&
     !canAAPEditExperiences(candidacy.status)
   ) {
-    throw new Error(
-      "Impossible de modifier les expériences après l'envoi du dossier de faisabilité",
-    );
+    throw new Error(IMPOSSIBLE_MODIFIER_EXPERIENCES_APRES_ENVOI_DOSSIER);
   }
 
   const experienceToDelete = await prismaClient.experience.findUnique({
@@ -51,7 +54,7 @@ export const deleteExperienceFromCandidacy = async ({
   });
 
   if (!experienceToDelete) {
-    throw new Error("Aucune expérience n'a été trouvée");
+    throw new Error(AUCUNE_EXPERIENCE_ETE_TROUVEE);
   }
 
   await prismaClient.experience.delete({

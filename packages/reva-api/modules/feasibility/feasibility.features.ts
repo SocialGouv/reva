@@ -8,6 +8,13 @@ import {
 import { v4 } from "uuid";
 
 import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
+import {
+  DOSSIER_FAISABILITE_INTROUVABLE,
+  DOSSIER_INTROUVABLE,
+  FAISABILITE_DEJA_ETE_MARQUEE_DOSSIER,
+  FAISABILITE_DEJA_ETE_PRONONCEE_DOSSIER,
+  FICHIER_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
@@ -448,7 +455,7 @@ export const getFileNameAndUrl = async ({
   });
 
   if (!file) {
-    throw new Error("Fichier non trouvé");
+    throw new Error(FICHIER_NON_TROUVE);
   }
 
   const downloadUrl = await getDownloadLink({
@@ -908,7 +915,7 @@ export const getFeasibilityById = async ({
   });
 
   if (!feasibility) {
-    throw new Error("Ce dossier est introuvable");
+    throw new Error(DOSSIER_INTROUVABLE);
   }
 
   const authorized = await canManageFeasibility({
@@ -946,7 +953,7 @@ const rejectFeasibility = async ({
   });
 
   if (!feasibility) {
-    throw new Error("Dossier de faisabilité introuvable");
+    throw new Error(DOSSIER_FAISABILITE_INTROUVABLE);
   }
 
   const authorized = await canManageFeasibility({
@@ -960,7 +967,7 @@ const rejectFeasibility = async ({
       feasibility.decision == FeasibilityStatus.ADMISSIBLE ||
       feasibility.decision == FeasibilityStatus.REJECTED
     ) {
-      throw new Error("Le faisabilité a déjà été prononcée sur ce dossier");
+      throw new Error(FAISABILITE_DEJA_ETE_PRONONCEE_DOSSIER);
     }
 
     let infoFileInstance: S3File | undefined;
@@ -1087,7 +1094,7 @@ const markFeasibilityAsIncomplete = async ({
   });
 
   if (!feasibility) {
-    throw new Error("Dossier de faisabilité introuvable");
+    throw new Error(DOSSIER_FAISABILITE_INTROUVABLE);
   }
 
   const authorized = await canManageFeasibility({
@@ -1101,14 +1108,14 @@ const markFeasibilityAsIncomplete = async ({
       feasibility.decision == FeasibilityStatus.ADMISSIBLE ||
       feasibility.decision == FeasibilityStatus.REJECTED
     ) {
-      throw new Error("Le faisabilité a déjà été prononcée sur ce dossier");
+      throw new Error(FAISABILITE_DEJA_ETE_PRONONCEE_DOSSIER);
     }
 
     if (
       feasibility.decision == FeasibilityStatus.COMPLETE ||
       feasibility.decision == FeasibilityStatus.INCOMPLETE
     ) {
-      throw new Error("Le faisabilité a déjà été marquée sur ce dossier");
+      throw new Error(FAISABILITE_DEJA_ETE_MARQUEE_DOSSIER);
     }
 
     const updatedFeasibility = await prismaClient.feasibility.update({
@@ -1202,7 +1209,7 @@ const markFeasibilityAsComplete = async ({
   });
 
   if (!feasibility) {
-    throw new Error("Dossier de faisabilité introuvable");
+    throw new Error(DOSSIER_FAISABILITE_INTROUVABLE);
   }
 
   const authorized = await canManageFeasibility({
@@ -1216,14 +1223,14 @@ const markFeasibilityAsComplete = async ({
       feasibility.decision == FeasibilityStatus.ADMISSIBLE ||
       feasibility.decision == FeasibilityStatus.REJECTED
     ) {
-      throw new Error("Le faisabilité a déjà été prononcée sur ce dossier");
+      throw new Error(FAISABILITE_DEJA_ETE_PRONONCEE_DOSSIER);
     }
 
     if (
       feasibility.decision == FeasibilityStatus.COMPLETE ||
       feasibility.decision == FeasibilityStatus.INCOMPLETE
     ) {
-      throw new Error("Le faisabilité a déjà été marquée sur ce dossier");
+      throw new Error(FAISABILITE_DEJA_ETE_MARQUEE_DOSSIER);
     }
 
     return prismaClient.$transaction(async (tx) => {

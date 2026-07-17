@@ -1,4 +1,10 @@
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import {
+  AUCUNE_CANDIDATURE_ETE_TROUVEE,
+  AUCUNE_EXPERIENCE_ETE_TROUVEE,
+  IMPOSSIBLE_METTRE_JOUR_EXPERIENCES_APRES_CONFIRME,
+  IMPOSSIBLE_MODIFIER_EXPERIENCES_APRES_ENVOI_DOSSIER,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { ExperienceInput } from "../candidacy.types";
@@ -30,25 +36,21 @@ export const updateExperienceOfCandidacy = async ({
   });
 
   if (!candidacy) {
-    throw new Error("Aucune candidature n'a été trouvée");
+    throw new Error(AUCUNE_CANDIDATURE_ETE_TROUVEE);
   }
 
   if (
     userRoles.includes("candidate") &&
     !(await canCandidateUpdateCandidacy({ candidacy }))
   ) {
-    throw new Error(
-      "Impossible de mettre à jour les experiences après avoir confirmé le parcours",
-    );
+    throw new Error(IMPOSSIBLE_METTRE_JOUR_EXPERIENCES_APRES_CONFIRME);
   }
 
   if (
     userRoles.includes("manage_candidacy") &&
     !canAAPEditExperiences(candidacy.status)
   ) {
-    throw new Error(
-      "Impossible de modifier les expériences après l'envoi du dossier de faisabilité",
-    );
+    throw new Error(IMPOSSIBLE_MODIFIER_EXPERIENCES_APRES_ENVOI_DOSSIER);
   }
 
   const experienceToUpdate = await prismaClient.experience.findUnique({
@@ -60,7 +62,7 @@ export const updateExperienceOfCandidacy = async ({
   });
 
   if (!experienceToUpdate) {
-    throw new Error("Aucune expérience n'a été trouvée");
+    throw new Error(AUCUNE_EXPERIENCE_ETE_TROUVEE);
   }
 
   const result = await prismaClient.experience.update({

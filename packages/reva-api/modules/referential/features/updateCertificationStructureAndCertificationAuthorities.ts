@@ -1,3 +1,4 @@
+import { CERTIFICATION_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { UpdateCertificationStructureAndCertificationAuthoritiesInput } from "../referential.types";
@@ -11,7 +12,7 @@ export const updateCertificationStructureAndCertificationAuthorities = async ({
     where: { id: certificationId },
   });
   if (!certification) {
-    throw new Error("Certification non trouvée");
+    throw new Error(CERTIFICATION_NON_TROUVEE);
   }
 
   const certificationAuthorityStructure =
@@ -19,7 +20,7 @@ export const updateCertificationStructureAndCertificationAuthorities = async ({
       where: { id: certificationAuthorityStructureId },
     });
   if (!certificationAuthorityStructure) {
-    throw new Error("Structure d'authorité certificatrice non trouvée");
+    throw new Error("Structure d'autorité certificatrice non trouvée");
   }
 
   // Add or change Certification Authority Structure on certification

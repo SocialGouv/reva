@@ -2,6 +2,7 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { CandidateTypology } from "@prisma/client";
 
 import { wrapKeycloakUnavailable } from "@/modules/shared/auth/wrap-keycloak-unavailable";
+import { CANDIDATE_NOT_FOUND } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { getActiveCandidaciesByCandidateId } from "../candidacy/features/getActiveCandidaciesByCandidateId";
@@ -180,7 +181,7 @@ const unsafeResolvers = {
     ) => {
       const candidate = await getCandidateByCandidacyId({ candidacyId });
       if (!candidate) {
-        throw new Error("Candidate not found");
+        throw new Error(CANDIDATE_NOT_FOUND);
       }
       return updateCandidate({
         params: {

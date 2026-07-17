@@ -1,3 +1,4 @@
+import { COMPTE_LOCAL_AUTORITE_CERTIFICATION_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const assignCandidaciesToCertificationAuthorityLocalAccount =
@@ -16,9 +17,7 @@ export const assignCandidaciesToCertificationAuthorityLocalAccount =
       });
 
     if (!certificationAuthorityLocalAccount) {
-      throw new Error(
-        "Compte local de l'authorité de certification non trouvée",
-      );
+      throw new Error(COMPTE_LOCAL_AUTORITE_CERTIFICATION_NON_TROUVE);
     }
 
     const departmentIds =

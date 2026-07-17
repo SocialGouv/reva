@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
+import { DOSSIER_FAISABILITE_DEMATERIALISE_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput } from "../dematerialized-feasibility-file.types";
@@ -21,7 +22,7 @@ export const createOrUpdatePrerequisites = async ({
     });
 
   if (!dFF) {
-    throw new Error("Dossier de faisabilité dématérialisé non trouvé");
+    throw new Error(DOSSIER_FAISABILITE_DEMATERIALISE_NON_TROUVE);
   }
 
   const candidacy = await prismaClient.candidacy.findUnique({

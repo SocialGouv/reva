@@ -1,5 +1,6 @@
 import { CandidacyStatusStep, Prisma } from "@prisma/client";
 
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { getCandidacy } from "./getCandidacy";
@@ -23,7 +24,7 @@ export const updateCandidacyCertificationAuthority = async ({
 
   const candidacy = await getCandidacy({ candidacyId });
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const isDfDematAutonomeActive = await prismaClient.feature.findFirst({

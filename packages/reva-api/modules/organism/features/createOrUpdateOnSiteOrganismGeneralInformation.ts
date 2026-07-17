@@ -2,6 +2,7 @@ import {
   AAPAuditLogUserInfo,
   logAAPAuditEvent,
 } from "@/modules/aap-log/features/logAAPAuditEvent";
+import { ORGANISME_PAS_ETE_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { OrganismInformationsCommerciales } from "../organism.types";
@@ -30,7 +31,7 @@ export const createOrUpdateOnSiteOrganismGeneralInformation = async ({
   });
 
   if (!current) {
-    throw new Error("L'organisme n'a pas été trouvé");
+    throw new Error(ORGANISME_PAS_ETE_TROUVE);
   }
 
   const targetStreet =

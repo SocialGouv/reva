@@ -1,5 +1,6 @@
 import { CertificationStatus } from "@prisma/client";
 
+import { CERTIFICATION_PAS_ETE_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { UpdateCertificationDescriptionInput } from "../referential.types";
@@ -20,7 +21,7 @@ export const updateCertificationDescription = async ({
     certificationId,
   });
   if (!certification) {
-    throw new Error("La certification n'a pas été trouvée");
+    throw new Error(CERTIFICATION_PAS_ETE_TROUVEE);
   }
 
   //Temporirarily to allow admins to update existing active certifications

@@ -2,6 +2,10 @@ import { add, endOfDay, isAfter, isBefore, startOfDay } from "date-fns";
 import { v4 as uuidV4 } from "uuid";
 
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import {
+  CANDIDATURE_PAS_ETE_TROUVEE,
+  RESULTAT_JURY_DEJA_ETE_RENSEIGNE,
+} from "@/modules/shared/errors/messages";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
 import { UploadedFile } from "@/modules/shared/file/file.interface";
 import { uploadFileToS3 } from "@/modules/shared/file/file.service";
@@ -48,7 +52,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     },
   });
   if (!candidacy) {
-    throw new Error("La candidature n'a pas été trouvée");
+    throw new Error(CANDIDATURE_PAS_ETE_TROUVEE);
   }
 
   const dossierDeValidation = candidacy.dossierDeValidation[0];
@@ -71,7 +75,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     }
 
     if (activeJury.result) {
-      throw new Error("Le résultat du jury a déjà été renseigné");
+      throw new Error(RESULTAT_JURY_DEJA_ETE_RENSEIGNE);
     }
   }
 

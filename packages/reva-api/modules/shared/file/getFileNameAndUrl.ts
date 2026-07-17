@@ -1,3 +1,4 @@
+import { FICHIER_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { getDownloadLink } from "./file.service";
@@ -14,7 +15,7 @@ export const getFileNameAndUrl = async ({ fileId }: { fileId: string }) => {
   });
 
   if (!file) {
-    throw new Error("Fichier non trouvé");
+    throw new Error(FICHIER_NON_TROUVE);
   }
 
   const downloadUrl = await getDownloadLink({

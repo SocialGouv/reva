@@ -1,4 +1,8 @@
 import { updateCandidacyCertificationCompletion } from "@/modules/candidacy/features/updateCandidacyCertificationCompletion";
+import {
+  CANDIDATURE_NON_TROUVEE,
+  DOSSIER_FAISABILITE_DEMATERIALISE_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput } from "../dematerialized-feasibility-file.types";
@@ -103,7 +107,7 @@ const updateCertificationInfo = async ({
   });
 
   if (!currentFile) {
-    throw new Error("Dossier de faisabilité dématérialisé non trouvé");
+    throw new Error(DOSSIER_FAISABILITE_DEMATERIALISE_NON_TROUVE);
   }
 
   await validateIfCompetenceBlocsArePartOfCandidacyCertification(
@@ -172,7 +176,7 @@ const validateIfCompetenceBlocsArePartOfCandidacyCertification = async (
   });
 
   if (!candidacy) {
-    throw new Error("Candidature non trouvée");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const competenceBlocIds =

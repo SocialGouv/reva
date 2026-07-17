@@ -1,4 +1,5 @@
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { DOSSIER_FAISABILITE_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { sendDFFNotificationToCandidateEmail } from "../emails/sendDFFNotificationToCandidateEmail";
@@ -26,7 +27,7 @@ export const sendDFFToCandidate = async ({
   });
 
   if (!dff) {
-    throw new Error("Dossier de faisabilité non trouvé");
+    throw new Error(DOSSIER_FAISABILITE_NON_TROUVE);
   }
 
   if (dff?.feasibility?.candidacy?.candidate?.email) {

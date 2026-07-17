@@ -33,7 +33,7 @@ export const updateCertificationAuthorityById = async ({
 
   if (!certificationAuthority) {
     throw new Error(
-      `Authorité de certification pour l'id ${certificationAuthorityId} non trouvé`,
+      `Autorité de certification pour l'id ${certificationAuthorityId} non trouvée`,
     );
   }
 

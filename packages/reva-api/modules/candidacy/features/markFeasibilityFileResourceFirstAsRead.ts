@@ -1,3 +1,4 @@
+import { AUCUNE_CANDIDATURE_ETE_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const markFeasibilityFileResourceFirstAsRead = async ({
@@ -10,7 +11,7 @@ export const markFeasibilityFileResourceFirstAsRead = async ({
   });
 
   if (!candidacy) {
-    throw new Error("Aucune candidature n'a été trouvée");
+    throw new Error(AUCUNE_CANDIDATURE_ETE_TROUVEE);
   }
 
   const result = await prismaClient.candidacy.update({

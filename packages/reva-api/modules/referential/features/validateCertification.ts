@@ -1,6 +1,7 @@
 import { CertificationStatus } from "@prisma/client";
 import { isAfter, isBefore, isEqual, startOfToday } from "date-fns";
 
+import { CERTIFICATION_PAS_ETE_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { ValidateCertificationInput } from "../referential.types";
@@ -14,7 +15,7 @@ export const validateCertification = async ({
     certificationId,
   });
   if (!certification) {
-    throw new Error("La certification n'a pas été trouvée");
+    throw new Error(CERTIFICATION_PAS_ETE_TROUVEE);
   }
 
   const allowedStatus: CertificationStatus[] = ["A_VALIDER_PAR_CERTIFICATEUR"];

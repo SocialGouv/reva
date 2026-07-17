@@ -1,5 +1,6 @@
 import { getCandidacyById } from "@/modules/candidacy/features/getCandidacyById";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { CANDIDATURE_EXISTE_PAS } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const revokeJuryDecision = async ({
@@ -30,7 +31,7 @@ export const revokeJuryDecision = async ({
   const candidacy = await getCandidacyById({ candidacyId: jury.candidacyId });
 
   if (!candidacy) {
-    throw new Error("La candidature n'existe pas");
+    throw new Error(CANDIDATURE_EXISTE_PAS);
   }
 
   const newJuryId = await prismaClient.$transaction(async (tx) => {

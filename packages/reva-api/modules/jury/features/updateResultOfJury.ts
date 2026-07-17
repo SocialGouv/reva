@@ -2,6 +2,10 @@ import { isBefore, startOfDay } from "date-fns";
 import z from "zod";
 
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import {
+  CANDIDATURE_EXISTE_PAS,
+  RESULTAT_JURY_DEJA_ETE_RENSEIGNE,
+} from "@/modules/shared/errors/messages";
 import { NOT_AUTHORIZED_CANDIDACY_MANAGE } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
@@ -72,7 +76,7 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
   }
 
   if (jury.result) {
-    throw new Error("Le résultat du jury a déjà été renseigné");
+    throw new Error(RESULTAT_JURY_DEJA_ETE_RENSEIGNE);
   }
 
   const updatedJury = await prismaClient.jury.update({
@@ -162,7 +166,7 @@ const validateJuryResultWithBlocks = async (
     .then((jury) => jury?.candidacyId);
 
   if (!candidacyId) {
-    throw new Error("La candidature n'existe pas");
+    throw new Error(CANDIDATURE_EXISTE_PAS);
   }
 
   const previouslyValidatedBlocksIds =

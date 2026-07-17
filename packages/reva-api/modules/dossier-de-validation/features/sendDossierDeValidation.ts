@@ -5,6 +5,12 @@ import { getAccountById } from "@/modules/account/features/getAccount";
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { getAccountByCertificationAuthorityId } from "@/modules/certification-authority/features/getAccountByCertificationAuthorityId";
+import {
+  CANDIDATURE_ETE_ABANDONNEE,
+  CANDIDATURE_ETE_SUPPRIMEE,
+  CANDIDATURE_PAS_ETE_TROUVEE,
+  DOSSIER_FAISABILITE_PAS_RECEVABLE,
+} from "@/modules/shared/errors/messages";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
 import { UploadedFile } from "@/modules/shared/file/file.interface";
 import { uploadFileToS3 } from "@/modules/shared/file/file.service";
@@ -53,19 +59,19 @@ export const sendDossierDeValidation = async ({
   });
 
   if (!candidacy) {
-    throw new Error("La candidature n'a pas été trouvée");
+    throw new Error(CANDIDATURE_PAS_ETE_TROUVEE);
   }
 
   if (candidacy.candidacyDropOut) {
-    throw new Error("La candidature a été abandonnée");
+    throw new Error(CANDIDATURE_ETE_ABANDONNEE);
   }
 
   if (candidacy.status === "ARCHIVE") {
-    throw new Error("La candidature a été supprimée");
+    throw new Error(CANDIDATURE_ETE_SUPPRIMEE);
   }
 
   if (candidacy.Feasibility?.[0]?.decision !== FeasibilityStatus.ADMISSIBLE) {
-    throw new Error("Le dossier de faisabilité n'est pas recevable");
+    throw new Error(DOSSIER_FAISABILITE_PAS_RECEVABLE);
   }
 
   const validStatuses: CandidacyStatusStep[] = [
