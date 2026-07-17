@@ -11,6 +11,10 @@ import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers"
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
+import {
+  NOT_AUTHORIZED,
+  NOT_AUTHORIZED_DOSSIER_ACCESS,
+} from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { Account } from "../account/account.types";
@@ -495,7 +499,7 @@ export const getActiveFeasibilityCountByCategory = async ({
   };
 
   if (!hasRole("admin") && !hasRole("manage_feasibility")) {
-    throw new Error("Utilisateur non autorisé");
+    throw new Error(NOT_AUTHORIZED);
   }
 
   const account = await getAccountByKeycloakId({ keycloakId });
@@ -533,7 +537,7 @@ export const getActiveFeasibilityCountByCategory = async ({
     certificationAuthorityLocalAccountId
   ) {
     if (!account?.certificationAuthorityId) {
-      throw new Error("Utilisateur non autorisé");
+      throw new Error(NOT_AUTHORIZED);
     }
 
     certificationAuthorityLocalAccount =
@@ -729,7 +733,7 @@ export const getActiveFeasibilities = async ({
       certificationAuthorityLocalAccountId
     ) {
       if (!account.certificationAuthorityId) {
-        throw new Error("Utilisateur non autorisé");
+        throw new Error(NOT_AUTHORIZED);
       }
 
       const certificationAuthorityLocalAccount =
@@ -849,7 +853,7 @@ export const getActiveFeasibilities = async ({
     }
   } else if (!hasRole("admin")) {
     //admin has access to everything
-    throw new Error("Utilisateur non autorisé");
+    throw new Error(NOT_AUTHORIZED);
   }
 
   if (searchFilter && searchFilter.length > 0) {
@@ -916,7 +920,7 @@ export const getFeasibilityById = async ({
   if (hasRole("admin") || authorized) {
     return { ...feasibility };
   } else {
-    throw new Error("Vous n'êtes pas autorisé à consulter ce dossier");
+    throw new Error(NOT_AUTHORIZED_DOSSIER_ACCESS);
   }
 };
 
@@ -1059,7 +1063,7 @@ const rejectFeasibility = async ({
 
     return updatedFeasibility;
   } else {
-    throw new Error("Utilisateur non autorisé");
+    throw new Error(NOT_AUTHORIZED);
   }
 };
 
@@ -1176,7 +1180,7 @@ const markFeasibilityAsIncomplete = async ({
 
     return updatedFeasibility;
   } else {
-    throw new Error("Utilisateur non autorisé");
+    throw new Error(NOT_AUTHORIZED);
   }
 };
 
@@ -1249,7 +1253,7 @@ const markFeasibilityAsComplete = async ({
       return updatedFeasibility;
     });
   } else {
-    throw new Error("Utilisateur non autorisé");
+    throw new Error(NOT_AUTHORIZED);
   }
 };
 

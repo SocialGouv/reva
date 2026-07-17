@@ -1,5 +1,6 @@
 import { Country, Department } from "@prisma/client";
 
+import { NOT_AUTHORIZED_CANDIDACY_MANAGE } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
@@ -687,8 +688,6 @@ describe("candidate information update", () => {
     expect(resp.statusCode).toEqual(200);
     const obj = resp.json();
     expect(obj).toHaveProperty("errors");
-    expect(obj.errors[0].message).toBe(
-      "Vous n'êtes pas autorisé à gérer cette candidature.",
-    );
+    expect(obj.errors[0].message).toBe(NOT_AUTHORIZED_CANDIDACY_MANAGE);
   });
 });

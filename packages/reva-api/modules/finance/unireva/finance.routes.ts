@@ -3,6 +3,7 @@ import { FastifyPluginAsync } from "fastify";
 
 import { canManageCandidacy } from "@/modules/candidacy/features/canManageCandidacy";
 import { UploadedFile } from "@/modules/shared/file/file.interface";
+import { NOT_AUTHORIZED_CANDIDACY_MANAGE } from "@/modules/shared/security/messages";
 
 import { addPaymentProof } from "./features/addPaymentProof";
 
@@ -56,7 +57,7 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
         });
         if (!auhtorization) {
           return reply.status(403).send({
-            err: "Vous n'êtes pas autorisé à gérer cette candidature.",
+            err: NOT_AUTHORIZED_CANDIDACY_MANAGE,
           });
         }
 

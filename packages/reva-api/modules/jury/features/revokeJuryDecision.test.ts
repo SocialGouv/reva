@@ -1,5 +1,6 @@
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "@/modules/certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
 import { graphql } from "@/modules/graphql/generated";
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
@@ -202,7 +203,7 @@ test("should throw error when user is not authorized", async () => {
     graphqlClient.request(revokeJuryDecisionMutation, {
       juryId: jury.id,
     }),
-  ).rejects.toThrowError("Utilisateur non autorisé");
+  ).rejects.toThrowError(NOT_AUTHORIZED);
 });
 
 test("certificateur can submit a jury result but cannot revoke his decision himself", async () => {
@@ -282,7 +283,7 @@ test("certificateur can submit a jury result but cannot revoke his decision hims
       juryId: jury.id,
       reason: "Trying to revoke as certificateur",
     }),
-  ).rejects.toThrowError("Utilisateur non autorisé");
+  ).rejects.toThrowError(NOT_AUTHORIZED);
 });
 
 test("should preserve jury history when revoking decision", async () => {

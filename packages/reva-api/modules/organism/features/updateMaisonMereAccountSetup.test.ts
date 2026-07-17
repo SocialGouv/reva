@@ -1,3 +1,4 @@
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createMaisonMereAapHelper } from "@/test/helpers/entities/create-maison-mere-aap-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
@@ -25,7 +26,7 @@ test("API should respond with error unauthorized user", async () => {
 
   expect(response.json()).toHaveProperty("errors");
   expect(response.json().data.organism_updateMaisonMereAccountSetup).toBeNull();
-  expect(response.json().errors[0].message).toMatch("Utilisateur non autorisé");
+  expect(response.json().errors[0].message).toMatch(NOT_AUTHORIZED);
 });
 
 test("API should let admin update MaisonMereAccountSetup and return data", async () => {

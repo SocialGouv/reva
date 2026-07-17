@@ -1,5 +1,7 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
+import { NOT_AUTHORIZED_CANDIDACY_MANAGE } from "@/modules/shared/security/messages";
+
 import { canManageDossierDeValidation as canManageDossierDeValidationFeature } from "../features/canManageDossierDeValidation";
 
 export const canManageDossierDeValidation =
@@ -19,7 +21,7 @@ export const canManageDossierDeValidation =
       keycloakId,
     });
     if (!authorized) {
-      throw new Error("Vous n'êtes pas autorisé à gérer cette candidature.");
+      throw new Error(NOT_AUTHORIZED_CANDIDACY_MANAGE);
     }
     return next(root, args, context, info);
   };

@@ -1,5 +1,7 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
+import { NOT_AUTHORIZED_CANDIDACY_ACCESS } from "@/modules/shared/security/messages";
+
 import { canAccessCandidacy as canAccessCandidacyFeature } from "../features/canAccessCandidacy";
 
 export const canAccessCandidacy =
@@ -17,7 +19,7 @@ export const canAccessCandidacy =
         keycloakId: context.auth.userInfo.sub,
       }))
     ) {
-      throw new Error("Vous n'êtes pas autorisé à accéder à cette candidature");
+      throw new Error(NOT_AUTHORIZED_CANDIDACY_ACCESS);
     }
     return next(root, args, context, info);
   };

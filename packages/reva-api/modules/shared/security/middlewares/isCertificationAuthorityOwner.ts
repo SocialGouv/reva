@@ -1,6 +1,7 @@
 import debug from "debug";
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
+import { NOT_AUTHORIZED_CERTIFICATION_AUTHORITY_ACCESS } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
 const log = debug("gql:security");
@@ -31,9 +32,7 @@ export const isCertificationAuthorityOwner =
     if (!context.auth.hasRole("manage_certification_authority_local_account")) {
       log("not authorized");
 
-      throw new Error(
-        "Vous n'êtes pas autorisé à consulter cette authorité de certification..",
-      );
+      throw new Error(NOT_AUTHORIZED_CERTIFICATION_AUTHORITY_ACCESS);
     }
 
     const account = await prismaClient.account.findUnique({
@@ -45,9 +44,7 @@ export const isCertificationAuthorityOwner =
     if (account?.certificationAuthorityId != certificationAuthorityId) {
       log("not authorized");
 
-      throw new Error(
-        "Vous n'êtes pas autorisé à consulter cette authorité de certification.",
-      );
+      throw new Error(NOT_AUTHORIZED_CERTIFICATION_AUTHORITY_ACCESS);
     }
 
     log("authorized");

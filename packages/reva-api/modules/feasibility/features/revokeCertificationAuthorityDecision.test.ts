@@ -6,6 +6,7 @@ import {
 import { v4 as uuidV4 } from "uuid";
 
 import { graphql } from "@/modules/graphql/generated";
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
@@ -265,7 +266,7 @@ describe("Révocation de la décision du dossier de faisabilité", () => {
           revokeCertificationAuthorityDecisionMutation,
           { feasibilityId: feasibility.id },
         ),
-      ).rejects.toThrowError("Utilisateur non autorisé");
+      ).rejects.toThrowError(NOT_AUTHORIZED);
     });
   });
 

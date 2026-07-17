@@ -1,9 +1,7 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
+import { NOT_AUTHORIZED_STRUCTURE_ACCESS } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
-
-const UNAUTHORIZED_ACCESS_ERROR =
-  "Vous n'êtes pas autorisé à accéder à cette structure";
 
 export const getIsCertificationAuthorityStructureMember =
   (next: IFieldResolver<unknown>) =>
@@ -39,7 +37,7 @@ export const getIsCertificationAuthorityStructureMember =
     });
 
     if (!userAccount) {
-      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
+      throw new Error(NOT_AUTHORIZED_STRUCTURE_ACCESS);
     }
 
     const targetCertificationAuthority =
@@ -50,7 +48,7 @@ export const getIsCertificationAuthorityStructureMember =
       });
 
     if (!targetCertificationAuthority) {
-      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
+      throw new Error(NOT_AUTHORIZED_STRUCTURE_ACCESS);
     }
 
     const certificationAuthorityStructureIds =
@@ -64,7 +62,7 @@ export const getIsCertificationAuthorityStructureMember =
       );
 
     if (!hasMatchingAuthorityStructure) {
-      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
+      throw new Error(NOT_AUTHORIZED_STRUCTURE_ACCESS);
     }
 
     return next(root, args, context, info);

@@ -1,5 +1,7 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
+import { NOT_AUTHORIZED_ORGANISM_ACCESS } from "@/modules/shared/security/messages";
+
 // Signature commune aux features de contrôle d'accès à un organisme.
 type OrganismAccessCheck = (params: {
   userRoles: KeyCloakUserRole[];
@@ -27,7 +29,7 @@ export const organismByIdArg =
         userKeycloakId: context.auth.userInfo.sub,
       }))
     ) {
-      throw new Error("Vous n'êtes pas autorisé à accéder à cet organisme");
+      throw new Error(NOT_AUTHORIZED_ORGANISM_ACCESS);
     }
     return next(root, args, context, info);
   };

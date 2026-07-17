@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 
+import { NOT_AUTHORIZED_CANDIDACY_MANAGE } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
@@ -31,7 +32,6 @@ const getActiveFeasibilityByCandidacyId = async ({
   });
 
 const ERROR_MESSAGES = {
-  UNAUTHORIZED: "Vous n'êtes pas autorisé à gérer cette candidature.",
   CANDIDACY_NOT_FOUND: "Candidature inexistante.",
 } as const;
 
@@ -88,7 +88,9 @@ describe("isFeasibilityManager", () => {
       });
 
       expect(resp.json()).toHaveProperty("errors");
-      expect(resp.json().errors[0].message).toBe(ERROR_MESSAGES.UNAUTHORIZED);
+      expect(resp.json().errors[0].message).toBe(
+        NOT_AUTHORIZED_CANDIDACY_MANAGE,
+      );
     });
 
     test("should deny access when candidacy does not exist", async () => {
@@ -147,7 +149,9 @@ describe("isFeasibilityManager", () => {
       });
 
       expect(resp.json()).toHaveProperty("errors");
-      expect(resp.json().errors[0].message).toBe(ERROR_MESSAGES.UNAUTHORIZED);
+      expect(resp.json().errors[0].message).toBe(
+        NOT_AUTHORIZED_CANDIDACY_MANAGE,
+      );
     });
 
     test("should deny access when feasibility is not active", async () => {
@@ -226,7 +230,9 @@ describe("isFeasibilityManager", () => {
       });
 
       expect(resp.json()).toHaveProperty("errors");
-      expect(resp.json().errors[0].message).toBe(ERROR_MESSAGES.UNAUTHORIZED);
+      expect(resp.json().errors[0].message).toBe(
+        NOT_AUTHORIZED_CANDIDACY_MANAGE,
+      );
     });
 
     test("should deny access when department does not match", async () => {
@@ -265,7 +271,9 @@ describe("isFeasibilityManager", () => {
       });
 
       expect(resp.json()).toHaveProperty("errors");
-      expect(resp.json().errors[0].message).toBe(ERROR_MESSAGES.UNAUTHORIZED);
+      expect(resp.json().errors[0].message).toBe(
+        NOT_AUTHORIZED_CANDIDACY_MANAGE,
+      );
     });
 
     test("should deny access when feasibility is not active", async () => {
@@ -310,7 +318,9 @@ describe("isFeasibilityManager", () => {
       });
 
       expect(resp.json()).toHaveProperty("errors");
-      expect(resp.json().errors[0].message).toBe(ERROR_MESSAGES.UNAUTHORIZED);
+      expect(resp.json().errors[0].message).toBe(
+        NOT_AUTHORIZED_CANDIDACY_MANAGE,
+      );
     });
   });
 
@@ -324,7 +334,9 @@ describe("isFeasibilityManager", () => {
       });
 
       expect(resp.json()).toHaveProperty("errors");
-      expect(resp.json().errors[0].message).toBe(ERROR_MESSAGES.UNAUTHORIZED);
+      expect(resp.json().errors[0].message).toBe(
+        NOT_AUTHORIZED_CANDIDACY_MANAGE,
+      );
     });
   });
 });

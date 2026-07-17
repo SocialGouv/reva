@@ -1,5 +1,9 @@
 import { faker } from "@faker-js/faker";
 
+import {
+  NOT_AUTHORIZED,
+  SESSION_EXPIRED,
+} from "@/modules/shared/security/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 
@@ -8,9 +12,6 @@ import { injectGraphql } from "@/test/helpers/graphql-helper";
 // on prouve qu'un candidat est refusé sur chacune. La création de demande et les
 // champs SubscriptionRequest.* sont volontairement publics (isAnyone): aucun refus
 // à prouver, l'accès reste limité à la demande que l'appelant vient de créer.
-
-const NOT_AUTHORIZED = "Utilisateur non autorisé";
-const UNAUTHENTICATED = "Votre session a expiré, veuillez vous reconnecter.";
 
 const asRole = (role: KeyCloakUserRole) =>
   authorizationHeaderForUser({ role, keycloakId: faker.string.uuid() });
@@ -35,7 +36,7 @@ describe("subscription - autorisation des resolvers", () => {
 
     test("un appelant non authentifié est refusé", async () => {
       const resp = await call();
-      expect(resp.json().errors[0].message).toBe(UNAUTHENTICATED);
+      expect(resp.json().errors[0].message).toBe(SESSION_EXPIRED);
     });
   });
 

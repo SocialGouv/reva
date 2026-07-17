@@ -1,14 +1,15 @@
 import { faker } from "@faker-js/faker";
 
+import {
+  NOT_AUTHORIZED,
+  SESSION_EXPIRED,
+} from "@/modules/shared/security/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 // Autorisation de chaque resolver account : qui passe, qui est refusé.
 // Un cas "autorisé" est prouvé par un échec de validation métier AVANT tout appel Keycloak
 // (message métier != message d'autorisation) ; un cas "public" par un appel non authentifié.
-
-const NOT_AUTHORIZED = "Utilisateur non autorisé";
-const UNAUTHENTICATED = "Votre session a expiré, veuillez vous reconnecter.";
 
 const asRole = (role: KeyCloakUserRole) =>
   authorizationHeaderForUser({ role, keycloakId: faker.string.uuid() });
@@ -44,7 +45,7 @@ describe("account - autorisation des resolvers", () => {
 
     test("non authentifié : refusé", async () => {
       const resp = await call();
-      expect(resp.json().errors[0].message).toBe(UNAUTHENTICATED);
+      expect(resp.json().errors[0].message).toBe(SESSION_EXPIRED);
     });
   });
 
@@ -158,7 +159,7 @@ describe("account - autorisation des resolvers", () => {
     // token invalide -> erreur de décodage JWT, jamais un refus d'autorisation.
     const message = resp.json().errors[0].message;
     expect(message).not.toBe(NOT_AUTHORIZED);
-    expect(message).not.toBe(UNAUTHENTICATED);
+    expect(message).not.toBe(SESSION_EXPIRED);
   });
 
   test("account_resendEmailOtp : public (atteint la feature)", async () => {

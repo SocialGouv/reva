@@ -1,3 +1,4 @@
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { getLastProfessionalCgu } from "./getLastProfessionalCgu";
@@ -8,7 +9,7 @@ export const acceptCgu = async (context: {
 }): Promise<boolean> => {
   const { hasRole, keycloakId } = context;
   if (!hasRole("gestion_maison_mere_aap")) {
-    throw new Error("Utilisateur non autorisé");
+    throw new Error(NOT_AUTHORIZED);
   }
 
   const lastProfessionalCgu = await getLastProfessionalCgu();

@@ -1,5 +1,6 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
@@ -25,7 +26,7 @@ export const isOwnerOrCanManageOrganism =
     });
 
     if (!account) {
-      throw new Error("Utilisateur non autorisé");
+      throw new Error(NOT_AUTHORIZED);
     }
 
     const maisonMereAAP = await getMaisonMereAAPByGestionnaireAccountId({
@@ -47,7 +48,7 @@ export const isOwnerOrCanManageOrganism =
       !organismOnAccounts.some((oa) => oa.organismId === organismId) &&
       !maisonMereAAP
     ) {
-      throw new Error("Utilisateur non autorisé");
+      throw new Error(NOT_AUTHORIZED);
     }
 
     return next(root, args, context, info);

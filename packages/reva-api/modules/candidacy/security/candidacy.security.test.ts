@@ -1,3 +1,4 @@
+import { NOT_AUTHORIZED_CANDIDACY_ACCESS } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
@@ -70,9 +71,7 @@ test("Random candidate should not be able to access the candidacy", async () => 
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
-  expect(obj.errors[0].message).toEqual(
-    "Vous n'êtes pas autorisé à accéder à cette candidature",
-  );
+  expect(obj.errors[0].message).toEqual(NOT_AUTHORIZED_CANDIDACY_ACCESS);
 });
 
 test("Aap associated to the candidacy should be able to access it", async () => {
@@ -105,9 +104,7 @@ test("Random aap should not be able to access the candidacy", async () => {
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
-  expect(obj.errors[0].message).toEqual(
-    "Vous n'êtes pas autorisé à accéder à cette candidature",
-  );
+  expect(obj.errors[0].message).toEqual(NOT_AUTHORIZED_CANDIDACY_ACCESS);
 });
 
 test("Maison mere manager of the aap associated to the candidacy should be able to access it", async () => {
@@ -140,9 +137,7 @@ test("Random maison mere manager should not be able to access the candidacy", as
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
-  expect(obj.errors[0].message).toEqual(
-    "Vous n'êtes pas autorisé à accéder à cette candidature",
-  );
+  expect(obj.errors[0].message).toEqual(NOT_AUTHORIZED_CANDIDACY_ACCESS);
 });
 
 test("Certification authority manager of the feasibility file of the candidacy should be able to access it", async () => {
@@ -174,9 +169,7 @@ test("Random Certification authority manager should not be able to access the ca
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
-  expect(obj.errors[0].message).toEqual(
-    "Vous n'êtes pas autorisé à accéder à cette candidature",
-  );
+  expect(obj.errors[0].message).toEqual(NOT_AUTHORIZED_CANDIDACY_ACCESS);
 });
 
 test("Certification local account of the feasibility file of the candidacy should be able to access it", async () => {
@@ -241,7 +234,5 @@ test("Random Certification local account should not be able to access the candid
   });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
-  expect(obj.errors[0].message).toEqual(
-    "Vous n'êtes pas autorisé à accéder à cette candidature",
-  );
+  expect(obj.errors[0].message).toEqual(NOT_AUTHORIZED_CANDIDACY_ACCESS);
 });

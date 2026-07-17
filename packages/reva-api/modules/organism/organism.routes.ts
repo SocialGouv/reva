@@ -2,6 +2,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
 import { logger } from "@/modules/shared/logger/logger";
+import { NOT_AUTHORIZED_CANDIDACY_MANAGE } from "@/modules/shared/security/messages";
 
 import { UploadedFile } from "../shared/file/file.interface";
 
@@ -106,7 +107,7 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
 
         if (!authorized) {
           return reply.status(403).send({
-            err: "Vous n'êtes pas autorisé à gérer cette candidature.",
+            err: NOT_AUTHORIZED_CANDIDACY_MANAGE,
           });
         }
 

@@ -3,6 +3,11 @@ import { isBefore } from "date-fns";
 import { FastifyPluginAsync } from "fastify";
 
 import { logger } from "@/modules/shared/logger/logger";
+import {
+  NOT_AUTHORIZED_CANDIDACY_MANAGE,
+  NOT_AUTHORIZED_FILE_ACCESS,
+  NOT_AUTHORIZED_FILE_VIEW,
+} from "@/modules/shared/security/messages";
 import { isCandidateOwnerOfCandidacyFeature } from "@/modules/shared/security/middlewares/isCandidateOwnerOfCandidacy.security";
 import { prismaClient } from "@/prisma/client";
 
@@ -74,7 +79,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
 
         if (!authorized) {
           return reply.status(403).send({
-            err: "Vous n'êtes pas autorisé à accéder à ce fichier.",
+            err: NOT_AUTHORIZED_FILE_ACCESS,
           });
         }
 
@@ -99,7 +104,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
           ].includes(fileId)
         ) {
           return reply.status(403).send({
-            err: "Vous n'êtes pas autorisé à visualiser ce fichier.",
+            err: NOT_AUTHORIZED_FILE_VIEW,
           });
         }
 
@@ -175,7 +180,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
 
       if (!authorized && !isCandidateOwner) {
         return reply.status(403).send({
-          err: "Vous n'êtes pas autorisé à gérer cette candidature.",
+          err: NOT_AUTHORIZED_CANDIDACY_MANAGE,
         });
       }
 

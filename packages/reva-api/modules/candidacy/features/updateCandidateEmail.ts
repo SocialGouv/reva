@@ -1,4 +1,5 @@
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const updateCandidateEmail = async ({
@@ -18,7 +19,7 @@ export const updateCandidateEmail = async ({
     throw new Error(`Ce candidat n'existe pas`);
   }
   if (!candidateToUpdate.keycloakId) {
-    throw new Error("Utilisateur non autorisé");
+    throw new Error(NOT_AUTHORIZED);
   }
 
   // Check if candidate with newEmail exsits

@@ -1,9 +1,7 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
+import { NOT_AUTHORIZED_RESOURCE_ACCESS } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
-
-const UNAUTHORIZED_ACCESS_ERROR =
-  "Vous n'êtes pas autorisé à accéder à cette ressource";
 
 export const isExperienceOfCandidacy =
   (next: IFieldResolver<unknown>) =>
@@ -22,7 +20,7 @@ export const isExperienceOfCandidacy =
       args.experienceId || args.input?.experienceId || root?.experienceId;
 
     if (!candidacyId || !experienceId) {
-      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
+      throw new Error(NOT_AUTHORIZED_RESOURCE_ACCESS);
     }
 
     const experience = await prismaClient.experience.findUnique({
@@ -34,7 +32,7 @@ export const isExperienceOfCandidacy =
     });
 
     if (!experience) {
-      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
+      throw new Error(NOT_AUTHORIZED_RESOURCE_ACCESS);
     }
 
     return next(root, args, context, info);

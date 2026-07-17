@@ -10,6 +10,7 @@ import {
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
 import { logger } from "@/modules/shared/logger/logger";
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { hasRole } from "@/modules/shared/security/middlewares";
 import { isAdmin, isAnyone } from "@/modules/shared/security/presets";
 import { withPolicies } from "@/modules/shared/security/withPolicies";
@@ -436,7 +437,7 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) => {
       if (context.auth.userInfo?.sub == undefined) {
-        throw new Error("Utilisateur non autorisé");
+        throw new Error(NOT_AUTHORIZED);
       }
 
       const statutValidationInformationsJuridiquesMaisonMereAAP =

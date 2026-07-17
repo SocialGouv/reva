@@ -4,6 +4,11 @@ import { FastifyPluginAsync } from "fastify";
 import { UploadedFile } from "@/modules/shared/file/file.interface";
 import { getDownloadLink } from "@/modules/shared/file/file.service";
 import { logger } from "@/modules/shared/logger/logger";
+import {
+  NOT_AUTHORIZED_CANDIDACY_MANAGE,
+  NOT_AUTHORIZED_FILE_ACCESS,
+  NOT_AUTHORIZED_FILE_VIEW,
+} from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { canManageJury } from "./features/canManageJury";
@@ -61,13 +66,13 @@ export const juryRoute: FastifyPluginAsync = async (server) => {
 
         if (!authorized) {
           return reply.status(403).send({
-            err: "Vous n'êtes pas autorisé à accéder à ce fichier.",
+            err: NOT_AUTHORIZED_FILE_ACCESS,
           });
         }
 
         if (![jury?.convocationFileId].includes(fileId)) {
           return reply.status(403).send({
-            err: "Vous n'êtes pas autorisé à visualiser ce fichier.",
+            err: NOT_AUTHORIZED_FILE_VIEW,
           });
         }
 
@@ -167,7 +172,7 @@ export const juryRoute: FastifyPluginAsync = async (server) => {
 
       if (!authorized) {
         return reply.status(403).send({
-          err: "Vous n'êtes pas autorisé à gérer cette candidature.",
+          err: NOT_AUTHORIZED_CANDIDACY_MANAGE,
         });
       }
 

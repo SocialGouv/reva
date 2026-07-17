@@ -1,6 +1,7 @@
 import debug from "debug";
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
+import { NOT_AUTHORIZED_LOCAL_ACCOUNT_ACCESS } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
 const log = debug("gql:security");
@@ -25,9 +26,7 @@ export const isCertificationAuthorityLocalAccountManager =
     if (!context.auth.hasRole("manage_certification_authority_local_account")) {
       log("not authorized");
 
-      throw new Error(
-        "Vous n'êtes pas autorisé à consulter ce compte collaborateur.",
-      );
+      throw new Error(NOT_AUTHORIZED_LOCAL_ACCOUNT_ACCESS);
     }
 
     const account = await prismaClient.account.findUnique({
@@ -39,9 +38,7 @@ export const isCertificationAuthorityLocalAccountManager =
     if (!account?.certificationAuthorityId) {
       log("not authorized");
 
-      throw new Error(
-        "Vous n'êtes pas autorisé à consulter ce compte collaborateur.",
-      );
+      throw new Error(NOT_AUTHORIZED_LOCAL_ACCOUNT_ACCESS);
     }
 
     const certificationAuthorityLocalAccount =
@@ -55,9 +52,7 @@ export const isCertificationAuthorityLocalAccountManager =
     if (!certificationAuthorityLocalAccount) {
       log("not authorized");
 
-      throw new Error(
-        "Vous n'êtes pas autorisé à consulter ce compte collaborateur.",
-      );
+      throw new Error(NOT_AUTHORIZED_LOCAL_ACCOUNT_ACCESS);
     }
 
     log("authorized");

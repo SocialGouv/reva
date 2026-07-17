@@ -1,15 +1,16 @@
 import { faker } from "@faker-js/faker";
 
+import {
+  NOT_AUTHORIZED,
+  NOT_AUTHORIZED_ORGANISM_ACCESS,
+  SESSION_EXPIRED as UNAUTHENTICATED,
+} from "@/modules/shared/security/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createAccountHelper } from "@/test/helpers/entities/create-account-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 // Autorisation de chaque resolver organism : qui passe, qui est refusé.
-
-const NOT_AUTHORIZED = "Utilisateur non autorisé";
-const UNAUTHENTICATED = "Votre session a expiré, veuillez vous reconnecter.";
-const NOT_ORGANISM_OWNER = "Vous n'êtes pas autorisé à accéder à cet organisme";
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
@@ -159,7 +160,9 @@ describe("organism - autorisation des resolvers", () => {
           autreOrganism.maisonMereAAP!.gestionnaire.keycloakId,
         ),
       );
-      expect(resp.json().errors[0].message).toBe(NOT_ORGANISM_OWNER);
+      expect(resp.json().errors[0].message).toBe(
+        NOT_AUTHORIZED_ORGANISM_ACCESS,
+      );
     });
 
     // Non-régression : même cause, branche `manage_candidacy`.
@@ -173,7 +176,9 @@ describe("organism - autorisation des resolvers", () => {
           autreOrganism.organismOnAccounts[0].account.keycloakId,
         ),
       );
-      expect(resp.json().errors[0].message).toBe(NOT_ORGANISM_OWNER);
+      expect(resp.json().errors[0].message).toBe(
+        NOT_AUTHORIZED_ORGANISM_ACCESS,
+      );
     });
 
     test("un candidate : refusé", async () => {

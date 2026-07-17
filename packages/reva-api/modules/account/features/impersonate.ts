@@ -1,6 +1,7 @@
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
 import { generateJwt, getJWTContent } from "@/modules/shared/auth/jwt.helper";
 import { BACKEND_BASE_URL } from "@/modules/shared/config/config";
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
 import {
@@ -49,7 +50,7 @@ const getImpersonateTokenForAccount = async (
   const { hasRole } = context;
 
   if (!hasRole("admin") && !hasRole("gestion_maison_mere_aap")) {
-    throw new Error("Utilisateur non autorisé");
+    throw new Error(NOT_AUTHORIZED);
   }
 
   const { accountId } = params;
@@ -116,7 +117,7 @@ const getImpersonateTokenForCandidate = async (
 ): Promise<string> => {
   const { hasRole } = context;
   if (!hasRole("admin")) {
-    throw new Error("Utilisateur non autorisé");
+    throw new Error(NOT_AUTHORIZED);
   }
 
   const { candidateId, candidacyId } = params;

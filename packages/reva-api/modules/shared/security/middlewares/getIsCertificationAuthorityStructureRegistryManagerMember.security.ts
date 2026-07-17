@@ -1,9 +1,7 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
+import { NOT_AUTHORIZED_STRUCTURE_ACCESS } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
-
-const UNAUTHORIZED_ACCESS_ERROR =
-  "Vous n'êtes pas autorisé à accéder à cette structure";
 
 export const getIsCertificationAuthorityStructureRegistryManagerMember =
   (next: IFieldResolver<unknown>) =>
@@ -22,7 +20,7 @@ export const getIsCertificationAuthorityStructureRegistryManagerMember =
       root?.id;
 
     if (!targetRegistryManagerId) {
-      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
+      throw new Error(NOT_AUTHORIZED_STRUCTURE_ACCESS);
     }
 
     const userAccount = await prismaClient.account.findUnique({
@@ -44,7 +42,7 @@ export const getIsCertificationAuthorityStructureRegistryManagerMember =
       });
 
     if (!userRegistryManager) {
-      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
+      throw new Error(NOT_AUTHORIZED_STRUCTURE_ACCESS);
     }
 
     const targetRegistryManager =
@@ -60,7 +58,7 @@ export const getIsCertificationAuthorityStructureRegistryManagerMember =
       });
 
     if (!targetRegistryManager) {
-      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
+      throw new Error(NOT_AUTHORIZED_STRUCTURE_ACCESS);
     }
 
     const hasMatchingAuthorityStructure =
@@ -68,7 +66,7 @@ export const getIsCertificationAuthorityStructureRegistryManagerMember =
       targetRegistryManager.certificationAuthorityStructure?.id;
 
     if (!hasMatchingAuthorityStructure) {
-      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
+      throw new Error(NOT_AUTHORIZED_STRUCTURE_ACCESS);
     }
 
     return next(root, args, context, info);

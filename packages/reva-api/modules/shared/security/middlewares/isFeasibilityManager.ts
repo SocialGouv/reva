@@ -1,6 +1,7 @@
 import debug from "debug";
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
+import { NOT_AUTHORIZED_CANDIDACY_MANAGE } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
 const log = debug("gql:security");
@@ -30,7 +31,7 @@ export const isFeasibilityManager =
       });
 
       if (!candidacyFeasibility || !account) {
-        throw new Error("Vous n'êtes pas autorisé à gérer cette candidature.");
+        throw new Error(NOT_AUTHORIZED_CANDIDACY_MANAGE);
       }
 
       if (
@@ -57,7 +58,7 @@ export const isFeasibilityManager =
       });
 
       if (!account) {
-        throw new Error("Vous n'êtes pas autorisé à gérer cette candidature.");
+        throw new Error(NOT_AUTHORIZED_CANDIDACY_MANAGE);
       }
 
       //use the accountId instead of account:{keycloadId ...} in order to be able to use a findUnique and let prisma batch the queries
@@ -67,7 +68,7 @@ export const isFeasibilityManager =
         });
 
       if (!certificationAuthorityLocalAccount) {
-        throw new Error("Vous n'êtes pas autorisé à gérer cette candidature.");
+        throw new Error(NOT_AUTHORIZED_CANDIDACY_MANAGE);
       }
 
       const hasCandidacy =
@@ -90,5 +91,5 @@ export const isFeasibilityManager =
     }
 
     log("not authorized");
-    throw new Error("Vous n'êtes pas autorisé à gérer cette candidature.");
+    throw new Error(NOT_AUTHORIZED_CANDIDACY_MANAGE);
   };

@@ -4,6 +4,7 @@ import { candidacySearchWord } from "@/modules/candidacy/utils/candidacy.helper"
 import { getCertificationAuthorityLocalAccountByAccountId } from "@/modules/certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { DossierDeValidationStatusFilter } from "../types/dossierDeValidationStatusFilter.type";
@@ -45,7 +46,7 @@ export const getActiveDossiersDeValidation = async ({
       certificationAuthorityLocalAccountId
     ) {
       if (!account.certificationAuthorityId) {
-        throw new Error("Utilisateur non autorisé");
+        throw new Error(NOT_AUTHORIZED);
       }
 
       const certificationAuthorityLocalAccount =

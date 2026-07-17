@@ -3,6 +3,7 @@ import { Account } from "@prisma/client";
 import { graphql } from "@/modules/graphql/generated";
 import { UpdateCertificationAuthorityInput } from "@/modules/graphql/generated/graphql";
 import * as getKeycloakAdminModule from "@/modules/shared/auth/getKeycloakAdmin";
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
@@ -294,7 +295,7 @@ test("should refuse to to update a certification authority's contact info as a c
         contactEmail: "new email",
       },
     }),
-  ).rejects.toThrowError("Utilisateur non autorisé");
+  ).rejects.toThrowError(NOT_AUTHORIZED);
 });
 
 test("should refuse to to update a certification authority's contact info as a candidate", async () => {
@@ -316,7 +317,7 @@ test("should refuse to to update a certification authority's contact info as a c
         contactEmail: "new email",
       },
     }),
-  ).rejects.toThrowError("Utilisateur non autorisé");
+  ).rejects.toThrowError(NOT_AUTHORIZED);
 });
 
 test("should update all of a certification authority's local accounts contact info when isGlobalContact is true", async () => {

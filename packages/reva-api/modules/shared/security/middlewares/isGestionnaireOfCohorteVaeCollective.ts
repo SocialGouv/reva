@@ -1,9 +1,7 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
+import { NOT_AUTHORIZED_RESOURCE_ACCESS } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
-
-const UNAUTHORIZED_ACCESS_ERROR =
-  "Vous n'êtes pas autorisé à accéder à cette ressource";
 
 export const isGestionnaireOfCohorteVaeCollective =
   (next: IFieldResolver<unknown>) =>
@@ -22,7 +20,7 @@ export const isGestionnaireOfCohorteVaeCollective =
       root?.id;
 
     if (!commanditaireVaeCollectiveId) {
-      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
+      throw new Error(NOT_AUTHORIZED_RESOURCE_ACCESS);
     }
 
     const commanditaireVaeCollective =
@@ -36,7 +34,7 @@ export const isGestionnaireOfCohorteVaeCollective =
       });
 
     if (!commanditaireVaeCollective) {
-      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
+      throw new Error(NOT_AUTHORIZED_RESOURCE_ACCESS);
     }
 
     const cohorteVaeCollectiveId =
@@ -45,7 +43,7 @@ export const isGestionnaireOfCohorteVaeCollective =
       root?.cohorteVaeCollectiveId;
 
     if (!cohorteVaeCollectiveId) {
-      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
+      throw new Error(NOT_AUTHORIZED_RESOURCE_ACCESS);
     }
 
     const cohorteVaeCollective =
@@ -57,7 +55,7 @@ export const isGestionnaireOfCohorteVaeCollective =
       });
 
     if (!cohorteVaeCollective) {
-      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
+      throw new Error(NOT_AUTHORIZED_RESOURCE_ACCESS);
     }
 
     return next(root, args, context, info);

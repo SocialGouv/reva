@@ -4,6 +4,7 @@ import { getAccountByKeycloakId } from "@/modules/account/features/getAccountByK
 import { candidacySearchWord } from "@/modules/candidacy/utils/candidacy.helper";
 import { getCertificationAuthorityLocalAccountByAccountId } from "@/modules/certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
 import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { JuryStatusFilter } from "../types/juryStatusFilter.type";
@@ -64,7 +65,7 @@ export const getActiveJuryCountByCategory = async ({
     certificationAuthorityLocalAccountId
   ) {
     if (!account?.certificationAuthorityId) {
-      throw new Error("Utilisateur non autorisé");
+      throw new Error(NOT_AUTHORIZED);
     }
 
     certificationAuthorityLocalAccount =

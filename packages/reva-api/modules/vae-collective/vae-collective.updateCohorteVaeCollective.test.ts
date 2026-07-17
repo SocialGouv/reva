@@ -1,3 +1,4 @@
+import { NOT_AUTHORIZED_RESOURCE_ACCESS } from "@/modules/shared/security/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
@@ -106,9 +107,7 @@ describe("update nom cohorte vae collective", () => {
         cohorteVaeCollectiveId: anotherCohorteVaeCollective.id,
         nomCohorteVaeCollective: "Nouveau nom",
       }),
-    ).rejects.toThrowError(
-      "Vous n'êtes pas autorisé à accéder à cette ressource",
-    );
+    ).rejects.toThrowError(NOT_AUTHORIZED_RESOURCE_ACCESS);
   });
 });
 
@@ -290,9 +289,7 @@ describe("update certification cohorte vae collective", () => {
           certificationIds: [certification.id],
         },
       ),
-    ).rejects.toThrowError(
-      "Vous n'êtes pas autorisé à accéder à cette ressource",
-    );
+    ).rejects.toThrowError(NOT_AUTHORIZED_RESOURCE_ACCESS);
   });
 });
 
@@ -525,8 +522,6 @@ describe("update organism cohorte vae collective", () => {
         cohorteVaeCollectiveId: anotherCohorteVaeCollective.id,
         organismId: anotherOrganism.id,
       }),
-    ).rejects.toThrowError(
-      "Vous n'êtes pas autorisé à accéder à cette ressource",
-    );
+    ).rejects.toThrowError(NOT_AUTHORIZED_RESOURCE_ACCESS);
   });
 });

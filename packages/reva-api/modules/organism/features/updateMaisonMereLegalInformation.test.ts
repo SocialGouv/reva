@@ -1,6 +1,7 @@
 import { Account } from "@prisma/client";
 
 import * as updateAccount from "@/modules/account/features/updateAccount";
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createMaisonMereAapHelper } from "@/test/helpers/entities/create-maison-mere-aap-helper";
@@ -50,7 +51,7 @@ test("should not allow a gestionnaire to update maison mere legal information", 
   });
 
   expect(response.json()).toHaveProperty("errors");
-  expect(response.json().errors[0].message).toMatch("Utilisateur non autorisé");
+  expect(response.json().errors[0].message).toMatch(NOT_AUTHORIZED);
 });
 
 test("should allow admin to update maison mere legal information", async () => {

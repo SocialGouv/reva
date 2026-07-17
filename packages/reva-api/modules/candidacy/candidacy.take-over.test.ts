@@ -1,5 +1,6 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
@@ -30,7 +31,7 @@ test("candidacy_takeOver should fail when not authenticated", async function () 
     graphqlClient.request(candidacy_takeOver, {
       candidacyId: candidacy.id,
     }),
-  ).rejects.toThrowError("Utilisateur non autorisé");
+  ).rejects.toThrowError(NOT_AUTHORIZED);
 });
 
 test("candidacy_takeOver should fail when user is admin", async function () {
@@ -57,7 +58,7 @@ test("candidacy_takeOver should fail when user is admin", async function () {
     graphqlClient.request(candidacy_takeOver, {
       candidacyId: candidacy.id,
     }),
-  ).rejects.toThrowError("Utilisateur non autorisé");
+  ).rejects.toThrowError(NOT_AUTHORIZED);
 });
 
 test("candidacy_takeOver should fail when candidacy manager has wrong organism", async function () {

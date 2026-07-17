@@ -1,3 +1,4 @@
+import { NOT_AUTHORIZED_CANDIDACY_ACCESS } from "@/modules/shared/security/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
@@ -69,9 +70,7 @@ test("a candidate can't get the information of another candidate", async () => {
     graphqlClient.request(candidate_getCandidateById, {
       id: anotherCandidate.id,
     }),
-  ).rejects.toThrowError(
-    "Vous n'êtes pas autorisé à accéder à cette candidature",
-  );
+  ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
 });
 
 test("a candidate can't get the information of an invalid candidate ID", async () => {
@@ -101,9 +100,7 @@ test("a candidate can't get the information of an invalid candidate ID", async (
     graphqlClient.request(candidate_getCandidateById, {
       id: "invalid-id",
     }),
-  ).rejects.toThrowError(
-    "Vous n'êtes pas autorisé à accéder à cette candidature",
-  );
+  ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
 });
 
 test("an admin can get the information of a candidate", async () => {

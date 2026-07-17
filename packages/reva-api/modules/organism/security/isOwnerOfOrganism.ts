@@ -1,5 +1,7 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
+import { NOT_AUTHORIZED_ORGANISM_ACCESS } from "@/modules/shared/security/messages";
+
 import { isUserOwnerOfOrganism } from "../features/isUserOwnerOfOrganism";
 
 export const isOwnerOfOrganism =
@@ -21,7 +23,7 @@ export const isOwnerOfOrganism =
         userKeycloakId: context.auth.userInfo.sub,
       }))
     ) {
-      throw new Error("Vous n'êtes pas autorisé à accéder à cet organisme");
+      throw new Error(NOT_AUTHORIZED_ORGANISM_ACCESS);
     }
     return next(root, args, context, info);
   };

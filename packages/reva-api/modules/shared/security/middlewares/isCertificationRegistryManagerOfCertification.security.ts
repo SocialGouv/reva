@@ -1,6 +1,7 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
 import { isUserCertificationRegistryManagerOfCertification } from "@/modules/certification-authority/features/isUserCertificationRegistryManagerOfCertification";
+import { NOT_AUTHORIZED_CERTIFICATION_ACCESS } from "@/modules/shared/security/messages";
 
 export const isCertificationRegistryManagerOfCertification =
   (next: IFieldResolver<unknown>) =>
@@ -22,9 +23,7 @@ export const isCertificationRegistryManagerOfCertification =
         userKeycloakId: context.auth.userInfo.sub,
       }))
     ) {
-      throw new Error(
-        "Vous n'êtes pas autorisé à accéder à cette certification",
-      );
+      throw new Error(NOT_AUTHORIZED_CERTIFICATION_ACCESS);
     }
     return next(root, args, context, info);
   };

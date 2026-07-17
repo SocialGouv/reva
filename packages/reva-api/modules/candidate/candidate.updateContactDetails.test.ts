@@ -1,3 +1,4 @@
+import { NOT_AUTHORIZED_CANDIDACY_MANAGE } from "@/modules/shared/security/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
@@ -117,7 +118,7 @@ describe("candidate information update", () => {
     expect(resp.statusCode).toEqual(200);
     expect(resp.json()).toHaveProperty("errors");
     expect(resp.json().errors[0].message).toEqual(
-      "Vous n'êtes pas autorisé à gérer cette candidature.",
+      NOT_AUTHORIZED_CANDIDACY_MANAGE,
     );
   });
 

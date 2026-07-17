@@ -1,3 +1,4 @@
+import { NOT_AUTHORIZED_CANDIDACY_ACCESS } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
@@ -146,9 +147,7 @@ test("get non existing candidacy should yield errors", async () => {
     graphqlClient.request(getCandidacyById, {
       id: "fb53327b-8ed9-4238-8e80-007fa1ddcfe6",
     }),
-  ).rejects.toThrowError(
-    "Vous n'êtes pas autorisé à accéder à cette candidature",
-  );
+  ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
 });
 
 test("a user can't modify the account information of another candidate", async () => {
@@ -183,9 +182,7 @@ test("a user can't modify the account information of another candidate", async (
       candidateId: anotherCandidate.id,
       candidateData: { phone: "0612345678" },
     }),
-  ).rejects.toThrowError(
-    "Vous n'êtes pas autorisé à accéder à cette candidature",
-  );
+  ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
 });
 
 test("a candidate can modify all his account information", async () => {

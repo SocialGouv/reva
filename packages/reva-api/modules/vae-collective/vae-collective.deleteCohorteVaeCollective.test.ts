@@ -1,3 +1,4 @@
+import { NOT_AUTHORIZED_RESOURCE_ACCESS } from "@/modules/shared/security/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCohorteVaeCollectiveHelper } from "@/test/helpers/entities/create-vae-collective-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
@@ -133,8 +134,6 @@ describe("delete cohorte vae collective", () => {
           cohorteVaeCollective.commanditaireVaeCollectiveId,
         cohorteVaeCollectiveId: anotherCohorteVaeCollective.id,
       }),
-    ).rejects.toThrowError(
-      "Vous n'êtes pas autorisé à accéder à cette ressource",
-    );
+    ).rejects.toThrowError(NOT_AUTHORIZED_RESOURCE_ACCESS);
   });
 });

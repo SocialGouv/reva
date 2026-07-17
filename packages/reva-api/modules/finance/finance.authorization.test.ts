@@ -1,5 +1,9 @@
 import { faker } from "@faker-js/faker";
 
+import {
+  NOT_AUTHORIZED,
+  SESSION_EXPIRED,
+} from "@/modules/shared/security/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 
@@ -8,9 +12,6 @@ import { injectGraphql } from "@/test/helpers/graphql-helper";
 // resolver de premier niveau. Les champs Candidacy.* et les mutations de
 // paiement partagent le preset isAdminOrCandidacyCompanion, dont le refus est
 // prouvé ici; withPolicies garantit par ailleurs qu'aucun resolver n'est sans policy.
-
-const NOT_AUTHORIZED = "Utilisateur non autorisé";
-const UNAUTHENTICATED = "Votre session a expiré, veuillez vous reconnecter.";
 
 const asRole = (role: KeyCloakUserRole) =>
   authorizationHeaderForUser({ role, keycloakId: faker.string.uuid() });
@@ -77,7 +78,7 @@ describe("finance - autorisation des resolvers", () => {
 
     test("un appelant non authentifié est refusé", async () => {
       const resp = await call();
-      expect(resp.json().errors[0].message).toBe(UNAUTHENTICATED);
+      expect(resp.json().errors[0].message).toBe(SESSION_EXPIRED);
     });
   });
 

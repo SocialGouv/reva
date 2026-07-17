@@ -1,4 +1,8 @@
 import * as getKeycloakAdminModule from "@/modules/shared/auth/getKeycloakAdmin";
+import {
+  NOT_AUTHORIZED,
+  NOT_AUTHORIZED_MAISON_MERE_ACCESS,
+} from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 import { attachOrganismToAllConventionCollectiveHelper } from "@/test/helpers/attach-organism-to-all-ccn-helper";
 import { attachOrganismToAllDegreesHelper } from "@/test/helpers/attach-organism-to-all-degrees-helper";
@@ -144,9 +148,7 @@ describe("MaisonMereAAP resolvers", () => {
         graphqlClient.request(maisonMereAAPComptesCollaborateursQuery, {
           maisonMereAAPId: otherMaisonMereAAP.id,
         }),
-      ).rejects.toThrowError(
-        "Vous n'êtes pas autorisé à accéder à cette maison mère",
-      );
+      ).rejects.toThrowError(NOT_AUTHORIZED_MAISON_MERE_ACCESS);
     });
 
     it("should return the compte collaborateur by id", async () => {
@@ -217,9 +219,7 @@ describe("MaisonMereAAP resolvers", () => {
           maisonMereAAPId: otherMaisonMereAAP.id,
           accountId: collaborateurAccountOfOtherMaisonMere.id,
         }),
-      ).rejects.toThrowError(
-        "Vous n'êtes pas autorisé à accéder à cette maison mère",
-      );
+      ).rejects.toThrowError(NOT_AUTHORIZED_MAISON_MERE_ACCESS);
     });
   });
 
@@ -448,9 +448,7 @@ describe("Positionnement compte collaborateur", () => {
           organismIds: [organism.id],
         },
       }),
-    ).rejects.toThrowError(
-      "Vous n'êtes pas autorisé à accéder à cette maison mère",
-    );
+    ).rejects.toThrowError(NOT_AUTHORIZED_MAISON_MERE_ACCESS);
   });
 });
 
@@ -578,7 +576,7 @@ describe("Disable local account", () => {
         maisonMereAAPId: maisonMereAAP.id,
         accountId: collaborateurAccount.id,
       }),
-    ).rejects.toThrowError("Utilisateur non autorisé");
+    ).rejects.toThrowError(NOT_AUTHORIZED);
   });
 
   it("should throw an error if the maisonMereAAPId is not the one of the collaborateur account", async () => {
@@ -858,7 +856,7 @@ describe("Delete lieu accueil", () => {
         maisonMereAAPId: lieuAccueil.maisonMereAAP!.id,
         organismId: lieuAccueil.id,
       }),
-    ).rejects.toThrowError("Utilisateur non autorisé");
+    ).rejects.toThrowError(NOT_AUTHORIZED);
   });
 
   it("should throw an error if the maisonMereAAPId in params does not match the organism's maison mere", async () => {
@@ -1060,6 +1058,6 @@ describe("Organism hasCandidacies", () => {
       graphqlClient.request(getOrganismHasCandidaciesQuery, {
         id: organism.id,
       }),
-    ).rejects.toThrowError("Utilisateur non autorisé");
+    ).rejects.toThrowError(NOT_AUTHORIZED);
   });
 });

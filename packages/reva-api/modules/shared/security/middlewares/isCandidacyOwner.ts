@@ -2,6 +2,7 @@ import debug from "debug";
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
 import { canManageCandidacy } from "@/modules/candidacy/features/canManageCandidacy";
+import { NOT_AUTHORIZED_CANDIDACY_MANAGE } from "@/modules/shared/security/messages";
 
 const log = debug("gql:security");
 
@@ -32,7 +33,7 @@ export const isCandidacyOwner =
     });
     if (!authorized) {
       log("not authorized");
-      throw new Error("Vous n'êtes pas autorisé à gérer cette candidature.");
+      throw new Error(NOT_AUTHORIZED_CANDIDACY_MANAGE);
     }
     log("authorized");
     return next(root, args, context, info);

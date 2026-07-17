@@ -1,5 +1,6 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
+import { NOT_AUTHORIZED_CANDIDACY_ACCESS } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
 const isUserOwnerOfCandidateFeature = async ({
@@ -38,7 +39,7 @@ export const isUserOwnerOfCandidate =
       root.id;
 
     if (!candidateId) {
-      throw new Error("Vous n'êtes pas autorisé à accéder à cette candidature");
+      throw new Error(NOT_AUTHORIZED_CANDIDACY_ACCESS);
     }
 
     if (
@@ -47,7 +48,7 @@ export const isUserOwnerOfCandidate =
         keycloakId: context.auth.userInfo?.sub,
       }))
     ) {
-      throw new Error("Vous n'êtes pas autorisé à accéder à cette candidature");
+      throw new Error(NOT_AUTHORIZED_CANDIDACY_ACCESS);
     }
     return next(root, args, context, info);
   };

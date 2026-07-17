@@ -1,6 +1,7 @@
 import { CandidateTypology } from "@prisma/client";
 
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const updateCandidacyTypologyAndCcn = async (
@@ -14,7 +15,7 @@ export const updateCandidacyTypologyAndCcn = async (
 ): Promise<void> => {
   const { hasRole } = context;
   if (!(hasRole("admin") || hasRole("manage_candidacy"))) {
-    throw new Error("Utilisateur non autorisé");
+    throw new Error(NOT_AUTHORIZED);
   }
 
   const { candidacyId, typology, additionalInformation, ccnId } = params;

@@ -2,6 +2,7 @@ import { isBefore, startOfDay } from "date-fns";
 import z from "zod";
 
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { NOT_AUTHORIZED_CANDIDACY_MANAGE } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { sendJuryResultAAPEmail } from "../emails/sendJuryResultAAPEmail";
@@ -53,7 +54,7 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
   });
 
   if (!authorized) {
-    throw new Error("Vous n'êtes pas autorisé à gérer cette candidature.");
+    throw new Error(NOT_AUTHORIZED_CANDIDACY_MANAGE);
   }
 
   const dateOfJuryHasNotPassed = jury

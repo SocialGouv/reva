@@ -7,6 +7,7 @@ import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers"
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
 import { UploadedFile } from "@/modules/shared/file/file.interface";
 import { S3File, uploadFileToS3 } from "@/modules/shared/file/file.service";
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { sendFeasibilityDecisionTakenToAAPEmail } from "../emails/sendFeasibilityDecisionTakenToAAPEmail";
@@ -155,6 +156,6 @@ export const validateFeasibility = async ({
     });
     return updatedFeasibility;
   } else {
-    throw new Error("Utilisateur non autorisé");
+    throw new Error(NOT_AUTHORIZED);
   }
 };

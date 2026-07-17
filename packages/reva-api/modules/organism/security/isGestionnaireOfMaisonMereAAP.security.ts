@@ -1,5 +1,7 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
+import { NOT_AUTHORIZED_MAISON_MERE_ACCESS } from "@/modules/shared/security/messages";
+
 import { isUserGestionnaireMaisonMereAAPOfMaisonMereAAP } from "../features/isUserGestionnaireMaisonMereAAPOfMaisonMereAAP";
 
 export const isGestionnaireOfMaisonMereAAP =
@@ -21,7 +23,7 @@ export const isGestionnaireOfMaisonMereAAP =
         userKeycloakId: context.auth.userInfo.sub,
       }))
     ) {
-      throw new Error("Vous n'êtes pas autorisé à accéder à cette maison mère");
+      throw new Error(NOT_AUTHORIZED_MAISON_MERE_ACCESS);
     }
     return next(root, args, context, info);
   };
