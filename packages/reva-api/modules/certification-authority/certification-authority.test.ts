@@ -294,7 +294,7 @@ test("should refuse to to update a certification authority's contact info as a c
         contactEmail: "new email",
       },
     }),
-  ).rejects.toThrowError("You are not authorized!");
+  ).rejects.toThrowError("Utilisateur non autorisé");
 });
 
 test("should refuse to to update a certification authority's contact info as a candidate", async () => {
@@ -316,7 +316,7 @@ test("should refuse to to update a certification authority's contact info as a c
         contactEmail: "new email",
       },
     }),
-  ).rejects.toThrowError("You are not authorized!");
+  ).rejects.toThrowError("Utilisateur non autorisé");
 });
 
 test("should update all of a certification authority's local accounts contact info when isGlobalContact is true", async () => {

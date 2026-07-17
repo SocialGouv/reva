@@ -7,11 +7,9 @@ import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 // Autorisation de chaque resolver organism : qui passe, qui est refusé.
 
-const NOT_AUTHORIZED = "You are not authorized!";
+const NOT_AUTHORIZED = "Utilisateur non autorisé";
 const UNAUTHENTICATED = "Votre session a expiré, veuillez vous reconnecter.";
 const NOT_ORGANISM_OWNER = "Vous n'êtes pas autorisé à accéder à cet organisme";
-// Jetée par `isOwnerOrCanManageOrganism`, qui a son propre message.
-const NOT_AUTHORIZED_FR = "Utilisateur non autorisé";
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
@@ -96,7 +94,7 @@ describe("organism - autorisation des resolvers", () => {
         organism.id,
         asRole("candidate", candidate.keycloakId),
       );
-      expect(resp.json().errors[0].message).toBe(NOT_AUTHORIZED_FR);
+      expect(resp.json().errors[0].message).toBe(NOT_AUTHORIZED);
     });
   });
 

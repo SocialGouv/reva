@@ -202,7 +202,7 @@ test("should throw error when user is not authorized", async () => {
     graphqlClient.request(revokeJuryDecisionMutation, {
       juryId: jury.id,
     }),
-  ).rejects.toThrowError("You are not authorized!");
+  ).rejects.toThrowError("Utilisateur non autorisé");
 });
 
 test("certificateur can submit a jury result but cannot revoke his decision himself", async () => {
@@ -282,7 +282,7 @@ test("certificateur can submit a jury result but cannot revoke his decision hims
       juryId: jury.id,
       reason: "Trying to revoke as certificateur",
     }),
-  ).rejects.toThrowError("You are not authorized!");
+  ).rejects.toThrowError("Utilisateur non autorisé");
 });
 
 test("should preserve jury history when revoking decision", async () => {

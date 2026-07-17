@@ -25,7 +25,7 @@ test("API should respond with error unauthorized user", async () => {
 
   expect(response.json()).toHaveProperty("errors");
   expect(response.json().data.organism_updateMaisonMereAccountSetup).toBeNull();
-  expect(response.json().errors[0].message).toMatch("You are not authorized");
+  expect(response.json().errors[0].message).toMatch("Utilisateur non autorisé");
 });
 
 test("API should let admin update MaisonMereAccountSetup and return data", async () => {

@@ -9,7 +9,7 @@ import { injectGraphql } from "@/test/helpers/graphql-helper";
 // champs SubscriptionRequest.* sont volontairement publics (isAnyone): aucun refus
 // à prouver, l'accès reste limité à la demande que l'appelant vient de créer.
 
-const NOT_AUTHORIZED = "You are not authorized!";
+const NOT_AUTHORIZED = "Utilisateur non autorisé";
 const UNAUTHENTICATED = "Votre session a expiré, veuillez vous reconnecter.";
 
 const asRole = (role: KeyCloakUserRole) =>

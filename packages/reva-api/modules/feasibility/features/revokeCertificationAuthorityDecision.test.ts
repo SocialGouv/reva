@@ -265,7 +265,7 @@ describe("Révocation de la décision du dossier de faisabilité", () => {
           revokeCertificationAuthorityDecisionMutation,
           { feasibilityId: feasibility.id },
         ),
-      ).rejects.toThrowError("You are not authorized!");
+      ).rejects.toThrowError("Utilisateur non autorisé");
     });
   });
 

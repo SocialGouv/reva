@@ -50,7 +50,7 @@ test("should not allow a gestionnaire to update maison mere legal information", 
   });
 
   expect(response.json()).toHaveProperty("errors");
-  expect(response.json().errors[0].message).toMatch("You are not authorized");
+  expect(response.json().errors[0].message).toMatch("Utilisateur non autorisé");
 });
 
 test("should allow admin to update maison mere legal information", async () => {

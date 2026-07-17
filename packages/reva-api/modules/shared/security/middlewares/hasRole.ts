@@ -19,7 +19,7 @@ export const hasRole =
     }
 
     if (!roles.some((role) => context.auth.hasRole(role))) {
-      throw new Error("You are not authorized!");
+      throw new Error("Utilisateur non autorisé");
     }
     return next(root, args, context, info);
   };

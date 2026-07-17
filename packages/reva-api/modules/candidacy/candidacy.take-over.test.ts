@@ -30,7 +30,7 @@ test("candidacy_takeOver should fail when not authenticated", async function () 
     graphqlClient.request(candidacy_takeOver, {
       candidacyId: candidacy.id,
     }),
-  ).rejects.toThrowError("You are not authorized!");
+  ).rejects.toThrowError("Utilisateur non autorisé");
 });
 
 test("candidacy_takeOver should fail when user is admin", async function () {
@@ -57,7 +57,7 @@ test("candidacy_takeOver should fail when user is admin", async function () {
     graphqlClient.request(candidacy_takeOver, {
       candidacyId: candidacy.id,
     }),
-  ).rejects.toThrowError("You are not authorized!");
+  ).rejects.toThrowError("Utilisateur non autorisé");
 });
 
 test("candidacy_takeOver should fail when candidacy manager has wrong organism", async function () {

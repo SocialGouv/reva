@@ -9,7 +9,7 @@ import { injectGraphql } from "@/test/helpers/graphql-helper";
 // paiement partagent le preset isAdminOrCandidacyCompanion, dont le refus est
 // prouvé ici; withPolicies garantit par ailleurs qu'aucun resolver n'est sans policy.
 
-const NOT_AUTHORIZED = "You are not authorized!";
+const NOT_AUTHORIZED = "Utilisateur non autorisé";
 const UNAUTHENTICATED = "Votre session a expiré, veuillez vous reconnecter.";
 
 const asRole = (role: KeyCloakUserRole) =>

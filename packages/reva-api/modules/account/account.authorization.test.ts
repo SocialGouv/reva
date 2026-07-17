@@ -7,7 +7,7 @@ import { injectGraphql } from "@/test/helpers/graphql-helper";
 // Un cas "autorisé" est prouvé par un échec de validation métier AVANT tout appel Keycloak
 // (message métier != message d'autorisation) ; un cas "public" par un appel non authentifié.
 
-const NOT_AUTHORIZED = "You are not authorized!";
+const NOT_AUTHORIZED = "Utilisateur non autorisé";
 const UNAUTHENTICATED = "Votre session a expiré, veuillez vous reconnecter.";
 
 const asRole = (role: KeyCloakUserRole) =>

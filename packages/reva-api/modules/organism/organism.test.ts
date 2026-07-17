@@ -578,7 +578,7 @@ describe("Disable local account", () => {
         maisonMereAAPId: maisonMereAAP.id,
         accountId: collaborateurAccount.id,
       }),
-    ).rejects.toThrowError("You are not authorized!");
+    ).rejects.toThrowError("Utilisateur non autorisé");
   });
 
   it("should throw an error if the maisonMereAAPId is not the one of the collaborateur account", async () => {
@@ -858,7 +858,7 @@ describe("Delete lieu accueil", () => {
         maisonMereAAPId: lieuAccueil.maisonMereAAP!.id,
         organismId: lieuAccueil.id,
       }),
-    ).rejects.toThrowError("You are not authorized!");
+    ).rejects.toThrowError("Utilisateur non autorisé");
   });
 
   it("should throw an error if the maisonMereAAPId in params does not match the organism's maison mere", async () => {
@@ -1060,6 +1060,6 @@ describe("Organism hasCandidacies", () => {
       graphqlClient.request(getOrganismHasCandidaciesQuery, {
         id: organism.id,
       }),
-    ).rejects.toThrowError("You are not authorized!");
+    ).rejects.toThrowError("Utilisateur non autorisé");
   });
 });
