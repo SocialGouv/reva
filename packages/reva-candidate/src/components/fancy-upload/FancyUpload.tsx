@@ -115,6 +115,7 @@ export const FancyUpload = ({
 
               {onClickDelete && (
                 <Button
+                  data-testid="delete-file-button"
                   priority="tertiary no outline"
                   size="small"
                   iconId="fr-icon-delete-line"
