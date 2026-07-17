@@ -1,4 +1,3 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import {
   MaisonMereAAPLegalInformationDocumentsDecisionEnum,
   Organism,
@@ -11,11 +10,12 @@ import {
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
 import { logger } from "@/modules/shared/logger/logger";
-import { prismaClient } from "@/prisma/client";
+import { hasRole } from "@/modules/shared/security/middlewares";
+import { isAdmin, isAnyone } from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
 import { buildAAPAuditLogUserInfoFromContext } from "../aap-log/features/logAAPAuditEvent";
 import { getAccountById } from "../account/features/getAccount";
-import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
 import { getOrganismsByAccountId } from "../certification-authority/features/getOrganismsByAccountId";
 import { getConventionCollectiveById } from "../referential/features/getConventionCollectiveById";
 import { getDegreeById } from "../referential/features/getDegreeByid";
@@ -35,11 +35,9 @@ import { deleteLieuAccueil } from "./features/deleteLieuAccueil";
 import { disableCompteCollaborateur } from "./features/disableCompteCollaborateur";
 import { findOrganismOnDegreeByOrganismId } from "./features/findOrganismOnDegreeByOrganismId";
 import { getAccountsByOrganismId } from "./features/getAccountsByOrganismId";
-import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestionnaireAccountId";
 import { getCompteCollaborateurById } from "./features/getCompteCollaborateurById";
 import { getComptesCollaborateursByMaisonMereAAPId } from "./features/getComptesCollaborateursByMaisonMereAAPId";
 import { getLastProfessionalCgu } from "./features/getLastProfessionalCgu";
-import { getMaisonMereAAPByGestionnaireAccountId } from "./features/getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereAAPByGestionnaireAccountIdOrCollaborateurAccountId } from "./features/getMaisonMereAAPByGestionnaireAccountIdOrCollaborateurAccountId";
 import { getMaisonMereAAPById } from "./features/getMaisonMereAAPId";
 import { getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType } from "./features/getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType";
@@ -72,7 +70,6 @@ import { updateOrganismAccount } from "./features/updateOrganismAccount";
 import { updateOrganismDegreesAndFormacodes } from "./features/updateOrganismDegreesAndFormacodes";
 import { updateOrganismDisponiblePourVaeCollective } from "./features/updateOrganismDisponiblePourVaeCollective";
 import { updatePositionnementCollaborateur } from "./features/updatePositionnementCollaborateur";
-import { resolversSecurityMap } from "./organism.security";
 import {
   CreateLieuAccueilInfoInput,
   CreateOrganismAccountInput,
@@ -83,11 +80,17 @@ import {
   UpdateMaisonMereLegalInformationInput,
   UpdateOrganimsAccountInput,
 } from "./organism.types";
+import { isGestionnaireOfMaisonMereAAP } from "./security/isGestionnaireOfMaisonMereAAP.security";
+import { isOwnerOrCanManageOrganism } from "./security/isOwnerOrCanManageOrganism.security";
+import {
+  isAdminOrGestionnaireOfMaisonMereAAP,
+  isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
+  isAdminOrGestionnaireOfMaisonMereAAPOrOwnerOfAccount,
+  isAdminOrGestionnaireVaeCollective,
+} from "./security/presets";
 
 const unsafeResolvers = {
   Account: {
-    agences: ({ id: accountId }: { id: string }) =>
-      getAgencesByGestionnaireAccountId({ gestionnaireAccountId: accountId }),
     maisonMereAAP: ({ id: accountId }: { id: string }) =>
       getMaisonMereAAPByGestionnaireAccountIdOrCollaborateurAccountId({
         accountId,
@@ -329,43 +332,12 @@ const unsafeResolvers = {
         fermePourAbsenceOuConges: boolean;
       },
       context: GraphqlContext,
-    ) => {
-      const account = await getAccountByKeycloakId({
-        keycloakId: context.auth.userInfo?.sub || "",
-      });
-
-      if (!account) {
-        throw new Error("Utilisateur non autorisé");
-      }
-
-      const maisonMereAAP = await getMaisonMereAAPByGestionnaireAccountId({
-        gestionnaireAccountId: account.id,
-      });
-
-      const organismOnAccounts = await prismaClient.organismOnAccount.findMany({
-        where: {
-          accountId: account.id,
-        },
-      });
-
-      // Pour pouvoir mettre à jour l'agence, il faut remplir au moins une condition parmi :
-      // - Être admin
-      // - Être le gestionnaire de l'agence
-      // - Être le gestionnaire de la maison mere
-      if (
-        !context.auth.hasRole("admin") &&
-        !organismOnAccounts.some((oa) => oa.organismId === organismId) &&
-        !maisonMereAAP
-      ) {
-        throw new Error("Utilisateur non autorisé");
-      }
-
-      return updateFermePourAbsenceOuConges({
+    ) =>
+      updateFermePourAbsenceOuConges({
         organismId,
         fermePourAbsenceOuConges,
         userInfo: buildAAPAuditLogUserInfoFromContext(context),
-      });
-    },
+      }),
     organism_updateDisponiblePourVaeCollective: async (
       _parent: unknown,
       {
@@ -407,24 +379,11 @@ const unsafeResolvers = {
       _parent: unknown,
       _: any,
       context: GraphqlContext,
-    ) => {
-      try {
-        if (context.auth.userInfo?.sub == undefined) {
-          throw new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
-          );
-        }
-
-        return acceptCgu({
-          hasRole: context.auth.hasRole,
-          keycloakId: context.auth.userInfo?.sub,
-        });
-      } catch (e) {
-        logger.error(e);
-        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
-      }
-    },
+    ) =>
+      acceptCgu({
+        hasRole: context.auth.hasRole,
+        keycloakId: context.auth.userInfo?.sub || "",
+      }),
     organism_updateOrganismDegreesAndFormacodes: async (
       _parent: unknown,
       params: {
@@ -524,21 +483,7 @@ const unsafeResolvers = {
           showAccountSetup: boolean;
         };
       },
-      context: GraphqlContext,
-    ) => {
-      if (context.auth.userInfo?.sub == undefined) {
-        throw new Error("Utilisateur non autorisé");
-      }
-
-      const isGestionaire = context.auth.hasRole("gestion_maison_mere_aap");
-      const isAdmin = context.auth.hasRole("admin");
-
-      if (!isGestionaire && !isAdmin) {
-        throw new Error("Utilisateur non autorisé");
-      }
-
-      return updateMaisonMereAccountSetup(params.data);
-    },
+    ) => updateMaisonMereAccountSetup(params.data),
     organism_updateMaisonMereOrganismsIsActive: async (
       _parent: unknown,
       params: {
@@ -679,14 +624,7 @@ const unsafeResolvers = {
         searchFilter?: string;
         legalValidationStatus?: StatutValidationInformationsJuridiquesMaisonMereAAP;
       },
-      context: GraphqlContext,
-    ) => {
-      if (!context.auth.hasRole("admin")) {
-        throw new Error("Utilisateur non autorisé");
-      }
-
-      return getMaisonMereAAPs(params);
-    },
+    ) => getMaisonMereAAPs(params),
     organism_getMaisonMereAAPById: async (
       _parent: unknown,
       params: {
@@ -723,7 +661,93 @@ const unsafeResolvers = {
   },
 };
 
-export const organismResolvers = composeResolvers(
-  unsafeResolvers,
-  resolversSecurityMap,
-);
+export const organismResolvers = withPolicies(unsafeResolvers, {
+  Account: {
+    // Lu par le layout privé racine (bandeau CGU) pour tous les rôles connectés.
+    maisonMereAAP: isAnyone,
+    organisms: isAnyone,
+  },
+  Organism: {
+    maisonMereAAP:
+      isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
+    accounts: isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
+    hasCandidacies:
+      isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
+    // Lu par reva-candidate lors du choix de l'accompagnateur.
+    isMaisonMereMCFCompatible: isAnyone,
+    // Données non personnelles, lues via des parents déjà protégés.
+    managedDegrees: isAnyone,
+    formacodes: isAnyone,
+    conventionCollectives: isAnyone,
+    certifications: isAnyone,
+    remoteZones: isAnyone,
+    isVisibleInCandidateSearchResults: isAnyone,
+  },
+  OrganismOnDegree: {
+    // Donnée de référentiel.
+    degree: isAnyone,
+  },
+  MaisonMereAAP: {
+    organisms: isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
+    paginatedOrganisms:
+      isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
+    gestionnaire:
+      isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
+    comptesCollaborateurs:
+      isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
+    paginatedComptesCollaborateurs:
+      isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
+    legalInformationDocuments: isAdmin,
+    legalInformationDocumentsDecisions: isAdminOrGestionnaireOfMaisonMereAAP,
+    metabaseDashboardIframeUrl: [isGestionnaireOfMaisonMereAAP],
+    // Lu par le layout privé racine (bandeau CGU) pour tous les rôles connectés.
+    cgu: isAnyone,
+    // Parent déjà protégé, donnée non personnelle.
+    maisonMereAAPOnConventionCollectives: isAnyone,
+  },
+  MaisonMereAAPLegalInformationDocuments: {
+    attestationURSSAFFile: isAdminOrGestionnaireOfMaisonMereAAP,
+    justificatifIdentiteDirigeantFile: isAdminOrGestionnaireOfMaisonMereAAP,
+    lettreDeDelegationFile: isAdminOrGestionnaireOfMaisonMereAAP,
+    justificatifIdentiteDelegataireFile: isAdminOrGestionnaireOfMaisonMereAAP,
+  },
+  MaisonMereAAPOnConventionCollective: {
+    // Parent déjà protégé, donnée non personnelle.
+    ccn: isAnyone,
+  },
+  Mutation: {
+    organism_createOrUpdateRemoteOrganismGeneralInformation:
+      isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
+    organism_createOrUpdateOnSiteOrganismGeneralInformation:
+      isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
+    organism_updateFermePourAbsenceOuConges: [isOwnerOrCanManageOrganism],
+    organism_updateDisponiblePourVaeCollective: [isOwnerOrCanManageOrganism],
+    organism_acceptCgu: [hasRole(["gestion_maison_mere_aap"])],
+    organism_updateMaisonMereAccountSetup: isAdminOrGestionnaireOfMaisonMereAAP,
+    organism_createAccount: isAdminOrGestionnaireOfMaisonMereAAP,
+    organism_updateMaisonMereIsSignalized: isAdmin,
+    organism_updateMaisonMereLegalInformation: isAdmin,
+    organism_updateMaisonMereAAPFinancingMethods:
+      isAdminOrGestionnaireOfMaisonMereAAP,
+    organism_updatePositionnementCollaborateur:
+      isAdminOrGestionnaireOfMaisonMereAAP,
+    organism_disableCompteCollaborateur: isAdminOrGestionnaireOfMaisonMereAAP,
+    organism_deleteLieuAccueil: isAdminOrGestionnaireOfMaisonMereAAP,
+    // Durcissements à venir : `isAnyone` reproduit le runtime actuel (aucune règle).
+    organism_updateOrganismAccount: isAnyone, // étape 4
+    organism_updateOrganismDegreesAndFormacodes: isAnyone, // étape 7
+    organism_updateMaisonMereOrganismsIsActive: isAnyone, // étape 5
+    organism_updateLegalInformationValidationDecision: isAnyone, // étape 5
+    organism_createLieuAccueilInfo: isAnyone, // étape 8
+  },
+  Query: {
+    organism_getMaisonMereAAPById: isAdminOrGestionnaireOfMaisonMereAAP,
+    organism_searchOrganisms: isAdminOrGestionnaireVaeCollective,
+    organism_getCompteCollaborateurById:
+      isAdminOrGestionnaireOfMaisonMereAAPOrOwnerOfAccount,
+    organism_getMaisonMereAAPs: isAdmin,
+    // L'inline du resolver gouverne encore l'accès ; l'étape 2 le remplace par une policy.
+    organism_getOrganism: isAnyone,
+    organism_isOrganismAttachedToCertifications: isAnyone, // étape 3
+  },
+});
