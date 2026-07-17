@@ -99,6 +99,12 @@ const sendFeasibilityDecisionTakenEmail = async ({
         certificationAuthorityLabel,
         certificationName,
       });
+      sendFeasibilityDecisionTakenToAAPEmail({
+        email: aapEmail,
+        feasibilityUrl: getBackofficeUrl({
+          path: `/candidacies/${candidacyId}/feasibility-aap`,
+        }),
+      });
     }
   } else if (decision === "ADMISSIBLE") {
     if (isAutonome) {
@@ -244,6 +250,8 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
       dff.feasibility.candidacy.organism?.emailContact ||
       (dff.feasibility.candidacy.organism
         ?.contactAdministrativeEmail as string);
+
+    console.log("aapEmail", aapEmail);
 
     if (decision === "ADMISSIBLE" || decision === "REJECTED") {
       await deleteFeasibilityIDFile(feasibility.id);
