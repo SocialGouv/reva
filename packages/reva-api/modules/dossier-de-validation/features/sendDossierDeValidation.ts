@@ -8,7 +8,7 @@ import { getAccountByCertificationAuthorityId } from "@/modules/certification-au
 import {
   CANDIDATURE_ETE_ABANDONNEE,
   CANDIDATURE_ETE_SUPPRIMEE,
-  CANDIDATURE_PAS_ETE_TROUVEE,
+  CANDIDATURE_NON_TROUVEE,
   DOSSIER_FAISABILITE_PAS_RECEVABLE,
 } from "@/modules/shared/errors/messages";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
@@ -59,7 +59,7 @@ export const sendDossierDeValidation = async ({
   });
 
   if (!candidacy) {
-    throw new Error(CANDIDATURE_PAS_ETE_TROUVEE);
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   if (candidacy.candidacyDropOut) {

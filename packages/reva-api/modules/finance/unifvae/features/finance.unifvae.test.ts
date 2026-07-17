@@ -1,5 +1,6 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
+import { DATE_LIMITE_DEMANDE_PAIEMENT_DEPASSEE_CANDIDATURE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 import {
   CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO,
@@ -427,9 +428,7 @@ describe("Unifvae payment request", () => {
           userRoles: ["manage_candidacy"],
           userKeycloakId: "test",
         }),
-      ).rejects.toThrowError(
-        "La date limite de demande de paiement est dépassée pour cette candidature, comme spécifié dans la convention Uniformation",
-      );
+      ).rejects.toThrowError(DATE_LIMITE_DEMANDE_PAIEMENT_DEPASSEE_CANDIDATURE);
     });
   });
 });

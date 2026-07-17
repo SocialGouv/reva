@@ -3,7 +3,10 @@ import {
   CertificationStatus,
 } from "@prisma/client";
 
-import { STATUT_CERTIFICATION_NE_PERMET_PAS_MODIFIER } from "@/modules/shared/errors/messages";
+import {
+  CERTIFICATION_NON_TROUVEE,
+  STATUT_CERTIFICATION_NE_PERMET_PAS_MODIFIER,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 type Competence = {
@@ -43,7 +46,7 @@ export const updateCompetenceBlocsByCertificationId = async (
   });
 
   if (!certification) {
-    throw new Error(`Certification non trouvée`);
+    throw new Error(CERTIFICATION_NON_TROUVEE);
   }
 
   const allowedStatus: CertificationStatus[] = [

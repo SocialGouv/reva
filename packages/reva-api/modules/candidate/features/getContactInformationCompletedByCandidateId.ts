@@ -1,3 +1,4 @@
+import { CANDIDAT_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const getContactInformationCompletedByCandidateId = async ({
@@ -10,7 +11,7 @@ export const getContactInformationCompletedByCandidateId = async ({
   });
 
   if (!candidate) {
-    throw new Error(`Le candidat n'existe pas`);
+    throw new Error(CANDIDAT_NON_TROUVE);
   }
 
   return (

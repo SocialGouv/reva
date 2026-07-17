@@ -10,8 +10,6 @@ export const CANDIDAT_NON_TROUVE = "Candidat non trouvé";
 export const DOSSIER_FAISABILITE_DEMATERIALISE_NON_TROUVE =
   "Dossier de faisabilité dématérialisé non trouvé";
 
-export const CANDIDATURE_PAS_ETE_TROUVEE = "La candidature n'a pas été trouvée";
-
 export const CERTIFICATION_PAS_ETE_TROUVEE =
   "La certification n'a pas été trouvée";
 
@@ -27,9 +25,6 @@ export const DOSSIER_FAISABILITE_NON_TROUVE =
   "Dossier de faisabilité non trouvé";
 
 export const COMPTE_NON_TROUVE = "Compte non trouvé";
-
-export const AUCUNE_CANDIDATURE_ETE_TROUVEE =
-  "Aucune candidature n'a été trouvée";
 
 export const COMPTE_LOCAL_AUTORITE_CERTIFICATION_NON_TROUVE =
   "Compte local de l'autorité de certification non trouvé";
@@ -112,8 +107,6 @@ export const DOSSIER_FAISABILITE_INTROUVABLE =
 export const DATE_LIMITE_DEMANDE_PAIEMENT_DEPASSEE_CANDIDATURE =
   "La date limite de demande de paiement est dépassée pour cette candidature, comme spécifié dans la convention Uniformation";
 
-export const CANDIDATURE_EXISTE_PAS = "La candidature n'existe pas";
-
 export const RESULTAT_JURY_DEJA_ETE_RENSEIGNE =
   "Le résultat du jury a déjà été renseigné";
 
@@ -124,3 +117,17 @@ export const MAISON_MERE_PAS_ETE_TROUVEE = "La maison mère n'a pas été trouv�
 
 export const STATUT_CERTIFICATION_DOIT_ETRE_ETAT_BROUILLON =
   "Le statut de la certification doit être à l'état 'Brouillon'";
+
+export const ACTION_NON_RECONNUE = "Action non reconnue";
+
+export const COMPTE_ADMIN_NON_MODIFIABLE =
+  'Les informations d\'un compte utilisateur keycloak de type "admin" ne peuvent pas être modifiées';
+
+export const ERREUR_MISE_A_JOUR_ORGANISME =
+  "Erreur lors de la mise à jour de l'organisme";
+
+export const CONVENTION_COLLECTIVE_EXISTE_PAS =
+  "La convention collective n'existe pas";
+
+export const CGU_DERNIERE_VERSION_DEJA_ACCEPTEE =
+  "La dernière version des CGU a déjà été acceptée.";

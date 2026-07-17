@@ -6,6 +6,7 @@ import {
   startOfToday,
 } from "date-fns";
 
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const setReadyForJuryEstimatedAt = async ({
@@ -32,7 +33,7 @@ export const setReadyForJuryEstimatedAt = async ({
   });
 
   if (!candidacy) {
-    throw new Error("Cette candidature n'existe pas");
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const result = await prismaClient.candidacy.update({

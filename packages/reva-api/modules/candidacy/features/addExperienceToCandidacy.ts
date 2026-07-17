@@ -1,6 +1,6 @@
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import {
-  AUCUNE_CANDIDATURE_ETE_TROUVEE,
+  CANDIDATURE_NON_TROUVEE,
   IMPOSSIBLE_METTRE_JOUR_EXPERIENCES_APRES_CONFIRME,
   IMPOSSIBLE_MODIFIER_EXPERIENCES_APRES_ENVOI_DOSSIER,
 } from "@/modules/shared/errors/messages";
@@ -33,7 +33,7 @@ export const addExperienceToCandidacy = async ({
   });
 
   if (!candidacy) {
-    throw new Error(AUCUNE_CANDIDATURE_ETE_TROUVEE);
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   if (

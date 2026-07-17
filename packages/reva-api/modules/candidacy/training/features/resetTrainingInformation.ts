@@ -1,7 +1,7 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
-import { CANDIDATURE_PAS_ETE_TROUVEE } from "@/modules/shared/errors/messages";
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
@@ -28,7 +28,7 @@ export const resetTrainingInformation = async ({
   });
 
   if (!candidacy) {
-    throw new Error(CANDIDATURE_PAS_ETE_TROUVEE);
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   if (candidacy.status !== "PARCOURS_ENVOYE") {

@@ -1,5 +1,6 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
@@ -82,7 +83,7 @@ describe("updateCandidacyCertificationAuthority", () => {
         candidacyId: "00000000-0000-0000-0000-000000000000",
         certificationAuthorityId: "00000000-0000-0000-0000-000000000000",
       }),
-    ).rejects.toThrow("Candidature non trouvée");
+    ).rejects.toThrow(CANDIDATURE_NON_TROUVEE);
   });
 
   test("should use the provided transaction client when given", async () => {

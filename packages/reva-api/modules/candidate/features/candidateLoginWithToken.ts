@@ -6,7 +6,10 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
-import { CANDIDAT_NON_TROUVE } from "@/modules/shared/errors/messages";
+import {
+  ACTION_NON_RECONNUE,
+  CANDIDAT_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { CandidateAuthenticationInput } from "../candidate.types";
@@ -27,7 +30,7 @@ export const candidateLoginWithToken = async ({ token }: { token: string }) => {
   } else {
     throw new FunctionalError(
       FunctionalCodeError.TECHNICAL_ERROR,
-      `Action non reconnue`,
+      ACTION_NON_RECONNUE,
     );
   }
 };
@@ -41,7 +44,7 @@ const loginCandidate = async ({ email }: { email: string }) => {
   if (!account) {
     throw new FunctionalError(
       FunctionalCodeError.ACCOUNT_IN_IAM_NOT_FOUND,
-      `Candidat non trouvé`,
+      CANDIDAT_NON_TROUVE,
     );
   }
 

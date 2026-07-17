@@ -1,6 +1,10 @@
 import { faker } from "@faker-js/faker";
 
 import {
+  COMPTE_NON_TROUVE,
+  SESSION_VERIFICATION_EXPIREE_VEUILLEZ_VOUS_RECONNECTER,
+} from "@/modules/shared/errors/messages";
+import {
   NOT_AUTHORIZED,
   SESSION_EXPIRED,
 } from "@/modules/shared/security/messages";
@@ -113,7 +117,7 @@ describe("account - autorisation des resolvers", () => {
         returnFields: "{ requiresOtp }",
       },
     });
-    expect(resp.json().errors[0].message).toBe("Compte non trouvé");
+    expect(resp.json().errors[0].message).toBe(COMPTE_NON_TROUVE);
   });
 
   test("account_verifyOtpChallenge : public (atteint la feature)", async () => {
@@ -127,7 +131,7 @@ describe("account - autorisation des resolvers", () => {
       },
     });
     expect(resp.json().errors[0].message).toBe(
-      "Session de vérification expirée, veuillez vous reconnecter",
+      SESSION_VERIFICATION_EXPIREE_VEUILLEZ_VOUS_RECONNECTER,
     );
   });
 
@@ -172,6 +176,6 @@ describe("account - autorisation des resolvers", () => {
         returnFields: "",
       },
     });
-    expect(resp.json().errors[0].message).toBe("Compte non trouvé");
+    expect(resp.json().errors[0].message).toBe(COMPTE_NON_TROUVE);
   });
 });

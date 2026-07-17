@@ -4,6 +4,7 @@ import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
 } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { getCandidacy } from "./getCandidacy";
@@ -24,7 +25,7 @@ export const updateCandidacyFinanceModule = async ({
   if (financeModule === "hors_plateforme") {
     const candidacy = await getCandidacy({ candidacyId });
     if (!candidacy) {
-      throw new Error(`Candidature non trouvée`);
+      throw new Error(CANDIDATURE_NON_TROUVEE);
     }
   }
 

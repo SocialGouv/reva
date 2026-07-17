@@ -5,7 +5,7 @@ import { getCertificationAuthorityLocalAccountByAccountId } from "@/modules/cert
 import {
   CANDIDATURE_ETE_ABANDONNEE,
   CANDIDATURE_ETE_SUPPRIMEE,
-  CANDIDATURE_PAS_ETE_TROUVEE,
+  CANDIDATURE_NON_TROUVEE,
   COMPTE_UTILISATEUR_NON_TROUVE,
   DOSSIER_FAISABILITE_PAS_RECEVABLE,
 } from "@/modules/shared/errors/messages";
@@ -31,7 +31,7 @@ export const canManageJury = async ({
   });
 
   if (!candidacy) {
-    throw new Error(CANDIDATURE_PAS_ETE_TROUVEE);
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   if (candidacy.candidacyDropOut) {

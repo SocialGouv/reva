@@ -1,5 +1,9 @@
 import { CandidacyStatusStep, ExperienceDuration } from "@prisma/client";
 
+import {
+  IMPOSSIBLE_METTRE_JOUR_EXPERIENCES_APRES_CONFIRME,
+  IMPOSSIBLE_MODIFIER_EXPERIENCES_APRES_ENVOI_DOSSIER,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
@@ -148,9 +152,7 @@ describe("mise à jour d'une expérience de candidature", () => {
           startedAt: Date.parse("2021-01-01T00:00:00.000Z"),
         },
       }),
-    ).rejects.toThrow(
-      "Impossible de mettre à jour les experiences après avoir confirmé le parcours",
-    );
+    ).rejects.toThrow(IMPOSSIBLE_METTRE_JOUR_EXPERIENCES_APRES_CONFIRME);
   });
 
   test("doit permettre à un AAP de mettre à jour une expérience rattachée à une candidature qu'il possède", async () => {
@@ -284,9 +286,7 @@ describe("mise à jour d'une expérience de candidature", () => {
             startedAt: Date.parse("2021-01-01T00:00:00.000Z"),
           },
         }),
-      ).rejects.toThrow(
-        "Impossible de modifier les expériences après l'envoi du dossier de faisabilité",
-      );
+      ).rejects.toThrow(IMPOSSIBLE_MODIFIER_EXPERIENCES_APRES_ENVOI_DOSSIER);
     },
   );
 });

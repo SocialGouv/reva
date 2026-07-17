@@ -6,7 +6,11 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
-import { ORGANISME_NON_TROUVE } from "@/modules/shared/errors/messages";
+import {
+  CANDIDATURE_NON_TROUVEE,
+  ERREUR_MISE_A_JOUR_ORGANISME,
+  ORGANISME_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
 import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
@@ -41,7 +45,7 @@ export const selectOrganismForCandidacyAsAdmin = async ({
   if (!candidacy) {
     throw new FunctionalError(
       FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-      `Aucune candidature n'a été trouvée`,
+      CANDIDATURE_NON_TROUVEE,
     );
   }
 
@@ -90,7 +94,7 @@ export const selectOrganismForCandidacyAsAdmin = async ({
     logger.error(e);
     throw new FunctionalError(
       FunctionalCodeError.ORGANISM_NOT_UPDATED,
-      `Erreur lors de la mise à jour de l'organisme`,
+      ERREUR_MISE_A_JOUR_ORGANISME,
     );
   }
 };

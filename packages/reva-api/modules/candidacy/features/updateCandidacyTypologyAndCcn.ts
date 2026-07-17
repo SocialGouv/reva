@@ -1,6 +1,10 @@
 import { CandidateTypology } from "@prisma/client";
 
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import {
+  CANDIDATURE_NON_TROUVEE,
+  CONVENTION_COLLECTIVE_EXISTE_PAS,
+} from "@/modules/shared/errors/messages";
 import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
@@ -31,7 +35,7 @@ export const updateCandidacyTypologyAndCcn = async (
     },
   });
   if (!candidacy) {
-    throw new Error(`La candidature n'existe pas`);
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   if (!candidacy.candidateId) {
@@ -44,7 +48,7 @@ export const updateCandidacyTypologyAndCcn = async (
       where: { id: ccnId },
     });
     if (!ccn) {
-      throw new Error(`La convention collective n'existe pas`);
+      throw new Error(CONVENTION_COLLECTIVE_EXISTE_PAS);
     }
   }
 

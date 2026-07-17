@@ -1,5 +1,9 @@
 import { Candidate, CandidateTypology } from "@prisma/client";
 
+import {
+  CANDIDAT_NON_TROUVE,
+  CONVENTION_COLLECTIVE_EXISTE_PAS,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const updateCandidateTypologyAndCcn = async (params: {
@@ -14,7 +18,7 @@ export const updateCandidateTypologyAndCcn = async (params: {
     where: { id: candidateId },
   });
   if (!candidate) {
-    throw new Error(`Le candidat n'existe pas`);
+    throw new Error(CANDIDAT_NON_TROUVE);
   }
 
   let ccn = null;
@@ -23,7 +27,7 @@ export const updateCandidateTypologyAndCcn = async (params: {
       where: { id: ccnId },
     });
     if (!ccn) {
-      throw new Error(`La convention collective n'existe pas`);
+      throw new Error(CONVENTION_COLLECTIVE_EXISTE_PAS);
     }
   }
 

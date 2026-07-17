@@ -4,7 +4,10 @@ import {
   resetPassword,
 } from "@/modules/shared/auth/auth.helper";
 import { getJWTContent } from "@/modules/shared/auth/jwt.helper";
-import { CANDIDAT_NON_TROUVE } from "@/modules/shared/errors/messages";
+import {
+  ACTION_NON_RECONNUE,
+  CANDIDAT_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import {
@@ -33,7 +36,7 @@ export const candidateFinalizeRegistrationWithPassword = async ({
   )) as FinalizeRegistrationTokenContent;
 
   if (tokenContent.action !== "finalize-registration") {
-    throw new Error("Action non reconnue");
+    throw new Error(ACTION_NON_RECONNUE);
   }
 
   const { email } = tokenContent;

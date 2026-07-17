@@ -3,7 +3,10 @@ import {
   resetPassword,
 } from "@/modules/shared/auth/auth.helper";
 import { getJWTContent } from "@/modules/shared/auth/jwt.helper";
-import { COMPTE_NON_TROUVE } from "@/modules/shared/errors/messages";
+import {
+  ACTION_NON_RECONNUE,
+  COMPTE_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
 
 import { getAccountByKeycloakId } from "./getAccountByKeycloakId";
 
@@ -26,7 +29,7 @@ export const resetAccountPassword = async ({
     );
 
     if (!iamAccount) {
-      throw new Error(`Compte non trouvé`);
+      throw new Error(COMPTE_NON_TROUVE);
     }
 
     const account = await getAccountByKeycloakId({
@@ -43,6 +46,6 @@ export const resetAccountPassword = async ({
       process.env.KEYCLOAK_ADMIN_REALM_REVA as string,
     );
   } else {
-    throw new Error(`Action non reconnue`);
+    throw new Error(ACTION_NON_RECONNUE);
   }
 };

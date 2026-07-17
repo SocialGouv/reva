@@ -1,5 +1,6 @@
 import { CandidateTypology } from "@prisma/client";
 
+import { CANDIDAT_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const getTypologyAndCollectiveAgreementCompletedByCandidateId = async ({
@@ -12,7 +13,7 @@ export const getTypologyAndCollectiveAgreementCompletedByCandidateId = async ({
   });
 
   if (!candidate) {
-    throw new Error(`Le candidat n'existe pas`);
+    throw new Error(CANDIDAT_NON_TROUVE);
   }
 
   const { typology, ccnId } = candidate;

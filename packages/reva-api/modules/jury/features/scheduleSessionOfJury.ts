@@ -3,7 +3,7 @@ import { v4 as uuidV4 } from "uuid";
 
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import {
-  CANDIDATURE_PAS_ETE_TROUVEE,
+  CANDIDATURE_NON_TROUVEE,
   RESULTAT_JURY_DEJA_ETE_RENSEIGNE,
 } from "@/modules/shared/errors/messages";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
@@ -52,7 +52,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     },
   });
   if (!candidacy) {
-    throw new Error(CANDIDATURE_PAS_ETE_TROUVEE);
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const dossierDeValidation = candidacy.dossierDeValidation[0];

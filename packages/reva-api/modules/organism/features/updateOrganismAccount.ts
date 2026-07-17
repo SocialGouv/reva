@@ -5,6 +5,7 @@ import {
 import { getAccountById } from "@/modules/account/features/getAccount";
 import { updateAccountById } from "@/modules/account/features/updateAccount";
 import {
+  COMPTE_UTILISATEUR_NON_TROUVE,
   IDENTIFIANT_MAISON_MERE_OBLIGATOIRE,
   MAISON_MERE_PAS_ETE_TROUVEE,
 } from "@/modules/shared/errors/messages";
@@ -27,7 +28,7 @@ export const updateOrganismAccount = async ({
   });
 
   if (!account) {
-    throw Error("Compte utilisateur non trouvé");
+    throw Error(COMPTE_UTILISATEUR_NON_TROUVE);
   }
 
   if (!maisonMereAAPId) {

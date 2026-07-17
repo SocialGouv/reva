@@ -1,5 +1,6 @@
 import { CandidacyStatusStep, ExperienceDuration } from "@prisma/client";
 
+import { IMPOSSIBLE_MODIFIER_EXPERIENCES_APRES_ENVOI_DOSSIER } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
@@ -258,9 +259,7 @@ describe("suppression d'une expérience de candidature", () => {
           candidacyId: candidacy.id,
           experienceId: experience.id,
         }),
-      ).rejects.toThrow(
-        "Impossible de modifier les expériences après l'envoi du dossier de faisabilité",
-      );
+      ).rejects.toThrow(IMPOSSIBLE_MODIFIER_EXPERIENCES_APRES_ENVOI_DOSSIER);
     },
   );
 });

@@ -1,5 +1,9 @@
 import { CandidacyStatusStep, ExperienceDuration } from "@prisma/client";
 
+import {
+  IMPOSSIBLE_METTRE_JOUR_EXPERIENCES_APRES_CONFIRME,
+  IMPOSSIBLE_MODIFIER_EXPERIENCES_APRES_ENVOI_DOSSIER,
+} from "@/modules/shared/errors/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
@@ -112,9 +116,7 @@ describe("ajout d'expérience à une candidature", () => {
           candidacyId: candidacy.id,
           experience: experienceInput,
         }),
-      ).rejects.toThrow(
-        "Impossible de modifier les expériences après l'envoi du dossier de faisabilité",
-      );
+      ).rejects.toThrow(IMPOSSIBLE_MODIFIER_EXPERIENCES_APRES_ENVOI_DOSSIER);
     },
   );
 
@@ -132,9 +134,7 @@ describe("ajout d'expérience à une candidature", () => {
         candidacyId: candidacy.id,
         experience: experienceInput,
       }),
-    ).rejects.toThrow(
-      "Impossible de mettre à jour les experiences après avoir confirmé le parcours",
-    );
+    ).rejects.toThrow(IMPOSSIBLE_METTRE_JOUR_EXPERIENCES_APRES_CONFIRME);
   });
 
   test("doit rejeter un AAP qui ajoute une expérience à une candidature qu'il ne possède pas", async () => {

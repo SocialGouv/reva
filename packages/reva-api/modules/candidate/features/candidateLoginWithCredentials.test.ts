@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 
 import * as AuthHelper from "@/modules/shared/auth/auth.helper";
+import { ADRESSE_ELECTRONIQUE_OU_MOT_PASSE_INCORRECT } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
@@ -148,7 +149,7 @@ describe("candidateLoginWithCredentials", () => {
         email: candidate.email,
         password,
       }),
-    ).rejects.toThrow("Adresse électronique ou mot de passe incorrect");
+    ).rejects.toThrow(ADRESSE_ELECTRONIQUE_OU_MOT_PASSE_INCORRECT);
 
     expect(generateTokensSpy).not.toHaveBeenCalled();
   });

@@ -2,6 +2,7 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { getCandidateById } from "@/modules/candidate/features/getCandidateById";
 import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 
 import { sendConfirmationCandidacySubmissionEmail } from "../emails/sendConfirmationCandidacySubmissionEmail";
 import { sendNewCandidacyEmail } from "../emails/sendNewCandidacyEmail";
@@ -26,7 +27,7 @@ export const submitCandidacy = async ({
     candidacyId,
   });
   if (!candidacy) {
-    throw new Error(`Aucune candidature n'a été trouvée`);
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const validateCandidacyNotAlreadySubmitted =

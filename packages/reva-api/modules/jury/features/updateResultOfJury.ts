@@ -3,7 +3,7 @@ import z from "zod";
 
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import {
-  CANDIDATURE_EXISTE_PAS,
+  CANDIDATURE_NON_TROUVEE,
   RESULTAT_JURY_DEJA_ETE_RENSEIGNE,
 } from "@/modules/shared/errors/messages";
 import { NOT_AUTHORIZED_CANDIDACY_MANAGE } from "@/modules/shared/security/messages";
@@ -166,7 +166,7 @@ const validateJuryResultWithBlocks = async (
     .then((jury) => jury?.candidacyId);
 
   if (!candidacyId) {
-    throw new Error(CANDIDATURE_EXISTE_PAS);
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const previouslyValidatedBlocksIds =

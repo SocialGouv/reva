@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import * as geocodingModule from "@/modules/shared/geocoding";
 import { prismaClient } from "@/prisma/client";
 import { attachOrganismToAllConventionCollectiveHelper } from "@/test/helpers/attach-organism-to-all-ccn-helper";
@@ -416,7 +417,7 @@ describe("searchOrganismsForCandidacy", () => {
 
       expect(resp.statusCode).toEqual(200);
       const error = resp.json().errors[0];
-      expect(error.message).toBe("Candidature non trouvée");
+      expect(error.message).toBe(CANDIDATURE_NON_TROUVEE);
     });
   });
 

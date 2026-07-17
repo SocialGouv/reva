@@ -2,6 +2,10 @@ import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
 } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import {
+  CANDIDATURE_NON_TROUVEE,
+  CANDIDAT_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { updateCandidateEmailAndSendNotifications } from "./updateCandidateEmailAndSendNotifications";
@@ -23,7 +27,7 @@ export const updateCandidateContactDetails = async ({
     where: { id: candidacyId },
   });
   if (!candidacy) {
-    throw new Error(`La candidature n'existe pas`);
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const candidate = await prismaClient.candidate.findUnique({
@@ -31,7 +35,7 @@ export const updateCandidateContactDetails = async ({
   });
 
   if (!candidate) {
-    throw new Error(`Ce candidat n'existe pas`);
+    throw new Error(CANDIDAT_NON_TROUVE);
   }
 
   if (candidacy.candidateId !== candidate.id) {

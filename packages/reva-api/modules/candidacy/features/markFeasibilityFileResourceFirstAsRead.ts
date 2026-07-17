@@ -1,4 +1,4 @@
-import { AUCUNE_CANDIDATURE_ETE_TROUVEE } from "@/modules/shared/errors/messages";
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 export const markFeasibilityFileResourceFirstAsRead = async ({
@@ -11,7 +11,7 @@ export const markFeasibilityFileResourceFirstAsRead = async ({
   });
 
   if (!candidacy) {
-    throw new Error(AUCUNE_CANDIDATURE_ETE_TROUVEE);
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   const result = await prismaClient.candidacy.update({

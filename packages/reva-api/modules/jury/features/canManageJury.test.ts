@@ -1,5 +1,11 @@
 import { faker } from "@faker-js/faker";
 
+import {
+  CANDIDATURE_ETE_ABANDONNEE,
+  CANDIDATURE_ETE_SUPPRIMEE,
+  CANDIDATURE_NON_TROUVEE,
+  DOSSIER_FAISABILITE_PAS_RECEVABLE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 import { createAccountHelper } from "@/test/helpers/entities/create-account-helper";
 import { createCandidacyDropOutHelper } from "@/test/helpers/entities/create-candidacy-drop-out-helper";
@@ -68,7 +74,7 @@ test("throws when candidacy is not found", async () => {
       roles: ["admin"],
       keycloakId: faker.string.uuid(),
     }),
-  ).rejects.toThrow("La candidature n'a pas été trouvée");
+  ).rejects.toThrow(CANDIDATURE_NON_TROUVEE);
 });
 
 test("throws when candidacy is dropped out", async () => {
@@ -81,7 +87,7 @@ test("throws when candidacy is dropped out", async () => {
       roles: ["admin"],
       keycloakId: faker.string.uuid(),
     }),
-  ).rejects.toThrow("La candidature a été abandonnée");
+  ).rejects.toThrow(CANDIDATURE_ETE_ABANDONNEE);
 });
 
 test("throws when candidacy is archived", async () => {
@@ -95,7 +101,7 @@ test("throws when candidacy is archived", async () => {
       roles: ["admin"],
       keycloakId: faker.string.uuid(),
     }),
-  ).rejects.toThrow("La candidature a été supprimée");
+  ).rejects.toThrow(CANDIDATURE_ETE_SUPPRIMEE);
 });
 
 test("throws when no active feasibility exists", async () => {
@@ -126,7 +132,7 @@ test("throws when feasibility is not admissible", async () => {
       roles: ["admin"],
       keycloakId: faker.string.uuid(),
     }),
-  ).rejects.toThrow("Le dossier de faisabilité n'est pas recevable");
+  ).rejects.toThrow(DOSSIER_FAISABILITE_PAS_RECEVABLE);
 });
 
 // --- Role-based access ---

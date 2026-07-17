@@ -1,5 +1,6 @@
 import { CertificationStatus } from "@prisma/client";
 
+import { STATUT_CERTIFICATION_DOIT_ETRE_ETAT_BROUILLON } from "@/modules/shared/errors/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createFormaCodeHelper } from "@/test/helpers/entities/create-formacode-helper";
@@ -146,7 +147,7 @@ test.each([
     });
     expect(response.json()).toHaveProperty("errors");
     expect(response.json().errors[0].message).toBe(
-      "Le statut de la certification doit être à l'état 'Brouillon'",
+      STATUT_CERTIFICATION_DOIT_ETRE_ETAT_BROUILLON,
     );
   },
 );

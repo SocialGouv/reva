@@ -1,4 +1,5 @@
 import * as EmailModule from "@/modules/shared/email/sendEmailUsingTemplate";
+import { COMPTE_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { createAccountHelper } from "@/test/helpers/entities/create-account-helper";
 
 import { resendEmailOtp } from "./resendEmailOtp";
@@ -25,6 +26,6 @@ describe("resendEmailOtp", () => {
   test("throws when no account matches the email", async () => {
     await expect(
       resendEmailOtp({ email: "unknown@example.com" }),
-    ).rejects.toThrow("Compte non trouvé");
+    ).rejects.toThrow(COMPTE_NON_TROUVE);
   });
 });

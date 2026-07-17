@@ -1,7 +1,7 @@
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import {
-  AUCUNE_CANDIDATURE_ETE_TROUVEE,
   AUCUNE_EXPERIENCE_ETE_TROUVEE,
+  CANDIDATURE_NON_TROUVEE,
   IMPOSSIBLE_MODIFIER_EXPERIENCES_APRES_ENVOI_DOSSIER,
 } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
@@ -29,7 +29,7 @@ export const deleteExperienceFromCandidacy = async ({
   });
 
   if (!candidacy) {
-    throw new Error(AUCUNE_CANDIDATURE_ETE_TROUVEE);
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   if (userRoles.includes("candidate") && candidacy.status !== "PROJET") {

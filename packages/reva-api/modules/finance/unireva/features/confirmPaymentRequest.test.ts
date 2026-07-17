@@ -1,6 +1,7 @@
 import { FundingRequest } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 
+import { DATE_LIMITE_DEMANDE_PAIEMENT_DEPASSEE_CANDIDATURE } from "@/modules/shared/errors/messages";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createPaymentRequestUnirevaHelper } from "@/test/helpers/entities/create-payment-request-unireva-helper";
 
@@ -82,8 +83,6 @@ describe("payment request", () => {
       confirmPaymentRequest({
         candidacyId: candidacy.id,
       }),
-    ).rejects.toThrowError(
-      "La date limite de demande de paiement est dépassée pour cette candidature, comme spécifié dans la convention Uniformation",
-    );
+    ).rejects.toThrowError(DATE_LIMITE_DEMANDE_PAIEMENT_DEPASSEE_CANDIDATURE);
   });
 });

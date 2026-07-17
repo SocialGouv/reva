@@ -1,3 +1,5 @@
+import { ADRESSE_ELECTRONIQUE_OU_MOT_PASSE_INCORRECT } from "@/modules/shared/errors/messages";
+
 import * as getKeycloakAdminModule from "./getKeycloakAdmin";
 import {
   KeycloakUnavailableError,
@@ -349,9 +351,7 @@ describe("generateIAMTokenWithPasswordShared", () => {
     }).catch((e) => e);
     expect(error).toBeInstanceOf(Error);
     expect(error).not.toBeInstanceOf(KeycloakUnavailableError);
-    expect(error.message).toBe(
-      "Adresse électronique ou mot de passe incorrect",
-    );
+    expect(error.message).toBe(ADRESSE_ELECTRONIQUE_OU_MOT_PASSE_INCORRECT);
   });
 
   test("lève KeycloakUnavailableError quand Keycloak répond 500", async () => {

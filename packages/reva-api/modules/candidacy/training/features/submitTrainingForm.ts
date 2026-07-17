@@ -8,7 +8,7 @@ import { getCandidateById } from "@/modules/candidate/features/getCandidateById"
 import { getFundingRequestUnifvaeFromCandidacyId } from "@/modules/finance/unifvae/features/finance.unifvae.features";
 import { getFundingRequestByCandidacyId } from "@/modules/finance/unireva/features/getFundingRequestByCandidacyId";
 import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "@/modules/referential/referential.types";
-import { CANDIDATURE_PAS_ETE_TROUVEE } from "@/modules/shared/errors/messages";
+import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { getCandidacy } from "../../features/getCandidacy";
@@ -48,7 +48,7 @@ export const submitTraining = async ({
   let candidacy = await getCandidacy({ candidacyId });
 
   if (!candidacy) {
-    throw new Error(CANDIDATURE_PAS_ETE_TROUVEE);
+    throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
   let existingFundingRequest = false;

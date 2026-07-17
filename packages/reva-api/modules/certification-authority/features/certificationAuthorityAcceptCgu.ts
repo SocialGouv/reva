@@ -1,3 +1,7 @@
+import {
+  CGU_DERNIERE_VERSION_DEJA_ACCEPTEE,
+  COMPTE_UTILISATEUR_NON_TROUVE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { getLastProfessionalCguCertificateur } from "./getLastProfessionalCguCertificateur";
@@ -18,7 +22,7 @@ export const certificationAuthorityAcceptCgu = async (context: {
   });
 
   if (!account) {
-    throw new Error(`Compte utilisateur non trouvé`);
+    throw new Error(COMPTE_UTILISATEUR_NON_TROUVE);
   }
 
   let userRegistryManager = null;
@@ -77,7 +81,7 @@ export const certificationAuthorityAcceptCgu = async (context: {
   if (
     certificationAuthorityStructure.cguVersion == lastProfessionalCgu.version
   ) {
-    throw new Error(`La dernière version des CGU a déjà été acceptée.`);
+    throw new Error(CGU_DERNIERE_VERSION_DEJA_ACCEPTEE);
   }
 
   await prismaClient.certificationAuthorityStructure.update({

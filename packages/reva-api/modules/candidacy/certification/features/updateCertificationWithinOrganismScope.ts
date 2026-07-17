@@ -8,7 +8,10 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
-import { CERTIFICATION_NON_TROUVEE } from "@/modules/shared/errors/messages";
+import {
+  CANDIDATURE_NON_TROUVEE,
+  CERTIFICATION_NON_TROUVEE,
+} from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
@@ -51,7 +54,7 @@ export const updateCertificationWithinOrganismScope = async ({
   if (!candidacy) {
     throw new FunctionalError(
       FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-      `Aucune candidature n'a été trouvée`,
+      CANDIDATURE_NON_TROUVEE,
     );
   }
 

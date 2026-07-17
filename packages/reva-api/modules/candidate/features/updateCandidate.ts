@@ -5,6 +5,7 @@ import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCand
 import { CandidateUpdateInput } from "@/modules/candidate/candidate.types";
 import { refreshCertificationAuthorityOfCandidacy } from "@/modules/certification-authority/features/refreshCertificationAuthorityOfCandidacy";
 import { generateAndUploadFeasibilityFileByCandidacyId } from "@/modules/feasibility/dematerialized-feasibility-file/features/generateAndUploadFeasibilityFileByCandidacyId";
+import { CANDIDAT_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
@@ -26,7 +27,7 @@ export const updateCandidate = async ({
   });
 
   if (!candidateToUpdate) {
-    throw new Error(`Ce candidat n'existe pas`);
+    throw new Error(CANDIDAT_NON_TROUVE);
   }
 
   if (candidateInput.email) {

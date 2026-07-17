@@ -1,4 +1,5 @@
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
+import { COMPTE_ADMIN_NON_MODIFIABLE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
 import { Account } from "../account.types";
@@ -62,9 +63,7 @@ export const updateAccountById = async (params: {
   // Check if account with accountToUpdate.keycloakId is not an admin account
   const groupAdmin = groups.find((group) => group.name == "admin");
   if (groupAdmin) {
-    throw new Error(
-      `Les informations d'un compte utilisateur keycloak de type "admin" ne peuvent pas être modifiées`,
-    );
+    throw new Error(COMPTE_ADMIN_NON_MODIFIABLE);
   }
 
   const prevEmail = accountToUpdate.email.toLowerCase();

@@ -1,4 +1,5 @@
 import * as EmailModule from "@/modules/shared/email/sendEmailUsingTemplate";
+import { COMPTE_UTILISATEUR_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 import { createAccountHelper } from "@/test/helpers/entities/create-account-helper";
 
@@ -49,7 +50,7 @@ describe("sendEmailOtp", () => {
   test("throws when the account does not exist", async () => {
     await expect(
       sendEmailOtp({ accountId: "00000000-0000-0000-0000-000000000000" }),
-    ).rejects.toThrow("Compte utilisateur non trouvé");
+    ).rejects.toThrow(COMPTE_UTILISATEUR_NON_TROUVE);
   });
 
   test("throws when ACCOUNT_EMAIL_OTP_SECRET is not set", async () => {

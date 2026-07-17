@@ -33,7 +33,7 @@ export const candidateLoginWithCredentials = async ({
   if (!account) {
     throw new FunctionalError(
       FunctionalCodeError.ACCOUNT_IN_IAM_NOT_FOUND,
-      `Candidat non trouvé`,
+      CANDIDAT_NON_TROUVE,
     );
   }
 
