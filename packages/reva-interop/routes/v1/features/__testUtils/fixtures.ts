@@ -12,9 +12,9 @@ export const buildCandidacyFixture = (
   overrides: Record<string, unknown> = {},
 ): NonNullable<Awaited<ReturnType<typeof getCandidacyById>>> => ({
   id: CANDIDACY_ID,
-  status: "ACTIVE",
-  feasibilityFormat: null,
-  typology: "SALARIE",
+  status: "PROJET",
+  feasibilityFormat: "DEMATERIALIZED",
+  typology: "SALARIE_PRIVE",
   organism: null,
   isCertificationPartial: false,
   certification: {
@@ -52,12 +52,12 @@ export const buildFeasibilityCandidacyFixture = (
   overrides: Record<string, unknown> = {},
 ): GetGqlResponseType<typeof getFeasibilityByCandidacyId> => ({
   id: CANDIDACY_ID,
-  status: "ACTIVE",
+  status: "PROJET",
   candidacyDropOut: null,
   experiences: [],
   feasibility: {
     decision: "PENDING",
-    feasibilityFileSentAt: "2025-01-15T10:00:00.000Z",
+    feasibilityFileSentAt: new Date("2025-01-15T10:00:00.000Z").getTime(),
     feasibilityFormat: "UPLOADED_PDF",
     feasibilityUploadedPdf: null,
     dematerializedFeasibilityFile: null,
@@ -70,7 +70,7 @@ export const buildJuryCandidacyFixture = (
 ): GetGqlResponseType<typeof getJuryByCandidacyId> => ({
   id: CANDIDACY_ID,
   jury: {
-    dateOfSession: new Date("2026-12-01"),
+    dateOfSession: new Date("2026-12-01").getTime(),
   },
   ...overrides,
 });
@@ -80,7 +80,7 @@ export const buildJurySessionCandidacyFixture = (
 ): GetGqlResponseType<typeof scheduleJurySessionByCandidacyId> => ({
   id: CANDIDACY_ID,
   jury: {
-    dateOfSession: new Date("2026-08-15T14:30:00"),
+    dateOfSession: new Date("2026-08-15T14:30:00").getTime(),
     timeOfSession: null,
     timeSpecified: true,
     addressOfSession: "10 avenue de la République",
@@ -118,9 +118,13 @@ export const buildDossierDeValidationRowFixture = (
 ): GetGqlRowType<typeof getDossiersDeValidation> => ({
   id: "dossier-1",
   decision: "PENDING",
-  dossierDeValidationSentAt: "2025-03-01T09:00:00.000Z",
+  dossierDeValidationSentAt: new Date("2025-03-01T09:00:00.000Z").getTime(),
   candidacy: { id: CANDIDACY_ID },
-  dossierDeValidationFile: null,
+  dossierDeValidationFile: {
+    name: "dossier-de-validation.pdf",
+    mimeType: "application/pdf",
+    previewUrl: null,
+  },
   dossierDeValidationOtherFiles: [],
   ...overrides,
 });
