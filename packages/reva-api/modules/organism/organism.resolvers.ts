@@ -56,8 +56,6 @@ import { getPaginatedOrganismsByMaisonMereAAPId } from "./features/getPaginatedO
 import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismId";
 import { isOrganismAttachedToCertifications } from "./features/isOrganismAttachedToCertifications";
 import { isOrganismVisibleInCandidateSearchResults } from "./features/isOrganismVisibleInCandidateSearchResults";
-import { isUserGestionnaireMaisonMereAAPOfOrganism } from "./features/isUserGestionnaireMaisonMereAAPOfOrganism";
-import { isUserOwnerOfOrganism } from "./features/isUserOwnerOfOrganism";
 import { organismHasCandidacies } from "./features/organismHasCandidacies";
 import { searchOrganisms } from "./features/searchOrganisms";
 import { updateFermePourAbsenceOuConges } from "./features/updateFermePourAbsenceOuConges";
@@ -85,6 +83,7 @@ import { isOwnerOrCanManageOrganism } from "./security/isOwnerOrCanManageOrganis
 import {
   isAdminOrGestionnaireOfMaisonMereAAP,
   isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
+  isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganismByIdArg,
   isAdminOrGestionnaireOfMaisonMereAAPOrOwnerOfAccount,
   isAdminOrGestionnaireVaeCollective,
 } from "./security/presets";
@@ -562,55 +561,10 @@ const unsafeResolvers = {
       params: {
         id: string;
       },
-      context: GraphqlContext,
     ) => {
       try {
-        if (context.auth.userInfo?.sub == undefined) {
-          throw new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
-          );
-        }
-
-        const organism = await getOrganismById({ organismId: params.id });
-
-        if (!organism) {
-          return null;
-        }
-
-        const roles = context.auth.userInfo.realm_access?.roles || [];
-        const userKeycloakId = context.auth.userInfo.sub;
-        //admin has every rights
-        if (!roles.includes("admin")) {
-          //if user is a "gestionnaire maison mere aap" he can access all organisms/agencies linked to his "maison mere"
-          if (roles.includes("gestion_maison_mere_aap")) {
-            if (
-              !isUserGestionnaireMaisonMereAAPOfOrganism({
-                organismId: organism.id,
-                userKeycloakId,
-                userRoles: roles,
-              })
-            ) {
-              throw new Error("Utilisateur non autorisé");
-            }
-          }
-          //if user is a "aap" he can access his own organism
-          else if (roles.includes("manage_candidacy")) {
-            if (
-              !isUserOwnerOfOrganism({
-                organismId: organism.id,
-                userKeycloakId,
-                userRoles: roles,
-              })
-            ) {
-              throw new Error("Utilisateur non autorisé");
-            }
-          } else {
-            throw new Error("Utilisateur non autorisé");
-          }
-        }
-
-        return organism;
+        // Renvoie null si l'id est inconnu. L'autorisation est portée par la policy.
+        return await getOrganismById({ organismId: params.id });
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
@@ -746,8 +700,8 @@ export const organismResolvers = withPolicies(unsafeResolvers, {
     organism_getCompteCollaborateurById:
       isAdminOrGestionnaireOfMaisonMereAAPOrOwnerOfAccount,
     organism_getMaisonMereAAPs: isAdmin,
-    // L'inline du resolver gouverne encore l'accès ; l'étape 2 le remplace par une policy.
-    organism_getOrganism: isAnyone,
+    organism_getOrganism:
+      isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganismByIdArg,
     organism_isOrganismAttachedToCertifications: isAnyone, // étape 3
   },
 });

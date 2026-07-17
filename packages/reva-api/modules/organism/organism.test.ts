@@ -1060,6 +1060,6 @@ describe("Organism hasCandidacies", () => {
       graphqlClient.request(getOrganismHasCandidaciesQuery, {
         id: organism.id,
       }),
-    ).rejects.toThrowError("Utilisateur non autorisé");
+    ).rejects.toThrowError("You are not authorized!");
   });
 });

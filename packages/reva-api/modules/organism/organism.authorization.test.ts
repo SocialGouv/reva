@@ -9,6 +9,9 @@ import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 const NOT_AUTHORIZED = "You are not authorized!";
 const UNAUTHENTICATED = "Votre session a expiré, veuillez vous reconnecter.";
+const NOT_ORGANISM_OWNER = "Vous n'êtes pas autorisé à accéder à cet organisme";
+// Jetée par `isOwnerOrCanManageOrganism`, qui a son propre message.
+const NOT_AUTHORIZED_FR = "Utilisateur non autorisé";
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
@@ -93,7 +96,101 @@ describe("organism - autorisation des resolvers", () => {
         organism.id,
         asRole("candidate", candidate.keycloakId),
       );
-      expect(resp.json().errors[0].message).toBe("Utilisateur non autorisé");
+      expect(resp.json().errors[0].message).toBe(NOT_AUTHORIZED_FR);
+    });
+  });
+
+  describe("organism_getOrganism (admin, gestionnaire de la MM, ou AAP rattaché)", () => {
+    // On ne sélectionne QUE `id` : il n'a pas de resolver, donc pas de policy. Sélectionner
+    // un champ policé (`hasCandidacies`...) ferait refuser l'appelant par la policy du CHAMP
+    // et masquerait ce qu'on teste ici, à savoir l'accès à la query elle-même.
+    const call = (id: string, authorization?: string) =>
+      injectGraphql({
+        fastify: global.testApp,
+        authorization,
+        payload: {
+          requestType: "query",
+          endpoint: "organism_getOrganism",
+          arguments: { id },
+          returnFields: "{ id }",
+        },
+      });
+
+    test("le gestionnaire de la maison mère de l'organisme : autorisé", async () => {
+      const organism = await createOrganismHelper();
+      const resp = await call(
+        organism.id,
+        asRole(
+          "gestion_maison_mere_aap",
+          organism.maisonMereAAP!.gestionnaire.keycloakId,
+        ),
+      );
+      expect(resp.json()).not.toHaveProperty("errors");
+      expect(resp.json().data.organism_getOrganism.id).toBe(organism.id);
+    });
+
+    test("l'AAP rattaché à l'organisme : autorisé", async () => {
+      const organism = await createOrganismHelper();
+      const resp = await call(
+        organism.id,
+        asRole(
+          "manage_candidacy",
+          organism.organismOnAccounts[0].account.keycloakId,
+        ),
+      );
+      expect(resp.json()).not.toHaveProperty("errors");
+      expect(resp.json().data.organism_getOrganism.id).toBe(organism.id);
+    });
+
+    test("l'admin : autorisé", async () => {
+      const organism = await createOrganismHelper();
+      const resp = await call(organism.id, asRole("admin"));
+      expect(resp.json()).not.toHaveProperty("errors");
+      expect(resp.json().data.organism_getOrganism.id).toBe(organism.id);
+    });
+
+    // Non-régression : l'inline remplacé n'`await`ait pas son contrôle d'ownership, donc
+    // `!Promise` valait toujours false et ce refus ne se déclenchait jamais (cf. facaf2841).
+    test("le gestionnaire d'une AUTRE maison mère : refusé", async () => {
+      const organism = await createOrganismHelper();
+      const autreOrganism = await createOrganismHelper();
+      const resp = await call(
+        organism.id,
+        asRole(
+          "gestion_maison_mere_aap",
+          autreOrganism.maisonMereAAP!.gestionnaire.keycloakId,
+        ),
+      );
+      expect(resp.json().errors[0].message).toBe(NOT_ORGANISM_OWNER);
+    });
+
+    // Non-régression : même cause, branche `manage_candidacy`.
+    test("un AAP NON rattaché à l'organisme : refusé", async () => {
+      const organism = await createOrganismHelper();
+      const autreOrganism = await createOrganismHelper();
+      const resp = await call(
+        organism.id,
+        asRole(
+          "manage_candidacy",
+          autreOrganism.organismOnAccounts[0].account.keycloakId,
+        ),
+      );
+      expect(resp.json().errors[0].message).toBe(NOT_ORGANISM_OWNER);
+    });
+
+    test("un candidate : refusé", async () => {
+      const organism = await createOrganismHelper();
+      const resp = await call(
+        organism.id,
+        asRole("candidate", (await createAccountHelper()).keycloakId),
+      );
+      expect(resp.json().errors[0].message).toBe(NOT_AUTHORIZED);
+    });
+
+    test("non authentifié : refusé", async () => {
+      const organism = await createOrganismHelper();
+      const resp = await call(organism.id);
+      expect(resp.json().errors[0].message).toBe(UNAUTHENTICATED);
     });
   });
 });

@@ -4,7 +4,9 @@ import { whenHasRoleButNotOthers } from "@/modules/shared/security/middlewares/w
 import { isOwnerOfAccount } from "../../account/security/isOwnerOfAccount.security";
 
 import { isGestionnaireOfMaisonMereAAP } from "./isGestionnaireOfMaisonMereAAP.security";
+import { isGestionnaireOfMaisonMereAAPOfOrganismByIdArg } from "./isGestionnaireOfMaisonMereAAPOfOrganismByIdArg";
 import { isOwnerOfOrganism } from "./isOwnerOfOrganism";
+import { isOwnerOfOrganismByIdArg } from "./isOwnerOfOrganismByIdArg";
 
 // Règles d'accès composées propres au module organism. Un seul consommateur
 // (`organism.resolvers.ts`) : elles ne sont pas promues dans `shared/presets`.
@@ -27,6 +29,24 @@ export const isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism = [
 export const isAdminOrGestionnaireVaeCollective = [
   hasRole(["admin", "manage_vae_collective"]),
 ];
+
+// Pour `organism_getOrganism(id:)`. Reproduit les branches de l'inline qu'il remplace : l'admin
+// passe ; le gestionnaire doit l'être de la maison mère de l'organisme ; un `manage_candidacy`
+// qui n'est ni admin ni gestionnaire doit être rattaché à l'organisme ; tout autre rôle est
+// refusé.
+export const isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganismByIdArg =
+  [
+    hasRole(["admin", "gestion_maison_mere_aap", "manage_candidacy"]),
+    whenHasRole(
+      "gestion_maison_mere_aap",
+      isGestionnaireOfMaisonMereAAPOfOrganismByIdArg,
+    ),
+    whenHasRoleButNotOthers(
+      "manage_candidacy",
+      ["admin", "gestion_maison_mere_aap"],
+      isOwnerOfOrganismByIdArg,
+    ),
+  ];
 
 export const isAdminOrGestionnaireOfMaisonMereAAPOrOwnerOfAccount = [
   hasRole(["admin", "gestion_maison_mere_aap", "manage_candidacy"]),
