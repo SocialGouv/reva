@@ -126,7 +126,6 @@ export const DF_FORMATED_DATE_6_MONTHS_AGO = format(
   "yyyy-MM-dd",
 );
 
-// eslint-disable-next-line import/no-unused-modules
 export const DF_CERTIFICATION = {
   label: "CAP Accompagnant éducatif petite enfance - AEPE",
   codeRncp: "38565",
