@@ -69,7 +69,7 @@ export const useEligibility = () => {
       queryClient.invalidateQueries({
         queryKey: [
           candidacyId,
-          "getCandidacyByIdForAapFeasibilityEligibilityPage",
+          "getCandidacyByIdForFeasibilityDematAutonomeEligibilityPage",
         ],
       });
     },

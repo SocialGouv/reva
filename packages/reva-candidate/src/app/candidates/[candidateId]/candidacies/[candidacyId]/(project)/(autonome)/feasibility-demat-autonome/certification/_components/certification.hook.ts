@@ -6,7 +6,9 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 
 const getCandidacyById = graphql(`
-  query getCandidacyByIdForAapFeasibilityCertificationPage($candidacyId: ID!) {
+  query getCandidacyByIdForFeasibilityDematAutonomeCertificationPage(
+    $candidacyId: ID!
+  ) {
     getCandidacyById(id: $candidacyId) {
       id
       status
@@ -62,7 +64,7 @@ export const useCertificationPageLogic = () => {
   const { data: getCandidacyByIdResponse } = useQuery({
     queryKey: [
       candidacyId,
-      "getCandidacyByIdForAapFeasibilityCertificationPage",
+      "getCandidacyByIdForFeasibilityDematAutonomeCertificationPage",
     ],
     queryFn: () =>
       graphqlClient.request(getCandidacyById, {
@@ -86,7 +88,7 @@ export const useCertificationPageLogic = () => {
       queryClient.invalidateQueries({
         queryKey: [
           candidacyId,
-          "getCandidacyByIdForAapFeasibilityCertificationPage",
+          "getCandidacyByIdForFeasibilityDematAutonomeCertificationPage",
         ],
       });
     },
