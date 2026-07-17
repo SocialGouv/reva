@@ -1,4 +1,4 @@
-import { expect, test } from "next/experimental/testmode/playwright/msw";
+import { expect, Page, test } from "next/experimental/testmode/playwright/msw";
 import { graphql } from "next/experimental/testmode/playwright/msw";
 
 import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
@@ -54,6 +54,18 @@ function createEligibilityHandlers() {
   ];
 }
 
+async function visitEligibilityPage(page: Page) {
+  await loginAndWaitForInitialLoad(page);
+
+  await page.goto(
+    `candidates/${candidate.id}/candidacies/${CANDIDACY_ID}/feasibility-demat-autonome/eligibility`,
+  );
+  await waitGraphQL(
+    page,
+    "getCandidacyByIdForFeasibilityDematAutonomeEligibilityPage",
+  );
+}
+
 test.describe("Dematerialized Feasibility File Eligibility Page", () => {
   test.describe("Initial form state", () => {
     test.use({
@@ -61,15 +73,7 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
     });
 
     test("should have disabled form buttons by default", async ({ page }) => {
-      await loginAndWaitForInitialLoad(page);
-
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${CANDIDACY_ID}/feasibility-demat-autonome/eligibility`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomeEligibilityPage",
-      );
+      await visitEligibilityPage(page);
 
       await expect(
         page.getByRole("button", { name: "Enregistrer" }),
@@ -85,15 +89,7 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
     test("should disable date and time fields when PREMIERE_DEMANDE_RECEVABILITE eligibility is selected", async ({
       page,
     }) => {
-      await loginAndWaitForInitialLoad(page);
-
-      await page.goto(
-        `candidates/${candidate.id}/candidacies/${CANDIDACY_ID}/feasibility-demat-autonome/eligibility`,
-      );
-      await waitGraphQL(
-        page,
-        "getCandidacyByIdForFeasibilityDematAutonomeEligibilityPage",
-      );
+      await visitEligibilityPage(page);
 
       await expect(
         page.getByRole("button", { name: "Enregistrer" }),
@@ -122,15 +118,7 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
       test("should handle DETENTEUR_RECEVABILITE eligibility with future date validation", async ({
         page,
       }) => {
-        await loginAndWaitForInitialLoad(page);
-
-        await page.goto(
-          `candidates/${candidate.id}/candidacies/${CANDIDACY_ID}/feasibility-demat-autonome/eligibility`,
-        );
-        await waitGraphQL(
-          page,
-          "getCandidacyByIdForFeasibilityDematAutonomeEligibilityPage",
-        );
+        await visitEligibilityPage(page);
 
         await expect(
           page.getByRole("button", { name: "Enregistrer" }),
@@ -158,15 +146,7 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
       test("should show error message when submitting DETENTEUR_RECEVABILITE eligibility with past date", async ({
         page,
       }) => {
-        await loginAndWaitForInitialLoad(page);
-
-        await page.goto(
-          `candidates/${candidate.id}/candidacies/${CANDIDACY_ID}/feasibility-demat-autonome/eligibility`,
-        );
-        await waitGraphQL(
-          page,
-          "getCandidacyByIdForFeasibilityDematAutonomeEligibilityPage",
-        );
+        await visitEligibilityPage(page);
 
         await expect(
           page.getByRole("button", { name: "Enregistrer" }),
@@ -210,15 +190,7 @@ test.describe("Dematerialized Feasibility File Eligibility Page", () => {
       test("should handle DETENTEUR_RECEVABILITE eligibility with future date validation", async ({
         page,
       }) => {
-        await loginAndWaitForInitialLoad(page);
-
-        await page.goto(
-          `candidates/${candidate.id}/candidacies/${CANDIDACY_ID}/feasibility-demat-autonome/eligibility`,
-        );
-        await waitGraphQL(
-          page,
-          "getCandidacyByIdForFeasibilityDematAutonomeEligibilityPage",
-        );
+        await visitEligibilityPage(page);
 
         await expect(
           page.getByRole("button", { name: "Enregistrer" }),
