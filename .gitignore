@@ -30,3 +30,4 @@ infra/ftps/data/*
 CLAUDE.md
 code_specs/
 __pycache__/
+temp/
