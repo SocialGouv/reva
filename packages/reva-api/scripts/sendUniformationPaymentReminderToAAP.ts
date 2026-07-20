@@ -121,13 +121,6 @@ const main = async (): Promise<void> => {
     let skipped = 0;
 
     for (const candidacy of candidacies) {
-      // Ignore les candidatures archivees.
-      if (candidacy.status === "ARCHIVE") {
-        console.warn(`Candidature ${candidacy.id} ignoree : statut ARCHIVE`);
-        skipped += 1;
-        continue;
-      }
-
       // Ignore les candidatures dont la demande de paiement est deja confirmee.
       if (
         candidacy.paymentRequest?.confirmedAt ||
