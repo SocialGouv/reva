@@ -68,16 +68,13 @@
             <p>Nous sommes heureux de vous accueillir en tant qu'Architecte Accompagnateur de Parcours (AAP) sur notre plateforme France VAE. Vous serez prochainement visible dans les résultats de recherche des candidats.</p>
 
             <h2>Prochaine étape : activez votre compte</h2>
-            <p>Pour finaliser votre inscription, cliquez sur le bouton ci-dessous, il vous sera demandé de choisir un mot de passe pour vos prochaines connexions :</p>
+            <p>Activez votre compte administrateur dès maintenant :</p>
         <#elseif section="actionButton">
             <a href="${link}"
                style="display:inline-block;background:#000099;color:white;font-family:Arial, sans-serif;font-size:14px;font-weight:500;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:12px 16px;mso-padding-alt:0px;"
                target="_blank">Finaliser mon inscription</a>
         <#elseif section="outro">
-            <p><i>Note : Ce lien restera actif pendant 4 jours.</i> Si vous avez dépassé ce délai,
-                <a href="https://${properties.keycloakHostname}/realms/reva/login-actions/reset-credentials"
-                   target="_blank">nous vous invitons à redemander un mot de passe.
-                </a>
+            <p>Passé 4 jours, vous pourrez l'activer depuis <a href="https://vae.gouv.fr">France VAE</a> via <b>Mot de passe oublié</b>.
             </p>
 
             <h2>Tout ce qu’il faut savoir pour bien démarrer</h2>
@@ -89,22 +86,15 @@
                     <strong>Tutoriels</strong></a> : Parfois, on a juste besoin d'un petit coup de pouce pour avancer sereinement sur la plateforme. C'est chose possible grâce à nos tutoriels !<br /><br />
                 </li>
                 <li>
-                    <a href="https://vae.gouv.fr/cgu/">
-                    <strong>Conditions générales d'utilisation</strong></a> : Familiarisez-vous avec vos responsabilités et les attentes du rôle en consultant le cahier des charges.<br /><br />
-                </li>
-                <li>
                     <a href="https://francevae.notion.site/Espace-documentaire-8a8100b69ece833d8af001ef76b98a67">
-                    <strong>Espace documentaire</strong></a> : Découvrez les documents clés pour accompagner efficacement vos premiers candidats. Cliquez sur l'icône 💡 en bas à droite de votre espace professionnel pour avoir accès à toutes nos ressources.
+                    <strong>Espace documentaire</strong></a> des AAP :  Retrouvez les documents et ressources utiles pour accompagner efficacement vos premiers candidats.
                 </li>
             </ul>
-            <p>Pour toute question, vous pouvez consulter notre
-                <a href="https://vae.gouv.fr/faq/"
-                   target="_blank">FAQ
-                </a> ou nous contacter via
-                <a href="https://vae.gouv.fr/nous-contacter/" target="_blank">notre formulaire de contact</a>.
+            <p>Une question ? Notre équipe support est à votre disposition via le <a href="https://francevae.crisp.help/fr/?contact">formulaire de contact</a>
             </p>
-            <p>Cordialement,</p>
-            <p>L'équipe France VAE.</p>
+            <p>L'équipe France VAE vous souhaite une bonne intégration.</p>
+            <h3>⚠️ Responsabilité de l’administrateur</h3>
+            <p>En tant qu'administrateur, vous êtes responsable de la gestion des accès des collaborateurs de votre organisme. Pensez à supprimer ou désactiver les comptes qui ne sont plus nécessaires ainsi qu’à vérifier régulièrement les accès attribués pour garantir la sécurité des données.</p>
         </#if>
 
     <#--  user_profile_type = organism  -->
@@ -176,9 +166,13 @@
                target="_blank">Activer mon compte</a>
         <#elseif section="outro">
             <p>Passé 4 jours, vous pourrez l'activer depuis <a href="https://vae.gouv.fr/" target="_blank">France VAE</a> via <strong>Mot de passe oublié</strong>.</p>
-            <p>Pour prendre en main vos missions (recevabilité, dossiers de validation, dates et résultats de jury) et paramétrer vos comptes locaux, consultez le <a href="https://scribehow.com/viewer/Tutoriel_certificateurs__gestion_des_candidatures__iAOKgJsISUOp5K7_zfYhzw?referrer=documents" target="_blank">tutoriel "Certificateurs – Gestion des candidatures"</a>.</p>
-            <p>Pour toutes questions liées à vos missions au sein de la plateforme, vous pourrez vous adresser à notre équipe support : <a href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</a></p>
+            <p>Pour prendre en main vos missions (recevabilité, dossiers de validation, dates et résultats de jury) et paramétrer vos comptes locaux, consultez le <a href="https://scribehow.com/viewer/Tutoriel_certificateurs__gestion_des_candidatures__iAOKgJsISUOp5K7_zfYhzw?referrer=documents" target="_blank">tutoriel "Certificateurs – Gestion des candidatures"</a>
+             et les ressources mises à votre disposition dans l'<a href="https://francevae.notion.site/Espace-documentaire-2ea100b69ece81fc9cded783f96d88e8">espace documentaire des certificateurs</a>.</p>
+            <p>Pour toutes questions liées à vos missions au sein de la plateforme, vous pourrez vous adresser à notre équipe support via le <a href="https://francevae.crisp.help/fr/?contact">formulaire de contact</a></p>
             <p>L'équipe France VAE vous souhaite une bonne intégration.</p>
+            
+            <h3>⚠️ Responsabilité de l’administrateur</h3>
+            <p>En tant qu'administrateur, vous êtes responsable de la gestion des accès des collaborateurs de votre organisme. Pensez à supprimer ou désactiver les comptes qui ne sont plus nécessaires ainsi qu’à vérifier régulièrement les accès attribués pour garantir la sécurité des données.</p>
         </#if>
 
      <#--  user_profile_type = certification_registry_manager  -->
