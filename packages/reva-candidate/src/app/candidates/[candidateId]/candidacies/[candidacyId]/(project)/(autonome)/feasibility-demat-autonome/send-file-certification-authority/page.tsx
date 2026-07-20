@@ -148,7 +148,11 @@ export default function SendFileCertificationAuthorityPage() {
           </div>
 
           <div className="mt-4 flex justify-between">
-            <Button priority="secondary" onClick={() => router.push("../")}>
+            <Button
+              data-testid="back-button"
+              priority="secondary"
+              onClick={() => router.push("../")}
+            >
               Retour
             </Button>
             <Button
