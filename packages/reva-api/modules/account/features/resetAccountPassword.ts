@@ -1,5 +1,5 @@
 import {
-  getAccountInIAM,
+  getAccountInIAMByKeycloakId,
   resetPassword,
 } from "@/modules/shared/auth/auth.helper";
 import { getJWTContent } from "@/modules/shared/auth/jwt.helper";
@@ -8,7 +8,7 @@ import {
   COMPTE_NON_TROUVE,
 } from "@/modules/shared/errors/messages";
 
-import { getAccountByKeycloakId } from "./getAccountByKeycloakId";
+import { getAccountByEmail } from "./getAccountByEmail";
 
 export const resetAccountPassword = async ({
   token,
@@ -23,20 +23,18 @@ export const resetAccountPassword = async ({
   };
 
   if (action === "reset-password") {
-    const iamAccount = await getAccountInIAM(
-      email,
-      process.env.KEYCLOAK_ADMIN_REALM_REVA as string,
-    );
+    const account = await getAccountByEmail(email);
 
-    if (!iamAccount) {
+    if (!account) {
       throw new Error(COMPTE_NON_TROUVE);
     }
 
-    const account = await getAccountByKeycloakId({
-      keycloakId: iamAccount?.id || "",
+    const iamAccount = await getAccountInIAMByKeycloakId({
+      keycloakId: account.keycloakId,
+      realm: process.env.KEYCLOAK_ADMIN_REALM_REVA as string,
     });
 
-    if (!account) {
+    if (!iamAccount) {
       throw new Error(COMPTE_NON_TROUVE);
     }
 
