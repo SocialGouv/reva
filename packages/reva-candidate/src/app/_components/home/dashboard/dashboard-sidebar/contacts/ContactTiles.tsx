@@ -67,6 +67,7 @@ export const ContactTiles = ({
       )}
       {showMultipleCertificationAuthorityAvailableContactTile && (
         <MultipleCertificationAuthorityAvailableContactTile
+          candidateId={candidacy.candidate.id}
           candidacyId={candidacy.id}
         />
       )}

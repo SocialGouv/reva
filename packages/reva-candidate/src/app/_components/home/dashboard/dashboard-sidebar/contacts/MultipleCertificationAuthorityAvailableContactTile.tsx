@@ -2,8 +2,10 @@ import Tile from "@codegouvfr/react-dsfr/Tile";
 
 export const MultipleCertificationAuthorityAvailableContactTile = ({
   candidacyId,
+  candidateId,
 }: {
   candidacyId: string;
+  candidateId: string;
 }) => (
   <Tile
     data-testid="multiple-certification-authority-available-contact-tile"
@@ -13,7 +15,7 @@ export const MultipleCertificationAuthorityAvailableContactTile = ({
     orientation="horizontal"
     detail="Choisir"
     linkProps={{
-      href: `/dashboard/candidacies/${candidacyId}/multiple-certification-authorities-selection/disclaimer`,
+      href: `/candidates/${candidateId}/candidacies/${candidacyId}/multiple-certification-authorities-selection/disclaimer`,
     }}
   />
 );

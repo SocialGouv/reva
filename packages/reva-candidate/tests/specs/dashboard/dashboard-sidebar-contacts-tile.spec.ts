@@ -492,7 +492,7 @@ test.describe("MultipleCertificationAuthorityAvailableContactTile", () => {
       multipleCertificationAuthorityAvailableContactTile.getByRole("link"),
     ).toHaveAttribute(
       "href",
-      `/candidat/dashboard/candidacies/${candidacy.id}/multiple-certification-authorities-selection/disclaimer/`,
+      `/candidat/candidates/${candidacy.candidate?.id}/candidacies/${candidacy.id}/multiple-certification-authorities-selection/disclaimer/`,
     );
   });
 
