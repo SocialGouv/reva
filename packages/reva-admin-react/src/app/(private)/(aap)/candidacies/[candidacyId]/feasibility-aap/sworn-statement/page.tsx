@@ -30,7 +30,7 @@ const schema = z
   .superRefine(({ swornStatement }, { addIssue }) => {
     if (!swornStatement?.[0]) {
       addIssue({
-        path: ["idCard"],
+        path: ["swornStatement"],
         message: "Merci de remplir ce champ",
         code: z.ZodIssueCode.custom,
       });
@@ -171,6 +171,7 @@ export default function SwornStatementPage() {
           }}
           state={errors.swornStatement ? "error" : "default"}
           stateRelatedMessage={errors.swornStatement?.[0]?.message}
+          dataTest="sworn-statement-upload"
         />
 
         <FormButtons
