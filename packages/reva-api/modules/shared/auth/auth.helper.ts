@@ -20,29 +20,6 @@ export const getAccountInIAM = async (email: string, realm: string) => {
   }
 };
 
-export const getAccountInIAMByKeycloakId = async ({
-  keycloakId,
-  realm,
-}: {
-  keycloakId: string;
-  realm: string;
-}) => {
-  try {
-    const keycloakAdmin = await getKeycloakAdmin();
-    const user = await keycloakAdmin.users.findOne({
-      id: keycloakId,
-      realm,
-    });
-
-    return user;
-  } catch (e) {
-    logger.error(e);
-    throw new Error(
-      `Erreur lors de la récupération du compte ${keycloakId} sur l' IAM`,
-    );
-  }
-};
-
 export const createAccountInIAM = async (
   account: {
     email: string;
