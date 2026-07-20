@@ -99,6 +99,7 @@ const GET_CANDIDACY_BY_ID_FOR_DASHBOARD = graphql(`
         }
       }
       candidate {
+        id
         niveauDeFormationLePlusEleve {
           level
         }
