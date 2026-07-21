@@ -24,7 +24,7 @@ export const CertificationAuthorityContactTile = ({
         </div>
       }
       detail="Consulter le(s) contact(s) référent(s)"
-      linkProps={{ href: "./certification-authority-contact-info" }}
+      linkProps={{ href: "./certification-authority-details" }}
     />
   );
 };

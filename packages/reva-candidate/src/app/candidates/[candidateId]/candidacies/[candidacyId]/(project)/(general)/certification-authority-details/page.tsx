@@ -8,15 +8,15 @@ import { Panel } from "@/components/layout/Panel";
 
 import { CertificationAuthorityCard } from "./_components/CertificationAuthorityCard";
 import { CertificationAuthorityLocalAccountCard } from "./_components/CertificationAuthorityLocalAccountCard";
-import { useCertificationAuthorityContactInfoPage } from "./certificationAuthorityContactInfo.hook";
+import { useCertificationAuthorityDetailsPage } from "./certificationAuthorityDetailsPage.hook";
 
-export default function CertificationAuthorityContactInfoPage() {
+export default function CertificationAuthorityDetailsPage() {
   const router = useRouter();
   const {
     certification,
     certificationAuthority,
     certificationAuthorityLocalAccounts,
-  } = useCertificationAuthorityContactInfoPage();
+  } = useCertificationAuthorityDetailsPage();
   if (
     !certification ||
     !certificationAuthority ||

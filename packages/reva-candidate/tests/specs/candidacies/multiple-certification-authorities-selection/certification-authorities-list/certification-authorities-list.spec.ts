@@ -100,7 +100,7 @@ test.describe("certification authorities list page", () => {
     await mutationPromise;
 
     await expect(page).toHaveURL(
-      `/candidat/candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-contact-info/`,
+      `/candidat/candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
     );
   });
 
@@ -128,7 +128,7 @@ test.describe("certification authorities list page", () => {
     await mutationPromise;
 
     await expect(page).toHaveURL(
-      `/candidat/candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-contact-info/`,
+      `/candidat/candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
     );
   });
 

@@ -57,7 +57,7 @@ const MultipleCertificationAuthoritiesListPage = () => {
       });
       successToast("Le certificateur a été mis à jour");
       router.push(
-        `/candidates/${candidateId}/candidacies/${candidacyId}/certification-authority-contact-info`,
+        `/candidates/${candidateId}/candidacies/${candidacyId}/certification-authority-details`,
       );
     } catch (error) {
       graphqlErrorToast(error);

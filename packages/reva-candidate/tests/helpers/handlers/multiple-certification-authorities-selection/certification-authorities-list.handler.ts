@@ -81,7 +81,7 @@ export const certificationAuthoritiesListHandlers = (
         graphQLResolver(candidacyInput),
       ),
       fvae.query(
-        "getCandidacyByIdForCertificationAuthorityContactInfoPage",
+        "getCandidacyByIdForCertificationAuthorityDetailsPage",
         graphQLResolver(candidacyInput),
       ),
     ],

@@ -25,7 +25,7 @@ const certification = createCertificationEntity({
   codeRncp: "RNCP1234",
 }) as Certification;
 
-function createCertificationAuthorityContactInfoHandlers(
+function createCertificationAuthorityDetailsHandlers(
   candidacy: CandidacyEntity,
   {
     activeFeaturesForConnectedUser = [],
@@ -47,7 +47,7 @@ function createCertificationAuthorityContactInfoHandlers(
     }),
     ...createCandidacyGuardsAndDashboardHandlers(candidacy),
     fvae.query(
-      "getCandidacyByIdForCertificationAuthorityContactInfoPage",
+      "getCandidacyByIdForCertificationAuthorityDetailsPage",
       graphQLResolver({
         getCandidacyById: {
           certification: {
@@ -76,7 +76,7 @@ function createCertificationAuthorityContactInfoHandlers(
   ];
 }
 
-test.describe("certification authority contact info page", () => {
+test.describe("certification authority details page", () => {
   const candidacy = createCandidacyEntity({
     candidate,
     certification,
@@ -85,7 +85,7 @@ test.describe("certification authority contact info page", () => {
 
   test.use({
     mswHandlers: [
-      createCertificationAuthorityContactInfoHandlers(candidacy),
+      createCertificationAuthorityDetailsHandlers(candidacy),
       { scope: "test" },
     ],
   });
@@ -93,7 +93,7 @@ test.describe("certification authority contact info page", () => {
   test("shows the page title and description", async ({ page }) => {
     await loginAndWaitForCandidaciesInitialLoad(page);
     await page.goto(
-      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-contact-info/`,
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
     );
 
     await expect(
@@ -110,7 +110,7 @@ test.describe("certification authority contact info page", () => {
   test("shows the breadcrumb with certification details", async ({ page }) => {
     await loginAndWaitForCandidaciesInitialLoad(page);
     await page.goto(
-      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-contact-info/`,
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
     );
 
     const breadcrumb = page.getByLabel("vous êtes ici :");
@@ -131,7 +131,7 @@ test.describe("certification authority contact info page", () => {
   test("shows a back button", async ({ page }) => {
     await loginAndWaitForCandidaciesInitialLoad(page);
     await page.goto(
-      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-contact-info/`,
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
     );
 
     await expect(page.getByRole("button", { name: "Retour" })).toBeVisible();
@@ -140,7 +140,7 @@ test.describe("certification authority contact info page", () => {
   test("shows the certification authority card", async ({ page }) => {
     await loginAndWaitForCandidaciesInitialLoad(page);
     await page.goto(
-      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-contact-info/`,
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
     );
 
     const card = page.getByTestId("certification-authority-card");
@@ -159,7 +159,7 @@ test.describe("certification authority contact info page", () => {
   }) => {
     await loginAndWaitForCandidaciesInitialLoad(page);
     await page.goto(
-      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-contact-info/`,
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
     );
 
     const card = page.getByTestId("certification-authority-local-account-card");
@@ -175,7 +175,7 @@ test.describe("certification authority contact info page", () => {
   });
 });
 
-test.describe("certification authority contact info page with NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature active", () => {
+test.describe("certification authority details page with NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature active", () => {
   const candidacy = createCandidacyEntity({
     candidate,
     certification,
@@ -184,7 +184,7 @@ test.describe("certification authority contact info page with NEW_CANDIDACY_CERT
 
   test.use({
     mswHandlers: [
-      createCertificationAuthorityContactInfoHandlers(candidacy, {
+      createCertificationAuthorityDetailsHandlers(candidacy, {
         activeFeaturesForConnectedUser: [
           "NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD",
         ],
@@ -203,7 +203,7 @@ test.describe("certification authority contact info page with NEW_CANDIDACY_CERT
   }) => {
     await loginAndWaitForCandidaciesInitialLoad(page);
     await page.goto(
-      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-contact-info/`,
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
     );
 
     const card = page.getByTestId("certification-authority-card");
@@ -223,7 +223,7 @@ test.describe("certification authority contact info page with NEW_CANDIDACY_CERT
   });
 });
 
-test.describe("certification authority contact info page with NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature active and no candidacy.certificationAuthority", () => {
+test.describe("certification authority details page with NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature active and no candidacy.certificationAuthority", () => {
   const candidacy = createCandidacyEntity({
     candidate,
     certification,
@@ -232,7 +232,7 @@ test.describe("certification authority contact info page with NEW_CANDIDACY_CERT
 
   test.use({
     mswHandlers: [
-      createCertificationAuthorityContactInfoHandlers(candidacy, {
+      createCertificationAuthorityDetailsHandlers(candidacy, {
         activeFeaturesForConnectedUser: [
           "NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD",
         ],
@@ -247,7 +247,7 @@ test.describe("certification authority contact info page with NEW_CANDIDACY_CERT
   }) => {
     await loginAndWaitForCandidaciesInitialLoad(page);
     await page.goto(
-      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-contact-info/`,
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
     );
 
     await expect(

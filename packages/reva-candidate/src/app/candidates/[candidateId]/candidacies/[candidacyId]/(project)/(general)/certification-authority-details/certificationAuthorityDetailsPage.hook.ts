@@ -6,8 +6,8 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 
 import { graphql } from "@/graphql/generated";
 
-const getCandidacyByIdForCertificationAuthorityContactInfoPage = graphql(`
-  query getCandidacyByIdForCertificationAuthorityContactInfoPage(
+const getCandidacyByIdForCertificationAuthorityDetailsPage = graphql(`
+  query getCandidacyByIdForCertificationAuthorityDetailsPage(
     $candidacyId: ID!
   ) {
     getCandidacyById(id: $candidacyId) {
@@ -37,7 +37,7 @@ const getCandidacyByIdForCertificationAuthorityContactInfoPage = graphql(`
   }
 `);
 
-export const useCertificationAuthorityContactInfoPage = () => {
+export const useCertificationAuthorityDetailsPage = () => {
   const { graphqlClient } = useGraphQlClient();
   const { isFeatureActive } = useFeatureFlipping();
   const isNewCertificationAuthorityCardFeatureActive = isFeatureActive(
@@ -49,14 +49,10 @@ export const useCertificationAuthorityContactInfoPage = () => {
   }>();
 
   const { data } = useSuspenseQuery({
-    queryKey: [
-      "candidacy",
-      "certification-authority-contact-info",
-      candidacyId,
-    ],
+    queryKey: ["candidacy", "certification-authority-details", candidacyId],
     queryFn: () =>
       graphqlClient.request(
-        getCandidacyByIdForCertificationAuthorityContactInfoPage,
+        getCandidacyByIdForCertificationAuthorityDetailsPage,
         {
           candidacyId,
         },

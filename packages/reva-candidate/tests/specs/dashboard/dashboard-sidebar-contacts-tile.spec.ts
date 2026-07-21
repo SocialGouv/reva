@@ -220,7 +220,7 @@ test.describe("CertificationAuthorityContactTile", () => {
     );
   });
 
-  test("should lead me to the certification authority contact info page when i click on the tile", async ({
+  test("should lead me to the certification authority details page when i click on the tile", async ({
     page,
     msw,
   }) => {
@@ -234,22 +234,22 @@ test.describe("CertificationAuthorityContactTile", () => {
 
     const fvae = graphql.link("https://reva-api/api/graphql");
 
-    const getCandidacyByIdForCertificationAuthorityContactInfoPageHandler =
+    const getCandidacyByIdForCertificationAuthorityDetailsPageHandler =
       fvae.query(
-        "getCandidacyByIdForCertificationAuthorityContactInfoPage",
+        "getCandidacyByIdForCertificationAuthorityDetailsPage",
         graphQLResolver({
           getCandidacyById: {},
         }),
       );
 
     await setupDashboard(page, msw, candidacy, [
-      getCandidacyByIdForCertificationAuthorityContactInfoPageHandler,
+      getCandidacyByIdForCertificationAuthorityDetailsPageHandler,
     ]);
 
     await page.getByTestId("certification-authority-contact-tile").click();
 
     await expect(page).toHaveURL(
-      "/candidat/candidates/1/candidacies/1/certification-authority-contact-info/",
+      "/candidat/candidates/1/candidacies/1/certification-authority-details/",
     );
   });
 
