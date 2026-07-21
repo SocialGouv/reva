@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { PREVIEW_URL_REFETCH_INTERVAL_MS } from "@/constants/previewUrl.constant";
 import { useUrqlClient } from "@/components/urql-client";
+import { PREVIEW_URL_REFETCH_INTERVAL_MS } from "@/constants/previewUrl.constant";
 
 import { graphql } from "@/graphql/generated";
 import { UpdateCertificationAdditionalInfoInput } from "@/graphql/generated/graphql";

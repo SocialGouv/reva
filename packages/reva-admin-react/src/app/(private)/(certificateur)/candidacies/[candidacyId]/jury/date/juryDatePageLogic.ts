@@ -3,8 +3,8 @@ import { useParams } from "next/navigation";
 
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { PREVIEW_URL_REFETCH_INTERVAL_MS } from "@/constants/previewUrl.constant";
 import { REST_API_URL } from "@/config/config";
+import { PREVIEW_URL_REFETCH_INTERVAL_MS } from "@/constants/previewUrl.constant";
 
 import { graphql } from "@/graphql/generated";
 

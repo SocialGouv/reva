@@ -8,11 +8,11 @@ import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { LegalDocumentList } from "@/components/legal-document-list/LegalDocumentList";
 import { Info } from "@/components/organism-summary/Info";
-import { PREVIEW_URL_REFETCH_INTERVAL_MS } from "@/constants/previewUrl.constant";
 import {
   OrganismSummary,
   Typology,
 } from "@/components/organism-summary/OrganismSummary";
+import { PREVIEW_URL_REFETCH_INTERVAL_MS } from "@/constants/previewUrl.constant";
 
 import { graphql } from "@/graphql/generated";
 
