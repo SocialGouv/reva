@@ -122,7 +122,8 @@ export default function SendFileCertificationAuthorityPage() {
   const decisionSentAt = feasibility?.decisionSentAt;
   const decisionComment = feasibility?.decisionComment;
   const feasibilityFileSentAt = feasibility?.feasibilityFileSentAt;
-  const feasibilityIsPending = decision === "PENDING";
+  const feasibilityIsPending =
+    decision === "PENDING" || decision === "COMPLETE";
   const feasibilityIsIncomplete = decision === "INCOMPLETE";
   const feasibilityHasBeenSent = !!feasibilityFileSentAt;
   const feasibilityFileNeedsNewOrResendAction =

@@ -50,6 +50,7 @@ const FeasibilityBanner = ({
     history={history}
   />
 );
+
 const AapFeasibilityPage = () => {
   const {
     certification,

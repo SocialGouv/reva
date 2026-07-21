@@ -33,18 +33,21 @@ export const FeasibiltyStatus = (props: Props) => {
     <div className="flex flex-col gap-6">
       <div>
         <h4>Décision prise concernant ce dossier</h4>
-        {feasibility?.decision == "PENDING" && (
+        {(feasibility?.decision == "PENDING" ||
+          feasibility?.decision == "COMPLETE") && (
           <GrayCard className="gap-4 italic">En attente</GrayCard>
         )}
 
-        {feasibility?.decision && feasibility?.decision != "PENDING" && (
-          <FeasibilityDecisionInfo
-            id={feasibility.id}
-            decision={feasibility.decision}
-            decisionSentAt={feasibility.decisionSentAt}
-            decisionComment={feasibility.decisionComment}
-          />
-        )}
+        {feasibility?.decision &&
+          feasibility?.decision != "PENDING" &&
+          feasibility?.decision != "COMPLETE" && (
+            <FeasibilityDecisionInfo
+              id={feasibility.id}
+              decision={feasibility.decision}
+              decisionSentAt={feasibility.decisionSentAt}
+              decisionComment={feasibility.decisionComment}
+            />
+          )}
       </div>
 
       {feasibilityFile && (
