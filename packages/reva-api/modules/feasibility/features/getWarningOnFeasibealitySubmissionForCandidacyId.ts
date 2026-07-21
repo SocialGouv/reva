@@ -85,8 +85,7 @@ export const getWarningOnFeasibilitySubmissionForCandidacyId = async (
   const hasPreviousFeasibilityRejectedForCurrentCertification =
     candidacies.some(
       (previousCandidacy) =>
-        previousCandidacy.certificationId ===
-          previousCandidacy.certificationId &&
+        candidacy.certificationId === previousCandidacy.certificationId &&
         previousCandidacy.Feasibility[0]?.decision === "REJECTED" &&
         new Date(
           previousCandidacy.Feasibility[0]?.feasibilityFileSentAt || "",
