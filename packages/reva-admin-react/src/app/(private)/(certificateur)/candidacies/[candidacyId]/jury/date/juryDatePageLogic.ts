@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { PREVIEW_URL_REFETCH_INTERVAL_MS } from "@/constants/previewUrl.constant";
 import { REST_API_URL } from "@/config/config";
 
 import { graphql } from "@/graphql/generated";
@@ -64,6 +65,7 @@ export const useJuryDatePageLogic = () => {
 
   const getCandidacy = useQuery({
     queryKey: ["getJuryForDatePageByCandidacyId", candidacyId],
+    refetchInterval: PREVIEW_URL_REFETCH_INTERVAL_MS,
     queryFn: () =>
       graphqlClient.request(getJuryByCandidacyIdQuery, {
         candidacyId: candidacyId,

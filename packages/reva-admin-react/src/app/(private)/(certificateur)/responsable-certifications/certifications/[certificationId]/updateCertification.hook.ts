@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { PREVIEW_URL_REFETCH_INTERVAL_MS } from "@/constants/previewUrl.constant";
 
 import { graphql } from "@/graphql/generated";
 import { ValidateCertificationInput } from "@/graphql/generated/graphql";
@@ -106,6 +107,7 @@ export const useUpdateCertificationPage = ({
       "certifications",
       "getCertificationForCertificationRegistryManagerUpdateCertificationPage",
     ],
+    refetchInterval: PREVIEW_URL_REFETCH_INTERVAL_MS,
     queryFn: () =>
       graphqlClient.request(getCertificationQuery, {
         certificationId,

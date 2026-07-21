@@ -4,6 +4,7 @@ import { useParams } from "next/dist/client/components/navigation";
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { REST_API_URL } from "@/config/config";
+import { PREVIEW_URL_REFETCH_INTERVAL_MS } from "@/constants/previewUrl.constant";
 
 import { graphql } from "@/graphql/generated";
 
@@ -75,6 +76,7 @@ export const useAapDossierDeValidationPage = () => {
 
   const { data: getCandidacyResponse, status: getCandidacyStatus } = useQuery({
     queryKey: [candidacyId, "getCandidacyForDossierDeValidation"],
+    refetchInterval: PREVIEW_URL_REFETCH_INTERVAL_MS,
     queryFn: () =>
       graphqlClient.request(getCandidacyQuery, {
         candidacyId,

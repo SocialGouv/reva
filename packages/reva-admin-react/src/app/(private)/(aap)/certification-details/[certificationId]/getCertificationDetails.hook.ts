@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { PREVIEW_URL_REFETCH_INTERVAL_MS } from "@/constants/previewUrl.constant";
 
 import { graphql } from "@/graphql/generated";
 
@@ -122,6 +123,7 @@ export const useCertificationDetailsPage = ({
       "certifications",
       "getCertificationForCertificationDetailsPage",
     ],
+    refetchInterval: PREVIEW_URL_REFETCH_INTERVAL_MS,
     queryFn: () =>
       graphqlClient.request(getCertificationQuery, {
         certificationId,

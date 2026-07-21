@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { PREVIEW_URL_REFETCH_INTERVAL_MS } from "@/constants/previewUrl.constant";
 
 import { graphql } from "@/graphql/generated";
 import { JuryInfoInput } from "@/graphql/generated/graphql";
@@ -150,6 +151,7 @@ export const useJuryResultPageLogic = () => {
 
   const getCandidacy = useQuery({
     queryKey: ["getJuryForResultPageByCandidacyId", candidacyId],
+    refetchInterval: PREVIEW_URL_REFETCH_INTERVAL_MS,
     queryFn: () =>
       graphqlClient.request(getJuryByCandidacyIdQuery, {
         candidacyId: candidacyId,
