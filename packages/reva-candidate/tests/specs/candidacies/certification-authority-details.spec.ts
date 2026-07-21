@@ -30,6 +30,7 @@ function createCertificationAuthorityDetailsHandlers(
   {
     activeFeaturesForConnectedUser = [],
     candidacyCertificationAuthority,
+    isCandidacyCertificationAuthorityUpdatable = false,
   }: {
     activeFeaturesForConnectedUser?: string[];
     candidacyCertificationAuthority?: {
@@ -37,6 +38,7 @@ function createCertificationAuthorityDetailsHandlers(
       contactEmail: string;
       contactPhone: string;
     } | null;
+    isCandidacyCertificationAuthorityUpdatable?: boolean;
   } = {},
 ) {
   return [
@@ -70,6 +72,7 @@ function createCertificationAuthorityDetailsHandlers(
               contactPhone: "0987654321",
             },
           },
+          isCandidacyCertificationAuthorityUpdatable,
         },
       }),
     ),
@@ -173,88 +176,242 @@ test.describe("certification authority details page", () => {
     await expect(card.getByText("jean.dupont@example.com")).toBeVisible();
     await expect(card.getByText("0123456789")).toBeVisible();
   });
-});
 
-test.describe("certification authority details page with NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature active", () => {
-  const candidacy = createCandidacyEntity({
-    candidate,
-    certification,
-    status: "PARCOURS_CONFIRME",
-  });
+  test.describe("when the NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature is active", () => {
+    test.describe("and certification authority is updatable", () => {
+      const candidacy = createCandidacyEntity({
+        candidate,
+        certification,
+        status: "PARCOURS_CONFIRME",
+      });
 
-  test.use({
-    mswHandlers: [
-      createCertificationAuthorityDetailsHandlers(candidacy, {
-        activeFeaturesForConnectedUser: [
-          "NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD",
+      test.use({
+        mswHandlers: [
+          createCertificationAuthorityDetailsHandlers(candidacy, {
+            activeFeaturesForConnectedUser: [
+              "NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD",
+            ],
+            candidacyCertificationAuthority: {
+              label: "Candidacy Certification Authority",
+              contactEmail: "candidacy-authority@example.com",
+              contactPhone: "0611223344",
+            },
+            isCandidacyCertificationAuthorityUpdatable: true,
+          }),
+          { scope: "test" },
         ],
-        candidacyCertificationAuthority: {
-          label: "Candidacy Certification Authority",
-          contactEmail: "candidacy-authority@example.com",
-          contactPhone: "0611223344",
-        },
-      }),
-      { scope: "test" },
-    ],
-  });
+      });
 
-  test("shows the certification authority card from candidacy.certificationAuthority instead of feasibility.certificationAuthority", async ({
-    page,
-  }) => {
-    await loginAndWaitForCandidaciesInitialLoad(page);
-    await page.goto(
-      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
-    );
+      test("shows the 'Changer de certificateur' button", async ({ page }) => {
+        await loginAndWaitForCandidaciesInitialLoad(page);
+        await page.goto(
+          `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
+        );
 
-    const card = page.getByTestId("certification-authority-card");
+        await expect(
+          page.getByRole("link", { name: "Changer de certificateur" }),
+        ).toBeVisible();
+      });
 
-    await expect(card).toBeVisible();
-    await expect(
-      card.getByRole("heading", {
-        name: "Candidacy Certification Authority",
-      }),
-    ).toBeVisible();
-    await expect(
-      card.getByText("candidacy-authority@example.com"),
-    ).toBeVisible();
-    await expect(card.getByText("0611223344")).toBeVisible();
+      test("'Changer de certificateur' links to the certification authorities list page", async ({
+        page,
+      }) => {
+        await loginAndWaitForCandidaciesInitialLoad(page);
+        await page.goto(
+          `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
+        );
 
-    await expect(card.getByText("Autorité Certificatrice")).toHaveCount(0);
-  });
-});
+        await expect(
+          page.getByRole("link", { name: "Changer de certificateur" }),
+        ).toHaveAttribute(
+          "href",
+          `/candidat/candidates/${candidate.id}/candidacies/${candidacy.id}/multiple-certification-authorities-selection/certification-authorities-list/`,
+        );
+      });
+    });
 
-test.describe("certification authority details page with NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature active and no candidacy.certificationAuthority", () => {
-  const candidacy = createCandidacyEntity({
-    candidate,
-    certification,
-    status: "PARCOURS_CONFIRME",
-  });
+    test.describe("and certification authority is not updatable", () => {
+      const candidacy = createCandidacyEntity({
+        candidate,
+        certification,
+        status: "PARCOURS_CONFIRME",
+      });
 
-  test.use({
-    mswHandlers: [
-      createCertificationAuthorityDetailsHandlers(candidacy, {
-        activeFeaturesForConnectedUser: [
-          "NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD",
+      test.use({
+        mswHandlers: [
+          createCertificationAuthorityDetailsHandlers(candidacy, {
+            activeFeaturesForConnectedUser: [
+              "NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD",
+            ],
+            candidacyCertificationAuthority: {
+              label: "Candidacy Certification Authority",
+              contactEmail: "candidacy-authority@example.com",
+              contactPhone: "0611223344",
+            },
+            isCandidacyCertificationAuthorityUpdatable: false,
+          }),
+          { scope: "test" },
         ],
-        candidacyCertificationAuthority: null,
-      }),
-      { scope: "test" },
-    ],
+      });
+
+      test("does not show the 'Changer de certificateur' button", async ({
+        page,
+      }) => {
+        await loginAndWaitForCandidaciesInitialLoad(page);
+        await page.goto(
+          `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
+        );
+
+        await expect(
+          page.getByRole("link", { name: "Changer de certificateur" }),
+        ).not.toBeVisible();
+      });
+    });
+
+    test.describe("and candidacy.certificationAuthority is set", () => {
+      const candidacy = createCandidacyEntity({
+        candidate,
+        certification,
+        status: "PARCOURS_CONFIRME",
+      });
+
+      test.use({
+        mswHandlers: [
+          createCertificationAuthorityDetailsHandlers(candidacy, {
+            activeFeaturesForConnectedUser: [
+              "NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD",
+            ],
+            candidacyCertificationAuthority: {
+              label: "Candidacy Certification Authority",
+              contactEmail: "candidacy-authority@example.com",
+              contactPhone: "0611223344",
+            },
+          }),
+          { scope: "test" },
+        ],
+      });
+
+      test("shows the certification authority card from candidacy.certificationAuthority instead of feasibility.certificationAuthority", async ({
+        page,
+      }) => {
+        await loginAndWaitForCandidaciesInitialLoad(page);
+        await page.goto(
+          `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
+        );
+
+        const card = page.getByTestId("certification-authority-card");
+
+        await expect(card).toBeVisible();
+        await expect(
+          card.getByRole("heading", {
+            name: "Candidacy Certification Authority",
+          }),
+        ).toBeVisible();
+        await expect(
+          card.getByText("candidacy-authority@example.com"),
+        ).toBeVisible();
+        await expect(card.getByText("0611223344")).toBeVisible();
+
+        await expect(card.getByText("Autorité Certificatrice")).toHaveCount(0);
+      });
+    });
+
+    test.describe("and candidacy.certificationAuthority is not set", () => {
+      const candidacy = createCandidacyEntity({
+        candidate,
+        certification,
+        status: "PARCOURS_CONFIRME",
+      });
+
+      test.use({
+        mswHandlers: [
+          createCertificationAuthorityDetailsHandlers(candidacy, {
+            activeFeaturesForConnectedUser: [
+              "NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD",
+            ],
+            candidacyCertificationAuthority: null,
+          }),
+          { scope: "test" },
+        ],
+      });
+
+      test("renders nothing, even though feasibility.certificationAuthority is set", async ({
+        page,
+      }) => {
+        await loginAndWaitForCandidaciesInitialLoad(page);
+        await page.goto(
+          `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
+        );
+
+        await expect(
+          page.getByRole("heading", { name: "Certificateur", level: 1 }),
+        ).toHaveCount(0);
+        await expect(
+          page.getByTestId("certification-authority-card"),
+        ).toHaveCount(0);
+      });
+    });
   });
 
-  test("renders nothing, even though feasibility.certificationAuthority is set", async ({
-    page,
-  }) => {
-    await loginAndWaitForCandidaciesInitialLoad(page);
-    await page.goto(
-      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
-    );
+  test.describe("when the NEW_CANDIDACY_CERTIFICATION_AUTHORITY_CARD feature is not active", () => {
+    test.describe("and certification authority is updatable", () => {
+      const candidacy = createCandidacyEntity({
+        candidate,
+        certification,
+        status: "PARCOURS_CONFIRME",
+      });
 
-    await expect(
-      page.getByRole("heading", { name: "Certificateur", level: 1 }),
-    ).toHaveCount(0);
-    await expect(page.getByTestId("certification-authority-card")).toHaveCount(
-      0,
-    );
+      test.use({
+        mswHandlers: [
+          createCertificationAuthorityDetailsHandlers(candidacy, {
+            isCandidacyCertificationAuthorityUpdatable: true,
+          }),
+          { scope: "test" },
+        ],
+      });
+
+      test("does not show the 'Changer de certificateur' button", async ({
+        page,
+      }) => {
+        await loginAndWaitForCandidaciesInitialLoad(page);
+        await page.goto(
+          `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
+        );
+
+        await expect(
+          page.getByRole("link", { name: "Changer de certificateur" }),
+        ).not.toBeVisible();
+      });
+    });
+  });
+
+  test.describe("when certification authority is not updatable", () => {
+    const candidacy = createCandidacyEntity({
+      candidate,
+      certification,
+      status: "PARCOURS_CONFIRME",
+    });
+
+    test.use({
+      mswHandlers: [
+        createCertificationAuthorityDetailsHandlers(candidacy, {
+          isCandidacyCertificationAuthorityUpdatable: false,
+        }),
+        { scope: "test" },
+      ],
+    });
+
+    test("does not show the 'Changer de certificateur' button", async ({
+      page,
+    }) => {
+      await loginAndWaitForCandidaciesInitialLoad(page);
+      await page.goto(
+        `candidates/${candidate.id}/candidacies/${candidacy.id}/certification-authority-details/`,
+      );
+
+      await expect(
+        page.getByRole("link", { name: "Changer de certificateur" }),
+      ).not.toBeVisible();
+    });
   });
 });

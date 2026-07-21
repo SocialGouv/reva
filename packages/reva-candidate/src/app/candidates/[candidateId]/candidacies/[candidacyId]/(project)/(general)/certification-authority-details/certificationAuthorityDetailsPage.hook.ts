@@ -33,6 +33,7 @@ const getCandidacyByIdForCertificationAuthorityDetailsPage = graphql(`
           contactPhone
         }
       }
+      isCandidacyCertificationAuthorityUpdatable
     }
   }
 `);
@@ -70,10 +71,15 @@ export const useCertificationAuthorityDetailsPage = () => {
   const certificationAuthorityLocalAccounts =
     candidacy?.certificationAuthorityLocalAccounts;
 
+  const isCandidacyCertificationAuthorityUpdatable =
+    isNewCertificationAuthorityCardFeatureActive &&
+    candidacy?.isCandidacyCertificationAuthorityUpdatable;
+
   return {
     candidacy,
     certification,
     certificationAuthority,
     certificationAuthorityLocalAccounts,
+    isCandidacyCertificationAuthorityUpdatable,
   };
 };

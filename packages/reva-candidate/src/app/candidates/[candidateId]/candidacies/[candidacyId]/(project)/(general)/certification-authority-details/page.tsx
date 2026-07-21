@@ -1,7 +1,8 @@
 "use client";
 
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
-import { useRouter } from "next/navigation";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { useParams, useRouter } from "next/navigation";
 
 import { BackButton } from "@/components/back-button/BackButton";
 import { Panel } from "@/components/layout/Panel";
@@ -12,10 +13,15 @@ import { useCertificationAuthorityDetailsPage } from "./certificationAuthorityDe
 
 export default function CertificationAuthorityDetailsPage() {
   const router = useRouter();
+  const { candidateId, candidacyId } = useParams<{
+    candidateId: string;
+    candidacyId: string;
+  }>();
   const {
     certification,
     certificationAuthority,
     certificationAuthorityLocalAccounts,
+    isCandidacyCertificationAuthorityUpdatable,
   } = useCertificationAuthorityDetailsPage();
   if (
     !certification ||
@@ -70,7 +76,20 @@ export default function CertificationAuthorityDetailsPage() {
         ))}
       </div>
 
-      <BackButton navigateBack={() => router.push("../")} />
+      <div className="flex flex-row gap-4 justify-between">
+        <BackButton navigateBack={() => router.push("../")} />
+        {isCandidacyCertificationAuthorityUpdatable && (
+          <Button
+            priority="tertiary no outline"
+            iconId="fr-icon-arrow-left-right-line"
+            linkProps={{
+              href: `/candidates/${candidateId}/candidacies/${candidacyId}/multiple-certification-authorities-selection/certification-authorities-list`,
+            }}
+          >
+            Changer de certificateur
+          </Button>
+        )}
+      </div>
     </Panel>
   );
 }
