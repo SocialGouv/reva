@@ -145,7 +145,7 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
                   <div className="flex items-center pt-1.5 mb-4">
                     <span className="fr-icon-user-fill fr-icon mr-2" />
                     <p className="font-bold text-xl capitalize">
-                      {`${candidate?.givenName || ""} ${candidate?.firstname || ""}`}
+                      {`${candidate?.givenName || candidate?.lastname} ${candidate?.firstname || ""}`}
                     </p>
                   </div>
                   {typeAccompagnement === "AUTONOME" && (
