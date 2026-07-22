@@ -106,7 +106,10 @@ export const Footer = () => (
             </Link>
           </li>
           <li className="fr-footer__bottom-item">
-            <Link className="fr-footer__bottom-link" href="/../nous-contacter">
+            <Link
+              className="fr-footer__bottom-link"
+              href="https://francevae.crisp.help/fr/?contact"
+            >
               Nous&nbsp;contacter
             </Link>
           </li>
