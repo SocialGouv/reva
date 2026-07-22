@@ -16,7 +16,6 @@ export const LayoutNotice = () => {
     pathname.startsWith("/information") || pathname.startsWith("/cgu");
 
   const { maisonMereCgu, getMaisonMereCGUisLoading } = useAppCgu();
-  const isLoading = getMaisonMereCGUisLoading || status === "LOADING";
   const canSeeAapCgu =
     authenticated &&
     isGestionnaireMaisonMereAAP &&
@@ -24,7 +23,7 @@ export const LayoutNotice = () => {
     maisonMereCgu &&
     !maisonMereCgu.isLatestVersion;
 
-  if (isLoading || isAdmin) {
+  if (getMaisonMereCGUisLoading || isAdmin) {
     return null;
   }
 
