@@ -79,6 +79,8 @@ export const updateCandidacyEndAccompagnementDecision = async ({
       data: {
         endAccompagnementStatus: "NOT_REQUESTED",
         endAccompagnementDate: null,
+        endAccompagnementReason: null,
+        endAccompagnementCandidateDropOutReasonId: null,
       },
     });
   }
