@@ -12,7 +12,7 @@ import {
 
 import { MaisonMereAAP } from "./MaisonMereAAP";
 
-const CandidacyLayoutSideMenu = ({
+const CandidaciesListSideMenu = ({
   candidaciesByStatusCount,
   cohortesVaeCollectives,
 }: {
@@ -290,7 +290,7 @@ export const CandidaciesLayout = ({
   cohortesVaeCollectives: { id: string; nom: string }[];
 }) => (
   <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
-    <CandidacyLayoutSideMenu
+    <CandidaciesListSideMenu
       candidaciesByStatusCount={candidaciesByStatusCount}
       cohortesVaeCollectives={cohortesVaeCollectives}
     />
