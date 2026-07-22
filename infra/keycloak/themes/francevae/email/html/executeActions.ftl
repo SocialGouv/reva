@@ -54,7 +54,7 @@
             <p><i>Ce lien est valable ${linkExpirationFormatter(linkExpiration)}.</i></p>
             <p>Une fois la double authentification activée, vous devrez saisir un nouveau code à chaque connexion. Conservez votre téléphone en sécurité.</p>
             <p>Pour toute question, vous pouvez nous contacter via
-                <a href="https://vae.gouv.fr/nous-contacter/" target="_blank">notre formulaire de contact</a>.
+                <a href="https://francevae.crisp.help/fr/?contact" target="_blank">notre formulaire de contact</a>.
             </p>
             <p>Cordialement,</p>
             <p>L'équipe France VAE.</p>
@@ -146,7 +146,7 @@
 
             <br />
 
-            <p>Pour toute question, vous pouvez nous contacter via <a href="https://vae.gouv.fr/nous-contacter/" target="_blank">notre formulaire de contact</a>.</p>
+            <p>Pour toute question, vous pouvez nous contacter via <a href="https://francevae.crisp.help/fr/?contact" target="_blank">notre formulaire de contact</a>.</p>
 
             <p>
             Cordialement,
@@ -187,7 +187,7 @@
         <#elseif section="outro">
             <p>Passé 4 jours, vous pourrez l'activer depuis <a href="https://vae.gouv.fr/" target="_blank">France VAE</a> via <strong>Mot de passe oublié</strong>.</p>
             <p>Afin de bénéficier d'un appui à la prise en main des fonctionnalités liées à vos missions sur la plateforme, nous vous invitons à consulter le <a href="https://scribehow.com/viewer/Tutoriel_du_Responsable_des_Certifications__7T3db0CzTtSaRV4tXSubfw?referrer=documents" target="_blank">tutoriel "Responsable des Certifications"</a> et les ressources mises à votre disposition dans l'<a href="https://www.notion.so/Espace-documentaire-2ea100b69ece81fc9cded783f96d88e8?pvs=21" target="_blank">espace documentaire des certificateurs</a></p>
-            <p>Pour toutes questions liées à vos missions au sein de la plateforme, vous pourrez vous adresser à notre équipe support via <a href="https://vae.gouv.fr/nous-contacter/" target="_blank">https://vae.gouv.fr/nous-contacter/</a></p>
+            <p>Pour toutes questions liées à vos missions au sein de la plateforme, vous pourrez vous adresser à notre équipe support via <a href="https://francevae.crisp.help/fr/?contact" target="_blank">https://francevae.crisp.help/fr/?contact</a></p>
             <p>L'équipe France VAE vous souhaite une bonne intégration au sein de la plateforme.</p>
         </#if>
 

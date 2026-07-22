@@ -17,7 +17,7 @@ ${link}
 
 Ce lien est valable ${linkExpirationFormatter(linkExpiration)}.
 
-Pour toute question, contactez-nous via https://vae.gouv.fr/nous-contacter/
+Pour toute question, contactez-nous via https://francevae.crisp.help/fr/?contact
 
 Cordialement,
 L'équipe France VAE.
