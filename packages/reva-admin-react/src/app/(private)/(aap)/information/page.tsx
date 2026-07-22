@@ -10,8 +10,8 @@ export default function InformationPage() {
         <p>
           Nous vous invitons à lire avec attention les informations suivantes, à
           lire attentivement les CGU et le cahier des charges et, à{" "}
-          <a href="https://vae.gouv.fr/nous-contacter/">nous consulter</a> si
-          vous avez besoin de précisions.
+          <a href="https://francevae.crisp.help/fr/?contact">nous consulter</a>{" "}
+          si vous avez besoin de précisions.
         </p>
         <hr className="mt-12 mb-6" />
       </div>

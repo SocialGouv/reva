@@ -15,7 +15,7 @@ const SitemapPage = () => (
         <a href="/declaration-accessibilite">Déclaration d'accessibilité</a>
       </li>
       <li>
-        <a href="/nous-contacter">Nous contacter</a>
+        <a href="https://francevae.crisp.help/fr/?contact">Nous contacter</a>
       </li>
     </ul>
   </div>
