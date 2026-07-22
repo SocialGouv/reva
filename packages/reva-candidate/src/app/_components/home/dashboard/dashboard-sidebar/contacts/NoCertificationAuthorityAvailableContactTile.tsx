@@ -13,7 +13,7 @@ export const NoCertificationAuthorityContactTile = () => (
       <span>
         Actuellement, aucun certificateur ne prend cette certification en
         charge. Pour que cette candidature puisse aboutir,{" "}
-        <a href="https://vae.gouv.fr/nous-contacter/" target="_blank">
+        <a href="https://francevae.crisp.help/fr/?contact" target="_blank">
           contactez le support
         </a>{" "}
         et informez-les de la situation.

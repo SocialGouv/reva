@@ -70,7 +70,7 @@ export default function AuthError() {
               entre vos comptes FranceConnect et France VAE ?{" "}
               <Link
                 className="fr-link"
-                href="https://vae.gouv.fr/nous-contacter/"
+                href="https://francevae.crisp.help/fr/?contact"
                 target="_blank"
               >
                 Contactez le support
