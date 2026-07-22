@@ -145,6 +145,7 @@ const dematerializedFeasibilityFile = {
 const candidacy = {
   id: CANDIDACY_ID,
   status: "DOSSIER_FAISABILITE_COMPLET",
+  typeAccompagnement: "ACCOMPAGNE",
   isCertificationPartial: false,
   organism: {
     contactAdministrativePhone: "0145678901",
@@ -284,6 +285,7 @@ const candidacy = {
 const aapCandidacy = {
   id: CANDIDACY_ID,
   status: "DOSSIER_FAISABILITE_COMPLET",
+  typeAccompagnement: "ACCOMPAGNE",
   isCertificationPartial: true,
   organism: {
     contactAdministrativePhone: "0145678901",

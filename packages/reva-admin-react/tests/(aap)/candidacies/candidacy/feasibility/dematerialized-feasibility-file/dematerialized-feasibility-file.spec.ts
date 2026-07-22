@@ -53,11 +53,13 @@ function createFeasibilityHandlers(args?: {
   feasibility?: any;
   certificationExpired?: boolean;
   certificationAuthorityStructureHasReducedRequirements?: boolean;
+  typeAccompagnement?: "ACCOMPAGNE" | "AUTONOME";
 }) {
   const {
     feasibility = DEFAULT_FEASIBILITY_FILE,
     certificationExpired = false,
     certificationAuthorityStructureHasReducedRequirements,
+    typeAccompagnement = "ACCOMPAGNE",
   } = args ?? {};
 
   const certification = {
@@ -81,6 +83,7 @@ function createFeasibilityHandlers(args?: {
         getCandidacyById: {
           id: CANDIDACY_ID,
           isCertificationPartial: false,
+          typeAccompagnement,
           organism: {
             label: "Organisme Lorem Ipsum",
             nomPublic: "Organisme Lorem Ipsum nom public",
@@ -140,6 +143,96 @@ async function waitForFeasibilityQueries(page: Page) {
 }
 
 test.describe("Candidacy Dematerialized Feasibility File Page", () => {
+  test.describe("[AUTONOME] When the feasibility file is in its initial state", () => {
+    test.use({
+      mswHandlers: [
+        [
+          ...aapCommonHandlers,
+          ...createFeasibilityHandlers({ typeAccompagnement: "AUTONOME" }),
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("[AUTONOME] should display all sections", async ({ page }) => {
+      await login({ role: "aap", page });
+      await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap`);
+      await waitForFeasibilityQueries(page);
+
+      await expect(page.getByTestId("eligibility-section")).toBeVisible();
+      await expect(page.getByTestId("certification-section")).toBeVisible();
+      await expect(page.getByTestId("certification-section")).not.toContainText(
+        "La certification dans sa totalité",
+      );
+      await expect(
+        page.getByTestId("competencies-blocks-section"),
+      ).toBeVisible();
+      await expect(page.getByTestId("prerequisites-section")).toBeVisible();
+      await expect(page.getByTestId("decision-section")).not.toBeVisible();
+      await expect(page.getByTestId("attachments-section")).toBeVisible();
+      await expect(
+        page.getByTestId("send-file-candidate-tile-uncompleted"),
+      ).not.toBeVisible();
+      await expect(page.getByTestId("sworn-statement-section")).toBeVisible();
+      await expect(
+        page.getByTestId("candidate-decision-comment-section"),
+      ).not.toBeVisible();
+      await expect(
+        page.getByTestId(
+          "send-file-certification-authority-tile-pending-validation",
+        ),
+      ).toBeVisible();
+    });
+
+    test("[AUTONOME] should display 'to complete' badges for eligibility, certification, decision, and attachments sections", async ({
+      page,
+    }) => {
+      await login({ role: "aap", page });
+      await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap`);
+      await waitForFeasibilityQueries(page);
+
+      const eligibilitySection = page.getByTestId("eligibility-section");
+      await expect(
+        eligibilitySection.getByTestId("to-complete-badge"),
+      ).toBeVisible();
+      await expect(eligibilitySection.getByRole("button")).toBeEnabled();
+
+      const certificationSection = page.getByTestId("certification-section");
+      await expect(
+        certificationSection.getByTestId("to-complete-badge"),
+      ).toBeVisible();
+      await expect(certificationSection.getByRole("button")).toBeEnabled();
+
+      const competenciesBlocksSection = page.getByTestId(
+        "competencies-blocks-section",
+      );
+      await expect(
+        competenciesBlocksSection.getByTestId("to-complete-badge"),
+      ).toBeVisible();
+      await expect(
+        competenciesBlocksSection.getByRole("button"),
+      ).not.toBeVisible();
+
+      const prerequisitesSection = page.getByTestId("prerequisites-section");
+      await expect(
+        prerequisitesSection.getByTestId("to-complete-badge"),
+      ).toBeVisible();
+      await expect(prerequisitesSection.getByRole("button")).not.toBeDisabled();
+
+      const decisionSection = page.getByTestId("decision-section");
+      await expect(
+        decisionSection.getByTestId("to-complete-badge"),
+      ).not.toBeVisible();
+      await expect(decisionSection.getByRole("button")).not.toBeVisible();
+
+      const attachmentsSection = page.getByTestId("attachments-section");
+      await expect(
+        attachmentsSection.getByTestId("to-complete-badge"),
+      ).toBeVisible();
+      await expect(attachmentsSection.getByRole("button")).toBeEnabled();
+    });
+  });
+
   test.describe("When the feasibility file is in its initial state", () => {
     test.use({
       mswHandlers: [
