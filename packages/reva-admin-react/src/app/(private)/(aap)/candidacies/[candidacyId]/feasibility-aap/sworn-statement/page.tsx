@@ -147,7 +147,7 @@ export default function SwornStatementPage() {
 
       <DownloadTile
         name="Modèle d'attestation sur l'honneur (PDF)"
-        url="/files/attestation_sur_l_honneur_modele.pdf"
+        url="/admin2/files/attestation_sur_l_honneur_modele.pdf"
         mimeType="application/pdf"
         fileSizeInBytes={984064}
       />
