@@ -1,10 +1,10 @@
 "use client";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import SideMenu, { SideMenuProps } from "@codegouvfr/react-dsfr/SideMenu";
+import SideMenu from "@codegouvfr/react-dsfr/SideMenu";
 import { useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
 
-import { CertificationStatus } from "@/graphql/generated/graphql";
+import { createCertificationListSideMenu } from "@/components/certification-list-layout/certificationListSideMenu";
 
 export default function CertificationsLayout({
   children,
@@ -17,36 +17,11 @@ export default function CertificationsLayout({
   const searchFilter = searchParams.get("search") || "";
   const visibleParam = searchParams.get("visible") || undefined;
 
-  const hrefSideMenu = (status?: string, visible?: "true" | "false") => {
-    const params = new URLSearchParams();
-    if (status) {
-      params.set("status", status);
-    }
-
-    if (visible) {
-      params.set("visible", visible);
-    }
-
-    params.set("page", "1");
-
-    if (searchFilter) {
-      params.set("search", searchFilter);
-    }
-
-    return `/responsable-certifications/certifications/?${params.toString()}`;
-  };
-
-  const menuItem = (
-    text: string,
-    status?: CertificationStatus,
-    visible?: "true" | "false",
-  ): SideMenuProps.Item => ({
-    isActive: status === statusParam && visible === visibleParam,
-    linkProps: {
-      href: hrefSideMenu(status, visible),
-      target: "_self",
-    },
-    text,
+  const { menuItem } = createCertificationListSideMenu({
+    basePath: "/responsable-certifications/certifications/",
+    searchFilter,
+    statusParam,
+    visibleParam,
   });
 
   const validatedManuItems = [
