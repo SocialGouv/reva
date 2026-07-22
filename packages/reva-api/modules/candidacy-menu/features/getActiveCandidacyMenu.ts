@@ -100,7 +100,12 @@ export const getActiveCandidacyMenu = async ({
       menuEntryStatus = "INACTIVE";
     } else if (isActiveWithEditHint) {
       menuEntryStatus = "ACTIVE_WITH_EDIT_HINT";
-    } else if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
+    } else if (
+      (candidacy.typeAccompagnement === "AUTONOME" &&
+        isStatusEqualOrAbove("PROJET")) ||
+      (candidacy.typeAccompagnement === "ACCOMPAGNE" &&
+        isStatusEqualOrAbove("PARCOURS_CONFIRME"))
+    ) {
       menuEntryStatus = "ACTIVE_WITHOUT_HINT";
     } else {
       menuEntryStatus = "INACTIVE";
@@ -108,7 +113,12 @@ export const getActiveCandidacyMenu = async ({
 
     let url = "#";
 
-    if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
+    if (
+      (candidacy.typeAccompagnement === "AUTONOME" &&
+        isStatusEqualOrAbove("PROJET")) ||
+      (candidacy.typeAccompagnement === "ACCOMPAGNE" &&
+        isStatusEqualOrAbove("PARCOURS_CONFIRME"))
+    ) {
       if (isDfDematerialized) {
         url = isFeasibilityPending
           ? buildUrl({

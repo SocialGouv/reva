@@ -141,7 +141,7 @@ const CompetenciesBlockPage = () => {
     dematerializedFile?.blocsDeCompetences?.[0]?.certificationCompetenceBloc;
 
   const competencesFromBlock = block?.competences;
-  const blockText = dematerializedFile?.blocsDeCompetences?.[0]?.text;
+  const defaultBlocText = dematerializedFile?.blocsDeCompetences?.[0]?.text;
 
   const defaultValues = useMemo(
     () => ({
@@ -152,12 +152,12 @@ const CompetenciesBlockPage = () => {
           (ccd) => ccd.certificationCompetence.id === c.id,
         )?.state,
       })),
-      blocText: blockText || "",
+      blocText: defaultBlocText || "",
     }),
     [
       competencesFromBlock,
       dematerializedFile?.certificationCompetenceDetails,
-      blockText,
+      defaultBlocText,
     ],
   );
 
@@ -173,6 +173,7 @@ const CompetenciesBlockPage = () => {
   });
 
   const competencesFields = watch("competences");
+  const blocText = watch("blocText");
 
   const resetForm = useCallback(
     () => reset(defaultValues),
@@ -279,36 +280,42 @@ const CompetenciesBlockPage = () => {
                 />
               </div>
             ))}
-            <Input
-              textArea
-              label="Commentaire sur le bloc"
-              className="mb-4"
-              hintText={
-                <span>
-                  Décrivez les activités réalisées pour maîtriser les
-                  compétences listées ci-dessus. Expliquer également le contexte
-                  professionnel dans lequel ces compétences ont été développées.{" "}
-                  <strong>
-                    Donner des exemples concrets qui illustrent chacune des
-                    activités.
-                  </strong>
-                  <Button
-                    type="button"
-                    className="underline p-0 m-0 mx-1 text-xs shadow-none min-h-0"
-                    priority="secondary"
-                    onClick={modal.open}
-                  >
-                    Voir plus de détails →
-                  </Button>
-                </span>
-              }
-              nativeTextAreaProps={{
-                ...register("blocText"),
-              }}
-              stateRelatedMessage={errors?.blocText?.message}
-              state={errors?.blocText ? "error" : "default"}
-              data-testid="block-comment-input"
-            />
+            <div className="mb-4 flex flex-col">
+              <Input
+                className="m-0"
+                textArea
+                label="Commentaire sur le bloc"
+                hintText={
+                  <span>
+                    Décrivez les activités réalisées pour maîtriser les
+                    compétences listées ci-dessus. Expliquer également le
+                    contexte professionnel dans lequel ces compétences ont été
+                    développées.{" "}
+                    <strong>
+                      Donner des exemples concrets qui illustrent chacune des
+                      activités.
+                    </strong>
+                    <Button
+                      type="button"
+                      className="underline p-0 m-0 mx-1 text-xs shadow-none min-h-0"
+                      priority="secondary"
+                      onClick={modal.open}
+                    >
+                      Voir plus de détails →
+                    </Button>
+                  </span>
+                }
+                nativeTextAreaProps={{
+                  ...register("blocText"),
+                }}
+                stateRelatedMessage={errors?.blocText?.message}
+                state={errors?.blocText ? "error" : "default"}
+                data-testid="block-comment-input"
+              />
+              <p className="m-0 mt-1 self-end text-xs text-dsfr-light-text-mention-grey-500">
+                {blocText?.length}/100 caractères minimum
+              </p>
+            </div>
 
             <Alert
               severity="info"

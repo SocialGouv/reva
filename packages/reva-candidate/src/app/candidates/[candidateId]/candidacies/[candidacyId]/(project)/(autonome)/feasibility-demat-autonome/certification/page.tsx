@@ -61,9 +61,13 @@ const CertificationPage = () => {
         dematerializedFeasibilityFile?.firstForeignLanguage || "",
       secondForeignlanguage:
         dematerializedFeasibilityFile?.secondForeignLanguage || "",
-      completion: candidacy?.isCertificationPartial
-        ? ("PARTIAL" as const)
-        : ("COMPLETE" as const),
+      completion:
+        !dematerializedFeasibilityFile ||
+        dematerializedFeasibilityFile?.blocsDeCompetences.length === 0
+          ? undefined
+          : candidacy?.isCertificationPartial
+            ? ("PARTIAL" as const)
+            : ("COMPLETE" as const),
       competenceBlocs: certification?.competenceBlocs?.map((bloc) => ({
         competenceBlocId: bloc.id,
         label: bloc.code ? `${bloc.code} - ${bloc.label}` : bloc.label,
@@ -75,10 +79,7 @@ const CertificationPage = () => {
     [
       candidacy?.isCertificationPartial,
       certification?.competenceBlocs,
-      dematerializedFeasibilityFile?.blocsDeCompetences,
-      dematerializedFeasibilityFile?.firstForeignLanguage,
-      dematerializedFeasibilityFile?.option,
-      dematerializedFeasibilityFile?.secondForeignLanguage,
+      dematerializedFeasibilityFile,
     ],
   );
 
@@ -96,6 +97,7 @@ const CertificationPage = () => {
   });
 
   const completion = useWatch({ name: "completion", control });
+
   const competenceBlocFields = watch("competenceBlocs", []);
 
   const handleCertificationCompletionChange = useCallback(

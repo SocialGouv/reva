@@ -247,16 +247,20 @@ const AapFeasibilityPage = () => {
             disabled={!dematerializedFeasibilityFile?.certificationPartComplete}
             isEditable={isFeasibilityEditable}
           />
-          <DecisionSection
-            aapDecision={
-              dematerializedFeasibilityFile?.aapDecision as DfFileAapDecision | null
-            }
-            aapDecisionComment={
-              dematerializedFeasibilityFile?.aapDecisionComment as string | null
-            }
-            isEditable={isFeasibilityEditable}
-            disabled={isEligibilityRequirementPartial}
-          />
+          {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
+            <DecisionSection
+              aapDecision={
+                dematerializedFeasibilityFile?.aapDecision as DfFileAapDecision | null
+              }
+              aapDecisionComment={
+                dematerializedFeasibilityFile?.aapDecisionComment as
+                  | string
+                  | null
+              }
+              isEditable={isFeasibilityEditable}
+              disabled={isEligibilityRequirementPartial}
+            />
+          )}
           <AttachmentsSection
             attachmentsPartComplete={
               dematerializedFeasibilityFile?.attachmentsPartComplete
@@ -269,23 +273,29 @@ const AapFeasibilityPage = () => {
 
           <hr className="pb-0.5" />
 
-          <SendFileCandidateSection
-            sentToCandidateAt={
-              dematerializedFeasibilityFile?.sentToCandidateAt
-                ? toDate(dematerializedFeasibilityFile.sentToCandidateAt)
-                : null
-            }
-            isReadyToBeSentToCandidate={canSendFeasibilityFileToCandidate}
-            isIncomplete={feasibilityDecisionIsIncomplete}
-            decisionSentAt={decisionSentAtDate}
-          />
-          {dematerializedFeasibilityFile?.candidateDecisionComment && (
-            <CandidateDecisionCommentSection
-              candidateDecisionComment={
-                dematerializedFeasibilityFile.candidateDecisionComment as string
-              }
-            />
+          {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
+            <>
+              <SendFileCandidateSection
+                sentToCandidateAt={
+                  dematerializedFeasibilityFile?.sentToCandidateAt
+                    ? toDate(dematerializedFeasibilityFile.sentToCandidateAt)
+                    : null
+                }
+                isReadyToBeSentToCandidate={canSendFeasibilityFileToCandidate}
+                isIncomplete={feasibilityDecisionIsIncomplete}
+                decisionSentAt={decisionSentAtDate}
+              />
+
+              {dematerializedFeasibilityFile?.candidateDecisionComment && (
+                <CandidateDecisionCommentSection
+                  candidateDecisionComment={
+                    dematerializedFeasibilityFile.candidateDecisionComment as string
+                  }
+                />
+              )}
+            </>
           )}
+
           <SwornStatementSection
             sentToCandidateAt={
               dematerializedFeasibilityFile?.sentToCandidateAt

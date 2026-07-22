@@ -214,42 +214,50 @@ export function DffSummary({
           />
         </div>
 
-        <div className="border border-gray-200 p-10">
-          <h2 className="mb-6">
-            <span className="w-10 h-10 inline-block align-top mr-2 my-auto">
-              <Image
-                src="/admin2/components/ecosystem.svg"
-                alt="Accompagnement"
-                width={40}
-                height={40}
-              />
-            </span>
-            Accompagnement proposé au candidat
-          </h2>
-          <ParcoursSection
-            basicSkills={basicSkills}
-            mandatoryTrainings={mandatoryTrainings}
-            additionalHourCount={additionalHourCount}
-            individualHourCount={individualHourCount}
-            collectiveHourCount={collectiveHourCount}
-          />
-        </div>
+        {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
+          <div className="border border-gray-200 p-10">
+            <h2 className="mb-6">
+              <span className="w-10 h-10 inline-block align-top mr-2 my-auto">
+                <Image
+                  src="/admin2/components/ecosystem.svg"
+                  alt="Accompagnement"
+                  width={40}
+                  height={40}
+                />
+              </span>
+              Accompagnement proposé au candidat
+            </h2>
+            <ParcoursSection
+              basicSkills={basicSkills}
+              mandatoryTrainings={mandatoryTrainings}
+              additionalHourCount={additionalHourCount}
+              individualHourCount={individualHourCount}
+              collectiveHourCount={collectiveHourCount}
+            />
+          </div>
+        )}
 
         <div className="border border-gray-200 p-10">
           <h2 className="mb-6">
             <span className="w-10 h-10 inline-block align-top mr-2 my-auto">
               {PICTOGRAMS.contractSmall}
             </span>
-            Avis et documents
+            {candidacy.typeAccompagnement === "ACCOMPAGNE"
+              ? "Avis et documents"
+              : "Documents"}
           </h2>
-          <DecisionSection
-            decision={aapDecision}
-            decisionComment={aapDecisionComment}
-          />
-          {candidateDecisionComment && (
-            <CandidateDecisionCommentSection
-              candidateDecisionComment={candidateDecisionComment}
-            />
+          {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
+            <>
+              <DecisionSection
+                decision={aapDecision}
+                decisionComment={aapDecisionComment}
+              />
+              {candidateDecisionComment && (
+                <CandidateDecisionCommentSection
+                  candidateDecisionComment={candidateDecisionComment}
+                />
+              )}
+            </>
           )}
           <AttachmentsSection
             attachments={attachments as DffAttachment[]}

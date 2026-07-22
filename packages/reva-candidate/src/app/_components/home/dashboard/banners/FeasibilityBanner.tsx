@@ -159,7 +159,7 @@ export const FeasibilityBanner = ({
     );
   }
 
-  if (decision === "PENDING") {
+  if (decision === "PENDING" || decision === "COMPLETE") {
     const isPendingAccompagne = typeAccompagnement === "ACCOMPAGNE";
     return (
       <BaseBanner

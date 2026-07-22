@@ -1,4 +1,5 @@
 import {
+  CandidacyTypeAccompagnement,
   CompetenceBlocsPartCompletionEnum,
   DFFCertificationCompetenceDetailsState,
   DFFDecision,
@@ -132,7 +133,7 @@ export const generateFeasibilityFileByCandidacyId = async (
   }
 
   const organism = candidacy.organism;
-  if (!organism) {
+  if (candidacy.typeAccompagnement === "ACCOMPAGNE" && !organism) {
     throw new Error("Organisme d'accompagnement non trouvé");
   }
 
@@ -306,41 +307,44 @@ export const generateFeasibilityFileByCandidacyId = async (
       doc,
     });
 
-    const {
-      basicSkills,
-      trainings,
-      additionalHourCount,
-      individualHourCount,
-      collectiveHourCount,
-    } = candidacy;
+    if (candidacy.typeAccompagnement === "ACCOMPAGNE") {
+      const {
+        basicSkills,
+        trainings,
+        additionalHourCount,
+        individualHourCount,
+        collectiveHourCount,
+      } = candidacy;
 
-    const sortedBasicSkills = [...basicSkills]
-      .map(({ basicSkill }) => basicSkill.label)
-      .sort((first, second) =>
-        first.localeCompare(second, "fr", {
-          sensitivity: "base",
-        }),
-      );
+      const sortedBasicSkills = [...basicSkills]
+        .map(({ basicSkill }) => basicSkill.label)
+        .sort((first, second) =>
+          first.localeCompare(second, "fr", {
+            sensitivity: "base",
+          }),
+        );
 
-    const sortedTrainings = [...trainings]
-      .map(({ training }) => training.label)
-      .sort((first, second) =>
-        first.localeCompare(second, "fr", {
-          sensitivity: "base",
-        }),
-      );
+      const sortedTrainings = [...trainings]
+        .map(({ training }) => training.label)
+        .sort((first, second) =>
+          first.localeCompare(second, "fr", {
+            sensitivity: "base",
+          }),
+        );
 
-    addAccompagnementCandidatSection({
-      additionalHourCount: additionalHourCount ?? 0,
-      individualHourCount: individualHourCount ?? 0,
-      collectiveHourCount: collectiveHourCount ?? 0,
-      basicSkills: sortedBasicSkills,
-      trainings: sortedTrainings,
-      doc,
-    });
+      addAccompagnementCandidatSection({
+        additionalHourCount: additionalHourCount ?? 0,
+        individualHourCount: individualHourCount ?? 0,
+        collectiveHourCount: collectiveHourCount ?? 0,
+        basicSkills: sortedBasicSkills,
+        trainings: sortedTrainings,
+        doc,
+      });
+    }
 
     addAvisEtDocumentsSection({
       doc,
+      typeAccompagnement: candidacy.typeAccompagnement,
       aapDecision: dematerializedFeasibilityFile.aapDecision,
       aapDecisionComment:
         dematerializedFeasibilityFile.aapDecisionComment ?? "",
@@ -357,19 +361,21 @@ export const generateFeasibilityFileByCandidacyId = async (
     });
 
     addContactsSection({
-      aapContactInfo: {
-        label: organism.nomPublic ?? organism.label,
-        address: [
-          organism.adresseNumeroEtNomDeRue,
-          organism.adresseInformationsComplementaires,
-          organism.adresseCodePostal,
-          organism.adresseVille,
-        ]
-          .filter(Boolean)
-          .join(" "),
-        email: organism.emailContact ?? "",
-        phone: organism.telephone ?? "",
-      },
+      aapContactInfo: organism
+        ? {
+            label: organism.nomPublic ?? organism.label,
+            address: [
+              organism.adresseNumeroEtNomDeRue,
+              organism.adresseInformationsComplementaires,
+              organism.adresseCodePostal,
+              organism.adresseVille,
+            ]
+              .filter(Boolean)
+              .join(" "),
+            email: organism.emailContact ?? "",
+            phone: organism.telephone ?? "",
+          }
+        : undefined,
       certificationAuthorityContactInfo: {
         label: certificationAuthority?.label ?? "",
         contactName: certificationAuthority?.contactFullName ?? "",
@@ -382,6 +388,7 @@ export const generateFeasibilityFileByCandidacyId = async (
     doc.end();
   });
 };
+
 type CheckIsDFFReadyArgs = {
   attachmentsPartComplete: boolean;
   certificationPartComplete: boolean;
@@ -1022,12 +1029,14 @@ const addAccompagnementCandidatSection = ({
 
 const addAvisEtDocumentsSection = ({
   doc,
+  typeAccompagnement,
   aapDecision,
   aapDecisionComment,
   candidateDecisionComment,
   attachments,
 }: {
   doc: PDFKit.PDFDocument;
+  typeAccompagnement: CandidacyTypeAccompagnement;
   aapDecision: DFFDecision | null;
   aapDecisionComment: string;
   candidateDecisionComment: string;
@@ -1035,50 +1044,54 @@ const addAvisEtDocumentsSection = ({
 }) => {
   addSection({
     doc,
-    title: "Avis et documents",
+    title:
+      typeAccompagnement === "ACCOMPAGNE" ? "Avis et documents" : "Documents",
     iconPath: `${ASSETS_PATH}/images/contract.png`,
     content: (doc) => {
-      addSubSection({
-        title:
-          "Avis de la personne chargée de l’accompagnement sur la faisabilité de la demande de validation des acquis de l’expérience",
-        doc,
-        content: (doc) => {
-          doc
-            .font("assets/fonts/Marianne/Marianne-Bold.otf")
-            .fontSize(10)
-            .text("Avis de l’accompagnateur");
-          doc.moveDown(0.5);
-          if (aapDecision) {
-            addDecision({
-              decision: aapDecision,
-              doc,
-            });
+      if (typeAccompagnement === "ACCOMPAGNE") {
+        addSubSection({
+          title:
+            "Avis de la personne chargée de l’accompagnement sur la faisabilité de la demande de validation des acquis de l’expérience",
+          doc,
+          content: (doc) => {
+            doc
+              .font("assets/fonts/Marianne/Marianne-Bold.otf")
+              .fontSize(10)
+              .text("Avis de l’accompagnateur");
             doc.moveDown(0.5);
-          }
-          doc
-            .font("assets/fonts/Marianne/Marianne-Regular.otf")
-            .fontSize(8)
-            .text(aapDecisionComment, doc.x, doc.y, {
-              width: pxToPt(1200),
-            });
-          doc.moveDown(0.5);
-          doc
-            .font("assets/fonts/Marianne/Marianne-Bold.otf")
-            .fontSize(10)
-            .text(
-              "Commentaires du candidat sur l’avis de l’accompagnateur",
-              doc.x,
-              doc.y,
-            );
-          doc.moveDown(0.5);
-          doc
-            .font("assets/fonts/Marianne/Marianne-Regular.otf")
-            .fontSize(8)
-            .text(candidateDecisionComment, doc.x, doc.y, {
-              width: pxToPt(1200),
-            });
-        },
-      });
+            if (aapDecision) {
+              addDecision({
+                decision: aapDecision,
+                doc,
+              });
+              doc.moveDown(0.5);
+            }
+            doc
+              .font("assets/fonts/Marianne/Marianne-Regular.otf")
+              .fontSize(8)
+              .text(aapDecisionComment, doc.x, doc.y, {
+                width: pxToPt(1200),
+              });
+            doc.moveDown(0.5);
+            doc
+              .font("assets/fonts/Marianne/Marianne-Bold.otf")
+              .fontSize(10)
+              .text(
+                "Commentaires du candidat sur l’avis de l’accompagnateur",
+                doc.x,
+                doc.y,
+              );
+            doc.moveDown(0.5);
+            doc
+              .font("assets/fonts/Marianne/Marianne-Regular.otf")
+              .fontSize(8)
+              .text(candidateDecisionComment, doc.x, doc.y, {
+                width: pxToPt(1200),
+              });
+          },
+        });
+      }
+
       addSubSection({
         title: "Pièces jointes",
         doc,
@@ -1116,7 +1129,7 @@ const addContactsSection = ({
   certificationAuthorityContactInfo,
   doc,
 }: {
-  aapContactInfo: {
+  aapContactInfo?: {
     label: string;
     address: string;
     email: string;
@@ -1135,30 +1148,33 @@ const addContactsSection = ({
     title: "Contacts",
     iconPath: `${ASSETS_PATH}/images/team.png`,
     content: (doc) => {
-      addSubSection({
-        title: "Architecte accompagnateur de parcours",
-        doc,
-        content: (doc) => {
-          addInfoTable({
-            widthInPt: pxToPt(1200),
-            data: [
-              { title: "Nom :", value: aapContactInfo.label },
-              aapContactInfo.address
-                ? { title: "Adresse :", value: aapContactInfo.address }
-                : null,
-              {
-                title: "Adresse électronique :",
-                value: aapContactInfo.email,
-              },
-              {
-                title: "Téléphone :",
-                value: aapContactInfo.phone,
-              },
-            ].filter((item) => item !== null),
-            doc,
-          });
-        },
-      });
+      if (aapContactInfo) {
+        addSubSection({
+          title: "Architecte accompagnateur de parcours",
+          doc,
+          content: (doc) => {
+            addInfoTable({
+              widthInPt: pxToPt(1200),
+              data: [
+                { title: "Nom :", value: aapContactInfo.label },
+                aapContactInfo.address
+                  ? { title: "Adresse :", value: aapContactInfo.address }
+                  : null,
+                {
+                  title: "Adresse électronique :",
+                  value: aapContactInfo.email,
+                },
+                {
+                  title: "Téléphone :",
+                  value: aapContactInfo.phone,
+                },
+              ].filter((item) => item !== null),
+              doc,
+            });
+          },
+        });
+      }
+
       addSubSection({
         title: "Certificateur",
         doc,

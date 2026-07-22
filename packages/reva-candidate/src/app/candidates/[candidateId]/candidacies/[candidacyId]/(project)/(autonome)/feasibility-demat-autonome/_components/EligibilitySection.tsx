@@ -55,7 +55,7 @@ export const EligibilitySection = ({
         </>
       ) : (
         <p>
-          Renseignez la situation dans laquelle se trouve votre candidat
+          Renseignez l’historique de recevabilité sur cette certification
           (première demande, recevabilité favorable en cours...) pour accéder à
           un dossier de faisabilité adapté.
         </p>

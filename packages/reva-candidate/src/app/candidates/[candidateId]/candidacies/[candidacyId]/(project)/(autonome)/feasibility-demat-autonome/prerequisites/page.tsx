@@ -383,7 +383,7 @@ export default function PrerequisitesPage() {
           <p>
             <ul>
               <li>le nom de l’organisme de formation contacté,</li>
-              <li>le nom de la formation ( AFGSU 2),</li>
+              <li>le nom de la formation (AFGSU 2),</li>
               <li>le nombre d’heures de la formation.</li>
             </ul>
           </p>

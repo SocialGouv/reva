@@ -14,6 +14,7 @@ const getCandidacyById = graphql(`
       collectiveHourCount
       additionalHourCount
       status
+      typeAccompagnement
       conventionCollective {
         label
       }

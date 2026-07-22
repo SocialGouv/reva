@@ -50,6 +50,7 @@ export default function FeasibilityDematAutonomeResourcesPage() {
     return null;
   }
 
+  const candidate = candidacy.candidate;
   const certification = candidacy.certification;
   const feasibility = candidacy.feasibility;
   const dematerializedFeasibilityFile =
@@ -355,7 +356,7 @@ export default function FeasibilityDematAutonomeResourcesPage() {
                   Informations liées à la certification :<br />
                   <a
                     className="fr-link text-sm"
-                    href={`https://www.francecompetences.fr/recherche/rncp/${certification?.codeRncp}`}
+                    href={`${window.location.origin}/candidat/candidates/${candidate?.id}/candidacies/${candidacy?.id}/certification/${certification?.id}`}
                     target="_blank"
                   >
                     Fiche de la certification

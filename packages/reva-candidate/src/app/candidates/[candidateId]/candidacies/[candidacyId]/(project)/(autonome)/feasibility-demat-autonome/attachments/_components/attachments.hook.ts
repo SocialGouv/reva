@@ -24,7 +24,12 @@ const feasibilityWithDematerializedFeasibilityFileAttachmentsByCandidacyId =
     ) {
       feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
         candidacy {
+          id
+          candidate {
+            id
+          }
           certification {
+            id
             codeRncp
           }
         }
@@ -68,11 +73,15 @@ export const useAttachments = () => {
   const feasibility =
     getCandidacyByIdResponse?.feasibility_getActiveFeasibilityByCandidacyId;
   const attachments = feasibility?.dematerializedFeasibilityFile?.attachments;
-  const certification = feasibility?.candidacy?.certification;
+  const candidacy = feasibility?.candidacy;
+  const candidate = candidacy?.candidate;
+  const certification = candidacy?.certification;
 
   return {
     attachments,
     queryStatus: getCandidacyByIdStatus,
+    candidacy,
+    candidate,
     certification,
   };
 };

@@ -31,6 +31,10 @@ const getComplementExperienceParcoursViseQuery = graphql(`
   ) {
     feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
       candidacy {
+        id
+        candidate {
+          id
+        }
         certification {
           codeRncp
         }
@@ -92,9 +96,11 @@ const ComplementExperienceParcoursVisePage = () => {
       }),
   });
 
-  const certification =
+  const candidacy =
     getComplementExperienceParcoursViseResponse
-      ?.feasibility_getActiveFeasibilityByCandidacyId?.candidacy?.certification;
+      ?.feasibility_getActiveFeasibilityByCandidacyId?.candidacy;
+  const candidate = candidacy?.candidate;
+  const certification = candidacy?.certification;
 
   const defaultValues = useMemo(
     () => ({
@@ -213,7 +219,7 @@ const ComplementExperienceParcoursVisePage = () => {
                     <p>
                       <a
                         className="fr-link text-sm"
-                        href={`https://www.francecompetences.fr/recherche/rncp/${certification?.codeRncp}`}
+                        href={`${window.location.origin}/candidat/candidates/${candidate?.id}/candidacies/${candidacy?.id}/certification/${certification?.id}`}
                         target="_blank"
                       >
                         Fiche de la certification

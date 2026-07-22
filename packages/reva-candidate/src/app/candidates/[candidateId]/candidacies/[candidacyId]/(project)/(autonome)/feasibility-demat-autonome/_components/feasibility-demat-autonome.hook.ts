@@ -23,6 +23,7 @@ const getCandidacyByIdForFeasibilityDematAutonomePage = graphql(`
       typology
       typeAccompagnement
       candidate {
+        id
         gender
         givenName
         firstname

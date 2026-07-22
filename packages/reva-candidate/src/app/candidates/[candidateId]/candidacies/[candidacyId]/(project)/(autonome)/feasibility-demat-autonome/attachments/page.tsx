@@ -116,7 +116,7 @@ export default function AttachmentsPage() {
   const urqlClient = useUrqlClient();
 
   const { candidacyId } = useParams() satisfies { candidacyId: string };
-  const { attachments, certification } = useAttachments();
+  const { attachments, candidacy, candidate, certification } = useAttachments();
 
   const {
     register,
@@ -394,7 +394,7 @@ export default function AttachmentsPage() {
                   <p>
                     <a
                       className="fr-link text-sm"
-                      href={`https://www.francecompetences.fr/recherche/rncp/${certification?.codeRncp}`}
+                      href={`${window.location.origin}/candidat/candidates/${candidate?.id}/candidacies/${candidacy?.id}/certification/${certification?.id}`}
                       target="_blank"
                     >
                       Fiche de la certification

@@ -294,17 +294,6 @@ export default function EligibilityPage() {
                   <p>
                     <a
                       className="fr-link text-sm"
-                      href={`https://www.francecompetences.fr/recherche/rncp/${certification?.codeRncp}`}
-                      target="_blank"
-                    >
-                      Article dédié à “la recevabilité déjà acquise”
-                    </a>
-                  </p>
-
-                  <hr />
-                  <p>
-                    <a
-                      className="fr-link text-sm"
                       href="https://scribehow.com/viewer/Tutoriel__Candidat_sans_accompagnement_autonome__0NQyq175SDaI0Epy7bdyLA?referrer=documents&mode=edit"
                       target="_blank"
                     >
