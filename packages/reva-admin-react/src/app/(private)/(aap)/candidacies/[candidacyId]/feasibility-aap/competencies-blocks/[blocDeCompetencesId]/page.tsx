@@ -40,7 +40,7 @@ const schema = z.object({
     })
     .array(),
   blocText: sanitizedTextAllowSpecialCharacters({
-    minLength: 1,
+    minLength: 100,
     maxLength: 10000,
   }),
 });
