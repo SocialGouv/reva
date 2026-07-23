@@ -36,6 +36,7 @@ const getComplementExperienceParcoursViseQuery = graphql(`
           id
         }
         certification {
+          id
           codeRncp
         }
       }
