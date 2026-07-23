@@ -34,6 +34,9 @@ const getFCCertificationQuery = graphql(`
           label
         }
       }
+      CERTIFICATEURS {
+        NOM_CERTIFICATEUR
+      }
     }
   }
 `);

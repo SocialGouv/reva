@@ -5,12 +5,14 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { sanitizedText } from "@/utils/input-sanitization";
 
@@ -97,11 +99,8 @@ export default function CertificationDescriptionPage() {
                 Descriptif de la certification avec France compétences
               </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Info className="col-span-1 md:col-span-2" title="Intitulé">
-                  {certification.INTITULE}
-                </Info>
-
+              <div className="flex flex-col border-t border-dsfr-light-decisions-border-border-default-grey">
+                <Info title="Intitulé">{certification.INTITULE}</Info>
                 <Info title="Niveau">
                   {certification?.NOMENCLATURE_EUROPE?.INTITULE || "Inconnu"}
                 </Info>
@@ -123,6 +122,19 @@ export default function CertificationDescriptionPage() {
                     ? format(certification.DATE_LIMITE_DELIVRANCE, "dd/MM/yyyy")
                     : "Inconnue"}
                 </Info>
+                {certification.CERTIFICATEURS.length > 0 && (
+                  <Info
+                    title="Certificateurs"
+                    data-testid="fc-certification-certificateurs"
+                    contentAlignedRight={false}
+                  >
+                    <ul className="mb-0 mt-0">
+                      {certification.CERTIFICATEURS.map((c, index) => (
+                        <li key={index}>{c.NOM_CERTIFICATEUR}</li>
+                      ))}
+                    </ul>
+                  </Info>
+                )}
               </div>
 
               <h3 className="mb-0">Domaines et sous-domaines du Formacode </h3>
@@ -146,6 +158,20 @@ export default function CertificationDescriptionPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+
+              <div className="flex items-center justify-between gap-4">
+                <SmallNotice>
+                  Les informations affichées ci-dessus sont issues de France
+                  compétences via le numéro RNCP de la certification.
+                </SmallNotice>
+                <Image
+                  className="shrink-0"
+                  src="/admin2/logos/logo-france-competences.svg"
+                  alt="France compétences"
+                  width={142}
+                  height={40}
+                />
               </div>
             </div>
           )}
@@ -187,14 +213,21 @@ export default function CertificationDescriptionPage() {
 const Info = ({
   title,
   children,
-  className,
+  "data-testid": dataTestId,
+  contentAlignedRight = true,
 }: {
   title: string;
   children: ReactNode;
-  className?: string;
+  "data-testid"?: string;
+  contentAlignedRight?: boolean;
 }) => (
-  <dl className={`${className || ""}`}>
-    <dt className="mb-1">{title}</dt>
+  <dl
+    data-testid={dataTestId}
+    className={`mb-0 px-4 py-2 border-b border-dsfr-light-decisions-border-border-default-grey flex ${
+      contentAlignedRight ? "justify-between" : "gap-4"
+    }`}
+  >
+    <dt className="min-w-[164px]">{title} :</dt>
     <dd className="font-medium">{children}</dd>
   </dl>
 );
