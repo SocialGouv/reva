@@ -122,7 +122,7 @@ export default function CertificationDescriptionPage() {
                     ? format(certification.DATE_LIMITE_DELIVRANCE, "dd/MM/yyyy")
                     : "Inconnue"}
                 </Info>
-                {certification.CERTIFICATEURS.length > 0 && (
+                {certification.CERTIFICATEURS?.length > 0 && (
                   <Info
                     title="Certificateurs"
                     data-testid="fc-certification-certificateurs"
