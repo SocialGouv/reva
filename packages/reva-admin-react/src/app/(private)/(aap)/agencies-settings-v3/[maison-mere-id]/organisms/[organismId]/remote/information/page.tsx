@@ -129,9 +129,6 @@ const InformationsRemotePage = () => {
     <div className="flex flex-col w-full">
       <Breadcrumb
         currentPageLabel={"Informations affichées au candidat"}
-        homeLinkProps={{
-          href: `/`,
-        }}
         segments={[
           isAdmin
             ? {

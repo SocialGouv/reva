@@ -31,8 +31,10 @@ const updateOrganismVisibilityMutation = graphql(`
 
 export const OrganismVisibilityToggle = ({
   organismId,
+  label,
 }: {
   organismId: string;
+  label?: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
@@ -76,8 +78,14 @@ export const OrganismVisibilityToggle = ({
   return (
     <div className="flex flex-col border-t border-t-neutral-200 border-b border-b-neutral-200 py-4">
       <ToggleSwitch
-        label="Je souhaite que la structure soit disponible dans les résultats de recherche"
-        inputTitle="Je souhaite que la structure soit disponible dans les résultats de recherche"
+        label={
+          label ||
+          "Je souhaite que la structure soit disponible dans les résultats de recherche"
+        }
+        inputTitle={
+          label ||
+          "Je souhaite que la structure soit disponible dans les résultats de recherche"
+        }
         labelPosition="left"
         showCheckedHint={false}
         checked={!organism?.fermePourAbsenceOuConges}

@@ -13,18 +13,11 @@ const FormacodesCcnsDegreesOnSitePage = () => {
     <div className="flex flex-col">
       <Breadcrumb
         currentPageLabel="Domaines, branches et niveaux"
-        homeLinkProps={{
-          href: `/`,
-        }}
         segments={[
-          {
-            label: "Paramètres",
-            linkProps: { href: "/agencies-settings-v3" },
-          },
           {
             label: organismName,
             linkProps: {
-              href: `/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/on-site`,
+              href: `../`,
             },
           },
         ]}

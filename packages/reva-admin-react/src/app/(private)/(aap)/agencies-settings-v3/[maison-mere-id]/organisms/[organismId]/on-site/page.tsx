@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast } from "@/components/toast/toast";
 
 import { OrganismDisponiblePourVaeCollectiveToggle } from "../_components/organism-disponible-pour-vae-collective-toggle/OrganismDisponiblePourVaeCollectiveToggle";
@@ -18,6 +19,12 @@ import { DeleteLieuAccueilTile } from "./_components/delete-lieu-accueil-tile/De
 import { useOnSiteOrganism } from "./_components/onSiteOrganism.hook";
 
 export default function OnSitePage() {
+  const { isFeatureActive } = useFeatureflipping();
+
+  const isAapFormacodeSelectionV2Enabled = isFeatureActive(
+    "AAP_FORMACODE_SELECTION_V2",
+  );
+
   const {
     organism,
     organismId,
@@ -61,9 +68,6 @@ export default function OnSitePage() {
     <div className="flex flex-col w-full">
       <Breadcrumb
         currentPageLabel={organismName}
-        homeLinkProps={{
-          href: `/`,
-        }}
         segments={[
           isAdmin
             ? {
@@ -80,12 +84,21 @@ export default function OnSitePage() {
       />
 
       <h1>{organismName}</h1>
-      <p>
-        Complétez et/ou modifiez les modalités d’accompagnement en présentiel de
-        ce lieu d’accueil ainsi que les domaines, branches et niveaux gérés par
-        celui-ci. Vous pouvez aussi changer la visibilité du lieu d’accueil dans
-        les résultats de recherche des candidats.
-      </p>
+
+      {isAapFormacodeSelectionV2Enabled ? (
+        <p>
+          Complétez et/ou modifiez les modalités d’accompagnement en présentiel
+          de ce lieu d’accueil.
+        </p>
+      ) : (
+        <p>
+          Complétez et/ou modifiez les modalités d’accompagnement en présentiel
+          de ce lieu d’accueil ainsi que les domaines, branches et niveaux gérés
+          par celui-ci. Vous pouvez aussi changer la visibilité du lieu
+          d’accueil dans les résultats de recherche des candidats.
+        </p>
+      )}
+
       <Alert
         className="mt-6 mb-8"
         severity="warning"
@@ -137,13 +150,48 @@ export default function OnSitePage() {
             )}
           </div>
         </EnhancedSectionCard>
+
         <EnhancedSectionCard
-          title="Domaines, branches, niveaux et certifications"
-          titleIconClass="fr-icon-award-fill"
+          title={
+            isAapFormacodeSelectionV2Enabled
+              ? "Périmètre d’accompagnement"
+              : "Domaines, branches, niveaux et certifications"
+          }
+          titleIconClass={
+            isAapFormacodeSelectionV2Enabled
+              ? "fr-icon-equalizer-fill"
+              : "fr-icon-award-fill"
+          }
           isEditable
-          buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/on-site/formacodes-ccns-degrees`}
-          status={isFormacodesAndLevelsComplete ? "COMPLETED" : "TO_COMPLETE"}
+          buttonOnClickHref={
+            isAapFormacodeSelectionV2Enabled
+              ? `./perimetre-accompagnement`
+              : `/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/on-site/formacodes-ccns-degrees`
+          }
+          status={
+            isAapFormacodeSelectionV2Enabled
+              ? undefined
+              : isFormacodesAndLevelsComplete
+                ? "COMPLETED"
+                : "TO_COMPLETE"
+          }
         >
+          {isAapFormacodeSelectionV2Enabled && (
+            <>
+              {!organism.certifications ||
+              organism.certifications?.length == 0 ? (
+                <p>
+                  Cet organisme n'est pas visible dans les recherches des
+                  candidats car rattaché à aucune certification.
+                </p>
+              ) : (
+                <p>
+                  Cet organisme est visible dans les recherches des candidats
+                  pour {organism.certifications?.length} certifications.
+                </p>
+              )}
+            </>
+          )}
           {organism.formacodes?.[0] && (
             <Accordion label="Domaines" defaultExpanded>
               <div className="flex flex-wrap gap-2">
@@ -198,7 +246,10 @@ export default function OnSitePage() {
           }
         />
 
-        <OrganismVisibilityToggle organismId={organismId} />
+        <OrganismVisibilityToggle
+          organismId={organismId}
+          label="Je souhaite que ce lieu d'accueil soit disponible dans les résultats de recherche."
+        />
         <DeleteLieuAccueilTile
           classname="mt-2"
           lieuAccueilLabel={organism.nomPublic || organism.label}

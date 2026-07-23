@@ -51,9 +51,6 @@ const InformationsOnSitePage = () => {
     <div className="flex flex-col">
       <Breadcrumb
         currentPageLabel={"Informations affichées au candidat"}
-        homeLinkProps={{
-          href: `/`,
-        }}
         segments={[
           isAdmin
             ? {
