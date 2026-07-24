@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 import { useAuth } from "@/components/auth/auth";
@@ -7,24 +7,20 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 
 const getOrganismQuery = graphql(`
-  query getOrganismForOrganismOnSitePage($organismId: ID!) {
+  query getOrganismForOrganismRemotePage($organismId: ID!) {
     organism_getOrganism(id: $organismId) {
-      id
-      label
       maisonMereAAP {
         id
         raisonSociale
       }
       id
+      label
       nomPublic
       telephone
       siteInternet
       emailContact
-      adresseNumeroEtNomDeRue
-      conformeNormesAccessibilite
-      adresseInformationsComplementaires
-      adresseCodePostal
-      adresseVille
+      remoteZones
+      modaliteAccompagnementRenseigneeEtValide
       managedDegrees {
         id
         degree {
@@ -45,44 +41,22 @@ const getOrganismQuery = graphql(`
         codeRncp
         label
       }
-      hasCandidacies
     }
   }
 `);
 
-const deleteLieuAccueilMutation = graphql(`
-  mutation deleteLieuAccueil($maisonMereAAPId: ID!, $organismId: ID!) {
-    organism_deleteLieuAccueil(
-      maisonMereAAPId: $maisonMereAAPId
-      organismId: $organismId
-    )
-  }
-`);
-
-export const useOnSiteOrganism = () => {
+export const useOnRemoteOrganism = () => {
   const { isAdmin } = useAuth();
   const { organismId, "maison-mere-id": maisonMereAAPId } = useParams<{
     organismId: string;
     "maison-mere-id": string;
   }>();
   const { graphqlClient } = useGraphQlClient();
-  const queryClient = useQueryClient();
 
   const { data: getOrganismResponse } = useQuery({
     queryKey: [organismId, "organism"],
     queryFn: () => graphqlClient.request(getOrganismQuery, { organismId }),
     enabled: !!organismId,
-  });
-
-  const deleteLieuAccueil = useMutation({
-    mutationFn: (organismId: string) =>
-      graphqlClient.request(deleteLieuAccueilMutation, {
-        maisonMereAAPId,
-        organismId,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [organismId, "organism"] });
-    },
   });
 
   const organism = getOrganismResponse?.organism_getOrganism;
@@ -95,6 +69,5 @@ export const useOnSiteOrganism = () => {
     organismName,
     maisonMereAAPId,
     isAdmin,
-    deleteLieuAccueil,
   };
 };

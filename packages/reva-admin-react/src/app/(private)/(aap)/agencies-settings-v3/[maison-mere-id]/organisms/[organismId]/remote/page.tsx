@@ -3,57 +3,17 @@ import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import Tag from "@codegouvfr/react-dsfr/Tag";
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
 import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-
-import { graphql } from "@/graphql/generated";
 
 import { getRemoteZoneLabel } from "../../../../_components/getRemoteZoneLabel";
 import { OrganismDisponiblePourVaeCollectiveToggle } from "../_components/organism-disponible-pour-vae-collective-toggle/OrganismDisponiblePourVaeCollectiveToggle";
 import { OrganismVisibilityToggle } from "../_components/organism-visibility-toggle/OrganismVisibilityToggle";
-
-const getOrganismQuery = graphql(`
-  query getOrganismForOrganismRemotePage($organismId: ID!) {
-    organism_getOrganism(id: $organismId) {
-      maisonMereAAP {
-        raisonSociale
-      }
-      id
-      nomPublic
-      telephone
-      siteInternet
-      emailContact
-      remoteZones
-      modaliteAccompagnementRenseigneeEtValide
-      managedDegrees {
-        id
-        degree {
-          id
-          level
-        }
-      }
-      formacodes {
-        code
-        label
-      }
-      conventionCollectives {
-        id
-        label
-      }
-      certifications {
-        id
-        codeRncp
-        label
-      }
-    }
-  }
-`);
+import { useOnRemoteOrganism } from "../on-site/_components/onRemoteOrganism.hook";
 
 export default function RemotePage() {
   const { isFeatureActive } = useFeatureflipping();
@@ -62,20 +22,14 @@ export default function RemotePage() {
     "AAP_FORMACODE_SELECTION_V2",
   );
 
+  const { organism } = useOnRemoteOrganism();
+
   const { organismId, "maison-mere-id": maisonMereAAPId } = useParams<{
     organismId: string;
     "maison-mere-id": string;
   }>();
-  const { graphqlClient } = useGraphQlClient();
 
-  const { data: getOrganismResponse } = useQuery({
-    queryKey: [organismId, "organismRemote"],
-    queryFn: () => graphqlClient.request(getOrganismQuery, { organismId }),
-    enabled: !!organismId,
-  });
   const { isAdmin } = useAuth();
-
-  const organism = getOrganismResponse?.organism_getOrganism;
 
   const isFormacodesAndLevelsComplete =
     organism?.managedDegrees?.[0] &&

@@ -22,6 +22,7 @@ import { getCertificationCompetencesByBlocId } from "./features/getCertification
 import { getCertificationPrerequisitesByCertificationId } from "./features/getCertificationPrerequisitesByCertificationId";
 import { getCompetenceBlocsByCertificationId } from "./features/getCompetenceBlocsByCertificationId";
 import { getConventionsCollectivesByCertificationId } from "./features/getConventionsCollectivesByCertificationId";
+import { getCountOfChildrenByParentCode } from "./features/getCountOfChildrenByParentCode";
 import { getDegreeByLevel } from "./features/getDegreeByLevel";
 import { getDegrees } from "./features/getDegrees";
 import { getDepartments } from "./features/getDepartments";
@@ -165,6 +166,10 @@ const unsafeReferentialResolvers = {
     qualiopiStatus: ({ siret }: { siret: string }) =>
       findQualiopiStatus({ siret }),
     kbis: ({ siret }: { siret: string }) => findKbis({ siret }),
+  },
+  Formacode: {
+    countOfChildren: ({ parentCode }: { parentCode: string }) =>
+      getCountOfChildrenByParentCode({ parentCode }),
   },
   Query: {
     getReferential: async (_: any, _payload: any) => {
