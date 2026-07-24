@@ -73,16 +73,9 @@ describe("GET /interop/v1/candidatures/:candidatureId", () => {
     });
 
     expect(response.statusCode).toBe(200);
-    // Le sérialiseur Fastify rend en {} les champs objet valant null (organisme,
-    // niveaux) : on assert donc les champs stables qui traversent sans coercion.
-    const expected = mapGetCandidacyById(buildCandidacyFixture());
-    const { data } = response.json();
-    expect(data.id).toBe(expected.id);
-    expect(data.certification).toEqual(expected.certification);
-    expect(data.candidat.prenom).toBe(expected.candidat.prenom);
-    expect(data.candidat.adresse.codePays).toBe(
-      expected.candidat.adresse.codePays,
-    );
+    expect(response.json()).toEqual({
+      data: mapGetCandidacyById(buildCandidacyFixture()),
+    });
   });
 
   test("répond 204 quand la candidature est introuvable", async () => {

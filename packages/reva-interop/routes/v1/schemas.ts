@@ -20,7 +20,7 @@ export const situationSchema = {
   additionalProperties: false,
   properties: {
     niveauCertificationObtenuePlusEleve: {
-      $ref: "http://vae.gouv.fr/components/schemas/Diplome",
+      allOf: [{ $ref: "http://vae.gouv.fr/components/schemas/Diplome" }],
       nullable: true,
     },
     intituleCertificationObtenuePlusEleve: {
@@ -30,11 +30,13 @@ export const situationSchema = {
       nullable: true,
     },
     niveauFormationPlusEleve: {
-      $ref: "http://vae.gouv.fr/components/schemas/Diplome",
+      allOf: [{ $ref: "http://vae.gouv.fr/components/schemas/Diplome" }],
       nullable: true,
     },
     typologie: {
-      $ref: "http://vae.gouv.fr/components/schemas/TypologieCandidat",
+      allOf: [
+        { $ref: "http://vae.gouv.fr/components/schemas/TypologieCandidat" },
+      ],
       nullable: true,
     },
   },
@@ -106,7 +108,7 @@ export const candidatSchema = {
   ],
   properties: {
     genre: {
-      $ref: "http://vae.gouv.fr/components/schemas/Genre",
+      allOf: [{ $ref: "http://vae.gouv.fr/components/schemas/Genre" }],
       nullable: true,
     },
     prenom: {
@@ -150,7 +152,7 @@ export const candidatSchema = {
       nullable: true,
     },
     departementNaissance: {
-      $ref: "http://vae.gouv.fr/components/schemas/Departement",
+      allOf: [{ $ref: "http://vae.gouv.fr/components/schemas/Departement" }],
       nullable: true,
     },
     dateNaissance: {
@@ -353,7 +355,7 @@ export const candidatureSchema = {
       $ref: "http://vae.gouv.fr/components/schemas/Candidat",
     },
     organisme: {
-      $ref: "http://vae.gouv.fr/components/schemas/Organisme",
+      allOf: [{ $ref: "http://vae.gouv.fr/components/schemas/Organisme" }],
       nullable: true,
     },
   },
@@ -450,7 +452,11 @@ export const dossierDeFaisabiliteSchema = {
       nullable: true,
     },
     statut: {
-      $ref: "http://vae.gouv.fr/components/schemas/StatutDossierDeFaisabilite",
+      allOf: [
+        {
+          $ref: "http://vae.gouv.fr/components/schemas/StatutDossierDeFaisabilite",
+        },
+      ],
       nullable: true,
     },
     blocsDeCompetences: {
@@ -539,7 +545,7 @@ export const dossierDeFaisabiliteDecisionSchema = {
       nullable: true,
     },
     document: {
-      $ref: "http://vae.gouv.fr/components/schemas/Fichier",
+      allOf: [{ $ref: "http://vae.gouv.fr/components/schemas/Fichier" }],
       nullable: true,
     },
   },
