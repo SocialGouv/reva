@@ -189,6 +189,43 @@ export const buildDossierDeValidationRowFixture = (
   ...overrides,
 });
 
+export const buildDossierDeValidationFixture = (
+  overrides: Record<string, unknown> = {},
+): GetGqlResponseType<typeof getDossierDeValidationByCandidacyId> => ({
+  id: CANDIDACY_ID,
+  activeDossierDeValidation: {
+    id: "dossier-validation-1",
+    dossierDeValidationSentAt: new Date("2025-03-01T09:00:00.000Z").getTime(),
+    decision: "COMPLETE",
+    dossierDeValidationFile: {
+      name: "dossier-de-validation.pdf",
+      mimeType: "application/pdf",
+      previewUrl: null,
+    },
+    dossierDeValidationOtherFiles: [],
+  },
+  ...overrides,
+});
+
+export const buildDossierDeValidationHistoryFixture = (
+  overrides: Record<string, unknown> = {},
+): GetGqlResponseType<typeof getDossierDeValidationHistoryByCandidacyId> => ({
+  id: CANDIDACY_ID,
+  activeDossierDeValidation: {
+    decision: "COMPLETE",
+    decisionComment: "Dossier vérifié",
+    decisionSentAt: new Date("2025-03-05T09:00:00.000Z").getTime(),
+  },
+  historyDossierDeValidation: [
+    {
+      decision: "INCOMPLETE",
+      decisionComment: "Dossier signalé",
+      decisionSentAt: new Date("2025-02-20T09:00:00.000Z").getTime(),
+    },
+  ],
+  ...overrides,
+});
+
 export const buildDossiersDeValidationPageFixture = (
   rows: GetGqlRowType<typeof getDossiersDeValidation>[] = [
     buildDossierDeValidationRowFixture(),
