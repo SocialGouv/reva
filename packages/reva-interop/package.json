@@ -19,7 +19,6 @@
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:generate:migration": "prisma migrate dev --create-only",
     "test": "npm run graphql:generate && dotenv -e .env.test -- vitest run",
-    "test:smoke": "npm run graphql:generate && dotenv -e .env.test -- vitest run smoke",
     "test:watch": "dotenv -e .env.test -- vitest",
     "test:coverage": "dotenv -e .env.test -- vitest run --coverage",
     "test:ui": "dotenv -e .env.test -- vitest --ui",

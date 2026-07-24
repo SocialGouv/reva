@@ -93,5 +93,5 @@ jobs:
       - name: Run postinstall script
         if: steps.interop-node_modules-cache.outputs.cache-hit == 'true'
         run: npm run postinstall
-      - name: Running smoke test
-        run: npm run test:smoke
+      - name: Running tests
+        run: npm run test
