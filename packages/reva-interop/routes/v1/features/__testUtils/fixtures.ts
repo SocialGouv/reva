@@ -1,7 +1,12 @@
 import { GetGqlResponseType, GetGqlRowType } from "../../../../utils/types.js";
 import { getCandidacyById } from "../candidacies/getCandidacyById.js";
+import { getDossierDeValidationByCandidacyId } from "../dossiersDeValidation/getDossierDeValidationByCandidacyId.js";
+import { getDossierDeValidationHistoryByCandidacyId } from "../dossiersDeValidation/getDossierDeValidationHistoryByCandidacyId.js";
 import { getDossiersDeValidation } from "../dossiersDeValidation/getDossiersDeValidation.js";
+import { getFeasibilities } from "../feasibilities/getFeasibilities.js";
 import { getFeasibilityByCandidacyId } from "../feasibilities/getFeasibilityByCandidacyId.js";
+import { getFeasibilityHistoryByCandidacyId } from "../feasibilities/getFeasibilityHistoryByCandidacyId.js";
+import { getJuries } from "../juries/getJuries.js";
 import { getJuryByCandidacyId } from "../juries/getJuryByCandidacyId.js";
 import { scheduleJurySessionByCandidacyId } from "../juries/scheduleJurySessionByCandidacyId.js";
 import { updateJuryResultByCandidacyId } from "../juries/updateJuryResultByCandidacyId.js";
@@ -63,6 +68,61 @@ export const buildFeasibilityCandidacyFixture = (
     dematerializedFeasibilityFile: null,
   },
   ...overrides,
+});
+
+export const buildFeasibilityHistoryFixture = (
+  overrides: Record<string, unknown> = {},
+): GetGqlResponseType<typeof getFeasibilityHistoryByCandidacyId> => ({
+  id: CANDIDACY_ID,
+  feasibility: {
+    feasibilityFormat: "UPLOADED_PDF",
+    decision: "COMPLETE",
+    decisionComment: "Dossier complet",
+    decisionSentAt: new Date("2025-02-01T09:00:00.000Z").getTime(),
+    decisionFile: null,
+    history: [
+      {
+        id: "feasibility-history-1",
+        decision: "PENDING",
+        decisionComment: null,
+        decisionSentAt: new Date("2025-01-15T09:00:00.000Z").getTime(),
+        decisionFile: null,
+      },
+    ],
+  },
+  ...overrides,
+});
+
+const buildFeasibilityRowFixture = (
+  overrides: Record<string, unknown> = {},
+): GetGqlRowType<typeof getFeasibilities> => ({
+  id: "feasibility-1",
+  candidacy: {
+    id: CANDIDACY_ID,
+    status: "PROJET",
+    cohorteVaeCollective: null,
+    candidacyDropOut: null,
+    experiences: [],
+  },
+  feasibilityFileSentAt: new Date("2025-01-15T10:00:00.000Z").getTime(),
+  decision: "PENDING",
+  feasibilityFormat: "UPLOADED_PDF",
+  feasibilityUploadedPdf: null,
+  dematerializedFeasibilityFile: null,
+  ...overrides,
+});
+
+export const buildFeasibilitiesPageFixture = (
+  rows: GetGqlRowType<typeof getFeasibilities>[] = [
+    buildFeasibilityRowFixture(),
+  ],
+): GetGqlResponseType<typeof getFeasibilities> => ({
+  rows,
+  info: {
+    totalRows: rows.length,
+    currentPage: 1,
+    totalPages: 1,
+  },
 });
 
 export const buildJuryCandidacyFixture = (
