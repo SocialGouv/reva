@@ -183,7 +183,7 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           required: ["candidatureId"],
         },
         response: {
-          201: {
+          200: {
             description: "Nouvelle décision créée avec succès",
             $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecisionResponse",
           },

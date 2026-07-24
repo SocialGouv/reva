@@ -224,6 +224,7 @@ describe("POST /interop/v1/candidatures/:id/dossierDeFaisabilite/decisions", () 
     });
 
     expect(response.statusCode).toBe(200);
+    expect(response.json().data.decision).toBe("COMPLET");
     expect(createFeasibilityDecisionByCandidacyId).toHaveBeenCalledWith(
       expect.anything(),
       KEYCLOAK_JWT,

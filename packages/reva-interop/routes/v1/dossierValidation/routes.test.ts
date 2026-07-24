@@ -213,6 +213,7 @@ describe("POST /interop/v1/candidatures/:id/dossierDeValidation/decisions", () =
     });
 
     expect(response.statusCode).toBe(200);
+    expect(response.json().data.decision).toBe("VERIFIE");
     expect(createDossierDeValidationDecisionByCandidacyId).toHaveBeenCalledWith(
       expect.anything(),
       CANDIDACY_ID,
