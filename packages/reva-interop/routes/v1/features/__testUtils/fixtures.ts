@@ -135,6 +135,25 @@ export const buildJuryCandidacyFixture = (
   ...overrides,
 });
 
+const buildJuryRowFixture = (
+  overrides: Record<string, unknown> = {},
+): GetGqlRowType<typeof getJuries> => ({
+  candidacy: { id: CANDIDACY_ID },
+  dateOfSession: new Date("2026-12-01T10:00:00.000Z").getTime(),
+  ...overrides,
+});
+
+export const buildJuriesPageFixture = (
+  rows: GetGqlRowType<typeof getJuries>[] = [buildJuryRowFixture()],
+): GetGqlResponseType<typeof getJuries> => ({
+  rows,
+  info: {
+    totalRows: rows.length,
+    currentPage: 1,
+    totalPages: 1,
+  },
+});
+
 export const buildJurySessionCandidacyFixture = (
   overrides: Record<string, unknown> = {},
 ): GetGqlResponseType<typeof scheduleJurySessionByCandidacyId> => ({
