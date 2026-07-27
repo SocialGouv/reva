@@ -4,7 +4,7 @@ import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useAuth } from "@/components/auth/auth";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 
-import PerimetreAccompagnementForm from "../../_components/perimetre-accompagnement-form/PerimetreAccompagnementForm";
+import { PerimetreAccompagnementForm } from "../../_components/perimetre-accompagnement-form/PerimetreAccompagnementForm";
 import { useOnSiteOrganism } from "../_components/onSiteOrganism.hook";
 
 const PerimetreAccompagnementOnSitePage = () => {
@@ -43,10 +43,7 @@ const PerimetreAccompagnementOnSitePage = () => {
         gérés par cet organisme.
       </p>
 
-      <PerimetreAccompagnementForm
-        organismId={organism?.id}
-        backButtonUrl={`../`}
-      />
+      <PerimetreAccompagnementForm organismId={organism?.id} />
     </div>
   );
 };

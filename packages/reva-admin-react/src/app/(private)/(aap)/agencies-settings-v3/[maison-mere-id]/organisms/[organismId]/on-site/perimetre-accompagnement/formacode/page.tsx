@@ -2,20 +2,19 @@
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 
 import { useAuth } from "@/components/auth/auth";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 
-import { PerimetreAccompagnementForm } from "../../_components/perimetre-accompagnement-form/PerimetreAccompagnementForm";
-import { useOnRemoteOrganism } from "../../on-site/_components/onRemoteOrganism.hook";
+import { FormacodesForm } from "../../../_components/formacodes-form/FormacodesForm";
+import { useOnSiteOrganism } from "../../_components/onSiteOrganism.hook";
 
 const PerimetreAccompagnementOnSitePage = () => {
   const { isAdmin } = useAuth();
-  const { organism } = useOnRemoteOrganism();
+  const { organismName, organism } = useOnSiteOrganism();
 
   return (
     <div className="flex flex-col">
       <Breadcrumb
         className="mb-2"
-        currentPageLabel="Périmètre d’accompagnement"
+        currentPageLabel="Formacode"
         segments={[
           isAdmin
             ? {
@@ -29,21 +28,22 @@ const PerimetreAccompagnementOnSitePage = () => {
                 linkProps: { href: "/agencies-settings-v3" },
               },
           {
-            label: "Accompagnement à distance",
+            label: organismName,
+            linkProps: {
+              href: `../../`,
+            },
+          },
+          {
+            label: "Périmètre d’accompagnement",
             linkProps: {
               href: `../`,
             },
           },
         ]}
       />
-      <h1>Périmètre d’accompagnement</h1>
-      <FormOptionalFieldsDisclaimer />
-      <p>
-        Consultez et mettez à jour les domaines d'accompagnement et les niveaux
-        gérés par cet organisme.
-      </p>
+      <h1>Périmètre d’accompagnement via le Formacode</h1>
 
-      <PerimetreAccompagnementForm organismId={organism?.id} />
+      <FormacodesForm organismId={organism?.id} />
     </div>
   );
 };

@@ -1,10 +1,12 @@
 "use client";
 
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -42,13 +44,13 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const PerimetreAccompagnementForm = ({
+export const PerimetreAccompagnementForm = ({
   organismId,
-  backButtonUrl,
 }: {
   organismId: string;
-  backButtonUrl: string;
 }) => {
+  const router = useRouter();
+
   const {
     degrees,
     conventionCollectives,
@@ -68,7 +70,7 @@ const PerimetreAccompagnementForm = ({
     handleSubmit,
     reset,
     control,
-    formState: { isSubmitting, isDirty },
+    formState: { isSubmitting },
     watch,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -244,20 +246,45 @@ const PerimetreAccompagnementForm = ({
                 <fieldset className="flex flex-col gap-4 mb-4">
                   <p className="m-0 text-md">Cet organisme couvre :</p>
 
-                  <div className="flex flex-wrap gap-2">
-                    <Tag>{`${organismFormacodes.length} champs sémantiques`}</Tag>
+                  <div className="flex flex-row justify-between gap-4 mb-4">
+                    <div className="flex flex-wrap gap-2">
+                      <Tag>{`${organismFormacodes.length} champs sémantiques`}</Tag>
 
-                    <Tag>{`${organismFormacodes.reduce((acc, formacode) => acc + formacode.countOfChildren, 0)} mots clés / descripteurs`}</Tag>
+                      <Tag>{`${organismFormacodes.reduce((acc, formacode) => acc + formacode.countOfChildren, 0)} mots clés / descripteurs`}</Tag>
+                    </div>
+
+                    <Button
+                      size="small"
+                      priority="secondary"
+                      type="button"
+                      onClick={() => {
+                        router.push("./formacode");
+                      }}
+                    >
+                      Modifier
+                    </Button>
                   </div>
                 </fieldset>
 
                 <hr className="pb-4" />
 
-                <fieldset className="flex flex-col gap-4 mb-4">
+                <fieldset className="flex flex-row justify-between gap-4 mb-4">
                   <p className="m-0 text-md">
                     Cet organisme est visible dans les recherches des candidats
                     pour {certifications.length} certifications.
                   </p>
+
+                  <Button
+                    size="small"
+                    priority="tertiary no outline"
+                    className="min-w-64 justify-center m-auto"
+                    type="button"
+                    onClick={() => {
+                      console.log("clicked");
+                    }}
+                  >
+                    Voir les certifications concernées
+                  </Button>
                 </fieldset>
 
                 <hr className="pb-4" />
@@ -338,14 +365,13 @@ const PerimetreAccompagnementForm = ({
           </div>
 
           <FormButtons
+            hideResetButton
             className="col-span-2"
-            formState={{ isSubmitting, isDirty }}
-            backUrl={backButtonUrl}
+            formState={{ isSubmitting }}
+            backUrl="../"
           />
         </form>
       )}
     </div>
   );
 };
-
-export default PerimetreAccompagnementForm;
