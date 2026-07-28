@@ -269,7 +269,8 @@ export const adresseSchema = {
   required: ["codePostal", "rue", "ville", "departement", "pays", "codePays"],
   properties: {
     departement: {
-      $ref: "http://vae.gouv.fr/components/schemas/Departement",
+      allOf: [{ $ref: "http://vae.gouv.fr/components/schemas/Departement" }],
+      nullable: true,
     },
     codePostal: {
       type: "string",

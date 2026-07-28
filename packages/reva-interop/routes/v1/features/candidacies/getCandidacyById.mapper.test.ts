@@ -63,6 +63,19 @@ describe("mapGetCandidacyById", () => {
     expect(mapGetCandidacyById(candidacy).candidat.genre).toBe(expected);
   });
 
+  test("retourne un departement null quand le candidat n'a pas de département", () => {
+    const candidacy = buildCandidacyFixture({
+      candidate: {
+        ...buildCandidacyFixture().candidate!,
+        department: null,
+      },
+    });
+
+    expect(
+      mapGetCandidacyById(candidacy).candidat.adresse.departement,
+    ).toBeNull();
+  });
+
   test("returns null organisme when candidacy has no organism", () => {
     const mapped = mapGetCandidacyById(
       buildCandidacyFixture({ organism: null }),

@@ -47,7 +47,7 @@ type Candidate {
   highestDegree: Degree
   highestDegreeLabel: String
   niveauDeFormationLePlusEleve: Degree
-  department: Department!
+  department: Department
   zip: String
   street: String
   city: String

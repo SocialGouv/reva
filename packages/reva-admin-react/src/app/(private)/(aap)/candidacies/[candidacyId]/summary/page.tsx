@@ -179,7 +179,7 @@ const CandidacySummaryPage = () => {
                 <dt className="sr-only">Adresse</dt>
                 <dd>
                   {isContactInformationCompleted &&
-                    `${candidate.street}, ${candidate.zip} ${candidate.city}, ${candidate.department.label}`}
+                    `${candidate.street}, ${candidate.zip} ${candidate.city}, ${candidate.department?.label}`}
                 </dd>
               </dl>
             </EnhancedSectionCard>

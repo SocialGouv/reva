@@ -39,7 +39,7 @@ import { resolversSecurityMap } from "./security/security";
 
 const unsafeResolvers = {
   Candidate: {
-    department: async (parent: { departmentId: string }) => {
+    department: async (parent: { departmentId: string | null }) => {
       if (!parent.departmentId) return null;
       const department = await prismaClient.department.findUnique({
         where: {

@@ -116,10 +116,12 @@ export const mapGetCandidacyById = (
         ville: candidacy.candidate.city || null,
         pays: candidacy.candidate.country?.label || null,
         codePays: candidacy.candidate.country?.isoCode?.toUpperCase() || null,
-        departement: {
-          code: candidacy.candidate.department.code,
-          nom: candidacy.candidate.department.label,
-        },
+        departement: candidacy.candidate.department
+          ? {
+              code: candidacy.candidate.department.code,
+              nom: candidacy.candidate.department.label,
+            }
+          : null,
       },
     },
     certification: {
