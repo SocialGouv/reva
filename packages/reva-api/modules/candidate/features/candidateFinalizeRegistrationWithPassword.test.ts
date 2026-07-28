@@ -84,6 +84,8 @@ describe("candidateFinalizeRegistrationWithPassword", () => {
     expect(candidate?.keycloakId).toBe(keycloakId);
     expect(candidate?.firstname).toBe("");
     expect(candidate?.lastname).toBe("");
+    // aucun département par défaut n'est attribué à la création du compte
+    expect(candidate?.departmentId).toBeNull();
 
     const candidacy = await prismaClient.candidacy.findFirst({
       where: { candidateId: candidate?.id },

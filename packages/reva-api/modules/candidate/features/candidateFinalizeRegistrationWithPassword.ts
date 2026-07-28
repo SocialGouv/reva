@@ -75,14 +75,6 @@ export const candidateFinalizeRegistrationWithPassword = async ({
 
   await resetPassword(keycloakId, password, realm);
 
-  const defaultDepartment = await prismaClient.department.findFirst({
-    where: { code: "75" },
-  });
-
-  if (!defaultDepartment) {
-    throw new Error("Département par défaut non trouvé");
-  }
-
   await prismaClient.candidate.create({
     data: {
       email,
@@ -90,7 +82,6 @@ export const candidateFinalizeRegistrationWithPassword = async ({
       firstname: "",
       lastname: "",
       phone: "",
-      departmentId: defaultDepartment.id,
     },
   });
 
