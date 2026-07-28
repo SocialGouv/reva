@@ -398,8 +398,6 @@ const createCandidateFromFranceConnect = async ({
     userInfo,
   });
 
-  const currentDepartment = await getDefaultDepartment();
-
   const candidate = await prismaClient.candidate.create({
     data: {
       ...fcData,
@@ -409,7 +407,6 @@ const createCandidateFromFranceConnect = async ({
       city: "",
       zip: "",
       street: "",
-      departmentId: currentDepartment.id,
     },
   });
 
@@ -426,20 +423,6 @@ const getCandidateBirthdateAsYMD = async (
     Array<{ birthdate: string | null }>
   >`SELECT TO_CHAR(birthdate, 'YYYY-MM-DD') AS birthdate FROM candidate WHERE id = ${candidateId}::uuid`;
   return rows[0]?.birthdate ?? null;
-};
-
-const getDefaultDepartment = async () => {
-  const department = await prismaClient.department.findFirst({
-    where: { code: "75" },
-  });
-
-  if (!department) {
-    throw new FranceConnectSystemError({
-      message: "Erreur de configuration du système",
-    });
-  }
-
-  return department;
 };
 
 const getCountry = async (

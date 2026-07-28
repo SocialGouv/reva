@@ -76,6 +76,8 @@ describe("getOrCreateCandidate - réconciliation FranceConnect", () => {
     expect(dbCandidate?.lastname).toBe("Dupont");
     expect(dbCandidate?.franceConnectLinked).toBe(true);
     expect(dbCandidate?.keycloakId).toBe(FC_KEYCLOAK_ID);
+    // aucun département de résidence par défaut n'est attribué via FranceConnect
+    expect(dbCandidate?.departmentId).toBeNull();
   });
 
   test("met à jour le candidat existant quand le keycloakId et les données pivots correspondent", async () => {
