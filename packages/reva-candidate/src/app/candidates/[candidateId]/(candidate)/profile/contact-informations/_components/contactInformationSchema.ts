@@ -14,7 +14,7 @@ export const contactInformationSchema = () =>
     .object({
       street: sanitizedText(),
       city: sanitizedText(),
-      zip: z.union([sanitizedZipCode(), z.literal("")]),
+      zip: sanitizedZipCode(),
       phone: sanitizedPhone(),
       email: sanitizedEmail(),
       addressComplement: sanitizedOptionalText(),
