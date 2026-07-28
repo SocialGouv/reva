@@ -11,6 +11,7 @@ import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/crea
 import { createFileHelper } from "@/test/helpers/entities/create-file-helper";
 import { createJuryHelper } from "@/test/helpers/entities/create-jury-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
+import { getCandidateDepartmentIdOrThrow } from "@/test/helpers/entities/get-candidate-department-id-or-throw";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
 async function setupTestCandidacyWithFeasibility() {
@@ -224,7 +225,7 @@ test("certificateur can submit a jury result but cannot revoke his decision hims
       },
       certificationAuthorityLocalAccountOnDepartment: {
         create: {
-          departmentId: candidate.departmentId,
+          departmentId: getCandidateDepartmentIdOrThrow(candidate),
         },
       },
     });

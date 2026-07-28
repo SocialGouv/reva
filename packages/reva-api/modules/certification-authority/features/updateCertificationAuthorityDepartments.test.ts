@@ -2,6 +2,7 @@ import { prismaClient } from "@/prisma/client";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
+import { getCandidateDepartmentIdOrThrow } from "@/test/helpers/entities/get-candidate-department-id-or-throw";
 
 import { updateCertificationAuthorityDepartments } from "./updateCertificationAuthorityDepartments";
 
@@ -19,7 +20,7 @@ test("should assign the certification authority to a previously-unassigned candi
 
   await updateCertificationAuthorityDepartments({
     certificationAuthorityId: certificationAuthority.id,
-    departmentIds: [candidacy.candidate!.departmentId],
+    departmentIds: [getCandidateDepartmentIdOrThrow(candidacy.candidate)],
   });
 
   const updated = await prismaClient.candidacy.findUnique({
@@ -47,7 +48,7 @@ test("should not assign a candidacy that already has a certification authority",
 
   await updateCertificationAuthorityDepartments({
     certificationAuthorityId: certificationAuthority.id,
-    departmentIds: [candidacy.candidate!.departmentId],
+    departmentIds: [getCandidateDepartmentIdOrThrow(candidacy.candidate)],
   });
 
   const updated = await prismaClient.candidacy.findUnique({

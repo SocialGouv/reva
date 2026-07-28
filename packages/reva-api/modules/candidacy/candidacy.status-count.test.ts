@@ -7,6 +7,7 @@ import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-
 import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
 import { createJuryHelper } from "@/test/helpers/entities/create-jury-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
+import { getCandidateDepartmentIdOrThrow } from "@/test/helpers/entities/get-candidate-department-id-or-throw";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
@@ -462,7 +463,7 @@ describe.each(["ADMIN", "AAP"] as const)(
       //that candidacy should be visible to both profiles
       const { candidate, organism } = await createCandidacyHelper();
       const department = await prismaClient.department.findUnique({
-        where: { id: candidate?.departmentId },
+        where: { id: getCandidateDepartmentIdOrThrow(candidate) },
       });
 
       const candidate2 = await createCandidateHelper({

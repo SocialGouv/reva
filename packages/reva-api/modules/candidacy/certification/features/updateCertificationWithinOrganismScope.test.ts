@@ -12,6 +12,7 @@ import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
+import { getCandidateDepartmentIdOrThrow } from "@/test/helpers/entities/get-candidate-department-id-or-throw";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
 const actionSocialeFormacode = {
@@ -417,7 +418,9 @@ test("should refresh certificationAuthorityId after organism updates certificati
       create: { certificationId: newCertification.id },
     },
     certificationAuthorityOnDepartment: {
-      create: { departmentId: candidacy.candidate!.departmentId },
+      create: {
+        departmentId: getCandidateDepartmentIdOrThrow(candidacy.candidate),
+      },
     },
   });
 

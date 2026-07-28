@@ -3,6 +3,7 @@ import { FeasibilityFormat, FeasibilityStatus } from "@prisma/client";
 import { prismaClient } from "@/prisma/client";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
+import { getCandidateDepartmentIdOrThrow } from "@/test/helpers/entities/get-candidate-department-id-or-throw";
 
 import { refreshCertificationAuthorityOfCandidacy } from "./refreshCertificationAuthorityOfCandidacy";
 
@@ -14,7 +15,9 @@ const createMatchingCertificationAuthority = (candidacy: Candidacy) =>
       create: { certificationId: candidacy.certificationId! },
     },
     certificationAuthorityOnDepartment: {
-      create: { departmentId: candidacy.candidate!.departmentId },
+      create: {
+        departmentId: getCandidateDepartmentIdOrThrow(candidacy.candidate),
+      },
     },
   });
 

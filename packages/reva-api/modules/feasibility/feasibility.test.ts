@@ -7,6 +7,7 @@ import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
+import { getCandidateDepartmentIdOrThrow } from "@/test/helpers/entities/get-candidate-department-id-or-throw";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
@@ -498,14 +499,18 @@ test("should only return the certification authorities available for the certifi
         create: { certificationId: certificationCollective.id },
       },
       certificationAuthorityOnDepartment: {
-        create: { departmentId: candidacy.candidate!.departmentId },
+        create: {
+          departmentId: getCandidateDepartmentIdOrThrow(candidacy.candidate),
+        },
       },
     });
 
   // Create certification authority without certification
   await createCertificationAuthorityHelper({
     certificationAuthorityOnDepartment: {
-      create: { departmentId: candidacy.candidate!.departmentId },
+      create: {
+        departmentId: getCandidateDepartmentIdOrThrow(candidacy.candidate),
+      },
     },
   });
 
@@ -562,7 +567,9 @@ test("should only return the certification authorities available for the departm
         create: { certificationId: certificationCollective.id },
       },
       certificationAuthorityOnDepartment: {
-        create: { departmentId: candidacy.candidate!.departmentId },
+        create: {
+          departmentId: getCandidateDepartmentIdOrThrow(candidacy.candidate),
+        },
       },
     });
 

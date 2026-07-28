@@ -8,6 +8,7 @@ import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper"
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
+import { getCandidateDepartmentIdOrThrow } from "@/test/helpers/entities/get-candidate-department-id-or-throw";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 const submitTraining = async ({
@@ -246,7 +247,9 @@ test("should refresh certificationAuthorityId after candidate updates certificat
       create: { certificationId: newCertification.id },
     },
     certificationAuthorityOnDepartment: {
-      create: { departmentId: candidacy.candidate!.departmentId },
+      create: {
+        departmentId: getCandidateDepartmentIdOrThrow(candidacy.candidate),
+      },
     },
   });
 

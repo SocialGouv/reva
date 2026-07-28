@@ -5,6 +5,7 @@ import { FeasibilityFormat, FeasibilityStatus } from "@prisma/client";
 import { prismaClient } from "@/prisma/client";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
+import { getCandidateDepartmentIdOrThrow } from "@/test/helpers/entities/get-candidate-department-id-or-throw";
 
 import { refreshCertificationAuthorityOfCandidacies } from "./refreshCertificationAuthorityOfCandidacies";
 
@@ -16,7 +17,9 @@ const createMatchingCertificationAuthority = (candidacy: Candidacy) =>
       create: { certificationId: candidacy.certificationId! },
     },
     certificationAuthorityOnDepartment: {
-      create: { departmentId: candidacy.candidate!.departmentId },
+      create: {
+        departmentId: getCandidateDepartmentIdOrThrow(candidacy.candidate),
+      },
     },
   });
 
@@ -41,7 +44,7 @@ describe("refreshCertificationAuthorityOfCandidacies", () => {
     await refreshCertificationAuthorityOfCandidacies({
       updatedCertificationAuthorityId: ca.id,
       certificationIds: [candidacy.certificationId!],
-      departmentIds: [candidacy.candidate!.departmentId],
+      departmentIds: [getCandidateDepartmentIdOrThrow(candidacy.candidate)],
     });
 
     const updated = await prismaClient.candidacy.findUnique({
@@ -58,7 +61,7 @@ describe("refreshCertificationAuthorityOfCandidacies", () => {
     await refreshCertificationAuthorityOfCandidacies({
       updatedCertificationAuthorityId: ca.id,
       certificationIds: [candidacy.certificationId!],
-      departmentIds: [candidacy.candidate!.departmentId],
+      departmentIds: [getCandidateDepartmentIdOrThrow(candidacy.candidate)],
     });
 
     const updated = await prismaClient.candidacy.findUnique({
@@ -80,7 +83,7 @@ describe("refreshCertificationAuthorityOfCandidacies", () => {
     await refreshCertificationAuthorityOfCandidacies({
       updatedCertificationAuthorityId: matchingCa.id,
       certificationIds: [candidacy.certificationId!],
-      departmentIds: [candidacy.candidate!.departmentId],
+      departmentIds: [getCandidateDepartmentIdOrThrow(candidacy.candidate)],
     });
 
     const updated = await prismaClient.candidacy.findUnique({
@@ -96,7 +99,7 @@ describe("refreshCertificationAuthorityOfCandidacies", () => {
     await refreshCertificationAuthorityOfCandidacies({
       updatedCertificationAuthorityId: ca.id,
       certificationIds: [randomUUID()],
-      departmentIds: [candidacy.candidate!.departmentId],
+      departmentIds: [getCandidateDepartmentIdOrThrow(candidacy.candidate)],
     });
 
     const updated = await prismaClient.candidacy.findUnique({
@@ -146,7 +149,7 @@ describe("refreshCertificationAuthorityOfCandidacies", () => {
       await refreshCertificationAuthorityOfCandidacies({
         updatedCertificationAuthorityId: ca.id,
         certificationIds: [candidacy.certificationId!],
-        departmentIds: [candidacy.candidate!.departmentId],
+        departmentIds: [getCandidateDepartmentIdOrThrow(candidacy.candidate)],
       });
 
       const updated = await prismaClient.candidacy.findUnique({
@@ -202,7 +205,7 @@ describe("refreshCertificationAuthorityOfCandidacies", () => {
         await refreshCertificationAuthorityOfCandidacies({
           updatedCertificationAuthorityId: ca.id,
           certificationIds: [candidacy.certificationId!],
-          departmentIds: [candidacy.candidate!.departmentId],
+          departmentIds: [getCandidateDepartmentIdOrThrow(candidacy.candidate)],
         });
 
         const updated = await prismaClient.candidacy.findUnique({
@@ -220,7 +223,7 @@ describe("refreshCertificationAuthorityOfCandidacies", () => {
       await refreshCertificationAuthorityOfCandidacies({
         updatedCertificationAuthorityId: ca.id,
         certificationIds: [candidacy.certificationId!],
-        departmentIds: [candidacy.candidate!.departmentId],
+        departmentIds: [getCandidateDepartmentIdOrThrow(candidacy.candidate)],
       });
 
       const updated = await prismaClient.candidacy.findUnique({

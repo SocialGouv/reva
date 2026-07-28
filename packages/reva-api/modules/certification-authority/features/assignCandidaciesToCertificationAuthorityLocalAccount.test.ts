@@ -4,6 +4,7 @@ import { createCertificationAuthorityHelper } from "@/test/helpers/entities/crea
 import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
+import { getCandidateDepartmentIdOrThrow } from "@/test/helpers/entities/get-candidate-department-id-or-throw";
 
 import { assignCandidaciesToCertificationAuthorityLocalAccount } from "./assignCandidaciesToCertificationAuthorityLocalAccount";
 
@@ -25,7 +26,9 @@ test("should return candidacies to created certification authority local account
       create: { certificationId: certification.id },
     },
     certificationAuthorityOnDepartment: {
-      create: { departmentId: candidacy.candidate!.departmentId },
+      create: {
+        departmentId: getCandidateDepartmentIdOrThrow(candidacy.candidate),
+      },
     },
   });
 
@@ -46,7 +49,7 @@ test("should return candidacies to created certification authority local account
     certificationAuthorityLocalAccountId:
       certificationAuthorityLocalAccountWithCertificationAndDepartment.id,
     certificationId: certification.id,
-    departmentId: candidacy.candidate!.departmentId,
+    departmentId: getCandidateDepartmentIdOrThrow(candidacy.candidate),
   });
 
   // assign candidacies to created certification authority local account

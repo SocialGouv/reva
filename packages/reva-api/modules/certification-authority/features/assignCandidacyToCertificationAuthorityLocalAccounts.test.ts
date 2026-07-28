@@ -4,6 +4,7 @@ import { createCertificationAuthorityHelper } from "@/test/helpers/entities/crea
 import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
+import { getCandidateDepartmentIdOrThrow } from "@/test/helpers/entities/get-candidate-department-id-or-throw";
 
 /**
  * Test assignCandidacyToCertificationAuthorityLocalAccounts
@@ -23,7 +24,9 @@ test("should only return the certification authority local accounts based on sam
       create: { certificationId: certification.id },
     },
     certificationAuthorityOnDepartment: {
-      create: { departmentId: candidacy.candidate!.departmentId },
+      create: {
+        departmentId: getCandidateDepartmentIdOrThrow(candidacy.candidate),
+      },
     },
   });
 
@@ -37,7 +40,7 @@ test("should only return the certification authority local accounts based on sam
     certificationAuthorityLocalAccountId:
       certificationAuthorityLocalAccountWithCertificationAndDepartment.id,
     certificationId: certification.id,
-    departmentId: candidacy.candidate!.departmentId,
+    departmentId: getCandidateDepartmentIdOrThrow(candidacy.candidate),
   });
 
   // Create second certification authority local account
