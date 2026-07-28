@@ -658,6 +658,48 @@ describe("candidate information update", () => {
     });
   });
 
+  test("affecte le bon département à un candidat qui n'en avait pas quand on renseigne son code postal", async () => {
+    const candidacy = await createCandidacyHelper();
+
+    if (!candidacy || !candidacy.candidate) {
+      throw Error("Error while creating test candidacy");
+    }
+
+    await prismaClient.candidate.update({
+      where: { id: candidacy.candidate.id },
+      data: { departmentId: null },
+    });
+
+    const updatedCandidateFields = {
+      ...(await getDefaultUpdatedCandidateFields()),
+      zip: "44000",
+    };
+
+    const resp = await injectGraphql({
+      fastify: global.testApp,
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: mockAdminKeycloakUuid,
+      }),
+      payload: {
+        requestType: "mutation",
+        arguments: {
+          candidacyId: candidacy.id,
+          candidateInformation: updatedCandidateFields,
+        },
+        enumFields: ["gender"],
+        endpoint: "candidate_updateCandidateInformation",
+        returnFields: "{ department { label } }",
+      },
+    });
+    expect(resp.statusCode).toEqual(200);
+    expect(resp.json()).not.toHaveProperty("errors");
+    const obj = resp.json();
+    expect(obj.data.candidate_updateCandidateInformation).toMatchObject({
+      department: { label: "Loire-Atlantique" },
+    });
+  });
+
   test("should not allow an aap to update candidate information if it is not the owner of the candidacy", async () => {
     const nonOwnerOrganism = await createOrganismHelper();
     const candidacy = await createCandidacyHelper();

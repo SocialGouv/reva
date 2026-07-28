@@ -15,6 +15,7 @@ export const getContactInformationCompletedByCandidateId = async ({
   }
 
   return (
+    candidate.departmentId !== null &&
     candidate.street !== null &&
     candidate.city !== null &&
     candidate.zip !== null &&
