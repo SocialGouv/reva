@@ -388,8 +388,8 @@ model Candidate {
   city                                 String?                        @db.VarChar(255)
   zip                                  String?                        @db.VarChar(5)
   addressComplement                    String?                        @db.VarChar(255)
-  departmentId                         String                         @map("department_id") @db.Uuid
-  department                           Department                     @relation(fields: [departmentId], references: [id])
+  departmentId                         String?                        @map("department_id") @db.Uuid
+  department                           Department?                    @relation(fields: [departmentId], references: [id])
   birthDepartmentId                    String?                        @map("birth_department_id") @db.Uuid
   birthDepartment                      Department?                    @relation("birthDepartmentCandidate", fields: [birthDepartmentId], references: [id])
   birthCity                            String?                        @map("birth_city") @db.VarChar(255)

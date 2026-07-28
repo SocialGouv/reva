@@ -20,7 +20,7 @@ export interface Candidate {
   street?: string | null;
   city?: string | null;
   zip?: string | null;
-  departmentId: string;
+  departmentId?: string | null;
   department?: Department;
   birthDepartmentId?: string | null;
   birthDepartment?: Department | null;

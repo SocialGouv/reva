@@ -51,7 +51,7 @@ export const refreshCertificationAuthorityOfCandidacies = async ({
     { certificationId: string; departmentId: string }
   >();
   for (const { certificationId, candidate } of candidacies) {
-    if (!certificationId || !candidate) continue;
+    if (!certificationId || !candidate?.departmentId) continue;
     pairs.set(`${certificationId}|${candidate.departmentId}`, {
       certificationId,
       departmentId: candidate.departmentId,
@@ -85,7 +85,7 @@ export const refreshCertificationAuthorityOfCandidacies = async ({
   const candidacyIdsByResolvedAuthorityId = new Map<string | null, string[]>();
   for (const { id, certificationId, candidate } of candidacies) {
     const resolvedAuthorityId =
-      certificationId && candidate
+      certificationId && candidate?.departmentId
         ? (resolvedAuthorityIdByPairKey.get(
             `${certificationId}|${candidate.departmentId}`,
           ) ?? null)

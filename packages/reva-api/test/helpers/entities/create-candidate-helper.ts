@@ -34,7 +34,7 @@ export const createCandidateHelper = async (
       zip: faker.string.numeric(5),
       addressComplement: faker.lorem.word(),
       givenName: faker.person.fullName(),
-      departmentId: parisDepartment?.id ?? "",
+      departmentId: parisDepartment?.id ?? null,
       ...candidateArgs,
     },
   });
