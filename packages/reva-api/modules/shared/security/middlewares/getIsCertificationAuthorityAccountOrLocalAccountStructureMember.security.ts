@@ -3,6 +3,15 @@ import { IFieldResolver, MercuriusContext } from "mercurius";
 import { NOT_AUTHORIZED_STRUCTURE_ACCESS } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 
+// Une autorité de certification peut être rattachée à plusieurs structures
+const toStructureIds = (
+  relations: { certificationAuthorityStructureId: string }[] = [],
+) =>
+  relations.map(
+    ({ certificationAuthorityStructureId }) =>
+      certificationAuthorityStructureId,
+  );
+
 /**
  * Middleware de sécurité qui vérifie si l'utilisateur est soit un certificateur
  * soit un compte local membre de la structure de certification ciblée.
@@ -28,7 +37,7 @@ export const getIsCertificationAuthorityAccountOrLocalAccountStructureMember =
 
     let userAccount;
     let userCertificationAuthorityId;
-    let userAccountAuthorityStructureId;
+    let userAccountAuthorityStructureIds: string[] = [];
 
     // Certificateur - Certification Authority
     if (context.auth?.hasRole("manage_certification_authority_local_account")) {
@@ -48,10 +57,10 @@ export const getIsCertificationAuthorityAccountOrLocalAccountStructureMember =
         },
       });
 
-      userAccountAuthorityStructureId =
+      userAccountAuthorityStructureIds = toStructureIds(
         userAccount?.certificationAuthority
-          ?.certificationAuthorityOnCertificationAuthorityStructure[0]
-          ?.certificationAuthorityStructureId;
+          ?.certificationAuthorityOnCertificationAuthorityStructure,
+      );
 
       userCertificationAuthorityId = userAccount?.certificationAuthority?.id;
     } else {
@@ -76,11 +85,11 @@ export const getIsCertificationAuthorityAccountOrLocalAccountStructureMember =
         },
       });
 
-      userAccountAuthorityStructureId =
+      userAccountAuthorityStructureIds = toStructureIds(
         userAccount?.certificationAuthorityLocalAccount?.[0]
           ?.certificationAuthority
-          ?.certificationAuthorityOnCertificationAuthorityStructure[0]
-          ?.certificationAuthorityStructureId;
+          ?.certificationAuthorityOnCertificationAuthorityStructure,
+      );
 
       userCertificationAuthorityId =
         userAccount?.certificationAuthorityLocalAccount?.[0]
@@ -92,7 +101,7 @@ export const getIsCertificationAuthorityAccountOrLocalAccountStructureMember =
     }
 
     let targetCertificationAuthorityId;
-    let targetCertificationAuthorityStructureId;
+    let targetCertificationAuthorityStructureIds: string[] = [];
 
     // Selon le chemin utilisé dans le resolver, l'ID peut pointer vers :
     // 1. Un certificateur (première tentative)
@@ -113,10 +122,9 @@ export const getIsCertificationAuthorityAccountOrLocalAccountStructureMember =
 
     if (targetCertificationAuthority) {
       targetCertificationAuthorityId = targetCertificationAuthority.id;
-      targetCertificationAuthorityStructureId =
-        targetCertificationAuthority
-          ?.certificationAuthorityOnCertificationAuthorityStructure[0]
-          ?.certificationAuthorityStructureId;
+      targetCertificationAuthorityStructureIds = toStructureIds(
+        targetCertificationAuthority.certificationAuthorityOnCertificationAuthorityStructure,
+      );
     } else {
       // Try to find as a structure
       const targetStructure =
@@ -131,7 +139,7 @@ export const getIsCertificationAuthorityAccountOrLocalAccountStructureMember =
         });
 
       if (targetStructure) {
-        targetCertificationAuthorityStructureId = targetStructure.id;
+        targetCertificationAuthorityStructureIds = [targetStructure.id];
         // Check if the structure is linked to the user's certification authority
         const structureLinkedToUserAuthority =
           targetStructure.certificationAuthorityOnCertificationAuthorityStructure.some(
@@ -147,14 +155,15 @@ export const getIsCertificationAuthorityAccountOrLocalAccountStructureMember =
 
     if (
       !targetCertificationAuthority &&
-      !targetCertificationAuthorityStructureId
+      !targetCertificationAuthorityStructureIds.length
     ) {
       throw new Error(NOT_AUTHORIZED_STRUCTURE_ACCESS);
     }
 
     const hasMatchingAuthorityStructure =
-      userAccountAuthorityStructureId ===
-      targetCertificationAuthorityStructureId;
+      targetCertificationAuthorityStructureIds.some((structureId) =>
+        userAccountAuthorityStructureIds.includes(structureId),
+      );
 
     const hasMatchingCertificationAuthority =
       userCertificationAuthorityId === targetCertificationAuthorityId;
