@@ -66,6 +66,7 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
       id: candidacyId,
     },
     data: {
+      certificationAuthorityId: newCertificationAuthority.id,
       certificationAuthorityTransferReason: transferReason,
       Feasibility: {
         updateMany: {

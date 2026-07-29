@@ -122,6 +122,8 @@ export const transferCandidacyToCertificationAuthorityLocalAccount =
         id: candidacyId,
       },
       data: {
+        certificationAuthorityId:
+          certificationAuthorityLocalAccount.certificationAuthorityId,
         certificationAuthorityTransferReason: transferReason,
         Feasibility: {
           updateMany: {
