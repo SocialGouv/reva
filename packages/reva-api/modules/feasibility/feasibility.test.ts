@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 
 import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
 import * as FILE from "@/modules/shared/file/file.service";
+import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
@@ -371,6 +372,68 @@ test("should reject a feasibility since certificator is allowed to do so", async
     id: feasiblity.id,
     decision: "REJECTED",
   });
+});
+
+test("should refresh certificationAuthorityId when a feasibility is marked INCOMPLETE and the candidate's department already changed", async () => {
+  const candidacy = await createCandidacyHelper();
+  if (!candidacy.candidate) throw new Error("no candidate");
+
+  const oldCertificationAuthority = await createCertificationAuthorityHelper({
+    certificationAuthorityOnCertification: {
+      create: { certificationId: candidacy.certificationId! },
+    },
+    certificationAuthorityOnDepartment: {
+      create: { departmentId: candidacy.candidate.departmentId },
+    },
+  });
+
+  const loireAtlantique = await prismaClient.department.findUniqueOrThrow({
+    where: { code: "44" },
+  });
+  const newCertificationAuthority = await createCertificationAuthorityHelper({
+    certificationAuthorityOnCertification: {
+      create: { certificationId: candidacy.certificationId! },
+    },
+    certificationAuthorityOnDepartment: {
+      create: { departmentId: loireAtlantique.id },
+    },
+  });
+
+  const feasibility = await createFeasibilityUploadedPdfHelper({
+    decision: "PENDING",
+    certificationAuthorityId: oldCertificationAuthority.id,
+    candidacyId: candidacy.id,
+  });
+
+  await prismaClient.candidacy.update({
+    where: { id: candidacy.id },
+    data: { certificationAuthorityId: oldCertificationAuthority.id },
+  });
+
+  // Simulate the candidate having already moved to the new department while the
+  // decision was still PENDING (the certification authority refresh is locked in that state)
+  await prismaClient.candidate.update({
+    where: { id: candidacy.candidate.id },
+    data: { departmentId: loireAtlantique.id },
+  });
+
+  const resp = await postFeasibilityDecision({
+    feasibilityId: feasibility.id,
+    decision: "INCOMPLETE",
+    authorization: authorizationHeaderForUser({
+      role: "manage_certification_authority_local_account",
+      keycloakId: oldCertificationAuthority.Account[0].keycloakId,
+    }),
+  });
+
+  expect(resp.statusCode).toEqual(200);
+
+  const updatedCandidacy = await prismaClient.candidacy.findUnique({
+    where: { id: candidacy.id },
+  });
+  expect(updatedCandidacy?.certificationAuthorityId).toEqual(
+    newCertificationAuthority.id,
+  );
 });
 
 test("should not reject a feasibility since the certificator doesn't handle it", async () => {

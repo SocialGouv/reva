@@ -1144,6 +1144,10 @@ const markFeasibilityAsIncomplete = async ({
       status: "DOSSIER_FAISABILITE_INCOMPLET",
     });
 
+    await refreshCertificationAuthorityOfCandidacy({
+      candidacyId: feasibility.candidacyId,
+    });
+
     const isAutonome =
       updatedFeasibility.candidacy.typeAccompagnement === "AUTONOME";
 
