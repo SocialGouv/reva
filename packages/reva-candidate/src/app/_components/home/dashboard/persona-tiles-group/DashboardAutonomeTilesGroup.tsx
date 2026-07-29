@@ -1,5 +1,3 @@
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
-
 import { CandidacyUseCandidateForDashboard } from "../dashboard.hooks";
 import { CertificationTile } from "../tiles/CertificationTile";
 import { DossierValidationTile } from "../tiles/DossierValidationTile";
@@ -23,9 +21,8 @@ export const DashboardAutonomeTilesGroup = ({
   const feasibility = candidacy?.feasibility;
   const hasFeasibilitySent = !!candidacy?.feasibility?.feasibilityFileSentAt;
 
-  const { isFeatureActive } = useFeatureFlipping();
-
-  const isDfDematAutonomeEnabled = isFeatureActive("DF_DEMAT_AUTONOME");
+  const isDfDematAutonomeFeasibilityFormat =
+    candidacy?.feasibilityFormat === "DEMATERIALIZED";
 
   const readOnly =
     feasibility?.decision === "PENDING" ||
@@ -46,7 +43,7 @@ export const DashboardAutonomeTilesGroup = ({
         title="Compléter ma candidature"
         icon="fr-icon-ball-pen-line"
       >
-        {isDfDematAutonomeEnabled ? (
+        {isDfDematAutonomeFeasibilityFormat ? (
           <>
             <div className="grid md:grid-cols-2 grid-rows-1">
               <CertificationTile

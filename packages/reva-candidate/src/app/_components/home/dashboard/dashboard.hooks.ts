@@ -13,6 +13,7 @@ const GET_CANDIDACY_BY_ID_FOR_DASHBOARD = graphql(`
   query getCandidacyByIdForDashboard($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
+      feasibilityFormat
       appointments(temporalStatusFilter: UPCOMING, limit: 3, sortBy: DATE_ASC) {
         rows {
           id

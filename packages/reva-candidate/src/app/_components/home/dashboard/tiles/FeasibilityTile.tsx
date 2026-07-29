@@ -3,7 +3,6 @@ import Tile from "@codegouvfr/react-dsfr/Tile";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import {
   hasFreshCandidateConfirmation,
   isSentToCandidateOutdatedAfterIncomplete,
@@ -108,9 +107,6 @@ export const FeasibilityTile = ({
 }) => {
   const router = useRouter();
 
-  const { isFeatureActive } = useFeatureFlipping();
-  const isDfDematAutonomeEnabled = isFeatureActive("DF_DEMAT_AUTONOME");
-
   const isFeasibilityDemat =
     feasibility?.feasibilityFormat === "DEMATERIALIZED";
   const feasibilityIsPdf = feasibility?.feasibilityFormat === "UPLOADED_PDF";
@@ -151,7 +147,7 @@ export const FeasibilityTile = ({
     ? "./validate-feasibility"
     : "./feasibility";
 
-  if (candidacyIsAutonome && isDfDematAutonomeEnabled) {
+  if (candidacyIsAutonome && isFeasibilityDemat) {
     feasibilityUrl = feasibilityFileResourceFirstRead
       ? "./feasibility-demat-autonome"
       : "./feasibility-demat-autonome-resources";
