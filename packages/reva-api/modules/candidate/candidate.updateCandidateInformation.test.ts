@@ -4,6 +4,7 @@ import { NOT_AUTHORIZED_CANDIDACY_MANAGE } from "@/modules/shared/security/messa
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 
@@ -213,6 +214,75 @@ describe("candidate information update", () => {
     expect(obj.data.candidate_updateCandidateInformation).toMatchObject({
       department: { label: "Loire-Atlantique" },
     });
+  });
+
+  test("should refresh certificationAuthorityId to match the candidate's new department (not the previous one) when the address changes", async () => {
+    const candidacy = await createCandidacyHelper();
+
+    if (!candidacy || !candidacy.candidate) {
+      throw Error("Error while creating test candidacy");
+    }
+
+    // A certification authority matching the candidate's current department (Paris, "75")
+    const previousDepartmentCertificationAuthority =
+      await createCertificationAuthorityHelper({
+        certificationAuthorityOnCertification: {
+          create: { certificationId: candidacy.certificationId! },
+        },
+        certificationAuthorityOnDepartment: {
+          create: { departmentId: candidacy.candidate.departmentId },
+        },
+      });
+
+    // A certification authority matching the department the candidate is moving to (Loire-Atlantique, zip 44000)
+    const loireAtlantique = (await prismaClient.department.findUnique({
+      where: { code: "44" },
+    })) as Department;
+    const newDepartmentCertificationAuthority =
+      await createCertificationAuthorityHelper({
+        certificationAuthorityOnCertification: {
+          create: { certificationId: candidacy.certificationId! },
+        },
+        certificationAuthorityOnDepartment: {
+          create: { departmentId: loireAtlantique.id },
+        },
+      });
+
+    const updatedCandidateFields = {
+      ...(await getDefaultUpdatedCandidateFields()),
+      zip: "44000",
+      city: "Nantes",
+    };
+
+    const resp = await injectGraphql({
+      fastify: global.testApp,
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: mockAdminKeycloakUuid,
+      }),
+      payload: {
+        requestType: "mutation",
+        arguments: {
+          candidacyId: candidacy.id,
+          candidateInformation: updatedCandidateFields,
+        },
+        enumFields: ["gender"],
+        endpoint: "candidate_updateCandidateInformation",
+        returnFields: "{ department { label } }",
+      },
+    });
+    expect(resp.statusCode).toEqual(200);
+    expect(resp.json()).not.toHaveProperty("errors");
+
+    const updatedCandidacy = await prismaClient.candidacy.findUnique({
+      where: { id: candidacy.id },
+    });
+    expect(updatedCandidacy?.certificationAuthorityId).toEqual(
+      newDepartmentCertificationAuthority.id,
+    );
+    expect(updatedCandidacy?.certificationAuthorityId).not.toEqual(
+      previousDepartmentCertificationAuthority.id,
+    );
   });
 
   test("should allow email update when candidate is FranceConnect-linked", async () => {

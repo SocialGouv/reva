@@ -181,14 +181,8 @@ export const updateCandidate = async ({
     ),
   );
 
-  //Si le candidat a changé de département on refresh la certification authority de toutes ses candidatures (le refresh ne se fera que si la candidature est dans un statut qui le permet)
-  if (candidateInput.departmentId !== candidateToUpdate.departmentId) {
-    await Promise.all(
-      candidacies.map((c) =>
-        refreshCertificationAuthorityOfCandidacy({ candidacyId: c.id }),
-      ),
-    );
-  }
+  const candidateDepartmentChanged =
+    candidateInput.departmentId !== candidateToUpdate.departmentId;
 
   const candidaciesWithoutFeasibility = candidacies.filter(
     (c) => !c.Feasibility?.[0] || !c.Feasibility?.[0]?.feasibilityFileSentAt,
@@ -216,6 +210,16 @@ export const updateCandidate = async ({
       })),
     }),
   ]);
+
+  //Si le candidat a changé de département on refresh la certification authority de toutes ses candidatures (le refresh ne se fera que si la candidature est dans un statut qui le permet)
+  //Ce refresh doit avoir lieu après la transaction ci-dessus pour que le nouveau département du candidat soit bien pris en compte
+  if (candidateDepartmentChanged) {
+    await Promise.all(
+      candidacies.map((c) =>
+        refreshCertificationAuthorityOfCandidacy({ candidacyId: c.id }),
+      ),
+    );
+  }
 
   await Promise.all(
     // On régénère le pdf du dossier de faisabilité de toutes les candidatures pour lesquelles le DF n'a pas été envoyé
