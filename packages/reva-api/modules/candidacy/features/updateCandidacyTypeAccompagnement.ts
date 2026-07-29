@@ -58,6 +58,10 @@ export const updateCandidacyTypeAccompagnement = async ({
     certificationId: candidacy.certificationId,
   });
 
+  const isDfDematAutonomeActive = await prismaClient.feature.findFirst({
+    where: { key: "DF_DEMAT_AUTONOME", isActive: true },
+  });
+
   return prismaClient.$transaction(async (tx) => {
     await updateCandidacyStatus({ candidacyId, status: "PROJET", tx });
 
@@ -107,7 +111,7 @@ export const updateCandidacyTypeAccompagnement = async ({
             ? (candidacy.candidate?.typologyAdditional ?? null)
             : null,
         feasibilityFormat:
-          typeAccompagnement === "AUTONOME"
+          typeAccompagnement === "AUTONOME" && !isDfDematAutonomeActive
             ? "UPLOADED_PDF"
             : certification?.feasibilityFormat,
       },
