@@ -3,18 +3,18 @@ import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 
 import { useAuth } from "@/components/auth/auth";
 
-import { FormacodesForm } from "../../../_components/formacodes-form/FormacodesForm";
+import { Certifications } from "../../../_components/certifications/Certifications";
 import { useOnRemoteOrganism } from "../../../on-site/_components/onRemoteOrganism.hook";
 
-const FormacodeOnRemotePage = () => {
+const CertificationsOnRemotePage = () => {
   const { isAdmin } = useAuth();
   const { organism } = useOnRemoteOrganism();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col flex-1">
       <Breadcrumb
         className="mb-2"
-        currentPageLabel="Formacode"
+        currentPageLabel="Certifications"
         segments={[
           isAdmin
             ? {
@@ -41,11 +41,11 @@ const FormacodeOnRemotePage = () => {
           },
         ]}
       />
-      <h1>Périmètre d’accompagnement via le Formacode</h1>
+      <h1>Certifications</h1>
 
-      <FormacodesForm organismId={organism?.id} />
+      <Certifications organismId={organism?.id} />
     </div>
   );
 };
 
-export default FormacodeOnRemotePage;
+export default CertificationsOnRemotePage;

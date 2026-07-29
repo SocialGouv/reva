@@ -280,7 +280,7 @@ export const PerimetreAccompagnementForm = ({
                     className="min-w-64 justify-center m-auto"
                     type="button"
                     onClick={() => {
-                      console.log("clicked");
+                      router.push("./certifications");
                     }}
                   >
                     Voir les certifications concernées

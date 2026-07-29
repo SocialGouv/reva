@@ -44,7 +44,7 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const FormacodesCcnsDegreesForm = ({
+export const FormacodesCcnsDegreesForm = ({
   organismId,
   backButtonUrl,
 }: {
@@ -426,8 +426,6 @@ const FormacodesCcnsDegreesForm = ({
     </div>
   );
 };
-
-export default FormacodesCcnsDegreesForm;
 
 const ToolTip = (props: {
   WrappedComponent: React.ReactNode;

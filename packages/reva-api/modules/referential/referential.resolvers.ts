@@ -30,6 +30,7 @@ import { getDomainsByCertificationId } from "./features/getDomainsByCertificatio
 import { getDomainsByFormacodes } from "./features/getDomainsByFormacodes";
 import { getDropOutReasons } from "./features/getDropOutReasons";
 import { getAvailableFormacodes } from "./features/getFormacodes";
+import { getFormacodesByCertificationId } from "./features/getFormacodesByCertificationId";
 import { getGoals } from "./features/getGoals";
 import { getParcoursCertificationByCertificationId } from "./features/getParcoursCertificationByCertificationId";
 import { getRegionById } from "./features/getRegionById";
@@ -125,6 +126,8 @@ const unsafeReferentialResolvers = {
         offset,
         limit,
       }),
+    formacodes: ({ id: certificationId }: { id: string }) =>
+      getFormacodesByCertificationId({ certificationId }),
   },
   CertificationAdditionalInfo: {
     dossierDeValidationTemplate: ({

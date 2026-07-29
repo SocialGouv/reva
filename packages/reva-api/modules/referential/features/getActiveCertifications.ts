@@ -7,7 +7,27 @@ export const getActiveCertifications = async (filters?: {
   branches?: string[];
   levels?: number[];
 }): Promise<Certification[]> => {
-  const { domaines, branches, levels } = filters || {};
+  // If no filters, return all active certifications
+  if (!filters) {
+    const certifications = await prismaClient.certification.findMany({
+      where: {
+        visible: true,
+        certificationOnConventionCollective: {
+          none: {},
+        },
+      },
+    });
+
+    const mappedCertifications = certifications.map((certification) => ({
+      ...certification,
+      codeRncp: certification.rncpId,
+    }));
+
+    return mappedCertifications;
+  }
+
+  // If filters, return active certifications filtered by filters
+  const { domaines, branches, levels } = filters;
 
   let certifications: Certification[] = [];
 

@@ -6,7 +6,7 @@ import { useAuth } from "@/components/auth/auth";
 import { FormacodesForm } from "../../../_components/formacodes-form/FormacodesForm";
 import { useOnSiteOrganism } from "../../_components/onSiteOrganism.hook";
 
-const PerimetreAccompagnementOnSitePage = () => {
+const FormacodeOnSitePage = () => {
   const { isAdmin } = useAuth();
   const { organismName, organism } = useOnSiteOrganism();
 
@@ -48,4 +48,4 @@ const PerimetreAccompagnementOnSitePage = () => {
   );
 };
 
-export default PerimetreAccompagnementOnSitePage;
+export default FormacodeOnSitePage;

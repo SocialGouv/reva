@@ -62,6 +62,7 @@ type Certification {
     searchFilter: String
     certificationAuthorityIdFilter: ID # If provided, only parcours managed by the collaborateur authority will be returned
   ): ParcoursCertificationPage!
+  formacodes: [Formacode!]!
 }
 
 type ParcoursCertificationPage {
