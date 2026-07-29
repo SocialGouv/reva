@@ -2143,3 +2143,14 @@ model RolePermissionSpecificToCohorteVaeCollective {
   @@unique([role, permission])
   @@map("role_permission_specific_to_cohorte_vae_collective")
 }
+
+model KeycloakRoleOnRoleVaeCollective {
+  id           String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  keycloakRole String            @map("keycloak_role")
+  role         RoleVaeCollective @map("role")
+  createdAt    DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime?         @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([keycloakRole, role])
+  @@map("keycloak_role_on_role_vae_collective")
+}
