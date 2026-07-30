@@ -45,6 +45,10 @@ type Account {
   commanditaireVaeCollective: CommanditaireVaeCollective
 }
 
+enum PermissionVaeCollective {
+  CREER_COHORTE
+}
+
 type Query {
   vaeCollective_commanditaireVaeCollectives(
     offset: Int
@@ -61,6 +65,7 @@ type Query {
     commanditaireVaeCollectiveId: ID!
     cohorteVaeCollectiveId: ID!
   ): CohorteVaeCollective!
+  vaeCollective_getUserPermissions: [PermissionVaeCollective!]!
 }
 
 type Mutation {

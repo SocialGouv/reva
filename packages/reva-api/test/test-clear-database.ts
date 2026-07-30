@@ -19,6 +19,8 @@ const DO_NOT_CLEAR_THESE_TABLES = [
   "candidacy_financing_method",
   "formacode",
   "country",
+  "keycloak_role_on_role_vae_collective",
+  "role_permission_vae_collective",
 ];
 
 export const testClearDatabase = async () => {

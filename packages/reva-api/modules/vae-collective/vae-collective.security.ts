@@ -42,4 +42,6 @@ export const vaeCollectiveResolversSecurityMap = {
 
   "CohorteVaeCollective.certificationCohorteVaeCollectives":
     isAdminOrGestionnaireOfCommanditaireVaeCollective,
+
+  "Query.vaeCollective_getUserPermissions": isAnyone,
 };

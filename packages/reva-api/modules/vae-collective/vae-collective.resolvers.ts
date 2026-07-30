@@ -16,6 +16,7 @@ import { getCommanditaireVaeCollectiveByGestionnaireAccountId } from "./features
 import { getCommanditaireVaeCollectiveById } from "./features/getCommanditaireVaeCollectiveById";
 import { getCommanditaireVaeCollectives } from "./features/getCommanditaireVaeCollectives";
 import { getMetabaseDashboardIframeUrlVaeCollective } from "./features/getMetabaseDashboardIframeUrlVaeCollective";
+import { getUserPermissions } from "./features/getUserPermissions";
 import { publishCohorteVAECollective } from "./features/publishCohorteVAECollective";
 import { updateCohorteVAECollectiveCertification } from "./features/updateCohorteVAECollectiveCertification";
 import { updateCohorteVAECollectiveOrganism } from "./features/updateCohorteVAECollectiveOrganism";
@@ -127,6 +128,14 @@ const unsafeResolvers = {
         searchFilter,
       }: { offset?: number; limit?: number; searchFilter?: string },
     ) => getCommanditaireVaeCollectives({ offset, limit, searchFilter }),
+    vaeCollective_getUserPermissions: async (
+      _parent: unknown,
+      _args: unknown,
+      context: GraphqlContext,
+    ) =>
+      getUserPermissions({
+        userKeycloakRoles: context.auth.userInfo?.realm_access?.roles || [],
+      }),
   },
   Mutation: {
     vaeCollective_createCohorteVaeCollective: async (
