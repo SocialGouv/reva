@@ -1,6 +1,6 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import { isAdminOrCandidacyCompanion } from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
-import { resolversSecurityMap } from "./candidacy-menu.security";
 import { getCandidacyMenu } from "./features/getCandidacyMenu";
 
 const unsafeResolvers = {
@@ -17,7 +17,8 @@ const unsafeResolvers = {
   },
 };
 
-export const candidacyMenuResolvers = composeResolvers(
-  unsafeResolvers,
-  resolversSecurityMap,
-);
+export const candidacyMenuResolvers = withPolicies(unsafeResolvers, {
+  Query: {
+    candidacyMenu_getCandidacyMenu: isAdminOrCandidacyCompanion,
+  },
+});

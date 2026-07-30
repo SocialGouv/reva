@@ -9,8 +9,7 @@ import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper"
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 
-// Autorisation du resolver candidacy-menu : qui passe, qui est refusé.
-// Verrouille aussi la règle métier du footer, réservé à l'admin.
+// Verrouille aussi la seule règle métier du resolver : le footer réservé à l'admin.
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
