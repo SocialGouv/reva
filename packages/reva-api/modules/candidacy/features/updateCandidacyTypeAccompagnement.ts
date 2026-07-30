@@ -69,13 +69,13 @@ export const updateCandidacyTypeAccompagnement = async ({
     // recevable pour que le candidat autonome reparte sur un dépôt de DF au format
     // PDF (sinon la tuile continue de router vers l'écran démat). Un DF déjà
     // recevable (ADMISSIBLE) est conservé tel quel.
-    if (typeAccompagnement === "AUTONOME") {
+    if (!isDfDematAutonomeActive && typeAccompagnement === "AUTONOME") {
       await tx.feasibility.updateMany({
         where: {
           candidacyId,
           isActive: true,
           feasibilityFormat: "DEMATERIALIZED",
-          decision: { not: "ADMISSIBLE" },
+          decision: { not: { in: ["ADMISSIBLE", "REJECTED"] } },
         },
         data: { isActive: false },
       });
