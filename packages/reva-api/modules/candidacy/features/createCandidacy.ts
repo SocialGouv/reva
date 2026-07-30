@@ -2,7 +2,6 @@ import {
   CandidacyStatusStep,
   CandidacyTypeAccompagnement,
   CandidateTypology,
-  Prisma,
 } from "@prisma/client";
 
 import { prismaClient } from "@/prisma/client";
@@ -12,21 +11,17 @@ export const createCandidacy = async ({
   typeAccompagnement,
   certificationId,
   cohorteVaeCollectiveId,
-  tx,
 }: {
   candidateId: string;
   typeAccompagnement?: CandidacyTypeAccompagnement;
   certificationId?: string;
   cohorteVaeCollectiveId?: string;
-  tx?: Prisma.TransactionClient;
 }) => {
   const candidate = await prismaClient.candidate.findUnique({
     where: { id: candidateId },
   });
 
-  const prisma = tx ?? prismaClient;
-
-  const isDfDematAutonomeActive = await prisma.feature.findFirst({
+  const isDfDematAutonomeActive = await prismaClient.feature.findFirst({
     where: { key: "DF_DEMAT_AUTONOME", isActive: true },
   });
 
@@ -39,8 +34,8 @@ export const createCandidacy = async ({
 
   // Row-level lock per candidate to avoid duplicate candidacies under concurrency
   // If a diffrent transaction tries to aquire the lock while the first one still holds it, it will fail and rollback
-  await prisma.$queryRaw`SELECT id FROM candidate WHERE id = ${candidateId}::uuid FOR UPDATE NOWAIT`;
-  return prisma.candidacy.create({
+  await prismaClient.$queryRaw`SELECT id FROM candidate WHERE id = ${candidateId}::uuid FOR UPDATE NOWAIT`;
+  return prismaClient.candidacy.create({
     data: {
       typeAccompagnement,
       candidateId,
