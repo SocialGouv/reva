@@ -6,6 +6,8 @@ import {
   isAdminOrGestionnaireOfCohorteVaeCollective,
 } from "@/modules/shared/security/presets";
 
+import { hasVaeCollectivePermission } from "./security/hasVaeCollectiveRole";
+
 export const vaeCollectiveResolversSecurityMap = {
   "Mutation.*": defaultSecurity,
 
@@ -21,7 +23,7 @@ export const vaeCollectiveResolversSecurityMap = {
   "Query.vaeCollective_commanditaireVaeCollectives": isAdmin,
 
   "Mutation.vaeCollective_createCohorteVaeCollective":
-    isAdminOrGestionnaireOfCommanditaireVaeCollective,
+    hasVaeCollectivePermission("CREER_COHORTE"),
 
   "Mutation.vaeCollective_updateNomCohorteVaeCollective":
     isAdminOrGestionnaireOfCohorteVaeCollective,
