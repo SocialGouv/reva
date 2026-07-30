@@ -1,6 +1,6 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import { isAdmin, isAnyone } from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
-import { resolversSecurityMap } from "./aap-log.security";
 import { AAPLog } from "./aap-log.types";
 import { getAAPLogMessage } from "./features/getAAPLogMessage";
 import { getAAPLogs } from "./features/getAAPLogs";
@@ -16,7 +16,14 @@ const unsafeResolvers = {
   },
 };
 
-export const aapLogResolvers = composeResolvers(
-  unsafeResolvers,
-  resolversSecurityMap,
-);
+export const aapLogResolvers = withPolicies(unsafeResolvers, {
+  MaisonMereAAP: {
+    aapLogs: isAdmin,
+  },
+  AAPLog: {
+    // Formateurs sans argument sur lequel un contrôle d'appartenance pourrait porter ;
+    // le parent `aapLogs` est déjà réservé à l'admin.
+    message: isAnyone,
+    details: isAnyone,
+  },
+});

@@ -10,12 +10,10 @@ import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 import { logAAPAuditEvent } from "./features/logAAPAuditEvent";
 
-// Autorisation des resolvers aap-log : qui passe, qui est refusé.
-//
 // Couplage assumé : `MaisonMereAAP.aapLogs` n'a aucun parent atteignable dans son propre
-// module, donc cette suite entre nécessairement par la query du module organism et dépend
-// de sa policy `isAdminOrGestionnaireOfMaisonMereAAP`. Il n'existe pas d'autre point
-// d'entrée portant un argument `maisonMereAAPId`.
+// module, donc cette suite entre par la query du module organism et dépend de sa policy
+// `isAdminOrGestionnaireOfMaisonMereAAP`. Aucun autre point d'entrée ne porte un argument
+// `maisonMereAAPId`.
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
@@ -55,8 +53,8 @@ describe("aap-log - autorisation des resolvers", () => {
       expect(resp.json()).not.toHaveProperty("errors");
       const aapLogs = resp.json().data.organism_getMaisonMereAAPById.aapLogs;
       expect(aapLogs).toHaveLength(1);
-      // Les 2 feuilles `message` / `details` restent publiques : leur seule protection
-      // est la policy du parent.
+      // Les feuilles `message` / `details` sont publiques : seule la policy du
+      // parent les protège.
       expect(aapLogs[0].message).toBeTruthy();
       expect(aapLogs[0].details).toBeTruthy();
     });
