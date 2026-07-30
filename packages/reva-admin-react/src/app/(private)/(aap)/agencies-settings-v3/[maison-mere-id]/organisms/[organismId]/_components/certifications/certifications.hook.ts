@@ -84,3 +84,9 @@ export const useCertifications = ({ organismId }: { organismId: string }) => {
     organismAndReferentialStatus,
   };
 };
+
+export type Formacode = NonNullable<
+  NonNullable<
+    NonNullable<ReturnType<typeof useCertifications>>["formacodes"]
+  >[number]
+>;

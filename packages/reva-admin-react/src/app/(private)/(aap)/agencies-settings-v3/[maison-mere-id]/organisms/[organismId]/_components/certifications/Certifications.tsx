@@ -12,12 +12,13 @@ import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import ToggleSwitch from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { useCertifications } from "./certifications.hook";
+import { Formacode, useCertifications } from "./certifications.hook";
 
 export const Certifications = ({ organismId }: { organismId: string }) => {
   const router = useRouter();
 
   const {
+    formacodes,
     degrees,
     organism,
     activeCertifications,
@@ -32,9 +33,11 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
 
   // View mode
   const searchParamsViewMode = searchParams.get("viewMode");
+
   const viewMode = searchParamsViewMode || "organism";
   const setViewMode = (viewMode: "reva" | "organism") => {
     const url = new URL(window.location.href);
+    url.searchParams.set("page", "1");
     url.searchParams.set("viewMode", viewMode);
     router.push(url.toString());
   };
@@ -47,6 +50,7 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
 
   const setLevelsFilter = (levelsFilter: number[]) => {
     const url = new URL(window.location.href);
+    url.searchParams.set("page", "1");
     url.searchParams.set("levelsFilter", levelsFilter.join(","));
     router.push(url.toString());
   };
@@ -65,6 +69,7 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
   const certificationSearchFilter = searchParamsCertificationSearchFilter || "";
   const setCertificationSearchFilter = (certificationSearchFilter: string) => {
     const url = new URL(window.location.href);
+    url.searchParams.set("page", "1");
     url.searchParams.set(
       "certificationSearchFilter",
       certificationSearchFilter,
@@ -83,6 +88,7 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
   const formacodeSearchFilter = searchParamsFormacodeSearchFilter || "";
   const setFormacodeSearchFilter = (formacodeSearchFilter: string) => {
     const url = new URL(window.location.href);
+    url.searchParams.set("page", "1");
     url.searchParams.set("formacodeSearchFilter", formacodeSearchFilter);
     router.push(url.toString());
   };
@@ -135,6 +141,18 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
     return organism?.certifications?.some((c) => c.id === certificationId);
   };
 
+  const getDomainFromSubDomains = (subDomains: Formacode[]): Formacode[] => {
+    return subDomains.reduce((acc, subDomain) => {
+      const domain = formacodes.find(
+        (formacode) => formacode.code === subDomain.parentCode,
+      );
+      if (domain && !acc.some((formacode) => formacode.code === domain.code)) {
+        acc.push(domain);
+      }
+      return acc;
+    }, [] as Formacode[]);
+  };
+
   return (
     <div className="flex flex-col flex-1">
       {organismAndReferentialStatus === "error" && (
@@ -179,7 +197,7 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
                   }
                 />
                 <hr className="p-1" />
-                <Accordion label="Formacode" defaultExpanded>
+                <Accordion label="Formacode" defaultExpanded={false}>
                   <Input
                     label="Numéro de Formacode"
                     hintText="Domaine, champs sémantique ou mot clé."
@@ -189,12 +207,12 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
                     }}
                   />
                 </Accordion>
-                <Accordion label="Niveau" defaultExpanded>
+                <Accordion label="Niveau" defaultExpanded={false}>
                   <Checkbox
                     className="mt-0 mb-1 [&_.fr-label]:h-8"
                     orientation="vertical"
                     small
-                    options={degrees.map((od) => ({
+                    options={degrees.slice(2, degrees.length).map((od) => ({
                       label: od.level,
                       nativeInputProps: {
                         checked: levelsFilter.includes(od.level),
@@ -207,8 +225,12 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
                   className="mx-auto"
                   type="button"
                   onClick={() => {
-                    setLevelsFilter([]);
-                    setFormacodeSearchFilter("");
+                    const url = new URL(window.location.href);
+                    url.searchParams.set("page", "1");
+                    url.searchParams.delete("levelsFilter");
+                    url.searchParams.delete("formacodeSearchFilter");
+
+                    router.push(url.toString());
                   }}
                   priority="tertiary"
                 >
@@ -218,7 +240,7 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
             </div>
 
             <div className="col-span-3 flex flex-col gap-4">
-              <p className="m-0 text-sm text-light-text-mention-grey">{`Résultat : ${certifications.length} sur ${totalCertifications}`}</p>
+              <p className="m-0 text-sm text-light-text-mention-grey">{`Résultat : ${(currentPage - 1) * 10 + certifications.length} sur ${totalCertifications}`}</p>
 
               {certifications.map((certification) => (
                 <div key={certification.id}>
@@ -245,7 +267,7 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
                         {!isCertificationCovered(certification.id) && (
                           <>
                             <span className="fr-text--sm m-0 text-light-text-mention-grey">
-                              <span className="fr-icon-close-circle-line fr-text--sm mr-2" />
+                              <span className="fr-icon-close-circle-fill fr-text--sm mr-2" />
                               Certification non couverte
                             </span>
                           </>
@@ -257,35 +279,43 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
                         <li>
                           <Tag>Niveau {certification.level}</Tag>
                         </li>
-                        {certification.formacodes.map((formacode) => (
-                          <li key={formacode.id}>
-                            <Tag>{`${formacode.code} ${formacode.label}`}</Tag>
-                          </li>
-                        ))}
+                        {getDomainFromSubDomains(certification.formacodes).map(
+                          (formacode) => (
+                            <li key={formacode.id}>
+                              <Tag>{`${formacode.code} ${formacode.label}`}</Tag>
+                            </li>
+                          ),
+                        )}
                       </ul>
                     }
                   />
                 </div>
               ))}
-
-              <Pagination
-                count={totalPages}
-                defaultPage={currentPage}
-                getPageLinkProps={(pageNumber) => ({
-                  href: `./?page=${pageNumber}`,
-                })}
-                showFirstLast
-              />
             </div>
           </div>
 
-          <Button
-            type="button"
-            onClick={() => router.push("../")}
-            priority="secondary"
-          >
-            Retour
-          </Button>
+          <div className="flex justify-between">
+            <Button
+              type="button"
+              onClick={() => router.push("../")}
+              priority="secondary"
+            >
+              Retour
+            </Button>
+
+            <Pagination
+              count={totalPages}
+              defaultPage={currentPage}
+              getPageLinkProps={(pageNumber) => {
+                return {
+                  href: `./?page=${pageNumber}&viewMode=${viewMode}&formacodeSearchFilter=${formacodeSearchFilter}&levelsFilter=${levelsFilter.join(",")}&certificationSearchFilter=${certificationSearchFilter}`,
+                };
+              }}
+              showFirstLast
+            />
+
+            <div />
+          </div>
         </div>
       )}
     </div>
