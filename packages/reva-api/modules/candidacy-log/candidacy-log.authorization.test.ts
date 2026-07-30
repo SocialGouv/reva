@@ -7,11 +7,9 @@ import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 import { logCandidacyAuditEvent } from "./features/logCandidacyAuditEvent";
 
-// Autorisation des resolvers candidacy-log : qui passe, qui est refusé.
-//
 // `Candidacy.candidacyLogs` est la seule barrière sur le journal d'audit : la query parente
 // `getCandidacyById` est ouverte à l'AAP rattaché, au candidat propriétaire et au
-// certificateur. On entre donc par elle, et on vérifie que le refus vient bien du champ.
+// certificateur. On entre par elle pour vérifier que le refus vient bien du champ.
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
@@ -49,8 +47,8 @@ describe("candidacy-log - autorisation des resolvers", () => {
       expect(resp.json()).not.toHaveProperty("errors");
       const candidacyLogs = resp.json().data.getCandidacyById.candidacyLogs;
       expect(candidacyLogs).toHaveLength(1);
-      // Les 2 feuilles `message` / `details` restent publiques : leur seule protection
-      // est la policy du parent.
+      // Les feuilles `message` / `details` sont publiques : seule la policy du
+      // parent les protège.
       expect(candidacyLogs[0].message).toBeTruthy();
       expect(candidacyLogs[0].details).toBeTruthy();
     });
@@ -77,10 +75,8 @@ describe("candidacy-log - autorisation des resolvers", () => {
     });
 
     // On verrouille le refus, pas le libellé : `getCandidacyById` est policé par
-    // `[canAccessCandidacy]` seul, sans `hasRole` en tête, et
-    // `canAccessCandidacy.security.ts` déréférence `context.auth.userInfo` sans garde.
-    // Un appel non authentifié remonte donc une TypeError interne au lieu d'un message
-    // d'autorisation. Anomalie du module candidacy, hors périmètre de ce module.
+    // `[canAccessCandidacy]` seul, qui déréférence `context.auth.userInfo` sans garde et
+    // remonte donc une TypeError interne. Anomalie du module candidacy, hors périmètre.
     test("non authentifié : refusé", async () => {
       const candidacy = await createCandidacyHelper();
       const resp = await call(candidacy.id);
