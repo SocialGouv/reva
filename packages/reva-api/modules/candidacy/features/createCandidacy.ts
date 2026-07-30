@@ -4,6 +4,7 @@ import {
   CandidateTypology,
 } from "@prisma/client";
 
+import { refreshCertificationAuthorityOfCandidacy } from "@/modules/certification-authority/features/refreshCertificationAuthorityOfCandidacy";
 import { prismaClient } from "@/prisma/client";
 
 export const createCandidacy = async ({
@@ -35,7 +36,7 @@ export const createCandidacy = async ({
   // Row-level lock per candidate to avoid duplicate candidacies under concurrency
   // If a diffrent transaction tries to aquire the lock while the first one still holds it, it will fail and rollback
   await prismaClient.$queryRaw`SELECT id FROM candidate WHERE id = ${candidateId}::uuid FOR UPDATE NOWAIT`;
-  return prismaClient.candidacy.create({
+  const candidacy = await prismaClient.candidacy.create({
     data: {
       typeAccompagnement,
       candidateId,
@@ -70,4 +71,8 @@ export const createCandidacy = async ({
           : null,
     },
   });
+
+  await refreshCertificationAuthorityOfCandidacy({ candidacyId: candidacy.id });
+
+  return candidacy;
 };
