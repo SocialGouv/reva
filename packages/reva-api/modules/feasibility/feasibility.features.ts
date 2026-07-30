@@ -1018,10 +1018,6 @@ const rejectFeasibility = async ({
       status: "DOSSIER_FAISABILITE_NON_RECEVABLE",
     });
 
-    await refreshCertificationAuthorityOfCandidacy({
-      candidacyId: feasibility.candidacyId,
-    });
-
     const isAutonome =
       updatedFeasibility.candidacy.typeAccompagnement === "AUTONOME";
     const certificationName =
