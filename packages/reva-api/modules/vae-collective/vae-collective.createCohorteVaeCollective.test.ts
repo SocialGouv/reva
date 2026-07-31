@@ -1,4 +1,7 @@
-import { NOT_AUTHORIZED_RESOURCE_ACCESS } from "@/modules/shared/security/messages";
+import {
+  NOT_AUTHORIZED,
+  NOT_AUTHORIZED_RESOURCE_ACCESS,
+} from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCohorteVaeCollectiveHelper } from "@/test/helpers/entities/create-vae-collective-helper";
@@ -139,5 +142,25 @@ describe("create cohorte vae collective", () => {
         nomCohorteVaeCollective: "Cohorte interdite",
       }),
     ).rejects.toThrowError(NOT_AUTHORIZED_RESOURCE_ACCESS);
+  });
+
+  test("should not let a user without an authorized role create a cohorte", async () => {
+    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "manage_candidacy",
+        }),
+      },
+    });
+
+    await expect(
+      graphqlClient.request(vaeCollective_createCohorteVaeCollective, {
+        commanditaireVaeCollectiveId:
+          cohorteVaeCollective.commanditaireVaeCollectiveId,
+        nomCohorteVaeCollective: "Cohorte interdite",
+      }),
+    ).rejects.toThrowError(NOT_AUTHORIZED);
   });
 });

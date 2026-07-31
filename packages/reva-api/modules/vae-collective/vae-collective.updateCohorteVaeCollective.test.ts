@@ -1,4 +1,7 @@
-import { NOT_AUTHORIZED_RESOURCE_ACCESS } from "@/modules/shared/security/messages";
+import {
+  NOT_AUTHORIZED,
+  NOT_AUTHORIZED_RESOURCE_ACCESS,
+} from "@/modules/shared/security/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
@@ -108,6 +111,91 @@ describe("update nom cohorte vae collective", () => {
         nomCohorteVaeCollective: "Nouveau nom",
       }),
     ).rejects.toThrowError(NOT_AUTHORIZED_RESOURCE_ACCESS);
+  });
+
+  test("should let an admin update nom of any cohorte vae collective", async () => {
+    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+
+    const vaeCollective_updateNomCohorteVaeCollective = graphql(`
+      mutation vaeCollective_updateNomCohorteVaeCollectiveAsAdmin(
+        $commanditaireVaeCollectiveId: ID!
+        $cohorteVaeCollectiveId: ID!
+        $nomCohorteVaeCollective: String!
+      ) {
+        vaeCollective_updateNomCohorteVaeCollective(
+          commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
+          cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+          nomCohorteVaeCollective: $nomCohorteVaeCollective
+        ) {
+          id
+          nom
+        }
+      }
+    `);
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "admin",
+          keycloakId: "1b0e7046-ca61-4259-b716-785f36ab79b2",
+        }),
+      },
+    });
+
+    const res = await graphqlClient.request(
+      vaeCollective_updateNomCohorteVaeCollective,
+      {
+        commanditaireVaeCollectiveId:
+          cohorteVaeCollective.commanditaireVaeCollectiveId,
+        cohorteVaeCollectiveId: cohorteVaeCollective.id,
+        nomCohorteVaeCollective: "Nouveau nom par un admin",
+      },
+    );
+
+    expect(res).toMatchObject({
+      vaeCollective_updateNomCohorteVaeCollective: {
+        id: cohorteVaeCollective.id,
+        nom: "Nouveau nom par un admin",
+      },
+    });
+  });
+
+  test("should not let a user without an authorized role update nom cohorte vae collective", async () => {
+    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+
+    const vaeCollective_updateNomCohorteVaeCollective = graphql(`
+      mutation vaeCollective_updateNomCohorteVaeCollectiveUnauthorized(
+        $commanditaireVaeCollectiveId: ID!
+        $cohorteVaeCollectiveId: ID!
+        $nomCohorteVaeCollective: String!
+      ) {
+        vaeCollective_updateNomCohorteVaeCollective(
+          commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
+          cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+          nomCohorteVaeCollective: $nomCohorteVaeCollective
+        ) {
+          id
+          nom
+        }
+      }
+    `);
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "manage_candidacy",
+        }),
+      },
+    });
+
+    await expect(
+      graphqlClient.request(vaeCollective_updateNomCohorteVaeCollective, {
+        commanditaireVaeCollectiveId:
+          cohorteVaeCollective.commanditaireVaeCollectiveId,
+        cohorteVaeCollectiveId: cohorteVaeCollective.id,
+        nomCohorteVaeCollective: "Nouveau nom",
+      }),
+    ).rejects.toThrowError(NOT_AUTHORIZED);
   });
 });
 
@@ -290,6 +378,110 @@ describe("update certification cohorte vae collective", () => {
         },
       ),
     ).rejects.toThrowError(NOT_AUTHORIZED_RESOURCE_ACCESS);
+  });
+
+  test("should let an admin update certification of any cohorte vae collective", async () => {
+    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+    const certification = await createCertificationHelper();
+
+    const vaeCollective_updateCohorteVAECollectiveCertification = graphql(`
+      mutation vaeCollective_updateCohorteVAECollectiveCertificationAsAdmin(
+        $commanditaireVaeCollectiveId: ID!
+        $cohorteVaeCollectiveId: ID!
+        $certificationIds: [ID!]!
+      ) {
+        vaeCollective_updateCohorteVAECollectiveCertification(
+          commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
+          cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+          certificationIds: $certificationIds
+        ) {
+          id
+          certificationCohorteVaeCollectives {
+            certification {
+              id
+            }
+          }
+        }
+      }
+    `);
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "admin",
+          keycloakId: "1b0e7046-ca61-4259-b716-785f36ab79b2",
+        }),
+      },
+    });
+
+    const res = await graphqlClient.request(
+      vaeCollective_updateCohorteVAECollectiveCertification,
+      {
+        commanditaireVaeCollectiveId:
+          cohorteVaeCollective.commanditaireVaeCollectiveId,
+        cohorteVaeCollectiveId: cohorteVaeCollective.id,
+        certificationIds: [certification.id],
+      },
+    );
+
+    expect(res).toMatchObject({
+      vaeCollective_updateCohorteVAECollectiveCertification: {
+        id: cohorteVaeCollective.id,
+        certificationCohorteVaeCollectives: [
+          {
+            certification: {
+              id: certification.id,
+            },
+          },
+        ],
+      },
+    });
+  });
+
+  test("should not let a user without an authorized role update certification cohorte vae collective", async () => {
+    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+    const certification = await createCertificationHelper();
+
+    const vaeCollective_updateCohorteVAECollectiveCertification = graphql(`
+      mutation vaeCollective_updateCohorteVAECollectiveCertificationUnauthorized(
+        $commanditaireVaeCollectiveId: ID!
+        $cohorteVaeCollectiveId: ID!
+        $certificationIds: [ID!]!
+      ) {
+        vaeCollective_updateCohorteVAECollectiveCertification(
+          commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
+          cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+          certificationIds: $certificationIds
+        ) {
+          id
+          certificationCohorteVaeCollectives {
+            certification {
+              id
+            }
+          }
+        }
+      }
+    `);
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "manage_candidacy",
+        }),
+      },
+    });
+
+    await expect(
+      graphqlClient.request(
+        vaeCollective_updateCohorteVAECollectiveCertification,
+        {
+          commanditaireVaeCollectiveId:
+            cohorteVaeCollective.commanditaireVaeCollectiveId,
+          cohorteVaeCollectiveId: cohorteVaeCollective.id,
+          certificationIds: [certification.id],
+        },
+      ),
+    ).rejects.toThrowError(NOT_AUTHORIZED);
   });
 });
 
@@ -523,5 +715,110 @@ describe("update organism cohorte vae collective", () => {
         organismId: anotherOrganism.id,
       }),
     ).rejects.toThrowError(NOT_AUTHORIZED_RESOURCE_ACCESS);
+  });
+
+  test("should let an admin update organism of any cohorte vae collective", async () => {
+    const certification = await createCertificationHelper();
+    const organism = await createOrganismHelper();
+    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
+      certificationCohorteVaeCollectives: {
+        create: {
+          certification: { connect: { id: certification.id } },
+        },
+      },
+    });
+
+    const vaeCollective_updateCohorteVAECollectiveOrganism = graphql(`
+      mutation vaeCollective_updateCohorteVAECollectiveOrganismAsAdmin(
+        $commanditaireVaeCollectiveId: ID!
+        $cohorteVaeCollectiveId: ID!
+        $organismId: ID!
+      ) {
+        vaeCollective_updateCohorteVAECollectiveOrganism(
+          commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
+          cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+          organismId: $organismId
+        ) {
+          id
+          organism {
+            id
+          }
+        }
+      }
+    `);
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "admin",
+          keycloakId: "1b0e7046-ca61-4259-b716-785f36ab79b2",
+        }),
+      },
+    });
+
+    const res = await graphqlClient.request(
+      vaeCollective_updateCohorteVAECollectiveOrganism,
+      {
+        commanditaireVaeCollectiveId:
+          cohorteVaeCollective.commanditaireVaeCollectiveId,
+        cohorteVaeCollectiveId: cohorteVaeCollective.id,
+        organismId: organism.id,
+      },
+    );
+
+    expect(res).toMatchObject({
+      vaeCollective_updateCohorteVAECollectiveOrganism: {
+        id: cohorteVaeCollective.id,
+        organism: {
+          id: organism.id,
+        },
+      },
+    });
+  });
+
+  test("should not let a user without an authorized role update organism cohorte vae collective", async () => {
+    const certification = await createCertificationHelper();
+    const organism = await createOrganismHelper();
+    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
+      certificationCohorteVaeCollectives: {
+        create: {
+          certification: { connect: { id: certification.id } },
+        },
+      },
+    });
+
+    const vaeCollective_updateCohorteVAECollectiveOrganism = graphql(`
+      mutation vaeCollective_updateCohorteVAECollectiveOrganismUnauthorized(
+        $commanditaireVaeCollectiveId: ID!
+        $cohorteVaeCollectiveId: ID!
+        $organismId: ID!
+      ) {
+        vaeCollective_updateCohorteVAECollectiveOrganism(
+          commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
+          cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+          organismId: $organismId
+        ) {
+          id
+          organism {
+            id
+          }
+        }
+      }
+    `);
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "manage_candidacy",
+        }),
+      },
+    });
+
+    await expect(
+      graphqlClient.request(vaeCollective_updateCohorteVAECollectiveOrganism, {
+        commanditaireVaeCollectiveId:
+          cohorteVaeCollective.commanditaireVaeCollectiveId,
+        cohorteVaeCollectiveId: cohorteVaeCollective.id,
+        organismId: organism.id,
+      }),
+    ).rejects.toThrowError(NOT_AUTHORIZED);
   });
 });

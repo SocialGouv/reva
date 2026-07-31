@@ -1,4 +1,7 @@
-import { NOT_AUTHORIZED_RESOURCE_ACCESS } from "@/modules/shared/security/messages";
+import {
+  NOT_AUTHORIZED,
+  NOT_AUTHORIZED_RESOURCE_ACCESS,
+} from "@/modules/shared/security/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCohorteVaeCollectiveHelper } from "@/test/helpers/entities/create-vae-collective-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
@@ -100,5 +103,84 @@ describe("get cohorte vae collective", () => {
         cohorteVaeCollectiveId: anotherCohorteVaeCollective.id,
       }),
     ).rejects.toThrowError(NOT_AUTHORIZED_RESOURCE_ACCESS);
+  });
+
+  test("should let an admin get any cohorte vae collective", async () => {
+    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+
+    const vaeCollective_getCohorteVaeCollectiveById = graphql(`
+      query vaeCollective_getCohorteVaeCollectiveByIdAsAdmin(
+        $commanditaireVaeCollectiveId: ID!
+        $cohorteVaeCollectiveId: ID!
+      ) {
+        vaeCollective_getCohorteVaeCollectiveById(
+          commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
+          cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+        ) {
+          id
+          nom
+        }
+      }
+    `);
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "admin",
+          keycloakId: "1b0e7046-ca61-4259-b716-785f36ab79b2",
+        }),
+      },
+    });
+
+    const res = await graphqlClient.request(
+      vaeCollective_getCohorteVaeCollectiveById,
+      {
+        commanditaireVaeCollectiveId:
+          cohorteVaeCollective.commanditaireVaeCollectiveId,
+        cohorteVaeCollectiveId: cohorteVaeCollective.id,
+      },
+    );
+
+    expect(res).toMatchObject({
+      vaeCollective_getCohorteVaeCollectiveById: {
+        id: cohorteVaeCollective.id,
+        nom: cohorteVaeCollective.nom,
+      },
+    });
+  });
+
+  test("should not let a user without an authorized role get a cohorte vae collective", async () => {
+    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+
+    const vaeCollective_getCohorteVaeCollectiveById = graphql(`
+      query vaeCollective_getCohorteVaeCollectiveByIdUnauthorized(
+        $commanditaireVaeCollectiveId: ID!
+        $cohorteVaeCollectiveId: ID!
+      ) {
+        vaeCollective_getCohorteVaeCollectiveById(
+          commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
+          cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+        ) {
+          id
+          nom
+        }
+      }
+    `);
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "manage_candidacy",
+        }),
+      },
+    });
+
+    await expect(
+      graphqlClient.request(vaeCollective_getCohorteVaeCollectiveById, {
+        commanditaireVaeCollectiveId:
+          cohorteVaeCollective.commanditaireVaeCollectiveId,
+        cohorteVaeCollectiveId: cohorteVaeCollective.id,
+      }),
+    ).rejects.toThrowError(NOT_AUTHORIZED);
   });
 });

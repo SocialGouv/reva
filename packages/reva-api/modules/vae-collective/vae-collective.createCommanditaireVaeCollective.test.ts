@@ -1,3 +1,4 @@
+import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
@@ -6,21 +7,24 @@ import { graphql } from "../graphql/generated";
 import * as getKeycloakAdminModule from "../shared/auth/getKeycloakAdmin";
 import * as sendEmailUsingTemplate from "../shared/email/sendEmailUsingTemplate";
 
-const createCommanditaireVaeCollective = async ({
-  raisonSociale,
-  gestionnaireFirstname,
-  gestionnaireLastname,
-  gestionnaireEmail,
-}: {
-  raisonSociale: string;
-  gestionnaireFirstname: string;
-  gestionnaireLastname: string;
-  gestionnaireEmail: string;
-}) => {
+const createCommanditaireVaeCollective = async (
+  {
+    raisonSociale,
+    gestionnaireFirstname,
+    gestionnaireLastname,
+    gestionnaireEmail,
+  }: {
+    raisonSociale: string;
+    gestionnaireFirstname: string;
+    gestionnaireLastname: string;
+    gestionnaireEmail: string;
+  },
+  role: KeyCloakUserRole = "admin",
+) => {
   const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
-        role: "admin",
+        role,
         keycloakId: "1b0e7046-ca61-4259-b716-785f36ab79b2",
       }),
     },
@@ -101,5 +105,19 @@ describe("create commanditaire vae collective", () => {
         to: { email: "john.doe@example.com" },
       }),
     );
+  });
+
+  test("should not let a non admin user create a commanditaire vae collective", async () => {
+    await expect(
+      createCommanditaireVaeCollective(
+        {
+          raisonSociale: "Test Commanditaire interdit",
+          gestionnaireFirstname: "John",
+          gestionnaireLastname: "Doe",
+          gestionnaireEmail: "john.doe.forbidden@example.com",
+        },
+        "manage_vae_collective",
+      ),
+    ).rejects.toThrowError(NOT_AUTHORIZED);
   });
 });
