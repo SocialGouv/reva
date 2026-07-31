@@ -63,6 +63,9 @@ const getCandidacyByIdForFeasibilityPage = graphql(`
           decisionComment
         }
       }
+      certificationAuthority {
+        id
+      }
       certificationAuthorities {
         id
         label

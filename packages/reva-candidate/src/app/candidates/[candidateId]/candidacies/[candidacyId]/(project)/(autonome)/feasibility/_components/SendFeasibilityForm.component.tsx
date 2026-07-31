@@ -4,7 +4,7 @@ import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, isBefore } from "date-fns";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import z from "zod";
 
@@ -73,19 +73,32 @@ export const SendFeasibilityForm = (): React.ReactNode => {
   const certificationValidOrDFIncomplete =
     !hasCertificationRncpExpired || feasibility?.decision === "INCOMPLETE";
 
+  // Get the certification authority id from the candidacy.
+  // This is the certification authority that can be selected by the user in the candidacy summary early in the candidacy process.
+  const candidacyCertificationAuthorityId =
+    candidacy?.certificationAuthority?.id;
+
+  // Get the default certification authority for the candidacy.
+  // If there is only one certification authority choice available, use it as the default
+  // This will be used if there is no certification authority selected for the candidacy, but only if there is only one choice available.
+  const defaultCertificationAuthorityId =
+    certificationAuthorities.length === 1 ? certificationAuthorities[0].id : "";
+
+  // if no certification authority is selected in this page, use the one from the candidacy if there is one. If not use the default one (if available)
+  const certificationAuthoritySelectedId =
+    candidacyCertificationAuthorityId ?? defaultCertificationAuthorityId;
+
   const {
     register,
     handleSubmit,
     reset,
     control,
-    formState: { errors, isSubmitting, isDirty },
+    setValue,
+    formState: { errors, isSubmitting, isDirty, dirtyFields },
   } = useForm<FeasibilityFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      certificationAuthorityId:
-        certificationAuthorities.length == 1
-          ? certificationAuthorities[0].id
-          : candidacy?.feasibility?.certificationAuthority?.id || "",
+      certificationAuthorityId: certificationAuthoritySelectedId,
       feasibilityFile: {},
       idFile: {},
       documentaryProofFile: {},
@@ -110,6 +123,20 @@ export const SendFeasibilityForm = (): React.ReactNode => {
     control,
     name: "certificationAuthorityId",
   });
+
+  // useForm's defaultValues is only read on the first render, so if the candidacy's
+  // certification authority changes after mount (e.g. a stale cache entry gets
+  // refreshed in the background), the select won't reflect it on its own. Re-sync
+  // it here, unless the user has already picked a different one themselves.
+  useEffect(() => {
+    if (!dirtyFields.certificationAuthorityId) {
+      setValue("certificationAuthorityId", certificationAuthoritySelectedId);
+    }
+  }, [
+    certificationAuthoritySelectedId,
+    dirtyFields.certificationAuthorityId,
+    setValue,
+  ]);
 
   const { fields: requirements } = useFieldArray({
     control,
