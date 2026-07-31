@@ -1,4 +1,10 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import {
+  isAdmin,
+  isAdminOrGestionnaireOfCohorteVaeCollective,
+  isAdminOrGestionnaireOfCommanditaireVaeCollective,
+  isAnyone,
+} from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
 import { getOrganismById } from "../organism/features/getOrganism";
 import { getCertificationById } from "../referential/features/getCertificationById";
@@ -21,7 +27,7 @@ import { publishCohorteVAECollective } from "./features/publishCohorteVAECollect
 import { updateCohorteVAECollectiveCertification } from "./features/updateCohorteVAECollectiveCertification";
 import { updateCohorteVAECollectiveOrganism } from "./features/updateCohorteVAECollectiveOrganism";
 import { updateNomCohorteVaeCollective } from "./features/updateNomCohorteVaeCollective";
-import { vaeCollectiveResolversSecurityMap } from "./vae-collective.security";
+import { hasVaeCollectivePermission } from "./security/hasVaeCollectiveRole";
 
 const unsafeResolvers = {
   Account: {
@@ -219,7 +225,62 @@ const unsafeResolvers = {
   },
 };
 
-export const vaeCollectiveResolvers = composeResolvers(
-  unsafeResolvers,
-  vaeCollectiveResolversSecurityMap,
-);
+export const vaeCollectiveResolvers = withPolicies(unsafeResolvers, {
+  Account: {
+    // Uniquement résolu à partir du compte de l'utilisateur connecté.
+    commanditaireVaeCollective: isAnyone,
+  },
+  CohorteVaeCollective: {
+    // CohorteVaeCollective.commanditaireVaeCollective est consultable anonymement via
+    // la query publique `cohorteVaeCollective(codeInscription)` (raisonSociale affichée
+    // lors de l'inscription candidat). Les champs imbriqués de CommanditaireVaeCollective
+    // (cohorteVaeCollectives, metabaseDashboardIframeUrl) restent quant à eux protégés
+    // individuellement, voir le bloc CommanditaireVaeCollective plus bas.
+    commanditaireVaeCollective: isAnyone,
+    certificationCohorteVaeCollectives:
+      isAdminOrGestionnaireOfCommanditaireVaeCollective,
+    organism: isAnyone,
+  },
+  CertificationCohorteVaeCollective: {
+    // Uniquement accessible via certificationCohorteVaeCollectives, déjà protégé ci-dessus.
+    certification: isAnyone,
+  },
+  Candidacy: {
+    // Champ d'une candidature déjà protégée par la policy de son parent.
+    cohorteVaeCollective: isAnyone,
+  },
+  CommanditaireVaeCollective: {
+    cohorteVaeCollectives: isAdminOrGestionnaireOfCommanditaireVaeCollective,
+    metabaseDashboardIframeUrl:
+      isAdminOrGestionnaireOfCommanditaireVaeCollective,
+  },
+  Query: {
+    vaeCollective_getCommanditaireVaeCollective:
+      isAdminOrGestionnaireOfCommanditaireVaeCollective,
+    cohorteVaeCollective: isAnyone,
+    // La sécurité est gérée dans la feature (filtre par rapport au rôle de l'utilisateur)
+    cohortesVaeCollectivesForConnectedAap: isAnyone,
+    // La sécurité est gérée dans la feature (filtre par rapport au rôle de l'utilisateur)
+    cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount:
+      isAnyone,
+    vaeCollective_getCohorteVaeCollectiveById:
+      isAdminOrGestionnaireOfCohorteVaeCollective,
+    vaeCollective_commanditaireVaeCollectives: isAdmin,
+    vaeCollective_getUserPermissions: isAnyone,
+  },
+  Mutation: {
+    vaeCollective_createCohorteVaeCollective:
+      hasVaeCollectivePermission("CREER_COHORTE"),
+    vaeCollective_updateNomCohorteVaeCollective:
+      isAdminOrGestionnaireOfCohorteVaeCollective,
+    vaeCollective_deleteCohorteVaeCollective:
+      isAdminOrGestionnaireOfCohorteVaeCollective,
+    vaeCollective_updateCohorteVAECollectiveCertification:
+      isAdminOrGestionnaireOfCohorteVaeCollective,
+    vaeCollective_updateCohorteVAECollectiveOrganism:
+      isAdminOrGestionnaireOfCohorteVaeCollective,
+    vaeCollective_publishCohorteVAECollective:
+      isAdminOrGestionnaireOfCohorteVaeCollective,
+    vaeCollective_createCommanditaireVaeCollective: isAdmin,
+  },
+});
