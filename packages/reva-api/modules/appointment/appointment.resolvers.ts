@@ -1,9 +1,16 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { AppointmentType } from "@prisma/client";
+
+import {
+  isAdminOrCandidacyCompanion,
+  isAdminOrCanManageAppointment,
+  isAnyone,
+  isOwnerOrCanManageAppointment,
+  isOwnerOrCanManageCandidacy,
+} from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
 import { buildAAPAuditLogUserInfoFromContext } from "../aap-log/features/logAAPAuditEvent";
 
-import { resolversSecurityMap } from "./appointment.security";
 import {
   AppointmentSortBy,
   AppointmentTemporalStatus,
@@ -93,7 +100,18 @@ const unsafeResolvers = {
   },
 };
 
-export const appointmentResolvers = composeResolvers(
-  unsafeResolvers,
-  resolversSecurityMap,
-);
+export const appointmentResolvers = withPolicies(unsafeResolvers, {
+  // Calcul pur sur `root.date` : la feuille est protégée par son parent.
+  Appointment: { temporalStatus: isAnyone },
+  Candidacy: {
+    appointments: isOwnerOrCanManageCandidacy,
+    // Même donnée et même parent que `appointments` : mêmes ayants droit.
+    firstAppointmentOccuredAt: isOwnerOrCanManageCandidacy,
+  },
+  Query: { appointment_getAppointmentById: isOwnerOrCanManageAppointment },
+  Mutation: {
+    appointment_createAppointment: isAdminOrCandidacyCompanion,
+    appointment_updateAppointment: isAdminOrCanManageAppointment,
+    appointment_deleteAppointment: isAdminOrCanManageAppointment,
+  },
+});
