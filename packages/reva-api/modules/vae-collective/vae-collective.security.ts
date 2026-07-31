@@ -24,6 +24,8 @@ export const vaeCollectiveResolversSecurityMap = {
 
   "Query.vaeCollective_commanditaireVaeCollectives": isAdmin,
 
+  "Query.vaeCollective_getUserPermissions": isAnyone,
+
   "Mutation.vaeCollective_createCohorteVaeCollective":
     hasVaeCollectivePermission("CREER_COHORTE"),
 
@@ -47,5 +49,9 @@ export const vaeCollectiveResolversSecurityMap = {
   "CohorteVaeCollective.certificationCohorteVaeCollectives":
     isAdminOrGestionnaireOfCommanditaireVaeCollective,
 
-  "Query.vaeCollective_getUserPermissions": isAnyone,
+  "CommanditaireVaeCollective.cohorteVaeCollectives":
+    isAdminOrGestionnaireOfCommanditaireVaeCollective,
+
+  "CommanditaireVaeCollective.metabaseDashboardIframeUrl":
+    isAdminOrGestionnaireOfCommanditaireVaeCollective,
 };
