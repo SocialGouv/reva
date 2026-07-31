@@ -1,6 +1,11 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
-
 import { getFileNameAndUrl } from "@/modules/shared/file/getFileNameAndUrl";
+import { hasRole } from "@/modules/shared/security/middlewares";
+import {
+  isAdmin,
+  isAdminOrCertificationRegistryManagerOfCertification,
+  isAnyone,
+} from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 import { prismaClient } from "@/prisma/client";
 
 import { addCertification } from "./features/addCertification";
@@ -51,7 +56,6 @@ import { updateCertificationPrerequisites } from "./features/updateCertification
 import { updateCertificationStructureAndCertificationAuthorities } from "./features/updateCertificationStructureAndCertificationAuthorities";
 import { updateCompetenceBlocsByCertificationId } from "./features/updateCompetenceBlocsByCertificationId";
 import { validateCertification } from "./features/validateCertification";
-import { referentialResolversSecurityMap } from "./referential.security";
 import {
   CreateCompetenceBlocInput,
   ReplaceCertificationInput,
@@ -334,7 +338,82 @@ const unsafeReferentialResolvers = {
   },
 };
 
-export const referentialResolvers = composeResolvers(
-  unsafeReferentialResolvers,
-  referentialResolversSecurityMap,
-);
+export const referentialResolvers = withPolicies(unsafeReferentialResolvers, {
+  // Champ d'une candidature déjà protégée par la policy de son parent.
+  Candidacy: { hasMoreThanOneCertificationAvailable: isAnyone },
+  // Référentiel public : consulté sans connexion par le site vitrine et l'app candidat.
+  Certification: {
+    codeRncp: isAnyone,
+    typeDiplome: isAnyone,
+    degree: isAnyone,
+    conventionsCollectives: isAnyone,
+    competenceBlocs: isAnyone,
+    domains: isAnyone,
+    prerequisites: isAnyone,
+    additionalInfo: isAnyone,
+    isAapAvailable: isAnyone,
+    parcours: isAnyone,
+    formacodes: isAnyone,
+  },
+  CertificationAdditionalInfo: {
+    dossierDeValidationTemplate: isAnyone,
+    additionalDocuments: isAnyone,
+  },
+  FCCertification: { DOMAINS: isAnyone },
+  CertificationCompetenceBloc: {
+    competences: isAnyone,
+    certification: isAnyone,
+  },
+  Department: { region: isAnyone },
+  // Recherche SIRET publique de l'inscription AAP.
+  EtablissementDiffusible: { qualiopiStatus: isAnyone },
+  // Le type `Etablissement` n'est renvoyé que par des resolvers déjà réservés à l'admin.
+  Etablissement: { qualiopiStatus: isAnyone, kbis: isAnyone },
+  Formacode: { countOfChildren: isAnyone },
+  Query: {
+    getReferential: isAnyone,
+    searchCertificationsForCandidate: isAnyone,
+    searchCertificationsForAdmin: isAdmin,
+    searchCertificationsV2ForRegistryManager: [
+      hasRole(["admin", "manage_certification_registry"]),
+    ],
+    getCertification: isAnyone,
+    getRegions: isAnyone,
+    getDepartments: isAnyone,
+    getDegrees: isAnyone,
+    getVulnerabilityIndicators: isAnyone,
+    getDropOutReasons: isAnyone,
+    getReorientationReasons: isAnyone,
+    getConventionCollectives: isAnyone,
+    getFCCertification: isAnyone,
+    getCountries: isAnyone,
+    getEtablissement: isAnyone,
+    getEtablissementAsAdmin: isAdmin,
+    getFormacodes: isAnyone,
+    getActiveCertifications: isAnyone,
+    getCandidacyFinancingMethods: isAnyone,
+    getCertificationCompetenceBloc: isAnyone,
+  },
+  Mutation: {
+    referential_updateCompetenceBlocsByCertificationId: isAdmin,
+    referential_createCertificationCompetenceBloc: isAdmin,
+    referential_updateCertificationCompetenceBloc:
+      isAdminOrCertificationRegistryManagerOfCertification,
+    referential_deleteCertificationCompetenceBloc: isAdmin,
+    referential_addCertification: isAdmin,
+    referential_replaceCertification:
+      isAdminOrCertificationRegistryManagerOfCertification,
+    referential_updateCertificationStructureAndCertificationAuthorities:
+      isAdmin,
+    referential_sendCertificationToRegistryManager: isAdmin,
+    referential_resetCompetenceBlocsByCertificationId: isAdmin,
+    referential_updateCertificationPrerequisites:
+      isAdminOrCertificationRegistryManagerOfCertification,
+    referential_updateCertificationDescription:
+      isAdminOrCertificationRegistryManagerOfCertification,
+    referential_validateCertification:
+      isAdminOrCertificationRegistryManagerOfCertification,
+    referential_updateCertificationAdditionalInfo:
+      isAdminOrCertificationRegistryManagerOfCertification,
+  },
+});
