@@ -71,6 +71,7 @@ function createCandidacyFeasibilityWith(options: {
   status?: CandidacyStatusStep;
   feasibilityOptions?: Partial<FeasibilityEntity>;
   certificationOptions?: Partial<Certification>;
+  certificationAuthority?: CandidacyEntity["certificationAuthority"];
 }) {
   const certification = createCertificationEntity(options.certificationOptions);
   const candidate = createCandidateEntity();
@@ -86,6 +87,7 @@ function createCandidacyFeasibilityWith(options: {
     feasibility,
     feasibilityFormat: "UPLOADED_PDF",
     certificationAuthorities,
+    certificationAuthority: options.certificationAuthority ?? null,
     warningOnFeasibilitySubmission: "NONE",
   });
 
@@ -529,6 +531,50 @@ test.describe("AUTONOME - Dossier de faisabilité", () => {
           });
         });
       });
+    });
+  });
+
+  test.describe("Certification authority preselection", () => {
+    test("preselects the certification authority already set on the candidacy", async ({
+      page,
+      msw,
+    }) => {
+      const { candidacy } = createCandidacyFeasibilityWith({
+        status: "PROJET",
+        certificationOptions: {
+          rncpExpiresAt: new Date("2100-01-01").getTime(),
+        },
+        certificationAuthority: certificationAuthorities[1],
+      });
+
+      await setupAndNavigateToFaisabilite(page, msw, candidacy);
+
+      const certificationAuthoritySelect = page.locator(
+        '[data-testid="certification-authority-select"] select',
+      );
+      await expect(certificationAuthoritySelect).toHaveValue(
+        certificationAuthorities[1].id,
+      );
+    });
+
+    test("leaves no certification authority preselected when none is set on the candidacy", async ({
+      page,
+      msw,
+    }) => {
+      const { candidacy } = createCandidacyFeasibilityWith({
+        status: "PROJET",
+        certificationOptions: {
+          rncpExpiresAt: new Date("2100-01-01").getTime(),
+        },
+        certificationAuthority: null,
+      });
+
+      await setupAndNavigateToFaisabilite(page, msw, candidacy);
+
+      const certificationAuthoritySelect = page.locator(
+        '[data-testid="certification-authority-select"] select',
+      );
+      await expect(certificationAuthoritySelect).toHaveValue("");
     });
   });
 });
