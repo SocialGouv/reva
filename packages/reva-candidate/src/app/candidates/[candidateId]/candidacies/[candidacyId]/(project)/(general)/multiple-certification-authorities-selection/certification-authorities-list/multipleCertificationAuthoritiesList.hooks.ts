@@ -65,8 +65,9 @@ export const useMultipleCertificationAuthoritiesListPage = ({
 
   const { data: response, isLoading } = useQuery({
     queryKey: [
-      candidacyId,
+      "candidacy",
       "getCandidacyByIdForMultipleCertificationAuthoritiesListPage",
+      candidacyId,
     ],
     queryFn: () =>
       graphqlClient.request(
@@ -87,10 +88,7 @@ export const useMultipleCertificationAuthoritiesListPage = ({
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          candidacyId,
-          "getCandidacyByIdForMultipleCertificationAuthoritiesListPage",
-        ],
+        queryKey: ["candidacy"],
       });
     },
   });
