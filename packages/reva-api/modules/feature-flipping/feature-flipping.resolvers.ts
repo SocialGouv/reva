@@ -1,6 +1,6 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import { isAdmin, isAnyone } from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
-import { featureFlippingResolversSecurityMap } from "./feature-filipping.security";
 import {
   activeFeaturesForConnectedUser,
   getFeatures,
@@ -31,7 +31,11 @@ const unsafeResolvers = {
   },
 };
 
-export const featureFlippingResolvers = composeResolvers(
-  unsafeResolvers,
-  featureFlippingResolversSecurityMap,
-);
+export const featureFlippingResolvers = withPolicies(unsafeResolvers, {
+  Query: {
+    // Consommé sans authentification par le site vitrine.
+    activeFeaturesForConnectedUser: isAnyone,
+    featureFlipping_getFeatures: isAdmin,
+  },
+  Mutation: { featureFlipping_toggleFeature: isAdmin },
+});
