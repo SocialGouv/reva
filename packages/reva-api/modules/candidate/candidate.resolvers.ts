@@ -300,8 +300,11 @@ export const candidateResolvers = withPolicies(unsafeResolvers, {
     contactInformationCompleted: isAnyone,
     civilInformationCompleted: isAnyone,
     typologyAndCollectiveAgreementCompleted: isAnyone,
-    candidacy: isAnyone,
-    candidacies: isAnyone,
+    // Ces deux champs listent les candidatures du candidat, et non la seule
+    // candidature sur laquelle l'appelant a été autorisé : même règle que
+    // candidate_getCandidateById, qui renvoie les mêmes objets.
+    candidacy: isAdminOrOwnerOfCandidate,
+    candidacies: isAdminOrOwnerOfCandidate,
   },
   Query: {
     candidate_getCandidateById: isAdminOrOwnerOfCandidate,
