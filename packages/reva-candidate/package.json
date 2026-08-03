@@ -35,7 +35,7 @@
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.57.0",
     "react-hot-toast": "^2.5.2",
-    "sharp": "^0.34.2",
+    "sharp": "^0.35.3",
     "urql": "^4.2.2",
     "uuid": "^14.0.0",
     "zod": "^3.25.51",
@@ -69,6 +69,8 @@
   "overrides": {
     "postcss-url": {
       "minimatch": "3.1.5"
-    }
+    },
+    "sharp": "^0.35.3",
+    "brace-expansion@1": "^1.1.18"
   }
 }
