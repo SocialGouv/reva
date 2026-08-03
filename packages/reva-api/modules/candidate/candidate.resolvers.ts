@@ -1,8 +1,15 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { CandidateTypology } from "@prisma/client";
 
 import { wrapKeycloakUnavailable } from "@/modules/shared/auth/wrap-keycloak-unavailable";
 import { CANDIDATE_NOT_FOUND } from "@/modules/shared/errors/messages";
+import {
+  isAdmin,
+  isAdminOrCandidacyCompanion,
+  isAdminOrOwnerOfCandidate,
+  isAnyone,
+  isOwnerOrCanManageCandidacy,
+} from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 import { prismaClient } from "@/prisma/client";
 
 import { getActiveCandidaciesByCandidateId } from "../candidacy/features/getActiveCandidaciesByCandidateId";
@@ -35,7 +42,6 @@ import { updateCandidate } from "./features/updateCandidate";
 import { updateCandidateContactDetails } from "./features/updateCandidateContactDetails";
 import { updateCandidateProfile } from "./features/updateCandidateProfile";
 import { updateCandidateTypologyAndCcn } from "./features/updateCandidateTypologyAndCcn";
-import { resolversSecurityMap } from "./security/security";
 
 const unsafeResolvers = {
   Candidate: {
@@ -281,7 +287,42 @@ const unsafeResolvers = {
   },
 };
 
-export const candidateResolvers = composeResolvers(
-  unsafeResolvers,
-  resolversSecurityMap,
-);
+export const candidateResolvers = withPolicies(unsafeResolvers, {
+  Candidate: {
+    // Champs de profil lus par l'AAP et le certificateur via Candidacy.candidate,
+    // dont le parent est déjà protégé par canAccessCandidacy.
+    department: isAnyone,
+    country: isAnyone,
+    birthDepartment: isAnyone,
+    niveauDeFormationLePlusEleve: isAnyone,
+    highestDegree: isAnyone,
+    conventionCollective: isAnyone,
+    contactInformationCompleted: isAnyone,
+    civilInformationCompleted: isAnyone,
+    typologyAndCollectiveAgreementCompleted: isAnyone,
+    candidacy: isAnyone,
+    candidacies: isAnyone,
+  },
+  Query: {
+    candidate_getCandidateById: isAdminOrOwnerOfCandidate,
+    // Résolu à partir du keycloakId de l'appelant, et refusé par le resolver
+    // lui-même si l'appelant n'est pas authentifié.
+    candidate_getCandidateWithCandidacy: isAnyone,
+    candidate_getFranceConnectSandboxCandidates: isAdmin,
+  },
+  Mutation: {
+    // Parcours de connexion / inscription : antérieurs à toute authentification.
+    candidate_askForRegistrationWithPassword: isAnyone,
+    candidate_loginWithToken: isAnyone,
+    candidate_loginWithCredentials: isAnyone,
+    candidate_verifyOtpChallenge: isAnyone,
+    candidate_forgotPassword: isAnyone,
+    candidate_resetPassword: isAnyone,
+    candidate_updateCandidateInformation: isAdminOrCandidacyCompanion,
+    candidate_updateCandidateProfile: isOwnerOrCanManageCandidacy,
+    candidate_updateCandidateInformationBySelf: isAdminOrOwnerOfCandidate,
+    candidate_updateCandidateContactDetails: isAdminOrCandidacyCompanion,
+    candidate_updateCandidateTypologyAndCcn: isAdminOrOwnerOfCandidate,
+    candidate_deleteFranceConnectSandboxCandidates: isAdmin,
+  },
+});
