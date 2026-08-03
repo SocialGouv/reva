@@ -2,10 +2,20 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
 
 import { AapSelectionAdvice } from "@/components/aap-selection-advice/AapSelectionAdvice";
+import { hasPermission } from "@/components/auth/actions";
 
 import applicationPolygon from "./assets/application-polygon.svg";
 
-export default function AucuneCohortePage() {
+export default async function AucuneCohortePage() {
+  const canCreateCohorte = await hasPermission("CREER_COHORTE");
+
+  const createCohorteButtonProps = canCreateCohorte
+    ? {
+        linkProps: {
+          href: "./nouvelle-cohorte",
+        },
+      }
+    : { disabled: true };
   return (
     <div className="flex flex-col-reverse items-center md:flex-row md:justify-between gap-[50px]">
       <div>
@@ -18,12 +28,7 @@ export default function AucuneCohortePage() {
         </p>
 
         <AapSelectionAdvice />
-        <Button
-          className="mt-4"
-          linkProps={{
-            href: "./nouvelle-cohorte",
-          }}
-        >
+        <Button className="mt-4" {...createCohorteButtonProps}>
           Créer une cohorte
         </Button>
       </div>

@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { redirect } from "next/navigation";
 
 import { AapSelectionAdvice } from "@/components/aap-selection-advice/AapSelectionAdvice";
+import { hasPermission } from "@/components/auth/actions";
 import { RoleDependentBreadcrumb } from "@/components/role-dependent-breadcrumb/RoleDependentBreadcrumb";
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
@@ -94,6 +95,16 @@ export default async function CohortesPage({
     redirect(`/commanditaires/${commanditaireId}/cohortes/aucune-cohorte/`);
   }
 
+  const canCreateCohorte = await hasPermission("CREER_COHORTE");
+
+  const createCohorteButtonProps = canCreateCohorte
+    ? {
+        linkProps: {
+          href: `/commanditaires/${commanditaireId}/cohortes/nouvelle-cohorte/`,
+        },
+      }
+    : { disabled: true };
+
   return (
     <div className="flex flex-col">
       <RoleDependentBreadcrumb
@@ -107,9 +118,7 @@ export default async function CohortesPage({
       <Button
         className="ml-auto mb-4"
         priority="secondary"
-        linkProps={{
-          href: `/commanditaires/${commanditaireId}/cohortes/nouvelle-cohorte/`,
-        }}
+        {...createCohorteButtonProps}
       >
         Créer une cohorte
       </Button>
