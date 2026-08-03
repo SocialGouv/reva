@@ -52,6 +52,8 @@
   "overrides": {
     "postcss-url": {
       "minimatch": "3.1.5"
-    }
+    },
+    "sharp": "^0.35.3",
+    "brace-expansion@1": "^1.1.18"
   }
 }
