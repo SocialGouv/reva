@@ -27,7 +27,14 @@ describe("get user permissions vae collective", () => {
     const res = await requestUserPermissions({ role: "manage_vae_collective" });
 
     expect(res).toMatchObject({
-      vaeCollective_getUserPermissions: ["CREER_COHORTE"],
+      vaeCollective_getUserPermissions: [
+        "CREER_COHORTE",
+        "MODIFIER_COHORTE",
+        "SUPPRIMER_COHORTE",
+        "VOIR_LISTE_COHORTES",
+        "VOIR_COHORTE",
+        "VOIR_STATISTIQUES",
+      ],
     });
   });
 
