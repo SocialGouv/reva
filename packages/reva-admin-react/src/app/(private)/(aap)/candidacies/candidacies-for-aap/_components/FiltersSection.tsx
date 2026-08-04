@@ -502,15 +502,14 @@ export const FiltersSection = ({
         />
       </Accordion>
 
-      {hasActiveFilters && (
-        <Button
-          priority="tertiary no outline"
-          onClick={onClearFilters}
-          className="self-start"
-        >
-          Effacer les filtres
-        </Button>
-      )}
+      <Button
+        priority="tertiary"
+        onClick={onClearFilters}
+        className="self-center"
+        disabled={!hasActiveFilters}
+      >
+        Réinitialiser les filtres
+      </Button>
     </div>
   );
 };
