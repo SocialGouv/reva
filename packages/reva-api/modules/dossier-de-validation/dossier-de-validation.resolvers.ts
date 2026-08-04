@@ -1,8 +1,11 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import {
+  isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+  isAdminOrCertificationAuthority,
+} from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
 import { getCandidacy } from "../candidacy/features/getCandidacy";
 
-import { dossierDeValidationResolversSecurityMap } from "./dossier-de-validation.security";
 import { getActiveDossierDeValidationByCandidacyId } from "./features/getActiveDossierDeValidationByCandidacyId";
 import { getActiveDossierDeValidationCountByCategory } from "./features/getActiveDossierDeValidationCountByCategory";
 import { getActiveDossiersDeValidation } from "./features/getActiveDossiersDeValidation";
@@ -13,6 +16,7 @@ import { getDossierDeValidationOtherFilesNamesAndUrls } from "./features/getDoss
 import { getHistoryDossierDeValidationByCandidacyId } from "./features/getHistoryDossierDeValidationByCandidacyId";
 import { markDossierDeValidationAsComplete } from "./features/markDossierDeValidationAsComplete";
 import { markDossierDeValidationAsIncomplete } from "./features/markDossierDeValidationAsIncomplete";
+import { canManageDossierDeValidation } from "./security/canManageDossierDeValidation";
 import { DossierDeValidationStatusFilter } from "./types/dossierDeValidationStatusFilter.type";
 
 const unsafeResolvers = {
@@ -135,7 +139,32 @@ const unsafeResolvers = {
   },
 };
 
-export const dossierDeValidationResolvers = composeResolvers(
-  unsafeResolvers,
-  dossierDeValidationResolversSecurityMap,
-);
+export const dossierDeValidationResolvers = withPolicies(unsafeResolvers, {
+  DossierDeValidation: {
+    dossierDeValidationFile:
+      isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+    dossierDeValidationOtherFiles:
+      isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+    history: isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+    candidacy: isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+  },
+  Candidacy: {
+    activeDossierDeValidation:
+      isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+    historyDossierDeValidation:
+      isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+  },
+  Query: {
+    dossierDeValidation_getDossierDeValidationById: [
+      canManageDossierDeValidation,
+    ],
+    dossierDeValidation_getDossiersDeValidation:
+      isAdminOrCertificationAuthority,
+    dossierDeValidation_dossierDeValidationCountByCategory:
+      isAdminOrCertificationAuthority,
+  },
+  Mutation: {
+    dossierDeValidation_markAsIncomplete: [canManageDossierDeValidation],
+    dossierDeValidation_markAsComplete: [canManageDossierDeValidation],
+  },
+});
