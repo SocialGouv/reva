@@ -13,6 +13,7 @@ import {
   FundingStatusFilter,
   ArchiveStatusFilter,
   AccompagnementStatusFilter,
+  TypeAccompagnementStatusFilter,
 } from "@/graphql/generated/graphql";
 
 import { AnnuaireFilters } from "./annuaire.hook";
@@ -21,6 +22,9 @@ interface FiltersSectionProps {
   filters: AnnuaireFilters;
   cohortes: Array<{ id: string; nom: string }>;
   onToggleCandidacyStatus: (status: CandidacyStatusStep) => void;
+  onToggleTypeAccompagnementStatus: (
+    status: TypeAccompagnementStatusFilter,
+  ) => void;
   onToggleTrainingStatus: (status: CandidacyStatusStep) => void;
   onToggleFeasibilityStatus: (status: FeasibilityStatusFilter) => void;
   onToggleDossierDeValidationStatus: (
@@ -40,6 +44,7 @@ export const FiltersSection = ({
   filters,
   cohortes,
   onToggleCandidacyStatus,
+  onToggleTypeAccompagnementStatus,
   onToggleTrainingStatus,
   onToggleFeasibilityStatus,
   onToggleDossierDeValidationStatus,
@@ -56,7 +61,11 @@ export const FiltersSection = ({
 
   return (
     <div className="flex w-[282px] shrink-0 flex-col gap-4">
-      <Accordion label="Candidatures" className="bg-white" defaultExpanded>
+      <Accordion
+        label="Candidatures"
+        className="bg-white"
+        defaultExpanded={filters.candidacyStatuses.length > 0}
+      >
         <Checkbox
           small
           className="mb-0"
@@ -64,7 +73,7 @@ export const FiltersSection = ({
             ...(isAdmin
               ? [
                   {
-                    label: "Nouvelles candidatures autonomes",
+                    label: "Brouillon / Projet",
                     nativeInputProps: {
                       checked: filters.candidacyStatuses.includes("PROJET"),
                       onChange: () => onToggleCandidacyStatus("PROJET"),
@@ -90,10 +99,53 @@ export const FiltersSection = ({
         />
       </Accordion>
 
+      {isAdmin && (
+        <Accordion
+          label="Modalité de parcours"
+          className="bg-white"
+          defaultExpanded={filters.typeAccompagnementStatuses.length > 0}
+        >
+          <Checkbox
+            small
+            className="mb-0"
+            options={[
+              {
+                label: "Accompagnement individuel",
+                nativeInputProps: {
+                  checked:
+                    filters.typeAccompagnementStatuses.includes("ACCOMPAGNE"),
+                  onChange: () =>
+                    onToggleTypeAccompagnementStatus("ACCOMPAGNE"),
+                },
+              },
+              {
+                label: "Accompagnement collectif",
+                nativeInputProps: {
+                  checked:
+                    filters.typeAccompagnementStatuses.includes(
+                      "VAE_COLLECTIVE",
+                    ),
+                  onChange: () =>
+                    onToggleTypeAccompagnementStatus("VAE_COLLECTIVE"),
+                },
+              },
+              {
+                label: "Sans accompagnement",
+                nativeInputProps: {
+                  checked:
+                    filters.typeAccompagnementStatuses.includes("AUTONOME"),
+                  onChange: () => onToggleTypeAccompagnementStatus("AUTONOME"),
+                },
+              },
+            ]}
+          />
+        </Accordion>
+      )}
+
       <Accordion
         label="Parcours et financement"
         className="bg-white"
-        defaultExpanded
+        defaultExpanded={filters.trainingStatuses.length > 0}
       >
         <Checkbox
           small
@@ -120,7 +172,7 @@ export const FiltersSection = ({
       <Accordion
         label="Dossier de faisabilité"
         className="bg-white"
-        defaultExpanded
+        defaultExpanded={filters.feasibilityStatuses.length > 0}
       >
         <Checkbox
           small
@@ -135,7 +187,7 @@ export const FiltersSection = ({
               },
             },
             {
-              label: "Partiellement validé",
+              label: "Validé sans attestation",
               nativeInputProps: {
                 checked: filters.feasibilityStatuses.includes(
                   "PARTIELLEMENT_VALIDE_PAR_LE_CANDIDAT",
@@ -187,7 +239,7 @@ export const FiltersSection = ({
       <Accordion
         label="Dossier de validation"
         className="bg-white"
-        defaultExpanded
+        defaultExpanded={filters.dossierDeValidationStatuses.length > 0}
       >
         <Checkbox
           small
@@ -224,7 +276,7 @@ export const FiltersSection = ({
       <Accordion
         label="Passage devant le jury"
         className="bg-white"
-        defaultExpanded
+        defaultExpanded={filters.juryStatuses.length > 0}
       >
         <Checkbox
           small
@@ -255,7 +307,11 @@ export const FiltersSection = ({
         />
       </Accordion>
 
-      <Accordion label="Résultat de jury" className="bg-white" defaultExpanded>
+      <Accordion
+        label="Résultat de jury"
+        className="bg-white"
+        defaultExpanded={filters.juryResults.length > 0}
+      >
         <Checkbox
           small
           className="mb-0"
@@ -335,7 +391,7 @@ export const FiltersSection = ({
       <Accordion
         label="Financement France VAE"
         className="bg-white"
-        defaultExpanded
+        defaultExpanded={filters.fundingStatuses.length > 0}
       >
         <Checkbox
           small
@@ -373,7 +429,11 @@ export const FiltersSection = ({
       </Accordion>
 
       {cohortes.length > 0 && (
-        <Accordion label="VAE Collective" className="bg-white">
+        <Accordion
+          label="VAE Collective"
+          className="bg-white"
+          defaultExpanded={filters.cohorteVaeCollectiveIds.length > 0}
+        >
           <Checkbox
             small
             className="mb-0"
@@ -391,7 +451,7 @@ export const FiltersSection = ({
       <Accordion
         label="Candidatures arrêtées"
         className="bg-white"
-        defaultExpanded
+        defaultExpanded={filters.archiveStatuses.length > 0}
       >
         <Checkbox
           small
@@ -405,7 +465,7 @@ export const FiltersSection = ({
               },
             },
             {
-              label: "Abandonées",
+              label: "Abandonnées",
               nativeInputProps: {
                 checked: filters.archiveStatuses.includes("ARCHIVE"),
                 onChange: () => onToggleArchiveStatus("ARCHIVE"),
@@ -415,7 +475,11 @@ export const FiltersSection = ({
         />
       </Accordion>
 
-      <Accordion label="Accompagnement" className="bg-white" defaultExpanded>
+      <Accordion
+        label="Accompagnement"
+        className="bg-white"
+        defaultExpanded={filters.accompagnementStatuses.length > 0}
+      >
         <Checkbox
           small
           className="mb-0"

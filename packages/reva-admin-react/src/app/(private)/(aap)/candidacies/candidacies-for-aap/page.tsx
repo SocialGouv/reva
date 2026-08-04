@@ -41,6 +41,7 @@ export default function AnnuairePage() {
     searchFilter,
     setSearchFilter: onSearchFilterChange,
     toggleCandidacyStatus,
+    toggleTypeAccompagnementStatus,
     toggleTrainingStatus,
     toggleFeasibilityStatus,
     toggleDossierDeValidationStatus,
@@ -121,7 +122,7 @@ export default function AnnuairePage() {
 
       <div className="mb-10 bg-white px-6 py-8 shadow-lifted">
         <SearchBar
-          label="Rechercher"
+          label="Rechercher par nom, prénom, adresse électronique, numéro de téléphone, intitulé de certification etc..."
           allowEmptySearch
           big
           onButtonClick={() => onSearchFilterChange(localSearchFilter)}
@@ -143,6 +144,7 @@ export default function AnnuairePage() {
           filters={filters}
           cohortes={cohortes}
           onToggleCandidacyStatus={toggleCandidacyStatus}
+          onToggleTypeAccompagnementStatus={toggleTypeAccompagnementStatus}
           onToggleTrainingStatus={toggleTrainingStatus}
           onToggleFeasibilityStatus={toggleFeasibilityStatus}
           onToggleDossierDeValidationStatus={toggleDossierDeValidationStatus}
@@ -228,6 +230,8 @@ export default function AnnuairePage() {
                     }
                     jury={candidacy.jury}
                     dropout={candidacy.candidacyDropOut}
+                    endAccompagnementStatus={candidacy.endAccompagnementStatus}
+                    endAccompagnementDate={candidacy.endAccompagnementDate}
                   />
                 ))
               )}

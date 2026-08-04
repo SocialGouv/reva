@@ -312,6 +312,12 @@ enum AccompagnementStatusFilter {
   TERMINE
 }
 
+enum TypeAccompagnementStatusFilter {
+  AUTONOME
+  ACCOMPAGNE
+  VAE_COLLECTIVE
+}
+
 type Query {
   getCandidacyById(id: ID!): Candidacy
   getCandidacies(
@@ -366,6 +372,7 @@ type Query {
     searchFilter: String
     sortByFilter: CandidacySortByFilter
     candidacyStatuses: [CandidacyStatusStep!]
+    typeAccompagnementStatuses: [TypeAccompagnementStatusFilter!]
     trainingStatuses: [CandidacyStatusStep!]
     feasibilityStatuses: [FeasibilityStatusFilter!]
     dossierDeValidationStatuses: [DossierDeValidationStatusFilter!]

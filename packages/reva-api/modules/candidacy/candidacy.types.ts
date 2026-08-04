@@ -180,12 +180,19 @@ export enum AccompagnementStatusFilter {
   TERMINE = "TERMINE",
 }
 
+export enum TypeAccompagnementStatusFilter {
+  AUTONOME = "AUTONOME",
+  ACCOMPAGNE = "ACCOMPAGNE",
+  VAE_COLLECTIVE = "VAE_COLLECTIVE",
+}
+
 export interface GetCandidaciesForAAPInput {
   offset?: number;
   limit?: number;
   searchFilter?: string;
   sortByFilter?: CandidacySortByFilter;
   candidacyStatuses?: CandidacyStatusStep[];
+  typeAccompagnementStatuses?: TypeAccompagnementStatusFilter[];
   trainingStatuses?: CandidacyStatusStep[];
   feasibilityStatuses?: FeasibilityStatusFilter[];
   dossierDeValidationStatuses?: DossierDeValidationStatusFilter[];

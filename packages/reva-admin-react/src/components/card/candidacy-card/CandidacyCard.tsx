@@ -7,6 +7,7 @@ import { useFeatureflipping } from "@/components/feature-flipping/featureFlippin
 import {
   CandidacyStatus,
   CandidacyStatusStep,
+  EndAccompagnementStatus,
   FeasibilityDecision,
   JuryResult,
   OrganismModaliteAccompagnement,
@@ -23,7 +24,8 @@ type Feasibility = {
     candidateConfirmationAt?: number | null;
     swornStatementFileId?: string | null;
   } | null;
-  decision?: FeasibilityDecision | null;
+  decision: FeasibilityDecision;
+  decisionSentAt?: number | null;
   feasibilityFileSentAt?: number | null;
 } | null;
 
@@ -66,6 +68,8 @@ export const CandidacyCard = ({
   readyForJuryEstimatedAt,
   jury,
   dropout,
+  endAccompagnementStatus,
+  endAccompagnementDate,
 }: {
   candidacyId: string;
   candidateFirstname: string;
@@ -93,6 +97,8 @@ export const CandidacyCard = ({
   readyForJuryEstimatedAt?: Date;
   jury?: Jury;
   dropout?: Dropout;
+  endAccompagnementStatus?: EndAccompagnementStatus | null;
+  endAccompagnementDate?: number | null;
 }) => {
   const router = useRouter();
 
@@ -102,14 +108,84 @@ export const CandidacyCard = ({
   )[1]?.status;
 
   const validationStatus = statusHistory.find((s) => s.status === "VALIDATION");
+  const parcoursEnvoyeStatus = statusHistory.find(
+    (s) => s.status === "PARCOURS_ENVOYE",
+  );
+  const parcoursConfirmeStatus = statusHistory.find(
+    (s) => s.status === "PARCOURS_CONFIRME",
+  );
 
   const candidacySentAt = validationStatus
     ? toDate(validationStatus.createdAt)
     : undefined;
 
+  const parcoursEnvoyeAt = parcoursEnvoyeStatus
+    ? toDate(parcoursEnvoyeStatus.createdAt)
+    : undefined;
+
+  const parcoursConfirmeAt = parcoursConfirmeStatus
+    ? toDate(parcoursConfirmeStatus.createdAt)
+    : undefined;
+
   const { isFeatureActive } = useFeatureflipping();
 
   const isMiddleNamesEnabled = isFeatureActive("MIDDLE_NAMES");
+
+  let dateToDisplay = undefined;
+
+  if (
+    endAccompagnementDate &&
+    (endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
+      endAccompagnementStatus === "CONFIRMED_BY_ADMIN")
+  ) {
+    dateToDisplay = (
+      <>
+        <span
+          className="fr-icon-close-circle-fill fr-icon--sm mr-2"
+          aria-hidden="true"
+        />
+        {`Accompagnement terminé le ${format(endAccompagnementDate, "dd/MM/yyyy")}`}
+      </>
+    );
+  } else if (jury?.dateOfSession && isAfter(new Date(), jury?.dateOfSession)) {
+    dateToDisplay = `Jury passé le ${format(jury?.dateOfSession, "dd/MM/yyyy")}`;
+  } else if (jury?.dateOfSession) {
+    dateToDisplay = `Jury programmé le ${format(jury?.dateOfSession, "dd/MM/yyyy")}`;
+  } else if (dossierDeValidation?.dossierDeValidationSentAt) {
+    dateToDisplay = `Dossier de validation déposé le ${format(dossierDeValidation?.dossierDeValidationSentAt, "dd/MM/yyyy")}`;
+  } else if (
+    feasibility?.decision === "ADMISSIBLE" &&
+    feasibility?.decisionSentAt
+  ) {
+    dateToDisplay = `Déclaré recevable le ${format(feasibility?.decisionSentAt, "dd/MM/yyyy")}`;
+  } else if (
+    feasibility?.decision === "REJECTED" &&
+    feasibility?.decisionSentAt
+  ) {
+    dateToDisplay = (
+      <>
+        <span
+          className="fr-icon-close-circle-fill fr-icon--sm mr-2"
+          aria-hidden="true"
+        />
+        {`Déclaré non recevable le ${format(feasibility?.decisionSentAt, "dd/MM/yyyy")}`}
+      </>
+    );
+  } else if (feasibility?.feasibilityFileSentAt) {
+    dateToDisplay = `Dossier de faisabilité déposé le ${format(feasibility?.feasibilityFileSentAt, "dd/MM/yyyy")}`;
+  } else if (
+    feasibility?.dematerializedFeasibilityFile?.candidateConfirmationAt
+  ) {
+    dateToDisplay = `Dossier de faisabilité validé par le candidat le ${format(feasibility?.dematerializedFeasibilityFile?.candidateConfirmationAt, "dd/MM/yyyy")}`;
+  } else if (feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt) {
+    dateToDisplay = `Dossier de faisabilité envoyé au candidat le ${format(feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt, "dd/MM/yyyy")}`;
+  } else if (parcoursConfirmeAt) {
+    dateToDisplay = `Parcours confirmé le ${format(parcoursConfirmeAt, "dd/MM/yyyy")}`;
+  } else if (parcoursEnvoyeAt) {
+    dateToDisplay = `Parcours envoyé le ${format(parcoursEnvoyeAt, "dd/MM/yyyy")}`;
+  } else if (candidacySentAt) {
+    dateToDisplay = `Candidature envoyée le ${format(candidacySentAt, "dd/MM/yyyy")}`;
+  }
 
   return (
     <WhiteCard
@@ -135,7 +211,15 @@ export const CandidacyCard = ({
           />
         </div>
 
-        {departmentLabel && departmentCode && (
+        {organismLabel && departmentLabel && departmentCode && (
+          <div className="text-xs text-dsfrGray-mentionGrey">{`${organismLabel} - ${departmentLabel} (${departmentCode})`}</div>
+        )}
+
+        {organismLabel && !departmentLabel && !departmentCode && (
+          <div className="text-xs text-dsfrGray-mentionGrey">{`${organismLabel}`}</div>
+        )}
+
+        {!organismLabel && departmentLabel && departmentCode && (
           <div className="text-xs text-dsfrGray-mentionGrey">{`${departmentLabel} (${departmentCode})`}</div>
         )}
       </div>
@@ -164,13 +248,6 @@ export const CandidacyCard = ({
             </span>
           )}
 
-          {organismLabel && (
-            <span>
-              {organismLabel}
-              <br />
-            </span>
-          )}
-
           {vaeCollectiveCommanditaireLabel && vaeCollectiveProjetLabel && (
             <span>
               {`${vaeCollectiveCommanditaireLabel} - ${vaeCollectiveProjetLabel}`}
@@ -183,30 +260,12 @@ export const CandidacyCard = ({
       </div>
 
       <div className="flex flex-row gap-2 justify-between">
-        <div className="text-xs text-dsfrGray-mentionGrey">
-          {!feasibility?.feasibilityFileSentAt &&
-            !dossierDeValidation?.dossierDeValidationSentAt &&
-            !jury?.dateOfSession &&
-            candidacySentAt &&
-            `Envoyée le ${format(candidacySentAt, "dd MMMM yyyy")}`}
-
-          {feasibility?.feasibilityFileSentAt &&
-            !dossierDeValidation?.dossierDeValidationSentAt &&
-            !jury?.dateOfSession &&
-            `Dossier de faisabilité envoyé le ${format(feasibility?.feasibilityFileSentAt, "d MMM yyyy")}`}
-
-          {dossierDeValidation?.dossierDeValidationSentAt &&
-            !jury?.dateOfSession &&
-            `Dossier de validation envoyé le ${format(dossierDeValidation?.dossierDeValidationSentAt, "d MMM yyyy")}`}
-
-          {jury?.dateOfSession &&
-            `Jury programmé le ${format(jury?.dateOfSession, "d MMM yyyy")}`}
-        </div>
+        <div className="text-xs text-dsfrGray-mentionGrey">{dateToDisplay}</div>
 
         <span
           className="fr-icon--sm fr-icon-arrow-right-line text-dsfr-blue-france-sun-113"
           aria-hidden="true"
-        ></span>
+        />
       </div>
     </WhiteCard>
   );

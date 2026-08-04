@@ -15,10 +15,12 @@ import {
   FundingStatusFilter,
   ArchiveStatusFilter,
   AccompagnementStatusFilter,
+  TypeAccompagnementStatusFilter,
 } from "@/graphql/generated/graphql";
 
 export interface AnnuaireFilters {
   candidacyStatuses: CandidacyStatusStep[];
+  typeAccompagnementStatuses: TypeAccompagnementStatusFilter[];
   trainingStatuses: CandidacyStatusStep[];
   feasibilityStatuses: FeasibilityStatusFilter[];
   dossierDeValidationStatuses: DossierDeValidationStatusFilter[];
@@ -50,6 +52,7 @@ const getCandidaciesForAAP = graphql(`
     $searchFilter: String
     $sortByFilter: CandidacySortByFilter
     $candidacyStatuses: [CandidacyStatusStep!]
+    $typeAccompagnementStatuses: [TypeAccompagnementStatusFilter!]
     $trainingStatuses: [CandidacyStatusStep!]
     $feasibilityStatuses: [FeasibilityStatusFilter!]
     $dossierDeValidationStatuses: [DossierDeValidationStatusFilter!]
@@ -67,6 +70,7 @@ const getCandidaciesForAAP = graphql(`
       searchFilter: $searchFilter
       sortByFilter: $sortByFilter
       candidacyStatuses: $candidacyStatuses
+      typeAccompagnementStatuses: $typeAccompagnementStatuses
       trainingStatuses: $trainingStatuses
       feasibilityStatuses: $feasibilityStatuses
       dossierDeValidationStatuses: $dossierDeValidationStatuses
@@ -81,6 +85,8 @@ const getCandidaciesForAAP = graphql(`
       rows {
         id
         typeAccompagnement
+        endAccompagnementStatus
+        endAccompagnementDate
         candidate {
           firstname
           lastname
@@ -100,7 +106,16 @@ const getCandidaciesForAAP = graphql(`
           }
         }
         feasibility {
+          decision
+          decisionSentAt
           feasibilityFileSentAt
+          dematerializedFeasibilityFile {
+            sentToCandidateAt
+            candidateConfirmationAt
+            isReadyToBeSentToCertificationAuthority
+            isReadyToBeSentToCandidate
+            swornStatementFileId
+          }
         }
         activeDossierDeValidation {
           dossierDeValidationSentAt
@@ -146,6 +161,7 @@ export const useAnnuaire = () => {
 
   const filters = useMemo<AnnuaireFilters>(() => {
     const candidacyParam = searchParams.get("candidacy");
+    const typeAccompagnementParam = searchParams.get("typeAccompagnement");
     const trainingParam = searchParams.get("training");
     const feasibilityParam = searchParams.get("feasibility");
     const dossierDeValidationParam = searchParams.get("dossierDeValidation");
@@ -161,6 +177,11 @@ export const useAnnuaire = () => {
     return {
       candidacyStatuses: candidacyParam
         ? (candidacyParam.split(",") as CandidacyStatusStep[])
+        : [],
+      typeAccompagnementStatuses: typeAccompagnementParam
+        ? (typeAccompagnementParam.split(
+            ",",
+          ) as TypeAccompagnementStatusFilter[])
         : [],
       trainingStatuses: trainingParam
         ? (trainingParam.split(",") as CandidacyStatusStep[])
@@ -211,6 +232,7 @@ export const useAnnuaire = () => {
       sortByFilter,
       currentPage,
       filters.candidacyStatuses,
+      filters.typeAccompagnementStatuses,
       filters.trainingStatuses,
       filters.feasibilityStatuses,
       filters.dossierDeValidationStatuses,
@@ -230,6 +252,10 @@ export const useAnnuaire = () => {
         candidacyStatuses:
           filters.candidacyStatuses.length > 0
             ? filters.candidacyStatuses
+            : undefined,
+        typeAccompagnementStatuses:
+          filters.typeAccompagnementStatuses.length > 0
+            ? filters.typeAccompagnementStatuses
             : undefined,
         trainingStatuses:
           filters.trainingStatuses.length > 0
@@ -293,6 +319,17 @@ export const useAnnuaire = () => {
           queryParams.set("candidacy", newFilters.candidacyStatuses.join(","));
         } else {
           queryParams.delete("candidacy");
+        }
+      }
+
+      if (newFilters.typeAccompagnementStatuses !== undefined) {
+        if (newFilters.typeAccompagnementStatuses.length > 0) {
+          queryParams.set(
+            "typeAccompagnement",
+            newFilters.typeAccompagnementStatuses.join(","),
+          );
+        } else {
+          queryParams.delete("typeAccompagnement");
         }
       }
 
@@ -418,6 +455,16 @@ export const useAnnuaire = () => {
     [filters.candidacyStatuses, updateFilters],
   );
 
+  const toggleTypeAccompagnementStatus = useCallback(
+    (status: TypeAccompagnementStatusFilter) => {
+      const newStatuses = filters.typeAccompagnementStatuses.includes(status)
+        ? filters.typeAccompagnementStatuses.filter((s) => s !== status)
+        : [...filters.typeAccompagnementStatuses, status];
+      updateFilters({ typeAccompagnementStatuses: newStatuses });
+    },
+    [filters.typeAccompagnementStatuses, updateFilters],
+  );
+
   const toggleTrainingStatus = useCallback(
     (status: CandidacyStatusStep) => {
       const newStatuses = filters.trainingStatuses.includes(status)
@@ -521,6 +568,7 @@ export const useAnnuaire = () => {
     queryParams.set("page", "1");
 
     queryParams.delete("candidacy");
+    queryParams.delete("typeAccompagnement");
     queryParams.delete("training");
     queryParams.delete("feasibility");
     queryParams.delete("dossierDeValidation");
@@ -540,6 +588,7 @@ export const useAnnuaire = () => {
   const hasActiveFilters = useMemo(
     () =>
       filters.candidacyStatuses.length > 0 ||
+      filters.typeAccompagnementStatuses.length > 0 ||
       filters.trainingStatuses.length > 0 ||
       filters.feasibilityStatuses.length > 0 ||
       filters.dossierDeValidationStatuses.length > 0 ||
@@ -551,6 +600,7 @@ export const useAnnuaire = () => {
       filters.cohorteVaeCollectiveIds.length > 0,
     [
       filters.candidacyStatuses,
+      filters.typeAccompagnementStatuses,
       filters.trainingStatuses,
       filters.feasibilityStatuses,
       filters.dossierDeValidationStatuses,
@@ -571,6 +621,7 @@ export const useAnnuaire = () => {
     searchFilter,
     setSearchFilter,
     toggleCandidacyStatus,
+    toggleTypeAccompagnementStatus,
     toggleTrainingStatus,
     toggleFeasibilityStatus,
     toggleDossierDeValidationStatus,

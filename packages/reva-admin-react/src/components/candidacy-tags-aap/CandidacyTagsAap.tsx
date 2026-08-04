@@ -85,7 +85,7 @@ const StatusTag = ({
     case status === "PRISE_EN_CHARGE" && isFirstAppointmentPast:
       return <Tag small>Parcours en construction</Tag>;
     case status === "PRISE_EN_CHARGE":
-      return <Tag small>Candidature prise en charge</Tag>;
+      return <Tag small>Candidature consultée</Tag>;
     case status === "PARCOURS_ENVOYE":
       return <Tag small>Parcours envoyé au candidat</Tag>;
     case status === "PARCOURS_CONFIRME":

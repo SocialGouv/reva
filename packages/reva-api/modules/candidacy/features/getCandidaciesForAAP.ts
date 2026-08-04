@@ -1,6 +1,5 @@
 import {
   CandidacyStatusStep,
-  CandidacyTypeAccompagnement,
   DossierDeValidationStatus,
   EndAccompagnementStatus,
   FeasibilityStatus,
@@ -21,6 +20,7 @@ import {
   FundingStatusFilter,
   ArchiveStatusFilter,
   AccompagnementStatusFilter,
+  TypeAccompagnementStatusFilter,
 } from "../candidacy.types";
 import { candidacySearchWord } from "../utils/candidacy.helper";
 
@@ -47,6 +47,7 @@ export const getCandidaciesForAAP = async ({
   searchFilter,
   sortByFilter,
   candidacyStatuses,
+  typeAccompagnementStatuses,
   trainingStatuses,
   feasibilityStatuses,
   dossierDeValidationStatuses,
@@ -191,33 +192,53 @@ export const getCandidaciesForAAP = async ({
       }
     }
 
-    if (candidacyStatuses.includes(CandidacyStatusStep.PROJET)) {
-      andClauses.push({
-        candidacy: {
-          OR: [
-            {
-              status: CandidacyStatusStep.PROJET,
-              typeAccompagnement: CandidacyTypeAccompagnement.AUTONOME,
-            },
-            {
-              status: {
-                in: allowedCandidacyStatuses.filter(
-                  (status) => status !== CandidacyStatusStep.PROJET,
-                ),
-              },
-            },
-          ],
+    andClauses.push({
+      candidacy: {
+        status: {
+          in: candidacyStatuses,
         },
-      });
-    } else {
-      andClauses.push({
+      },
+    });
+  }
+
+  if (
+    isAdmin &&
+    typeAccompagnementStatuses &&
+    typeAccompagnementStatuses.length > 0
+  ) {
+    const typeAccompagnementWhereInput: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] =
+      [];
+
+    const filteredTypeAccompagnementStatuses =
+      typeAccompagnementStatuses.filter(
+        (status) => status !== TypeAccompagnementStatusFilter.VAE_COLLECTIVE,
+      );
+
+    if (filteredTypeAccompagnementStatuses.length > 0) {
+      typeAccompagnementWhereInput.push({
         candidacy: {
-          status: {
-            in: candidacyStatuses,
+          typeAccompagnement: {
+            in: filteredTypeAccompagnementStatuses,
           },
         },
       });
     }
+
+    if (
+      typeAccompagnementStatuses.includes(
+        TypeAccompagnementStatusFilter.VAE_COLLECTIVE,
+      )
+    ) {
+      typeAccompagnementWhereInput.push({
+        candidacy: {
+          cohorteVaeCollectiveId: {
+            not: null,
+          },
+        },
+      });
+    }
+
+    andClauses.push({ OR: typeAccompagnementWhereInput });
   }
 
   // Training status filter
