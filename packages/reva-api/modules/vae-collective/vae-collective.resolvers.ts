@@ -1,6 +1,5 @@
 import {
   isAdmin,
-  isAdminOrGestionnaireOfCohorteVaeCollective,
   isAdminOrGestionnaireOfCommanditaireVaeCollective,
   isAnyone,
 } from "@/modules/shared/security/presets";
@@ -250,9 +249,8 @@ export const vaeCollectiveResolvers = withPolicies(unsafeResolvers, {
     cohorteVaeCollective: isAnyone,
   },
   CommanditaireVaeCollective: {
-    cohorteVaeCollectives: isAdminOrGestionnaireOfCommanditaireVaeCollective,
-    metabaseDashboardIframeUrl:
-      isAdminOrGestionnaireOfCommanditaireVaeCollective,
+    cohorteVaeCollectives: hasVaeCollectivePermission("VOIR_LISTE_COHORTES"),
+    metabaseDashboardIframeUrl: hasVaeCollectivePermission("VOIR_STATISTIQUES"),
   },
   Query: {
     vaeCollective_getCommanditaireVaeCollective:
@@ -264,7 +262,7 @@ export const vaeCollectiveResolvers = withPolicies(unsafeResolvers, {
     cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount:
       isAnyone,
     vaeCollective_getCohorteVaeCollectiveById:
-      isAdminOrGestionnaireOfCohorteVaeCollective,
+      hasVaeCollectivePermission("VOIR_COHORTE"),
     vaeCollective_commanditaireVaeCollectives: isAdmin,
     vaeCollective_getUserPermissions: isAnyone,
   },
@@ -272,15 +270,15 @@ export const vaeCollectiveResolvers = withPolicies(unsafeResolvers, {
     vaeCollective_createCohorteVaeCollective:
       hasVaeCollectivePermission("CREER_COHORTE"),
     vaeCollective_updateNomCohorteVaeCollective:
-      isAdminOrGestionnaireOfCohorteVaeCollective,
+      hasVaeCollectivePermission("MODIFIER_COHORTE"),
     vaeCollective_deleteCohorteVaeCollective:
-      isAdminOrGestionnaireOfCohorteVaeCollective,
+      hasVaeCollectivePermission("SUPPRIMER_COHORTE"),
     vaeCollective_updateCohorteVAECollectiveCertification:
-      isAdminOrGestionnaireOfCohorteVaeCollective,
+      hasVaeCollectivePermission("MODIFIER_COHORTE"),
     vaeCollective_updateCohorteVAECollectiveOrganism:
-      isAdminOrGestionnaireOfCohorteVaeCollective,
+      hasVaeCollectivePermission("MODIFIER_COHORTE"),
     vaeCollective_publishCohorteVAECollective:
-      isAdminOrGestionnaireOfCohorteVaeCollective,
+      hasVaeCollectivePermission("MODIFIER_COHORTE"),
     vaeCollective_createCommanditaireVaeCollective: isAdmin,
   },
 });
