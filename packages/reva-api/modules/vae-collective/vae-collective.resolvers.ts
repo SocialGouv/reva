@@ -26,7 +26,7 @@ import { publishCohorteVAECollective } from "./features/publishCohorteVAECollect
 import { updateCohorteVAECollectiveCertification } from "./features/updateCohorteVAECollectiveCertification";
 import { updateCohorteVAECollectiveOrganism } from "./features/updateCohorteVAECollectiveOrganism";
 import { updateNomCohorteVaeCollective } from "./features/updateNomCohorteVaeCollective";
-import { hasVaeCollectivePermission } from "./security/hasVaeCollectiveRole";
+import { hasVaeCollectivePermission } from "./security/hasVaeCollectivePermission";
 
 const unsafeResolvers = {
   Account: {

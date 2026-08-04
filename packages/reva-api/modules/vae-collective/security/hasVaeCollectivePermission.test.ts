@@ -4,7 +4,7 @@ import { IFieldResolver, MercuriusContext } from "mercurius";
 import { NOT_AUTHORIZED_RESOURCE_ACCESS } from "@/modules/shared/security/messages";
 import { createCohorteVaeCollectiveHelper } from "@/test/helpers/entities/create-vae-collective-helper";
 
-import { hasVaeCollectivePermission } from "./hasVaeCollectiveRole";
+import { hasVaeCollectivePermission } from "./hasVaeCollectivePermission";
 
 const makeContext = ({
   roles,
