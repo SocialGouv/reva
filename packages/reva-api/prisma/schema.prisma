@@ -2114,6 +2114,11 @@ model AccountEmailOtp {
 
 enum PermissionVaeCollective {
   CREER_COHORTE
+  MODIFIER_COHORTE
+  SUPPRIMER_COHORTE
+  VOIR_LISTE_COHORTES
+  VOIR_COHORTE
+  VOIR_STATISTIQUES
 }
 
 enum RoleVaeCollective {
