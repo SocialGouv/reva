@@ -1,9 +1,11 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
-
 import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "@/modules/shared/error/functionalError";
+  isAdmin,
+  isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+  isAdminOrCandidacyCompanion,
+  isAdminOrCertificationAuthority,
+  isAnyone,
+} from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
 import { Candidacy } from "../candidacy/candidacy.types";
 import { getCandidacy } from "../candidacy/features/getCandidacy";
@@ -21,7 +23,6 @@ import { revokeJuryDecision } from "./features/revokeJuryDecision";
 import { updateExamInfo } from "./features/updateExamInfo";
 import { updateResultOfJury } from "./features/updateResultOfJury";
 import { ExamInfo, JuryInfo } from "./jury.types";
-import { resolversSecurityMap } from "./security";
 import { JuryStatusFilter } from "./types/juryStatusFilter.type";
 
 const unsafeResolvers = {
@@ -86,20 +87,12 @@ const unsafeResolvers = {
         certificationAuthorityLocalAccountId?: string;
       },
       context: GraphqlContext,
-    ) => {
-      if (!context.auth.userInfo?.sub) {
-        throw new FunctionalError(
-          FunctionalCodeError.TECHNICAL_ERROR,
-          "Not authorized",
-        );
-      }
-
-      return getActiveJuries({
-        keycloakId: context.auth.userInfo.sub,
+    ) =>
+      getActiveJuries({
+        keycloakId: context.auth.userInfo?.sub ?? "",
         hasRole: context.auth.hasRole,
         ...args,
-      });
-    },
+      }),
     jury_juryCountByCategory: (
       _: unknown,
       args: {
@@ -108,20 +101,12 @@ const unsafeResolvers = {
         certificationAuthorityLocalAccountId?: string;
       },
       context: GraphqlContext,
-    ) => {
-      if (!context.auth.userInfo?.sub) {
-        throw new FunctionalError(
-          FunctionalCodeError.TECHNICAL_ERROR,
-          "Not authorized",
-        );
-      }
-
-      return getActiveJuryCountByCategory({
-        keycloakId: context.auth.userInfo.sub,
+    ) =>
+      getActiveJuryCountByCategory({
+        keycloakId: context.auth.userInfo?.sub ?? "",
         hasRole: context.auth.hasRole,
         ...args,
-      });
-    },
+      }),
   },
   Mutation: {
     jury_updateExamInfo: async (
@@ -146,23 +131,15 @@ const unsafeResolvers = {
         input: JuryInfo;
       },
       context: GraphqlContext,
-    ) => {
-      if (!context.auth.userInfo?.sub) {
-        throw new FunctionalError(
-          FunctionalCodeError.TECHNICAL_ERROR,
-          "Not authorized",
-        );
-      }
-
-      return updateResultOfJury({
+    ) =>
+      updateResultOfJury({
         juryId: params.juryId,
         juryInfo: params.input,
-        roles: context.auth.userInfo.realm_access?.roles || [],
+        roles: context.auth.userInfo?.realm_access?.roles || [],
         hasRole: context.auth.hasRole,
-        keycloakId: context.auth.userInfo?.sub,
-        userEmail: context.auth?.userInfo?.email,
-      });
-    },
+        keycloakId: context.auth.userInfo?.sub ?? "",
+        userEmail: context.auth.userInfo?.email ?? "",
+      }),
     jury_revokeDecision: async (
       _parent: unknown,
       params: {
@@ -182,7 +159,36 @@ const unsafeResolvers = {
   },
 };
 
-export const juryResolvers = composeResolvers(
-  unsafeResolvers,
-  resolversSecurityMap,
-);
+export const juryResolvers = withPolicies(unsafeResolvers, {
+  Candidacy: {
+    examInfo: isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+    jury: isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+    historyJury: isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+  },
+  Jury: {
+    convocationFile: isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+    candidacy: isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+    juryResultByCompetenceBlocs:
+      isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+    previouslyValidatedBlocks:
+      isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+  },
+  JuryResultByCompetenceBloc: {
+    // Parent déjà protégé, donnée référentielle. Le contrôle d'ownership est de toute façon
+    // inapplicable ici : le root est une ligne de résultat par bloc, sans identifiant de
+    // candidature, et refuserait donc tous les appelants.
+    competenceBloc: isAnyone,
+  },
+  Query: {
+    jury_getJuries: isAdminOrCertificationAuthority,
+    jury_juryCountByCategory: isAdminOrCertificationAuthority,
+  },
+  Mutation: {
+    jury_updateExamInfo: isAdminOrCandidacyCompanion,
+    // Le rôle écarte l'AAP et le candidat avant que la mutation ne lise le jury. Il ne dit
+    // rien du périmètre : une autorité de certification passe cette policy quelle que soit la
+    // candidature, et c'est canManageJury, dans la feature, qui la refuse.
+    jury_updateResult: isAdminOrCertificationAuthority,
+    jury_revokeDecision: isAdmin,
+  },
+});
