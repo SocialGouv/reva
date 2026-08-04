@@ -3,9 +3,16 @@ import { IFieldResolver, MercuriusContext } from "mercurius";
 
 import { NOT_AUTHORIZED_RESOURCE_ACCESS } from "@/modules/shared/security/messages";
 import { hasRole, whenHasRole } from "@/modules/shared/security/middlewares";
+import { isGestionnaireOfCohorteVaeCollective } from "@/modules/shared/security/middlewares/isGestionnaireOfCohorteVaeCollective";
 import { isGestionnaireOfCommanditaireVaeCollective } from "@/modules/shared/security/middlewares/isGestionnaireOfCommanditaireVaeCollective";
 
 import { getUserPermissions } from "../features/getUserPermissions";
+
+// Permissions portant sur une cohorte précise : le simple rattachement au
+// commanditaire ne suffit pas, il faut aussi vérifier que la cohorte visée
+// (args.cohorteVaeCollectiveId) appartient bien à ce commanditaire.
+const COHORTE_SCOPED_PERMISSIONS: ReadonlySet<PermissionVaeCollective> =
+  new Set(["VOIR_COHORTE", "MODIFIER_COHORTE", "SUPPRIMER_COHORTE"]);
 
 export const hasVaeCollectivePermission = (
   permission: PermissionVaeCollective,
@@ -13,7 +20,9 @@ export const hasVaeCollectivePermission = (
   hasRole(["admin", "manage_vae_collective"]),
   whenHasRole(
     "manage_vae_collective",
-    isGestionnaireOfCommanditaireVaeCollective,
+    COHORTE_SCOPED_PERMISSIONS.has(permission)
+      ? isGestionnaireOfCohorteVaeCollective
+      : isGestionnaireOfCommanditaireVaeCollective,
   ),
   whenHasRole("manage_vae_collective", checkUserPermission(permission)),
 ];
