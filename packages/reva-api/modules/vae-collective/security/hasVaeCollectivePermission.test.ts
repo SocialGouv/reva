@@ -121,4 +121,67 @@ describe("hasVaeCollectivePermission", () => {
       ),
     ).rejects.toThrow(NOT_AUTHORIZED_RESOURCE_ACCESS);
   });
+
+  test("lets a manage_vae_collective gestionnaire through for a cohorte-scoped permission when they own both the commanditaire and the cohorte", async () => {
+    const cohorte = await createCohorteVaeCollectiveHelper();
+    const gestionnaireKeycloakId =
+      cohorte.commanditaireVaeCollective?.gestionnaire?.keycloakId;
+    if (!gestionnaireKeycloakId) {
+      throw new Error("Gestionnaire keycloak id not found");
+    }
+
+    const policy = hasVaeCollectivePermission(
+      PermissionVaeCollective.VOIR_COHORTE,
+    );
+    const context = makeContext({
+      roles: ["manage_vae_collective"],
+      keycloakId: gestionnaireKeycloakId,
+    });
+    const finalResolver = vi.fn().mockResolvedValue("resolved");
+
+    await expect(
+      runPolicy(
+        policy,
+        {
+          commanditaireVaeCollectiveId: cohorte.commanditaireVaeCollectiveId,
+          cohorteVaeCollectiveId: cohorte.id,
+        },
+        context,
+        finalResolver,
+      ),
+    ).resolves.toBe("resolved");
+    expect(finalResolver).toHaveBeenCalledOnce();
+  });
+
+  test("denies a manage_vae_collective gestionnaire for a cohorte-scoped permission when the cohorte does not belong to the commanditaire they own", async () => {
+    const cohorte = await createCohorteVaeCollectiveHelper();
+    const otherCohorte = await createCohorteVaeCollectiveHelper();
+    const gestionnaireKeycloakId =
+      cohorte.commanditaireVaeCollective?.gestionnaire?.keycloakId;
+    if (!gestionnaireKeycloakId) {
+      throw new Error("Gestionnaire keycloak id not found");
+    }
+
+    const policy = hasVaeCollectivePermission(
+      PermissionVaeCollective.VOIR_COHORTE,
+    );
+    const context = makeContext({
+      roles: ["manage_vae_collective"],
+      keycloakId: gestionnaireKeycloakId,
+    });
+
+    // The gestionnaire owns cohorte.commanditaireVaeCollectiveId, but points
+    // at another commanditaire's cohorte: isGestionnaireOfCommanditaireVaeCollective
+    // alone would let this through, so this pins the extra cohorte-ownership check.
+    await expect(
+      runPolicy(
+        policy,
+        {
+          commanditaireVaeCollectiveId: cohorte.commanditaireVaeCollectiveId,
+          cohorteVaeCollectiveId: otherCohorte.id,
+        },
+        context,
+      ),
+    ).rejects.toThrow(NOT_AUTHORIZED_RESOURCE_ACCESS);
+  });
 });
