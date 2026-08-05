@@ -4,6 +4,7 @@ import Tag from "@codegouvfr/react-dsfr/Tag";
 
 type CertificationsCardProps = {
   numberOfCertifications: number;
+  disabled?: boolean;
 } & (
   | { cohorteStatus: "PUBLIE"; certificationsSelectionneesHref: string }
   | { cohorteStatus: "BROUILLON"; selectCertificationsHref: string }
@@ -34,14 +35,18 @@ export const CertificationsCard = (props: CertificationsCardProps) => {
               <Button
                 className="ml-auto"
                 priority="tertiary"
-                linkProps={{ href: props.selectCertificationsHref }}
+                {...(props.disabled
+                  ? { disabled: true }
+                  : { linkProps: { href: props.selectCertificationsHref } })}
               >
                 Modifier
               </Button>
             ) : (
               <Button
                 className="ml-auto text-white"
-                linkProps={{ href: props.selectCertificationsHref }}
+                {...(props.disabled
+                  ? { disabled: true }
+                  : { linkProps: { href: props.selectCertificationsHref } })}
               >
                 Compléter
               </Button>
