@@ -33,6 +33,9 @@ const nextConfig = {
     ];
   },
   distDir: isTest ? ".next-test" : ".next",
+  typescript: {
+    tsconfigPath: "tsconfig.build.json",
+  },
   experimental: {
     testProxy: isTest,
   },
