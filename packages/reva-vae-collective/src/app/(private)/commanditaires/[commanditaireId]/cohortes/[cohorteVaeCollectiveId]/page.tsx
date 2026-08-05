@@ -97,6 +97,7 @@ export default async function CohortePage({
   const organismSelected = !!organism;
 
   const canModifyCohorte = await hasPermission("MODIFIER_COHORTE");
+  const canDeleteCohorte = await hasPermission("SUPPRIMER_COHORTE");
 
   const modifierIntituleButtonProps = canModifyCohorte
     ? {
@@ -175,6 +176,7 @@ export default async function CohortePage({
             commanditaireId={commanditaireId}
             cohorteVaeCollectiveId={cohorteVaeCollectiveId}
             nomCohorte={cohorte.nom}
+            disabled={!canDeleteCohorte}
           />
         </>
       )}
