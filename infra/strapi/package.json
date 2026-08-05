@@ -34,7 +34,7 @@
     "esbuild": "^0.25.12",
     "handlebars": "^4.7.9",
     "lodash": "^4.18.1",
-    "undici": "6.27.0",
+    "undici": "6.28.0",
     "tmp": "^0.2.4",
     "nodemailer": "9.0.1",
     "ws": "^8.21.0",
