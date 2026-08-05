@@ -1,6 +1,6 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import Link from "next/link";
 
+import { hasPermission } from "@/components/auth/actions";
 import { RoleDependentBreadcrumb } from "@/components/role-dependent-breadcrumb/RoleDependentBreadcrumb";
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
@@ -96,6 +96,23 @@ export default async function CohortePage({
   const certificationSelected = certifications.length > 0;
   const organismSelected = !!organism;
 
+  const canModifyCohorte = await hasPermission("MODIFIER_COHORTE");
+
+  const modifierIntituleButtonProps = canModifyCohorte
+    ? {
+        linkProps: {
+          href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/modifier-intitule`,
+        },
+      }
+    : { disabled: true };
+
+  //disabled si aucune certification n'est sélectionnée, si la cohorte est publiée et aucun organisme n'est sélectionnée
+  //  (ce cas n'est pas sensé se produire aujourd'hui dans l'interface), ou si l'utilisateur n'a pas la permission de modifier la cohorte
+  const organismCardDisabled =
+    !certificationSelected ||
+    (cohorte.status !== "BROUILLON" && !organismSelected) ||
+    !canModifyCohorte;
+
   return (
     <div className="flex flex-col w-full">
       <RoleDependentBreadcrumb
@@ -112,12 +129,15 @@ export default async function CohortePage({
       />
       <div className="flex justify-between items-center">
         <h1>{cohorte.nom}</h1>
-        <Link
-          className="text-sm bg-none p-2 fr-link fr-icon-edit-line fr-link--icon-left mb-6"
-          href={`/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/modifier-intitule`}
+        <Button
+          className="mb-6"
+          priority="tertiary no outline"
+          iconId="fr-icon-edit-line"
+          size="small"
+          {...modifierIntituleButtonProps}
         >
           Modifier l’intitulé
-        </Link>
+        </Button>
       </div>
       <p className="text-xl mb-12">
         Paramétrez votre cohorte, afin de générer un code unique à transmettre
@@ -128,18 +148,14 @@ export default async function CohortePage({
         cohorteStatus={cohorte.status}
         certificationsSelectionneesHref={`/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications-selectionnees`}
         selectCertificationsHref={`/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/selection-certifications`}
+        disabled={!canModifyCohorte}
       />
       <OrganismCard
         className="mt-8"
         commanditaireId={commanditaireId}
         cohorteVaeCollectiveId={cohorteVaeCollectiveId}
         organism={organism}
-        //disabled si aucune certification n'est sélectionnée ou  si la cohorte est publiée et aucun organisme n'est sélectionnée
-        //  (ce cas n'est pas sensé se produire aujourd'hui dans l'interface)
-        disabled={
-          !certificationSelected ||
-          (cohorte.status !== "BROUILLON" && !organismSelected)
-        }
+        disabled={organismCardDisabled}
         //readonly si la cohorte est publiée
         readonly={cohorte.status !== "BROUILLON"}
         certificationSelected={certificationSelected}
@@ -152,7 +168,7 @@ export default async function CohortePage({
             cohorteVaeCollectiveId={cohorteVaeCollectiveId}
             nomCohorte={cohorte.nom}
             aapLabel={organism?.label ?? ""}
-            disabled={!organismSelected}
+            disabled={!organismSelected || !canModifyCohorte}
           />
 
           <DeleteCohorteButton

@@ -7,6 +7,7 @@ import {
 
 import { login } from "../../../../shared/utils/auth/login";
 import { mockQueryActiveFeatures } from "../../../../shared/utils/mockActiveFeatures";
+import { mockQueryGetUserPermissions } from "../../../../shared/utils/mockGetUserPermissions";
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 test.describe("organism card", () => {
@@ -28,6 +29,7 @@ test.describe("organism card", () => {
               });
             }),
             mockQueryActiveFeatures(),
+            mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
           ],
           { scope: "test" },
         ],
@@ -69,6 +71,7 @@ test.describe("organism card", () => {
               });
             }),
             mockQueryActiveFeatures(),
+            mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
           ],
           { scope: "test" },
         ],
@@ -129,6 +132,7 @@ test.describe("organism card", () => {
                 });
               }),
               mockQueryActiveFeatures(),
+              mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
             ],
             { scope: "test" },
           ],
@@ -190,6 +194,7 @@ test.describe("organism card", () => {
                 });
               }),
               mockQueryActiveFeatures(),
+              mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
             ],
             { scope: "test" },
           ],
@@ -255,6 +260,7 @@ test.describe("organism card", () => {
                 });
               }),
               mockQueryActiveFeatures(),
+              mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
             ],
             { scope: "test" },
           ],
@@ -289,6 +295,64 @@ test.describe("organism card", () => {
           await expect(page).toHaveURL(
             "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/aaps",
           );
+        });
+      });
+
+      test.describe("when the user lacks the MODIFIER_COHORTE permission", () => {
+        test.use({
+          mswHandlers: [
+            [
+              fvae.query("getCohorteByIdForCohortePage", () => {
+                return HttpResponse.json({
+                  data: {
+                    vaeCollective_getCohorteVaeCollectiveById: {
+                      id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                      nom: "macohorte",
+                      status: "BROUILLON",
+                      certificationCohorteVaeCollectives: [
+                        {
+                          id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                          certification: {
+                            id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                            certification: {
+                              label: "Certification 1",
+                              codeRncp: "123456",
+                            },
+                          },
+                        },
+                      ],
+                      organism: {
+                        id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                        label: "Organism 1",
+                        adresseNumeroEtNomDeRue: "123456",
+                        adresseCodePostal: "123456",
+                        adresseVille: "123456",
+                        emailContact: "123456",
+                        telephone: "123456",
+                      },
+                    },
+                  },
+                });
+              }),
+              mockQueryActiveFeatures(),
+              mockQueryGetUserPermissions(),
+            ],
+            { scope: "test" },
+          ],
+        });
+
+        test("when i access the page, the filled organism card should be disabled", async ({
+          page,
+        }) => {
+          await login({ page, role: "gestionnaireVaeCollective" });
+
+          await page.goto(
+            "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
+          );
+
+          await expect(
+            page.getByTestId("filled-organism-card").getByRole("button"),
+          ).toBeDisabled();
         });
       });
 
@@ -329,6 +393,7 @@ test.describe("organism card", () => {
                 });
               }),
               mockQueryActiveFeatures(),
+              mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
             ],
             { scope: "test" },
           ],

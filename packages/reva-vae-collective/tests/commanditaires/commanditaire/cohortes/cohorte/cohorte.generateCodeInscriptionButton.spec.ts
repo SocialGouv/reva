@@ -7,6 +7,7 @@ import {
 
 import { login } from "../../../../shared/utils/auth/login";
 import { mockQueryActiveFeatures } from "../../../../shared/utils/mockActiveFeatures";
+import { mockQueryGetUserPermissions } from "../../../../shared/utils/mockGetUserPermissions";
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 test.describe("generate cohorte code inscription button", () => {
@@ -27,6 +28,7 @@ test.describe("generate cohorte code inscription button", () => {
             });
           }),
           mockQueryActiveFeatures(),
+          mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
         ],
         { scope: "test" },
       ],
@@ -70,6 +72,7 @@ test.describe("generate cohorte code inscription button", () => {
                 },
               });
             }),
+            mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
           ],
           { scope: "test" },
         ],
@@ -120,6 +123,7 @@ test.describe("generate cohorte code inscription button", () => {
                   },
                 });
               }),
+              mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
             ],
             { scope: "test" },
           ],
@@ -188,6 +192,7 @@ test.describe("generate cohorte code inscription button", () => {
                   },
                 });
               }),
+              mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
             ],
             { scope: "test" },
           ],
@@ -260,6 +265,65 @@ test.describe("generate cohorte code inscription button", () => {
           );
         });
       });
+
+      test.describe("when the user lacks the MODIFIER_COHORTE permission", () => {
+        test.use({
+          mswHandlers: [
+            [
+              fvae.query("getCohorteByIdForCohortePage", () => {
+                return HttpResponse.json({
+                  data: {
+                    vaeCollective_getCohorteVaeCollectiveById: {
+                      id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                      nom: "macohorte",
+                      status: "BROUILLON",
+                      certificationCohorteVaeCollectives: [
+                        {
+                          id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                          certification: {
+                            id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                            certification: {
+                              label: "Certification 1",
+                              codeRncp: "123456",
+                            },
+                          },
+                        },
+                      ],
+                      organism: {
+                        id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                        label: "Organism 1",
+                        adresseNumeroEtNomDeRue: "123456",
+                        adresseCodePostal: "123456",
+                        adresseVille: "123456",
+                        emailContact: "123456",
+                        telephone: "123456",
+                      },
+                    },
+                  },
+                });
+              }),
+              mockQueryGetUserPermissions(),
+            ],
+            { scope: "test" },
+          ],
+        });
+
+        test("the generate cohorte code inscription button should be disabled", async ({
+          page,
+        }) => {
+          await login({ page, role: "gestionnaireVaeCollective" });
+
+          await page.goto(
+            "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
+          );
+
+          await expect(
+            page.getByRole("button", {
+              name: "Générez le code d’accès à la cohorte",
+            }),
+          ).toBeDisabled();
+        });
+      });
     });
   });
 });
@@ -282,6 +346,7 @@ test.describe("registration code display", () => {
             });
           }),
           mockQueryActiveFeatures(),
+          mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
         ],
         { scope: "test" },
       ],
@@ -320,6 +385,7 @@ test.describe("registration code display", () => {
             });
           }),
           mockQueryActiveFeatures(),
+          mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
         ],
         { scope: "test" },
       ],

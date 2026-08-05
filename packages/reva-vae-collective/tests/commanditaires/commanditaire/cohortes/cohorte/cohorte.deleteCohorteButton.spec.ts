@@ -7,6 +7,7 @@ import {
 
 import { login } from "../../../../shared/utils/auth/login";
 import { mockQueryActiveFeatures } from "../../../../shared/utils/mockActiveFeatures";
+import { mockQueryGetUserPermissions } from "../../../../shared/utils/mockGetUserPermissions";
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 test.describe("delete cohorte button", () => {
@@ -27,6 +28,7 @@ test.describe("delete cohorte button", () => {
             });
           }),
           mockQueryActiveFeatures(),
+          mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
         ],
         { scope: "test" },
       ],
@@ -73,6 +75,7 @@ test.describe("delete cohorte button", () => {
             });
           }),
           mockQueryActiveFeatures(),
+          mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
         ],
         { scope: "test" },
       ],

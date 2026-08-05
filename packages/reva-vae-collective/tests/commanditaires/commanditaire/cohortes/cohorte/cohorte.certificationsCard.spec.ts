@@ -7,6 +7,7 @@ import {
 
 import { login } from "../../../../shared/utils/auth/login";
 import { mockQueryActiveFeatures } from "../../../../shared/utils/mockActiveFeatures";
+import { mockQueryGetUserPermissions } from "../../../../shared/utils/mockGetUserPermissions";
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 test.describe("certifications card", () => {
@@ -48,6 +49,7 @@ test.describe("certifications card", () => {
             });
           }),
           mockQueryActiveFeatures(),
+          mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
         ],
         { scope: "test" },
       ],
@@ -101,6 +103,7 @@ test.describe("certifications card", () => {
                 });
               }),
               mockQueryActiveFeatures(["VAE_COLLECTIVE_MULTI_CERTIFICATION"]),
+              mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
             ],
             { scope: "test" },
           ],
@@ -152,6 +155,7 @@ test.describe("certifications card", () => {
                 });
               }),
               mockQueryActiveFeatures(["VAE_COLLECTIVE_MULTI_CERTIFICATION"]),
+              mockQueryGetUserPermissions(["MODIFIER_COHORTE"]),
             ],
             { scope: "test" },
           ],
@@ -172,6 +176,55 @@ test.describe("certifications card", () => {
           await expect(page).toHaveURL(
             "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/selection-certifications",
           );
+        });
+      });
+
+      test.describe("when the user lacks the MODIFIER_COHORTE permission", () => {
+        test.use({
+          mswHandlers: [
+            [
+              fvae.query("getCohorteByIdForCohortePage", () => {
+                return HttpResponse.json({
+                  data: {
+                    vaeCollective_getCohorteVaeCollectiveById: {
+                      id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                      nom: "macohorte",
+                      status: "BROUILLON",
+                      certificationCohorteVaeCollectives: [
+                        {
+                          id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                          certification: {
+                            id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                            certification: {
+                              label: "Certification 1",
+                              codeRncp: "123456",
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                });
+              }),
+              mockQueryActiveFeatures(["VAE_COLLECTIVE_MULTI_CERTIFICATION"]),
+              mockQueryGetUserPermissions(),
+            ],
+            { scope: "test" },
+          ],
+        });
+
+        test("the 'Modifier' button should be disabled", async ({ page }) => {
+          await login({ page, role: "gestionnaireVaeCollective" });
+
+          await page.goto(
+            "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
+          );
+
+          await expect(
+            page
+              .getByTestId("certifications-card")
+              .getByRole("button", { name: "Modifier" }),
+          ).toBeDisabled();
         });
       });
     });
