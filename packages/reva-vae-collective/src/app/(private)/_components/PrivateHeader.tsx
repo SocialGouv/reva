@@ -1,3 +1,4 @@
+import { hasPermission } from "@/components/auth/actions";
 import { getActiveFeatures } from "@/helpers/get-actives-features";
 
 import { PrivateHeaderClient } from "./PrivateHeaderClient";
@@ -8,9 +9,18 @@ export async function PrivateHeader() {
     "SHOW_METABASE_DASHBOARD_VAE_COLLECTIVE",
   );
 
+  // Comme getActiveFeatures, on tolère l'échec de cet appel : le header est rendu
+  // sur toutes les pages privées, pas seulement celles d'un commanditaire.
+  let canViewStatistiques = false;
+  try {
+    canViewStatistiques = await hasPermission("VOIR_STATISTIQUES");
+  } catch (error) {
+    console.error("Failed to fetch user permissions:", error);
+  }
+
   return (
     <PrivateHeaderClient
-      isMetabaseDashboardActive={isMetabaseDashboardActive}
+      showMetabaseDashboard={isMetabaseDashboardActive && canViewStatistiques}
     />
   );
 }

@@ -32,9 +32,9 @@ const createTab = ({
 });
 
 export const PrivateHeaderClient = ({
-  isMetabaseDashboardActive,
+  showMetabaseDashboard,
 }: {
-  isMetabaseDashboardActive: boolean;
+  showMetabaseDashboard: boolean;
 }) => {
   const { logout, authenticated } = useKeycloakContext();
 
@@ -45,7 +45,7 @@ export const PrivateHeaderClient = ({
   );
 
   const navigation =
-    authenticated && isMetabaseDashboardActive && isCommanditairePath
+    authenticated && showMetabaseDashboard && isCommanditairePath
       ? [
           createTab({
             text: LABELS.COHORTES,
