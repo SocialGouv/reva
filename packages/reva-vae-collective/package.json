@@ -11,7 +11,7 @@
     "dev": "next dev -p 3005",
     "prebuild": "react-dsfr update-icons && npm ci --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts",
     "build": "next build",
-    "start": "next start --hostname 0.0.0.0",
+    "start": "next start",
     "lint": "eslint src tests",
     "test": "playwright test --project=chromium",
     "test:ui": "playwright test --ui",
