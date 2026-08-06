@@ -36,6 +36,16 @@ const FeasibilityBadge = ({
       !isCandidateConfirmed);
 
   switch (true) {
+    // Dossier revenu en "Incomplet" et pas encore re-envoyé par l'AAP : le candidat n'a rien à faire
+    case !candidacyIsAutonome &&
+      isSentToCandidateOutdatedAfterIncomplete({
+        decision,
+        decisionSentAt: feasibility?.decisionSentAt,
+        sentToCandidateAt:
+          feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt,
+      }):
+      return null;
+
     case decisionIsDraftOrIncomplete &&
       isDfDemat &&
       isSentToCandidate &&
