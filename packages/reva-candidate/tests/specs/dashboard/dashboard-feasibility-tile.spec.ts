@@ -225,6 +225,31 @@ test("should be enabled when PDF DF is incomplete (candidate can view the decisi
   ).toBeEnabled();
 });
 
+test("ne doit afficher aucun label quand le DF est incomplet et pas encore renvoyé au candidat par l'AAP", async ({
+  page,
+  msw,
+}) => {
+  await setupDashboard(page, msw, {
+    feasibility: createFeasibilityEntity({
+      decision: "INCOMPLETE",
+      decisionSentAt: Date.parse("2024-01-02T00:00:00.000Z"),
+      feasibilityFormat: "DEMATERIALIZED",
+      dematerializedFeasibilityFile: {
+        sentToCandidateAt: Date.parse("2024-01-01T00:00:00.000Z"),
+        candidateConfirmationAt: Date.parse("2024-01-01T00:00:00.000Z"),
+      },
+    }),
+    typeAccompagnement: "ACCOMPAGNE",
+  });
+
+  await expect(
+    page.getByTestId("feasibility-badge-to-validate"),
+  ).not.toBeVisible();
+  await expect(
+    page.getByTestId("feasibility-waiting-for-attestation"),
+  ).not.toBeVisible();
+});
+
 test("should be disabled when DF is incomplete and has not been yet resent to candidate by AAP", async ({
   page,
   msw,
