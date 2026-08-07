@@ -4,7 +4,6 @@ import {
   NOT_AUTHORIZED,
   NOT_AUTHORIZED_CANDIDACY_ACCESS,
   NOT_AUTHORIZED_CANDIDACY_MANAGE,
-  NOT_AUTHORIZED_DOSSIER_ACCESS,
   SESSION_EXPIRED,
 } from "@/modules/shared/security/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
@@ -27,10 +26,9 @@ import { injectGraphql } from "@/test/helpers/graphql-helper";
 // réellement applicable - à la différence des enfants du DFF et du PDF, laissés ouverts et gardés
 // par leur parent (voir `dematerialized-feasibility-file.authorization.test.ts`).
 //
-// Les trois requêtes de listing ne sont, elles, rattachées à aucune candidature. Elles n'ont
-// aujourd'hui aucune garde au niveau resolver : c'est le contrôle de rôle fait à l'intérieur de
-// chaque feature qui les protège, donc après lecture du dossier et avec un libellé de refus qui
-// varie d'une requête à l'autre. Ces tests figent ce comportement.
+// Les trois requêtes de listing ne sont, elles, rattachées à aucune candidature : seul le rôle
+// peut les garder. Sans ce contrôle, n'importe quel compte authentifié listerait les dossiers de
+// toute la plateforme.
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
@@ -346,9 +344,8 @@ describe("feasibility - autorisation des resolvers", () => {
       expect(ids).not.toContain(horsPerimetre.feasibility.id);
     });
 
-    // Aucune garde au niveau resolver aujourd'hui : l'appelant atteint la feature, qui refuse
-    // elle-même. Le refus arrive donc après la lecture du dossier, et son libellé diffère selon
-    // la requête.
+    // Sans contrôle de rôle en amont, un candidat ou un AAP atteint la feature, qui lui répond
+    // sur l'existence du dossier avant de le refuser.
     test("un candidat : refusé sur les trois requêtes", async () => {
       const { feasibility } = await creerCandidatureAvecDossier();
       const autreCandidat = await createCandidateHelper();
@@ -362,7 +359,7 @@ describe("feasibility - autorisation des resolvers", () => {
       expect(
         (await lireDossier(feasibility.id, authorization)).json().errors[0]
           .message,
-      ).toBe(NOT_AUTHORIZED_DOSSIER_ACCESS);
+      ).toBe(NOT_AUTHORIZED);
     });
 
     test("un AAP : refusé sur les trois requêtes", async () => {
@@ -381,21 +378,19 @@ describe("feasibility - autorisation des resolvers", () => {
       expect(
         (await lireDossier(feasibility.id, authorization)).json().errors[0]
           .message,
-      ).toBe(NOT_AUTHORIZED_DOSSIER_ACCESS);
+      ).toBe(NOT_AUTHORIZED);
     });
 
-    // Un appelant sans session n'est pas écarté avant la feature : il reçoit le refus métier,
-    // pas un refus d'authentification.
     test("non authentifié : refusé sur les trois requêtes", async () => {
       const { feasibility } = await creerCandidatureAvecDossier();
-      expect((await listerDossiers()).json().errors[0].message).toBe(
-        NOT_AUTHORIZED,
-      );
+      const liste = await listerDossiers();
+      expect(liste.json().errors[0].message).toBe(SESSION_EXPIRED);
+      expect(liste.json().errors[0].extensions.code).toBe("UNAUTHENTICATED");
       expect((await compterDossiers()).json().errors[0].message).toBe(
-        NOT_AUTHORIZED,
+        SESSION_EXPIRED,
       );
       expect((await lireDossier(feasibility.id)).json().errors[0].message).toBe(
-        NOT_AUTHORIZED_DOSSIER_ACCESS,
+        SESSION_EXPIRED,
       );
     });
   });

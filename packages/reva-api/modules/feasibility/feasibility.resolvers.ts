@@ -1,8 +1,8 @@
 import {
   isAdmin,
   isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+  isAdminOrCertificationAuthority,
   isAdminOrOwnerOfCandidacy,
-  isAnyone,
 } from "@/modules/shared/security/presets";
 import { withPolicies } from "@/modules/shared/security/withPolicies";
 
@@ -122,12 +122,18 @@ export const feasibilityResolvers = withPolicies(unsafeResolvers, {
     history: isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
     candidacy: isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
   },
+  // Ces trois requêtes ne sont pas rattachées à une candidature : le rôle est la seule garde
+  // possible en amont. Elle reprend exactement le contrôle que les features faisaient déjà en
+  // interne, désormais visible et testable.
+  //
+  // Le périmètre par dossier reste tenu par `canManageFeasibility` dans `getFeasibilityById`,
+  // mais celui-ci lève `DOSSIER_INTROUVABLE` avant de le faire : un certificateur distingue donc
+  // encore un id de dossier existant d'un id inventé. Refermer cet oracle demande de réordonner
+  // la feature.
   Query: {
-    // L'ancienne map déclarait `"Query.*": isAnyone` : ces trois requêtes n'ont pas de garde au
-    // niveau resolver, seul le contrôle de rôle fait dans les features les protège.
-    feasibilityCountByCategory: isAnyone,
-    feasibilities: isAnyone,
-    feasibility: isAnyone,
+    feasibilityCountByCategory: isAdminOrCertificationAuthority,
+    feasibilities: isAdminOrCertificationAuthority,
+    feasibility: isAdminOrCertificationAuthority,
     feasibility_getActiveFeasibilityByCandidacyId:
       isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
   },
