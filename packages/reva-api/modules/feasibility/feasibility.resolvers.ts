@@ -1,4 +1,10 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import {
+  isAdmin,
+  isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+  isAdminOrOwnerOfCandidacy,
+  isAnyone,
+} from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
 import { getCandidacy } from "../candidacy/features/getCandidacy";
 
@@ -10,7 +16,6 @@ import {
   getFeasibilityById,
   getFileNameAndUrl,
 } from "./feasibility.features";
-import { resolversSecurityMap } from "./feasibility.security";
 import { FeasibilityCategoryFilter } from "./feasibility.types";
 import { getFeasibilityHistory } from "./features/getFeasibilityHistory";
 import { getWarningOnFeasibilitySubmissionForCandidacyId } from "./features/getWarningOnFeasibealitySubmissionForCandidacyId";
@@ -98,7 +103,32 @@ const unsafeResolvers = {
   },
 };
 
-export const feasibilityResolvers = composeResolvers(
-  unsafeResolvers,
-  resolversSecurityMap,
-);
+export const feasibilityResolvers = withPolicies(unsafeResolvers, {
+  Candidacy: {
+    // Ces deux champs n'avaient aucune entrée dans l'ancienne map : ils restent ouverts, la
+    // migration ne change aucun comportement.
+    certificationAuthorities: isAnyone,
+    feasibility: isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+    warningOnFeasibilitySubmission: isAnyone,
+  },
+  Feasibility: {
+    // Idem : aucune entrée auparavant.
+    decisionFile: isAnyone,
+    history: isAnyone,
+    candidacy: isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+  },
+  Query: {
+    // L'ancienne map déclarait `"Query.*": isAnyone` : ces trois requêtes n'ont pas de garde au
+    // niveau resolver, seul le contrôle de rôle fait dans les features les protège.
+    feasibilityCountByCategory: isAnyone,
+    feasibilities: isAnyone,
+    feasibility: isAnyone,
+    feasibility_getActiveFeasibilityByCandidacyId:
+      isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+  },
+  Mutation: {
+    feasibility_updateFeasibilityFileTemplateFirstReadAt:
+      isAdminOrOwnerOfCandidacy,
+    feasibility_revokeCertificationAuthorityDecision: isAdmin,
+  },
+});
