@@ -3,6 +3,7 @@ import { DematerializedFeasibilityFile } from "@prisma/client";
 import { getCertificationCompetenceById } from "@/modules/referential/features/getCertificationCompetenceById";
 import { getCompetenceBlocById } from "@/modules/referential/features/getCompetenceBlocById";
 import {
+  isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
   isAdminOrCandidacyCompanion,
   isAdminOrCertificationAuthority,
   isAdminOrOwnerOfCandidacy,
@@ -311,8 +312,16 @@ const unsafeResolvers = {
 export const dematerializedFeasibilityFileResolvers = withPolicies(
   unsafeResolvers,
   {
-    // Aucun de ces champs n'avait d'entrée dans l'ancienne map : `"Query.*"` et `"Mutation.*"` ne
-    // matchaient rien pour eux. Ils restent ouverts, la migration ne change aucun comportement.
+    // Le root d'un `DematerializedFeasibilityFile` porte `feasibilityId`, jamais `candidacyId` :
+    // un middleware d'ownership y retomberait sur `root.id` (l'id du DFF) et refuserait tout le
+    // monde. La lecture est gardée par `Feasibility.dematerializedFeasibilityFile` ci-dessous.
+    //
+    // Attention, ce n'est PAS un point d'étranglement complet : les mutations qui retournent un
+    // DFF le désignent par `dematerializedFeasibilityFileId` sans vérifier qu'il appartient au
+    // `candidacyId` sur lequel porte la policy (`confirmCandidate`, `sendToCandidate`,
+    // `createOrUpdateCertificationCompetenceDetails`). Tant que ce rattachement n'est pas
+    // contrôlé dans les features, un appelant légitime sur SA candidature peut lire et écrire le
+    // dossier d'un autre par ce chemin.
     DematerializedFeasibilityFile: {
       blocsDeCompetences: isAnyone,
       certificationCompetenceDetails: isAnyone,
@@ -325,13 +334,18 @@ export const dematerializedFeasibilityFileResolvers = withPolicies(
       dffFile: isAnyone,
     },
     DFFCertificationCompetenceBloc: {
+      // Donnée référentielle, parent déjà gardé.
       certificationCompetenceBloc: isAnyone,
     },
     CertificationCompetenceDetails: {
+      // Donnée référentielle, parent déjà gardé.
       certificationCompetence: isAnyone,
     },
     Feasibility: {
-      dematerializedFeasibilityFile: isAnyone,
+      // Point d'étranglement de tout le sous-arbre DFF : la racine est une `Feasibility`, donc
+      // elle porte `candidacyId` et le contrôle d'ownership est applicable ici.
+      dematerializedFeasibilityFile:
+        isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
     },
     Mutation: {
       dematerialized_feasibility_file_createOrUpdateCertificationInfo:

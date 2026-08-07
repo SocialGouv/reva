@@ -22,10 +22,9 @@ import { injectGraphql } from "@/test/helpers/graphql-helper";
 // Les champs enfants (`DematerializedFeasibilityFile.*`, `FeasibilityUploadedPdf.*`,
 // `DFFCertificationCompetenceBloc.*`, `CertificationCompetenceDetails.*`) sont volontairement
 // ouverts : leur racine ne porte pas d'identifiant de candidature, un middleware d'ownership y
-// retomberait sur `root.id` et refuserait tout le monde. En lecture, on ne les atteint que par
-// leur parent, `Feasibility.dematerializedFeasibilityFile` et `Feasibility.feasibilityUploadedPdf`,
-// eux-mêmes atteints par la candidature - déjà réservée à ses acteurs. Ces tests figent ce que
-// chaque acteur obtient par ce chemin.
+// retomberait sur `root.id` et refuserait tout le monde. En lecture, ils ne sont atteignables que
+// par leur parent, `Feasibility.dematerializedFeasibilityFile` et `Feasibility.feasibilityUploadedPdf` :
+// ce sont ces deux points d'étranglement que ce fichier verrouille, avec les 12 mutations.
 //
 // Réserve : les mutations ne sont pas un étranglement complet. `confirmCandidate`,
 // `sendToCandidate` et `createOrUpdateCertificationCompetenceDetails` agissent sur le
@@ -501,8 +500,9 @@ describe("dossier de faisabilité dématérialisé - autorisation des resolvers"
     });
   });
 
-  // Lecture du sous-arbre DFF : pièces jointes, attestation sur l'honneur et dossier généré
-  // remontent des URLs signées. Aujourd'hui seule la candidature les garde.
+  // Point d'étranglement du sous-arbre DFF : c'est ici, et seulement ici, que le contrôle
+  // d'ownership peut tourner pour protéger les pièces jointes, l'attestation sur l'honneur et le
+  // dossier généré.
   describe("Feasibility.dematerializedFeasibilityFile", () => {
     const CHAMPS = `{
       feasibility {
@@ -604,8 +604,8 @@ describe("dossier de faisabilité dématérialisé - autorisation des resolvers"
     });
   });
 
-  // Même chemin, côté dossier PDF : le dossier, la pièce d'identité, les justificatifs et
-  // l'attestation de présence remontent tous des URLs signées.
+  // Même point d'étranglement, côté dossier PDF : le dossier, la pièce d'identité, les
+  // justificatifs et l'attestation de présence remontent tous des URLs signées.
   describe("Feasibility.feasibilityUploadedPdf", () => {
     const CHAMPS = `{
       feasibility {

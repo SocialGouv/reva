@@ -104,17 +104,22 @@ const unsafeResolvers = {
 };
 
 export const feasibilityResolvers = withPolicies(unsafeResolvers, {
+  // Ces racines portent bien un identifiant de candidature (`root.id` pour une `Candidacy`,
+  // `root.candidacyId` pour une `Feasibility`) : le contrôle d'ownership y est applicable, à la
+  // différence des enfants du DFF et du PDF.
   Candidacy: {
-    // Ces deux champs n'avaient aucune entrée dans l'ancienne map : ils restent ouverts, la
-    // migration ne change aucun comportement.
-    certificationAuthorities: isAnyone,
+    certificationAuthorities:
+      isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
     feasibility: isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
-    warningOnFeasibilitySubmission: isAnyone,
+    // Pas du référentiel : l'avertissement est dérivé des AUTRES candidatures du candidat et
+    // révèle qu'il a déposé plusieurs dossiers cette année ou qu'un dossier a été rejeté.
+    warningOnFeasibilitySubmission:
+      isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
   },
   Feasibility: {
-    // Idem : aucune entrée auparavant.
-    decisionFile: isAnyone,
-    history: isAnyone,
+    // URL signée vers le courrier de décision.
+    decisionFile: isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+    history: isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
     candidacy: isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
   },
   Query: {

@@ -1,6 +1,9 @@
 import { Feasibility } from "@prisma/client";
 
-import { isAnyone } from "@/modules/shared/security/presets";
+import {
+  isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+  isAnyone,
+} from "@/modules/shared/security/presets";
 import { withPolicies } from "@/modules/shared/security/withPolicies";
 
 import { getFileNameAndUrl } from "../feasibility.features";
@@ -62,10 +65,10 @@ const unsafeResolvers = {
   },
 };
 
-// L'ancienne map ne déclarait que `"Query.*"` et `"Mutation.*"`, alors que ce module n'expose ni
-// `Query` ni `Mutation` : elle n'enveloppait aucun resolver. Ces cinq champs tournaient déjà sans
-// garde, la migration ne change donc rien au runtime.
 export const feasibilityUploadedPdfResolvers = withPolicies(unsafeResolvers, {
+  // Le root d'un `FeasibilityUploadedPdf` porte la relation `Feasibility`, jamais `candidacyId` :
+  // un middleware d'ownership y retomberait sur `root.id` et refuserait tout le monde. Le point
+  // d'étranglement du sous-arbre est `Feasibility.feasibilityUploadedPdf` ci-dessous.
   FeasibilityUploadedPdf: {
     feasibilityFile: isAnyone,
     IDFile: isAnyone,
@@ -73,6 +76,9 @@ export const feasibilityUploadedPdfResolvers = withPolicies(unsafeResolvers, {
     certificateOfAttendanceFile: isAnyone,
   },
   Feasibility: {
-    feasibilityUploadedPdf: isAnyone,
+    // Point d'étranglement du sous-arbre PDF : la racine est une `Feasibility`, donc elle porte
+    // `candidacyId` et le contrôle d'ownership est applicable ici.
+    feasibilityUploadedPdf:
+      isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
   },
 });

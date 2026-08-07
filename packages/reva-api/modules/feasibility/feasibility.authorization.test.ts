@@ -20,10 +20,12 @@ import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 // Autorisation de chaque resolver du module `feasibility` : qui passe, qui est refusé.
 //
-// Les champs de `Candidacy` et de `Feasibility` ne sont atteignables qu'à travers une
-// candidature, dont l'accès est déjà réservé à ses acteurs. Les tests de ces champs vérifient
-// donc que les quatre acteurs légitimes (admin, AAP accompagnateur, candidat propriétaire,
-// certificateur compétent) obtiennent bien la donnée, et que les tiers sont écartés.
+// Les champs de `Candidacy` et de `Feasibility` portent tous le même contrôle, parce qu'ils
+// portent tous la même donnée : le dossier du candidat, son courrier de décision et l'historique
+// de ses décisions. Leurs racines exposent un identifiant de candidature (`root.id` pour une
+// `Candidacy`, `root.candidacyId` pour une `Feasibility`), donc le contrôle d'ownership y est
+// réellement applicable - à la différence des enfants du DFF et du PDF, laissés ouverts et gardés
+// par leur parent (voir `dematerialized-feasibility-file.authorization.test.ts`).
 //
 // Les trois requêtes de listing ne sont, elles, rattachées à aucune candidature. Elles n'ont
 // aujourd'hui aucune garde au niveau resolver : c'est le contrôle de rôle fait à l'intérieur de
