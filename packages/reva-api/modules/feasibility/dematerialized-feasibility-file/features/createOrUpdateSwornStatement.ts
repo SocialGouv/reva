@@ -39,18 +39,6 @@ export const createOrUpdateSwornStatement = async ({
     }
 
     const existingSwornStatementFileId = dff.swornStatementFileId;
-    if (existingSwornStatementFileId) {
-      const existingSwornStatementFile = await prismaClient.file.findUnique({
-        where: { id: existingSwornStatementFileId },
-      });
-
-      if (existingSwornStatementFile) {
-        await deleteFile(existingSwornStatementFile.path);
-        await prismaClient.file.delete({
-          where: { id: existingSwornStatementFileId },
-        });
-      }
-    }
 
     const swornStatementFile = await getUploadedFile(swornStatement);
 
@@ -97,6 +85,19 @@ export const createOrUpdateSwornStatement = async ({
       userEmail,
       userRoles,
     });
+
+    if (existingSwornStatementFileId) {
+      const existingSwornStatementFile = await prismaClient.file.findUnique({
+        where: { id: existingSwornStatementFileId },
+      });
+
+      if (existingSwornStatementFile) {
+        await deleteFile(existingSwornStatementFile.path);
+        await prismaClient.file.delete({
+          where: { id: existingSwornStatementFileId },
+        });
+      }
+    }
 
     return getDematerializedFeasibilityFileByCandidacyId({
       candidacyId,
