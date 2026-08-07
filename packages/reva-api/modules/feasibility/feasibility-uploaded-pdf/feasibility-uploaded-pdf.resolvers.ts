@@ -1,9 +1,10 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { Feasibility } from "@prisma/client";
+
+import { isAnyone } from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
 import { getFileNameAndUrl } from "../feasibility.features";
 
-import { resolversSecurityMap } from "./feasibility-uploaded-pdf.security";
 import { getFeasibilityUploadedPdfByFeasibilityId } from "./features/getFeasibilityUploadedPdfByFeasibilityId";
 
 const unsafeResolvers = {
@@ -61,7 +62,17 @@ const unsafeResolvers = {
   },
 };
 
-export const feasibilityUploadedPdfResolvers = composeResolvers(
-  unsafeResolvers,
-  resolversSecurityMap,
-);
+// L'ancienne map ne déclarait que `"Query.*"` et `"Mutation.*"`, alors que ce module n'expose ni
+// `Query` ni `Mutation` : elle n'enveloppait aucun resolver. Ces cinq champs tournaient déjà sans
+// garde, la migration ne change donc rien au runtime.
+export const feasibilityUploadedPdfResolvers = withPolicies(unsafeResolvers, {
+  FeasibilityUploadedPdf: {
+    feasibilityFile: isAnyone,
+    IDFile: isAnyone,
+    documentaryProofFile: isAnyone,
+    certificateOfAttendanceFile: isAnyone,
+  },
+  Feasibility: {
+    feasibilityUploadedPdf: isAnyone,
+  },
+});
