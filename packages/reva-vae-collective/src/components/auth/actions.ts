@@ -1,11 +1,15 @@
 "use server";
 
+import { jwtDecode } from "jwt-decode";
+
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
 
 import { graphql } from "@/graphql/generated";
 import { PermissionVaeCollective } from "@/graphql/generated/graphql";
+
+import { UserRole } from "./types";
 
 const getUserPermissionsQuery = graphql(`
   query vaeCollective_getUserPermissions {
@@ -35,7 +39,30 @@ const getUserPermissions = async () => {
   return result.data?.vaeCollective_getUserPermissions ?? [];
 };
 
+const isUserInAdminRole = async () => {
+  const accessToken = await getAccessTokenFromCookie();
+  let isAdmin = false;
+
+  if (accessToken) {
+    const decodedToken = jwtDecode<{
+      resource_access?: { "reva-vae-collective"?: { roles: string[] } };
+    }>(accessToken);
+
+    const roles = (decodedToken?.resource_access?.["reva-vae-collective"]
+      ?.roles || []) as UserRole[];
+    isAdmin = roles.includes("admin");
+  }
+  return isAdmin;
+};
+
 export const hasPermission = async (permission: PermissionVaeCollective) => {
-  const permissions = await getUserPermissions();
-  return permissions.includes(permission);
+  let userHasPermission = false;
+  const isAdmin = await isUserInAdminRole();
+  if (isAdmin) {
+    userHasPermission = true;
+  } else {
+    const permissions = await getUserPermissions();
+    userHasPermission = permissions.includes(permission);
+  }
+  return userHasPermission;
 };
