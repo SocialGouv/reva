@@ -88,6 +88,7 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
         status
         isCertificationPartial
         typology
+        typeAccompagnement
         conventionCollective {
           label
         }

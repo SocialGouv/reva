@@ -92,6 +92,7 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
           id
           isCertificationPartial
           typology
+          typeAccompagnement
           feasibility {
             certificationAuthority {
               label
