@@ -1,11 +1,17 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { DematerializedFeasibilityFile } from "@prisma/client";
 
 import { getCertificationCompetenceById } from "@/modules/referential/features/getCertificationCompetenceById";
 import { getCompetenceBlocById } from "@/modules/referential/features/getCompetenceBlocById";
+import {
+  isAdminOrCandidacyCompanion,
+  isAdminOrCertificationAuthority,
+  isAdminOrOwnerOfCandidacy,
+  isAnyone,
+  isOwnerOrCanManageCandidacy,
+} from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 import { prismaClient } from "@/prisma/client";
 
-import { resolversSecurityMap } from "./dematerialized-feasibility-file.security";
 import {
   DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput,
   DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput,
@@ -302,7 +308,56 @@ const unsafeResolvers = {
   },
 };
 
-export const dematerializedFeasibilityFileResolvers = composeResolvers(
+export const dematerializedFeasibilityFileResolvers = withPolicies(
   unsafeResolvers,
-  resolversSecurityMap,
+  {
+    // Aucun de ces champs n'avait d'entrée dans l'ancienne map : `"Query.*"` et `"Mutation.*"` ne
+    // matchaient rien pour eux. Ils restent ouverts, la migration ne change aucun comportement.
+    DematerializedFeasibilityFile: {
+      blocsDeCompetences: isAnyone,
+      certificationCompetenceDetails: isAnyone,
+      prerequisites: isAnyone,
+      dffAndCertificationPrerequisites: isAnyone,
+      attachments: isAnyone,
+      isReadyToBeSentToCandidate: isAnyone,
+      isReadyToBeSentToCertificationAuthority: isAnyone,
+      swornStatementFile: isAnyone,
+      dffFile: isAnyone,
+    },
+    DFFCertificationCompetenceBloc: {
+      certificationCompetenceBloc: isAnyone,
+    },
+    CertificationCompetenceDetails: {
+      certificationCompetence: isAnyone,
+    },
+    Feasibility: {
+      dematerializedFeasibilityFile: isAnyone,
+    },
+    Mutation: {
+      dematerialized_feasibility_file_createOrUpdateCertificationInfo:
+        isOwnerOrCanManageCandidacy,
+      dematerialized_feasibility_file_createOrUpdateCertificationCompetenceDetails:
+        isOwnerOrCanManageCandidacy,
+      dematerialized_feasibility_file_createOrUpdateComplementExperienceParcoursVise:
+        isOwnerOrCanManageCandidacy,
+      dematerialized_feasibility_file_createOrUpdatePrerequisites:
+        isOwnerOrCanManageCandidacy,
+      dematerialized_feasibility_file_createOrUpdateAapDecision:
+        isAdminOrCandidacyCompanion,
+      dematerialized_feasibility_file_createOrUpdateAttachments:
+        isOwnerOrCanManageCandidacy,
+      dematerialized_feasibility_file_sendToCandidate:
+        isAdminOrCandidacyCompanion,
+      dematerialized_feasibility_file_createOrUpdateSwornStatement:
+        isOwnerOrCanManageCandidacy,
+      dematerialized_feasibility_file_sendToCertificationAuthority:
+        isOwnerOrCanManageCandidacy,
+      dematerialized_feasibility_file_createOrUpdateCertificationAuthorityDecision:
+        isAdminOrCertificationAuthority,
+      dematerialized_feasibility_file_confirmCandidate:
+        isAdminOrOwnerOfCandidacy,
+      dematerialized_feasibility_file_createOrUpdateEligibilityRequirement:
+        isOwnerOrCanManageCandidacy,
+    },
+  },
 );
