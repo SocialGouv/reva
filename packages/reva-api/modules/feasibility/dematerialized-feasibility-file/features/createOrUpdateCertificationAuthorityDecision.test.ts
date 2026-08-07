@@ -5,6 +5,7 @@ import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
+import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
 import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
@@ -50,8 +51,30 @@ const getCertificationAuthorityId = (candidacy: CandidacyHelper) =>
     ?.certificationAuthorityOnCertificationAuthorityStructure?.[0]
     ?.certificationAuthority?.id;
 
+const getCertificationAuthorityAccountId = (candidacy: CandidacyHelper) =>
+  candidacy.certification?.certificationAuthorityStructure
+    ?.certificationAuthorityOnCertificationAuthorityStructure?.[0]
+    ?.certificationAuthority?.Account?.[0]?.id;
+
 const getAapKeycloakId = (candidacy: CandidacyHelper) =>
   candidacy.organism?.organismOnAccounts?.[0]?.account?.keycloakId;
+
+// La décision est réservée au périmètre du certificateur : le compte tête de réseau n'y accède
+// que via un compte local rattaché à la candidature. Ce rattachement est posé par le helper de
+// faisabilité, qui ne relie que les comptes locaux déjà existants : à créer AVANT lui.
+const linkCertificationAuthorityAccountToCandidacy = (
+  candidacy: CandidacyHelper,
+) =>
+  createCertificationAuthorityLocalAccountHelper({
+    certificationAuthorityId: getCertificationAuthorityId(candidacy)!,
+    accountId: getCertificationAuthorityAccountId(candidacy)!,
+    certificationAuthorityLocalAccountOnCertification: {
+      create: { certificationId: candidacy.certificationId! },
+    },
+    certificationAuthorityLocalAccountOnDepartment: {
+      create: { departmentId: candidacy.candidate?.departmentId ?? "" },
+    },
+  });
 
 describe("Décision INCOMPLETE sur le dossier de faisabilité dématérialisé", () => {
   const createDFFWithPreExistingData = async () => {
@@ -59,6 +82,8 @@ describe("Décision INCOMPLETE sur le dossier de faisabilité dématérialisé",
       candidacyActiveStatus: "DOSSIER_FAISABILITE_ENVOYE",
       candidacyArgs: { status: "DOSSIER_FAISABILITE_ENVOYE" },
     });
+
+    await linkCertificationAuthorityAccountToCandidacy(candidacy);
 
     const feasibility = await createFeasibilityDematerializedHelper({
       candidacyId: candidacy.id,
@@ -256,6 +281,8 @@ describe("INCOMPLETE decision resets certificationAuthorityId", () => {
       candidacyArgs: { status: "DOSSIER_FAISABILITE_ENVOYE" },
     });
     const certificationAuthorityId = getCertificationAuthorityId(candidacy)!;
+
+    await linkCertificationAuthorityAccountToCandidacy(candidacy);
 
     const feasibility = await createFeasibilityDematerializedHelper({
       candidacyId: candidacy.id,

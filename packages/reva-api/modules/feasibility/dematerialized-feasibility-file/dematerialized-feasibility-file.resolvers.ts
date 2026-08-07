@@ -5,7 +5,7 @@ import { getCompetenceBlocById } from "@/modules/referential/features/getCompete
 import {
   isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
   isAdminOrCandidacyCompanion,
-  isAdminOrCertificationAuthority,
+  isAdminOrFeasibilityManager,
   isAdminOrOwnerOfCandidacy,
   isAnyone,
   isOwnerOrCanManageCandidacy,
@@ -366,8 +366,11 @@ export const dematerializedFeasibilityFileResolvers = withPolicies(
         isOwnerOrCanManageCandidacy,
       dematerialized_feasibility_file_sendToCertificationAuthority:
         isOwnerOrCanManageCandidacy,
+      // La décision change le statut de la candidature, supprime la pièce d'identité du candidat
+      // et déclenche les mails : le contrôle de rôle seul laisserait n'importe quel certificateur
+      // décider sur n'importe quelle candidature, à partir du seul `candidacyId`.
       dematerialized_feasibility_file_createOrUpdateCertificationAuthorityDecision:
-        isAdminOrCertificationAuthority,
+        isAdminOrFeasibilityManager,
       dematerialized_feasibility_file_confirmCandidate:
         isAdminOrOwnerOfCandidacy,
       dematerialized_feasibility_file_createOrUpdateEligibilityRequirement:

@@ -29,8 +29,8 @@ import { injectGraphql } from "@/test/helpers/graphql-helper";
 // Réserve : les mutations ne sont pas un étranglement complet. `confirmCandidate`,
 // `sendToCandidate` et `createOrUpdateCertificationCompetenceDetails` agissent sur le
 // `dematerializedFeasibilityFileId` fourni par l'appelant sans vérifier qu'il appartient au
-// `candidacyId` que la policy contrôle. Non couvert ici : ce trou se ferme dans les features,
-// pas dans la policy map.
+// `candidacyId` que la policy contrôle. Le trou est antérieur à cette migration et non couvert
+// ici : il se ferme dans les features, pas dans la policy map.
 //
 // Limite connue : `..._createOrUpdateAttachments` et `..._createOrUpdateSwornStatement` prennent
 // un scalaire `Upload`, qui exige une requête multipart que `injectGraphql` ne construit pas. Ces
@@ -432,12 +432,11 @@ describe("dossier de faisabilité dématérialisé - autorisation des resolvers"
     });
   });
 
-  // TROU OUVERT, constaté ici tel quel : la policy ne porte que le rôle et la feature ne vérifie
-  // aucun périmètre. Tout compte `manage_feasibility` du pays peut donc prononcer une décision
-  // sur n'importe quelle candidature à partir de son seul `candidacyId` - changement de statut,
-  // suppression de la pièce d'identité du candidat et envoi des mails compris. Le dernier test
-  // de ce bloc fige ce comportement pour prouver la faille avant de la refermer.
-  describe("décision du certificateur", () => {
+  // Le trou refermé : la policy ne portait que le rôle, et la feature ne vérifiait rien. Tout
+  // compte `manage_feasibility` du pays pouvait prononcer une décision sur n'importe quelle
+  // candidature à partir de son seul `candidacyId` - changement de statut, suppression de la
+  // pièce d'identité du candidat et envoi des mails compris.
+  describe("isAdminOrFeasibilityManager - décision du certificateur", () => {
     test("l'admin : autorisé", async () => {
       const ctx = await creerCandidatureAvecDFF();
       const resp = await appelerDecisionCertificateur(ctx, asRole("admin"));
@@ -463,22 +462,16 @@ describe("dossier de faisabilité dématérialisé - autorisation des resolvers"
       ).toBe(ctx.dffId);
     });
 
-    // La faille. Ce compte n'a aucun lien avec la candidature et prononce quand même la
-    // décision. Assertion volontairement écrite sur le succès : elle documente l'état actuel et
-    // basculera en refus quand le périmètre sera contrôlé.
-    test("le certificateur d'une autre autorité : autorisé, alors qu'il ne devrait pas", async () => {
+    test("le certificateur d'une autre autorité : refusé sur le périmètre", async () => {
       const ctx = await creerCandidatureAvecDFF();
       const autre = await creerCandidatureAvecDFF();
       const resp = await appelerDecisionCertificateur(
         ctx,
         asRole("manage_feasibility", autre.certificateurKeycloakId),
       );
-      expect(resp.json()).not.toHaveProperty("errors");
-      expect(
-        resp.json().data
-          .dematerialized_feasibility_file_createOrUpdateCertificationAuthorityDecision
-          .id,
-      ).toBe(ctx.dffId);
+      expect(resp.json().errors[0].message).toBe(
+        NOT_AUTHORIZED_CANDIDACY_MANAGE,
+      );
     });
 
     test("l'AAP accompagnateur : refusé sur le rôle", async () => {

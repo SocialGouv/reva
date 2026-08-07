@@ -60,6 +60,13 @@ export const isAdminOrCertificationAuthority = [
   hasRole(["admin", "manage_feasibility"]),
 ];
 
+// Le certificateur ne décide que sur les candidatures de son périmètre (autorité de
+// certification du dossier, ou compte local rattaché à la candidature).
+export const isAdminOrFeasibilityManager = accessBy({
+  admin: ALLOW,
+  manage_feasibility: isFeasibilityManager,
+});
+
 // eslint-disable-next-line import/no-unused-modules
 export const isAdminCandidacyCompanionOrFeasibilityManager = [
   hasRole(["admin", "manage_candidacy", "manage_feasibility"]),
