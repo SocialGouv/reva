@@ -15,7 +15,7 @@ const FeasibilityBadge = ({
   candidacyIsAutonome,
 }: {
   feasibility: FeasibilityUseCandidateForDashboard;
-  candidacyIsAutonome: boolean;
+  candidacyIsAutonome?: boolean;
 }) => {
   const decision = feasibility?.decision;
   const isDfDemat = feasibility?.feasibilityFormat === "DEMATERIALIZED";
@@ -108,17 +108,17 @@ const FeasibilityBadge = ({
 
 export const FeasibilityTile = ({
   feasibility,
+  isFeasibilityDemat,
   candidacyIsAutonome,
   feasibilityFileResourceFirstRead,
 }: {
   feasibility: FeasibilityUseCandidateForDashboard;
-  candidacyIsAutonome: boolean;
+  isFeasibilityDemat?: boolean;
+  candidacyIsAutonome?: boolean;
   feasibilityFileResourceFirstRead?: boolean;
 }) => {
   const router = useRouter();
 
-  const isFeasibilityDemat =
-    feasibility?.feasibilityFormat === "DEMATERIALIZED";
   const feasibilityIsPdf = feasibility?.feasibilityFormat === "UPLOADED_PDF";
   const feasibilityHasBeenSentToCandidate =
     !!feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt;

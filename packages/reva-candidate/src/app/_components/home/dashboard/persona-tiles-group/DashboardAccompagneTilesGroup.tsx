@@ -30,6 +30,7 @@ export const DashboardAccompagneTilesGroup = ({
   hasCompletedGoals: boolean;
   className?: string;
 }) => {
+  const isFeasibilityDemat = candidacy?.feasibilityFormat === "DEMATERIALIZED";
   const feasibility = candidacy?.feasibility;
   const endAccompagnementConfirmed =
     candidacy.endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
@@ -93,8 +94,8 @@ export const DashboardAccompagneTilesGroup = ({
             firstAppointmentOccuredAt={candidacy.firstAppointmentOccuredAt}
           />
           <FeasibilityTile
+            isFeasibilityDemat={isFeasibilityDemat}
             feasibility={feasibility}
-            candidacyIsAutonome={false}
           />
           <DossierValidationTile
             feasibility={candidacy.feasibility}

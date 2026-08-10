@@ -21,8 +21,7 @@ export const DashboardAutonomeTilesGroup = ({
   const feasibility = candidacy?.feasibility;
   const hasFeasibilitySent = !!candidacy?.feasibility?.feasibilityFileSentAt;
 
-  const isDfDematAutonomeFeasibilityFormat =
-    candidacy?.feasibilityFormat === "DEMATERIALIZED";
+  const isFeasibilityDemat = candidacy?.feasibilityFormat === "DEMATERIALIZED";
 
   const readOnly =
     feasibility?.decision === "PENDING" ||
@@ -43,7 +42,7 @@ export const DashboardAutonomeTilesGroup = ({
         title="Compléter ma candidature"
         icon="fr-icon-ball-pen-line"
       >
-        {isDfDematAutonomeFeasibilityFormat ? (
+        {isFeasibilityDemat ? (
           <>
             <div className="grid md:grid-cols-2 grid-rows-1">
               <CertificationTile
@@ -90,8 +89,9 @@ export const DashboardAutonomeTilesGroup = ({
       >
         <div className="grid grid-flow-row md:grid-flow-col md:grid-cols-2 grid-rows-1">
           <FeasibilityTile
-            feasibility={feasibility}
             candidacyIsAutonome
+            isFeasibilityDemat={isFeasibilityDemat}
+            feasibility={feasibility}
             feasibilityFileResourceFirstRead={
               candidacy.feasibilityFileResourceFirstRead
             }
