@@ -111,7 +111,7 @@ const StatusTag = ({
     case status === "DOSSIER_FAISABILITE_NON_RECEVABLE":
       return <Tag small>Non recevable</Tag>;
     case status === "DOSSIER_FAISABILITE_RECEVABLE" && !readyForJuryEstimatedAt:
-      return <Tag small>Recevable / en attente de la date prévisonnelle</Tag>;
+      return <Tag small>Recevable / en attente de la date prévisionnelle</Tag>;
     case status === "DOSSIER_FAISABILITE_RECEVABLE" &&
       isReadyForJuryEstimatedAtUpcoming:
       return (

@@ -62,7 +62,7 @@ export const ReadyForJuryEstimatedDateTab = ({
 
         <Input
           className="max-w-xs"
-          label="Date prévisonnelle"
+          label="Date prévisionnelle"
           hintText="Date au format 31/12/2022"
           nativeInputProps={{
             type: "date",

@@ -125,7 +125,7 @@ const ExamInfoPage = () => {
             <div className="flex flex-col md:flex-row gap-6">
               <Input
                 className="w-72"
-                label="Date prévisonnelle (optionnel)"
+                label="Date prévisionnelle (optionnel)"
                 hintText="Date au format 31/12/2022"
                 nativeInputProps={{
                   type: "date",
