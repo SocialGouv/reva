@@ -67,14 +67,20 @@ export const updateCertificationOfCandidacy = async ({
       throw new Error(CERTIFICATION_NON_TROUVEE);
     }
 
+    const isDfDematAutonomeActive = await prismaClient.feature.findFirst({
+      where: { key: "DF_DEMAT_AUTONOME", isActive: true },
+    });
+
+    const feasibilityFormat =
+      isDfDematAutonomeActive || candidacy.typeAccompagnement === "ACCOMPAGNE"
+        ? newCertification.feasibilityFormat
+        : "UPLOADED_PDF";
+
     await updateCertification({
       candidacyId,
       certificationId,
       author: "candidate",
-      feasibilityFormat:
-        candidacy.typeAccompagnement === "ACCOMPAGNE"
-          ? newCertification.feasibilityFormat
-          : "UPLOADED_PDF",
+      feasibilityFormat,
     });
 
     await updateCandidacyOrganism({
