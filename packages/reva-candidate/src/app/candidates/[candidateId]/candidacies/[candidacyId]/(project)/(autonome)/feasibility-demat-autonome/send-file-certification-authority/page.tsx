@@ -2,6 +2,7 @@
 
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
@@ -17,6 +18,11 @@ import { Candidacy } from "@/graphql/generated/graphql";
 
 import CertificationAuthoritySection from "./_components/CertificationAuthoritySection";
 import { useSendFileCertificationAuthority } from "./_components/sendFileCertificationAuthority.hook";
+
+const modal = createModal({
+  id: "confirm-send-file-certification-authority",
+  isOpenedByDefault: false,
+});
 
 export default function SendFileCertificationAuthorityPage() {
   const router = useRouter();
@@ -57,6 +63,12 @@ export default function SendFileCertificationAuthorityPage() {
     candidcayCertificationAuthorityId ??
     defaultCertificationAuthorityId;
 
+  const selectedCertificationAuthority = useMemo(() => {
+    return certificationAuthorities.find(
+      (ca) => ca.id === certificationAuthoritySelectedId,
+    );
+  }, [certificationAuthorities, certificationAuthoritySelectedId]);
+
   const [
     certificationAuthoritySelectError,
     setCertificationAuthoritySelectError,
@@ -73,11 +85,7 @@ export default function SendFileCertificationAuthorityPage() {
   const isReadyToBeSentToCertificationAuthority =
     dematerializedFeasibilityFile?.isReadyToBeSentToCertificationAuthority;
 
-  const handleSendFile = async () => {
-    if (!dematerializedFeasibilityFile) {
-      return;
-    }
-
+  const handleMissingCertificationAuthority = () => {
     if (!certificationAuthoritySelectedId) {
       setCertificationAuthoritySelectError(true);
       errorToast(
@@ -87,6 +95,14 @@ export default function SendFileCertificationAuthorityPage() {
     } else {
       setCertificationAuthoritySelectError(false);
     }
+  };
+
+  const handleSendFile = async () => {
+    if (!dematerializedFeasibilityFile) {
+      return;
+    }
+
+    handleMissingCertificationAuthority();
 
     try {
       setIsSubmitting(true);
@@ -156,7 +172,10 @@ export default function SendFileCertificationAuthorityPage() {
               Retour
             </Button>
             <Button
-              onClick={handleSendFile}
+              onClick={() => {
+                handleMissingCertificationAuthority();
+                modal.open();
+              }}
               disabled={
                 !feasibilityFileNeedsNewOrResendAction ||
                 !isReadyToBeSentToCertificationAuthority ||
@@ -167,6 +186,37 @@ export default function SendFileCertificationAuthorityPage() {
             </Button>
           </div>
         </div>
+
+        <modal.Component
+          title={<div>Envoi du dossier de faisabilité au certificateur</div>}
+          size="large"
+          buttons={[
+            {
+              priority: "secondary",
+              children: "Annuler",
+            },
+            {
+              priority: "primary",
+              children: "Envoyer",
+              onClick: handleSendFile,
+            },
+          ]}
+        >
+          <p>
+            Vous êtes sur le point d’envoyer un dossier de faisabilité sur la
+            certification {candidacy?.certification?.codeRncp}{" "}
+            {candidacy?.certification?.label} au certificateur{" "}
+            {selectedCertificationAuthority?.label}.
+          </p>
+
+          <p>
+            Veillez à ce que le dossier soit complet et suffisamment détaillé.
+            Si ce n’est pas le cas, le certificateur pourra vous demander de
+            compléter le dossier, ou prononcer un avis défavorable.
+          </p>
+
+          <p>Envoyer le dossier au certificateur ?</p>
+        </modal.Component>
       </div>
     </Panel>
   );

@@ -182,13 +182,31 @@ test.describe("AAP send file to certification authority page", () => {
       ],
     });
 
+    test("opens a confirmation modal when clicking Envoyer au certificateur", async ({
+      page,
+    }) => {
+      await goTo(page);
+
+      await page
+        .getByRole("button", { name: "Envoyer au certificateur" })
+        .click();
+
+      const modal = page.getByRole("dialog");
+      await expect(modal).toBeVisible();
+      await expect(
+        modal.getByRole("heading", {
+          name: "Envoi du dossier de faisabilité au certificateur",
+        }),
+      ).toBeVisible();
+    });
+
     test("shows the certification authority as plain text and sends the file on submit", async ({
       page,
     }) => {
       await goTo(page);
 
       await expect(
-        page.getByText("Certificateur Métiers Services"),
+        page.getByText("Certificateur Métiers Services", { exact: true }),
       ).toBeVisible();
       await expect(
         page.getByRole("combobox", {
@@ -196,10 +214,15 @@ test.describe("AAP send file to certification authority page", () => {
         }),
       ).not.toBeVisible();
 
-      const mutationPromise = waitGraphQL(page, MUTATION_NAME);
       await page
         .getByRole("button", { name: "Envoyer au certificateur" })
         .click();
+
+      const mutationPromise = waitGraphQL(page, MUTATION_NAME);
+
+      const modal = page.getByRole("dialog");
+      await modal.getByRole("button", { name: "Envoyer" }).click();
+
       await mutationPromise;
 
       await expect(page.getByTestId("toast-success")).toBeVisible();
@@ -264,10 +287,13 @@ test.describe("AAP send file to certification authority page", () => {
         })
         .selectOption("ca-2");
 
-      const mutationPromise = waitGraphQL(page, MUTATION_NAME);
       await page
         .getByRole("button", { name: "Envoyer au certificateur" })
         .click();
+
+      const modal = page.getByRole("dialog");
+      const mutationPromise = waitGraphQL(page, MUTATION_NAME);
+      await modal.getByRole("button", { name: "Envoyer" }).click();
       await mutationPromise;
 
       await expect(page.getByTestId("toast-success")).toBeVisible();
@@ -365,7 +391,7 @@ test.describe("AAP send file to certification authority page", () => {
       ).toBeVisible();
 
       await expect(
-        page.getByText("Certificateur Métiers Services"),
+        page.getByText("Certificateur Métiers Services", { exact: true }),
       ).toBeVisible();
       await expect(
         page.getByRole("button", { name: "Envoyer au certificateur" }),
