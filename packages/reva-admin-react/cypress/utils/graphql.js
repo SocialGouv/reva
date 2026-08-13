@@ -22,7 +22,7 @@ export const stubQuery = (req, operationName, fixture, statusCode = 200) => {
   }
 };
 
-export const CERTIFICATION_AUTHORITY_STRUCTURE_CGU_QUERY_NAMES = [
+const CERTIFICATION_AUTHORITY_STRUCTURE_CGU_QUERY_NAMES = [
   "getCertificationAuthorityStructureCGUQueryForCertificationAuthority",
   "getCertificationAuthorityStructureCGUQueryForCertificationRegistryManager",
   "getCertificationAuthorityStructureCGUQueryForCertificationAuthorityLocalAccount",
