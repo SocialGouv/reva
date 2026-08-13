@@ -6,35 +6,13 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 
 import { graphql } from "@/graphql/generated";
 
-const getCertificationAuthorityStructureCGUQuery = graphql(`
-  query getCertificationAuthorityStructureCGUQuery {
-    account_getAccountForConnectedUser {
-      certificationRegistryManager {
-        certificationAuthorityStructure {
-          cguAcceptanceRequired
-          cgu {
-            isLatestVersion
-          }
-        }
-      }
-      certificationAuthority {
-        certificationAuthorityStructures {
-          cguAcceptanceRequired
-          cgu {
-            isLatestVersion
-          }
-        }
-      }
-      certificationAuthorityLocalAccount {
-        certificationAuthority {
-          certificationAuthorityStructures {
+const getCertificationAuthorityStructureCGUQueryForCertificationRegistryManager =
+  graphql(`
+    query getCertificationAuthorityStructureCGUQueryForCertificationRegistryManager {
+      account_getAccountForConnectedUser {
+        certificationRegistryManager {
+          certificationAuthorityStructure {
             cguAcceptanceRequired
-            certificationRegistryManager {
-              account {
-                firstname
-                lastname
-              }
-            }
             cgu {
               isLatestVersion
             }
@@ -42,8 +20,41 @@ const getCertificationAuthorityStructureCGUQuery = graphql(`
         }
       }
     }
-  }
-`);
+  `);
+
+const getCertificationAuthorityStructureCGUQueryForCertificationAuthority =
+  graphql(`
+    query getCertificationAuthorityStructureCGUQueryForCertificationAuthority {
+      account_getAccountForConnectedUser {
+        certificationAuthority {
+          certificationAuthorityStructures {
+            cguAcceptanceRequired
+            cgu {
+              isLatestVersion
+            }
+          }
+        }
+      }
+    }
+  `);
+
+const getCertificationAuthorityStructureCGUQueryForCertificationAuthorityLocalAccount =
+  graphql(`
+    query getCertificationAuthorityStructureCGUQueryForCertificationAuthorityLocalAccount {
+      account_getAccountForConnectedUser {
+        certificationAuthorityLocalAccount {
+          certificationAuthority {
+            certificationAuthorityStructures {
+              cguAcceptanceRequired
+              cgu {
+                isLatestVersion
+              }
+            }
+          }
+        }
+      }
+    }
+  `);
 
 export const useCertificateurLayout = () => {
   const {
@@ -56,23 +67,71 @@ export const useCertificateurLayout = () => {
 
   const { graphqlClient } = useGraphQlClient();
 
+  const shouldFetchCertificationAuthority =
+    isAdminCertificationAuthority ||
+    (isCertificationAuthority && !isCertificationLocalAccount);
+  const shouldFetchCertificationRegistryManager =
+    !isAdmin && isCertificationRegistryManager;
+  const shouldFetchCertificationAuthorityLocalAccount =
+    !isAdmin && isCertificationLocalAccount;
+
   const {
-    data: getCertificationAuthorityStructureCGU,
-    isLoading: getCertificationAuthorityStructureCGURequestLoading,
+    data: certificationAuthorityCguData,
+    isLoading: certificationAuthorityCguLoading,
   } = useQuery({
-    queryKey: ["certificateur", "getCertificationAuthorityStructureCGU"],
+    queryKey: [
+      "certificateur",
+      "getCertificationAuthorityStructureCGU",
+      "certificationAuthority",
+    ],
     queryFn: () =>
-      graphqlClient.request(getCertificationAuthorityStructureCGUQuery),
+      graphqlClient.request(
+        getCertificationAuthorityStructureCGUQueryForCertificationAuthority,
+      ),
+    enabled: shouldFetchCertificationAuthority,
+  });
+
+  const {
+    data: certificationRegistryManagerCguData,
+    isLoading: certificationRegistryManagerCguLoading,
+  } = useQuery({
+    queryKey: [
+      "certificateur",
+      "getCertificationAuthorityStructureCGU",
+      "certificationRegistryManager",
+    ],
+    queryFn: () =>
+      graphqlClient.request(
+        getCertificationAuthorityStructureCGUQueryForCertificationRegistryManager,
+      ),
+    enabled: shouldFetchCertificationRegistryManager,
+  });
+
+  const {
+    data: certificationAuthorityLocalAccountCguData,
+    isLoading: certificationAuthorityLocalAccountCguLoading,
+  } = useQuery({
+    queryKey: [
+      "certificateur",
+      "getCertificationAuthorityStructureCGU",
+      "certificationAuthorityLocalAccount",
+    ],
+    queryFn: () =>
+      graphqlClient.request(
+        getCertificationAuthorityStructureCGUQueryForCertificationAuthorityLocalAccount,
+      ),
+    enabled: shouldFetchCertificationAuthorityLocalAccount,
   });
 
   const certificationAuthorityStructure =
-    getCertificationAuthorityStructureCGU?.account_getAccountForConnectedUser
-      ?.certificationAuthority?.certificationAuthorityStructures[0] ||
-    getCertificationAuthorityStructureCGU?.account_getAccountForConnectedUser
-      ?.certificationRegistryManager?.certificationAuthorityStructure ||
-    getCertificationAuthorityStructureCGU?.account_getAccountForConnectedUser
-      ?.certificationAuthorityLocalAccount?.certificationAuthority
-      ?.certificationAuthorityStructures[0];
+    certificationAuthorityCguData?.account_getAccountForConnectedUser
+      ?.certificationAuthority?.certificationAuthorityStructures[0] ??
+    certificationRegistryManagerCguData?.account_getAccountForConnectedUser
+      ?.certificationRegistryManager?.certificationAuthorityStructure ??
+    certificationAuthorityLocalAccountCguData
+      ?.account_getAccountForConnectedUser?.certificationAuthorityLocalAccount
+      ?.certificationAuthority?.certificationAuthorityStructures[0] ??
+    null;
 
   const certificationAuthorityStructureCGU =
     certificationAuthorityStructure?.cgu;
@@ -98,6 +157,9 @@ export const useCertificateurLayout = () => {
 
   return {
     displayCguCertificateur,
-    getCertificationAuthorityStructureCGURequestLoading,
+    getCertificationAuthorityStructureCGURequestLoading:
+      certificationAuthorityCguLoading ||
+      certificationRegistryManagerCguLoading ||
+      certificationAuthorityLocalAccountCguLoading,
   };
 };

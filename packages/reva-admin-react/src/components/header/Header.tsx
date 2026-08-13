@@ -19,6 +19,13 @@ const getCertificationAuthorityForHeaderQuery = graphql(`
         id
         metabaseDashboardIframeUrl
       }
+    }
+  }
+`);
+
+const getCertificationAuthorityLocalAccountForHeaderQuery = graphql(`
+  query getCertificationAuthorityLocalAccountForHeader {
+    account_getAccountForConnectedUser {
       certificationAuthorityLocalAccount {
         certificationAuthority {
           id
@@ -344,7 +351,19 @@ export const Header = () => {
     queryKey: ["certificateur", "getCertificationAuthorityForHeader"],
     queryFn: () =>
       graphqlClient.request(getCertificationAuthorityForHeaderQuery),
-    enabled: !isOrganism && !isGestionnaireMaisonMereAAP && !isAdmin,
+    enabled: isAdminCertificationAuthority && !isAdmin,
+  });
+
+  const { data: getCertificationAuthorityLocalAccountForHeader } = useQuery({
+    queryKey: [
+      "certificateur",
+      "getCertificationAuthorityLocalAccountForHeader",
+    ],
+    queryFn: () =>
+      graphqlClient.request(
+        getCertificationAuthorityLocalAccountForHeaderQuery,
+      ),
+    enabled: isCertificationAuthorityLocalAccount && !isAdmin,
   });
 
   const metabaseDashboardIframeUrl =
@@ -354,8 +373,9 @@ export const Header = () => {
   const certificationAuthorityId =
     getCertificationAuthorityForHeader?.account_getAccountForConnectedUser
       ?.certificationAuthority?.id ??
-    getCertificationAuthorityForHeader?.account_getAccountForConnectedUser
-      ?.certificationAuthorityLocalAccount?.certificationAuthority?.id;
+    getCertificationAuthorityLocalAccountForHeader
+      ?.account_getAccountForConnectedUser?.certificationAuthorityLocalAccount
+      ?.certificationAuthority?.id;
 
   const { data: getCohortesVaeCollectivesForConnectedAap } = useQuery({
     queryKey: ["aap", "getCohortesVaeCollectivesForConnectedAap"],
