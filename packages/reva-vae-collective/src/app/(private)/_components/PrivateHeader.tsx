@@ -9,6 +9,10 @@ export async function PrivateHeader() {
     "SHOW_METABASE_DASHBOARD_VAE_COLLECTIVE",
   );
 
+  const isVaeCollectiveAccountsFeatureActive = isFeatureActive(
+    "VAE_COLLECTIVE_ACCOUNTS",
+  );
+
   // Comme getActiveFeatures, on tolère l'échec de cet appel : le header est rendu
   // sur toutes les pages privées, pas seulement celles d'un commanditaire.
   let canViewStatistiques = false;
@@ -18,9 +22,28 @@ export async function PrivateHeader() {
     console.error("Failed to fetch user permissions:", error);
   }
 
+  const showMetabaseDashboard =
+    isMetabaseDashboardActive && canViewStatistiques;
+
+  // Comme getActiveFeatures, on tolère l'échec de cet appel : le header est rendu
+  // sur toutes les pages privées, pas seulement celles d'un commanditaire.
+  let canAccessAccountsPage = false;
+  try {
+    canAccessAccountsPage =
+      (await hasPermission("CREER_SOUS_COMPTE")) ||
+      (await hasPermission("MODIFIER_SOUS_COMPTE")) ||
+      (await hasPermission("SUPPRIMER_SOUS_COMPTE"));
+  } catch (error) {
+    console.error("Failed to fetch user permissions:", error);
+  }
+
+  const showAccountsPage =
+    isVaeCollectiveAccountsFeatureActive && canAccessAccountsPage;
+
   return (
     <PrivateHeaderClient
-      showMetabaseDashboard={isMetabaseDashboardActive && canViewStatistiques}
+      showMetabaseDashboard={showMetabaseDashboard}
+      showAccountsPage={showAccountsPage}
     />
   );
 }

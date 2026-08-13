@@ -8,11 +8,13 @@ import { useKeycloakContext } from "@/components/auth/keycloakContext";
 const PATHS = {
   COHORTES: "/cohortes",
   DASHBOARD: "/dashboard",
+  ACCOUNTS: "/comptes-utilisateurs",
 } as const;
 
 const LABELS = {
   COHORTES: "Cohortes",
   DASHBOARD: "Pilotage",
+  ACCOUNTS: "Gestion des comptes",
 } as const;
 
 const createTab = ({
@@ -33,8 +35,10 @@ const createTab = ({
 
 export const PrivateHeaderClient = ({
   showMetabaseDashboard,
+  showAccountsPage,
 }: {
   showMetabaseDashboard: boolean;
+  showAccountsPage: boolean;
 }) => {
   const { logout, authenticated } = useKeycloakContext();
 
@@ -44,21 +48,38 @@ export const PrivateHeaderClient = ({
     `/commanditaires/${commanditaireId}`,
   );
 
-  const navigation =
-    authenticated && showMetabaseDashboard && isCommanditairePath
-      ? [
-          createTab({
-            text: LABELS.COHORTES,
-            href: `/commanditaires/${commanditaireId}${PATHS.COHORTES}`,
-            isActive: currentPathname.includes(PATHS.COHORTES),
-          }),
-          createTab({
-            text: LABELS.DASHBOARD,
-            href: `/commanditaires/${commanditaireId}${PATHS.DASHBOARD}`,
-            isActive: currentPathname.includes(PATHS.DASHBOARD),
-          }),
-        ]
-      : [];
+  const showTabs =
+    authenticated &&
+    (showMetabaseDashboard || showAccountsPage) &&
+    isCommanditairePath;
+
+  const navigation = showTabs
+    ? [
+        createTab({
+          text: LABELS.COHORTES,
+          href: `/commanditaires/${commanditaireId}${PATHS.COHORTES}`,
+          isActive: currentPathname.includes(PATHS.COHORTES),
+        }),
+        ...(showMetabaseDashboard
+          ? [
+              createTab({
+                text: LABELS.DASHBOARD,
+                href: `/commanditaires/${commanditaireId}${PATHS.DASHBOARD}`,
+                isActive: currentPathname.includes(PATHS.DASHBOARD),
+              }),
+            ]
+          : []),
+        ...(showAccountsPage
+          ? [
+              createTab({
+                text: LABELS.ACCOUNTS,
+                href: `/commanditaires/${commanditaireId}${PATHS.ACCOUNTS}`,
+                isActive: currentPathname.includes(PATHS.ACCOUNTS),
+              }),
+            ]
+          : []),
+      ]
+    : [];
 
   type QuickAccessItem = NonNullable<
     ComponentProps<typeof DsfrHeader>["quickAccessItems"]
