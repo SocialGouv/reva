@@ -6,7 +6,10 @@ import {
 } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "../../../shared/helpers/auth/login";
-import { getCertificateurCommonHandlers } from "../../../shared/helpers/common-handlers/certificateur/getCertificateurCommon.handlers";
+import {
+  getCertificateurCommonHandlers,
+  waitCertificationAuthorityStructureCGUQuery,
+} from "../../../shared/helpers/common-handlers/certificateur/getCertificateurCommon.handlers";
 import { graphQLResolver } from "../../../shared/helpers/network/msw";
 import { waitGraphQL } from "../../../shared/helpers/network/requests";
 
@@ -21,7 +24,7 @@ async function waitForPageQueries(page: Page) {
   await Promise.all([
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
-    waitGraphQL(page, "getCertificationAuthorityStructureCGUQuery"),
+    waitCertificationAuthorityStructureCGUQuery(page),
     waitGraphQL(page, "getCandidaciesForAnnuaire"),
     waitGraphQL(page, "getCohortesForAnnuaire"),
   ]);

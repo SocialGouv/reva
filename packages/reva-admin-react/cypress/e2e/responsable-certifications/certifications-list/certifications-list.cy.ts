@@ -1,4 +1,7 @@
-import { stubQuery } from "../../../utils/graphql";
+import {
+  stubQuery,
+  stubCertificationAuthorityStructureCGUQueries,
+} from "../../../utils/graphql";
 
 import certifications from "./fixtures/certifications.json";
 
@@ -15,7 +18,7 @@ function interceptCertifications(status: string, visible = true) {
       "getMaisonMereCGUQuery",
       "account/gestionnaire-cgu-accepted.json",
     );
-    stubQuery(req, "getCertificationAuthorityStructureCGUQuery", {
+    stubCertificationAuthorityStructureCGUQueries(req, {
       data: {
         account_getAccountForConnectedUser: {
           certificationRegistryManager: null,

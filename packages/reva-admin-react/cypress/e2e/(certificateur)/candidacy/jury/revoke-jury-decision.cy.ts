@@ -1,4 +1,8 @@
-import { stubMutation, stubQuery } from "../../../../utils/graphql";
+import {
+  stubMutation,
+  stubQuery,
+  stubCertificationAuthorityStructureCGUQueries,
+} from "../../../../utils/graphql";
 import candidacyInfoForLayout from "../../fixtures/candidacy-info-for-layout.json";
 import maisonMereCGU from "../../fixtures/maison-mere-cgu.json";
 
@@ -24,7 +28,7 @@ describe("revoke jury decision", () => {
       );
 
       stubQuery(req, "getJuryByCandidacyId", candidacyWithJuryResult);
-      stubQuery(req, "getCertificationAuthorityStructureCGUQuery", {
+      stubCertificationAuthorityStructureCGUQueries(req, {
         data: {
           account_getAccountForConnectedUser: {
             certificationRegistryManager: null,

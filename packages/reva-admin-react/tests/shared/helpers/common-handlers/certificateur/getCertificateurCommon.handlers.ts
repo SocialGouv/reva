@@ -3,12 +3,33 @@ import { graphql, Page } from "next/experimental/testmode/playwright/msw";
 import { graphQLResolver } from "../../network/msw";
 import { waitGraphQL } from "../../network/requests";
 
+export const CERTIFICATION_AUTHORITY_STRUCTURE_CGU_QUERY_NAMES = [
+  "getCertificationAuthorityStructureCGUQueryForCertificationAuthority",
+  "getCertificationAuthorityStructureCGUQueryForCertificationRegistryManager",
+  "getCertificationAuthorityStructureCGUQueryForCertificationAuthorityLocalAccount",
+] as const;
+
+const emptyCertificationAuthorityStructureCguResponse = {
+  account_getAccountForConnectedUser: {
+    certificationRegistryManager: null,
+    certificationAuthority: null,
+    certificationAuthorityLocalAccount: null,
+  },
+};
+
+export const waitCertificationAuthorityStructureCGUQuery = (page: Page) =>
+  Promise.race(
+    CERTIFICATION_AUTHORITY_STRUCTURE_CGU_QUERY_NAMES.map((operationName) =>
+      waitGraphQL(page, operationName),
+    ),
+  );
+
 const certificateurCommonWait = async (page: Page) => {
   await Promise.all([
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
     waitGraphQL(page, "getCandidacyWithCandidateInfoForLayout"),
-    waitGraphQL(page, "getCertificationAuthorityStructureCGUQuery"),
+    waitCertificationAuthorityStructureCGUQuery(page),
   ]);
 };
 
@@ -56,15 +77,12 @@ export const getCertificateurCommonHandlers = ({
           },
         }),
       ),
-      fvae.query(
-        "getCertificationAuthorityStructureCGUQuery",
-        graphQLResolver({
-          account_getAccountForConnectedUser: {
-            certificationRegistryManager: null,
-            certificationAuthority: null,
-            certificationAuthorityLocalAccount: null,
-          },
-        }),
+      ...CERTIFICATION_AUTHORITY_STRUCTURE_CGU_QUERY_NAMES.map(
+        (operationName) =>
+          fvae.query(
+            operationName,
+            graphQLResolver(emptyCertificationAuthorityStructureCguResponse),
+          ),
       ),
       fvae.query(
         "candidacy_canAccessCandidacy",

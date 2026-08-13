@@ -1,4 +1,8 @@
-import { stubMutation, stubQuery } from "../../../../utils/graphql";
+import {
+  stubMutation,
+  stubQuery,
+  stubCertificationAuthorityStructureCGUQueries,
+} from "../../../../utils/graphql";
 
 import certificationBpBoucher from "./fixtures/certification-bp-boucher.json";
 import fcCertificationRncp3890 from "./fixtures/get-fc-certification-rncp-3890.json";
@@ -49,7 +53,7 @@ context("Replace Certification Page", () => {
         "replaceCertificationMutation",
         replaceCertificationResponse,
       );
-      stubQuery(req, "getCertificationAuthorityStructureCGUQuery", {
+      stubCertificationAuthorityStructureCGUQueries(req, {
         data: {
           account_getAccountForConnectedUser: {
             certificationRegistryManager: null,

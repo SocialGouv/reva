@@ -22,6 +22,23 @@ export const stubQuery = (req, operationName, fixture, statusCode = 200) => {
   }
 };
 
+export const CERTIFICATION_AUTHORITY_STRUCTURE_CGU_QUERY_NAMES = [
+  "getCertificationAuthorityStructureCGUQueryForCertificationAuthority",
+  "getCertificationAuthorityStructureCGUQueryForCertificationRegistryManager",
+  "getCertificationAuthorityStructureCGUQueryForCertificationAuthorityLocalAccount",
+];
+
+/** Stub all persona-specific layout CGU queries with the same fixture payload. */
+export const stubCertificationAuthorityStructureCGUQueries = (
+  req,
+  fixture,
+  statusCode = 200,
+) => {
+  for (const operationName of CERTIFICATION_AUTHORITY_STRUCTURE_CGU_QUERY_NAMES) {
+    stubQuery(req, operationName, fixture, statusCode);
+  }
+};
+
 // Alias mutation if operationName matches
 export const stubMutation = (req, operationName, fixture, statusCode = 200) => {
   if (hasOperationName(req, operationName)) {

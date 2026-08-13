@@ -1,4 +1,8 @@
-import { stubMutation, stubQuery } from "../../../../utils/graphql";
+import {
+  stubMutation,
+  stubQuery,
+  stubCertificationAuthorityStructureCGUQueries,
+} from "../../../../utils/graphql";
 
 import certificationBPBoucher from "./fixtures/certification-bp-boucher.json";
 import updateCertificationPrerequisitesMutationResponse from "./fixtures/update-prerequisites-bp-boucher-mutation-response.json";
@@ -23,7 +27,7 @@ function interceptCertification() {
         },
       },
     });
-    stubQuery(req, "getCertificationAuthorityStructureCGUQuery", {
+    stubCertificationAuthorityStructureCGUQueries(req, {
       data: {
         account_getAccountForConnectedUser: {
           certificationRegistryManager: null,

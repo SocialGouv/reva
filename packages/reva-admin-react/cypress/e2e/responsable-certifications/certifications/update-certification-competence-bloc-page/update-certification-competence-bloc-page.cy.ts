@@ -1,4 +1,8 @@
-import { stubMutation, stubQuery } from "../../../../utils/graphql";
+import {
+  stubMutation,
+  stubQuery,
+  stubCertificationAuthorityStructureCGUQueries,
+} from "../../../../utils/graphql";
 
 import certificationCBBPBoucher1 from "./fixtures/certification-competence-bloc-bp-boucher-1.json";
 import updateCertificationBlocMutationResponse from "./fixtures/update-competence-bloc-bp-boucher-mutation-response.json";
@@ -20,7 +24,7 @@ function interceptCertificationCompetenceBloc() {
       "getCompetenceBlocForCertificationRegistryManagerUpdateCompetenceBlocPage",
       certificationCBBPBoucher1,
     );
-    stubQuery(req, "getCertificationAuthorityStructureCGUQuery", {
+    stubCertificationAuthorityStructureCGUQueries(req, {
       data: {
         account_getAccountForConnectedUser: {
           certificationRegistryManager: null,

@@ -3,20 +3,27 @@ import { graphql, Page } from "next/experimental/testmode/playwright/msw";
 import { graphQLResolver } from "../../network/msw";
 import { waitGraphQL } from "../../network/requests";
 
-export const certificateurSettingsCommonWait = async (page: Page) => {
+import {
+  CERTIFICATION_AUTHORITY_STRUCTURE_CGU_QUERY_NAMES,
+  waitCertificationAuthorityStructureCGUQuery,
+} from "./getCertificateurCommon.handlers";
+
+const certificateurSettingsCommonWait = async (page: Page) => {
   await Promise.all([
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
-    waitGraphQL(page, "getCertificationAuthorityForHeader"),
-    waitGraphQL(page, "getCertificationAuthorityStructureCGUQuery"),
+    Promise.race([
+      waitGraphQL(page, "getCertificationAuthorityForHeader"),
+      waitGraphQL(page, "getCertificationAuthorityLocalAccountForHeader"),
+    ]),
+    waitCertificationAuthorityStructureCGUQuery(page),
   ]);
 };
 
-export const certificateurSettingsAdminCommonWait = async (page: Page) => {
+const certificateurSettingsAdminCommonWait = async (page: Page) => {
   await Promise.all([
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
-    waitGraphQL(page, "getCertificationAuthorityStructureCGUQuery"),
   ]);
 };
 
@@ -56,15 +63,18 @@ export const getCertificateurSettingsCommonHandlers = ({
           },
         }),
       ),
-      fvae.query(
-        "getCertificationAuthorityStructureCGUQuery",
-        graphQLResolver({
-          account_getAccountForConnectedUser: {
-            certificationRegistryManager: null,
-            certificationAuthority: null,
-            certificationAuthorityLocalAccount: null,
-          },
-        }),
+      ...CERTIFICATION_AUTHORITY_STRUCTURE_CGU_QUERY_NAMES.map(
+        (operationName) =>
+          fvae.query(
+            operationName,
+            graphQLResolver({
+              account_getAccountForConnectedUser: {
+                certificationRegistryManager: null,
+                certificationAuthority: null,
+                certificationAuthorityLocalAccount: null,
+              },
+            }),
+          ),
       ),
       fvae.query(
         "getCertificationAuthorityForHeader",
@@ -74,7 +84,18 @@ export const getCertificateurSettingsCommonHandlers = ({
               id: certificationAuthorityId,
               metabaseDashboardIframeUrl: null,
             },
-            certificationAuthorityLocalAccount: null,
+          },
+        }),
+      ),
+      fvae.query(
+        "getCertificationAuthorityLocalAccountForHeader",
+        graphQLResolver({
+          account_getAccountForConnectedUser: {
+            certificationAuthorityLocalAccount: {
+              certificationAuthority: {
+                id: certificationAuthorityId,
+              },
+            },
           },
         }),
       ),

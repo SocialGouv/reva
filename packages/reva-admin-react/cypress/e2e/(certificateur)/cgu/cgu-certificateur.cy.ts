@@ -1,4 +1,7 @@
-import { stubQuery } from "../../../utils/graphql";
+import {
+  stubQuery,
+  stubCertificationAuthorityStructureCGUQueries,
+} from "../../../utils/graphql";
 
 import cguCertificateurFixture from "./fixtures/cgu-certificateur.json";
 
@@ -48,7 +51,7 @@ function visitCguCertificateur({
       },
     });
 
-    stubQuery(req, "getCertificationAuthorityStructureCGUQuery", {
+    stubCertificationAuthorityStructureCGUQueries(req, {
       data: {
         account_getAccountForConnectedUser: {
           certificationRegistryManager: isRegistryManagerOrAuthorityAdmin

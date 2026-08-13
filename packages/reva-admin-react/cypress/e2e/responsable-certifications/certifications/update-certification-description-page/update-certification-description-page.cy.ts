@@ -1,4 +1,7 @@
-import { stubQuery } from "../../../../utils/graphql";
+import {
+  stubQuery,
+  stubCertificationAuthorityStructureCGUQueries,
+} from "../../../../utils/graphql";
 
 import certificationBPBoucher from "./fixtures/certification-bp-boucher.json";
 
@@ -26,7 +29,7 @@ function interceptCertification() {
         },
       },
     );
-    stubQuery(req, "getCertificationAuthorityStructureCGUQuery", {
+    stubCertificationAuthorityStructureCGUQueries(req, {
       data: {
         account_getAccountForConnectedUser: {
           certificationRegistryManager: null,
