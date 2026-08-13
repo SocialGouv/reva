@@ -79,7 +79,7 @@ describe("Envoi du dossier de faisabilité dématérialisé au candidat par l'AA
         where: { candidacyId: candidacy.id, isActive: true },
       });
 
-      expect(updatedFeasibility?.decision).toBe("DRAFT");
+      expect(updatedFeasibility?.decision).toBe(decision);
 
       const auditLog = await prismaClient.candidacyLog.findFirst({
         where: {
