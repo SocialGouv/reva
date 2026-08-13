@@ -1,6 +1,13 @@
 import { Page } from "@playwright/test";
 
-export function waitGraphQL(page: Page, operationName: string) {
+export function waitGraphQL(
+  page: Page,
+  operationName: string | readonly string[],
+) {
+  const operationNames = new Set(
+    typeof operationName === "string" ? [operationName] : operationName,
+  );
+
   return page.waitForResponse(async (response) => {
     if (!response.url().includes("api/graphql")) {
       return false;
@@ -17,10 +24,12 @@ export function waitGraphQL(page: Page, operationName: string) {
       const matchesOperationName = (() => {
         try {
           const body = request.postDataJSON();
-          return body.operationName === operationName;
+          return operationNames.has(body.operationName);
         } catch {
           const rawPostData = request.postData();
-          return rawPostData?.includes(operationName) ?? false;
+          return [...operationNames].some((name) =>
+            rawPostData?.includes(name),
+          );
         }
       })();
 

@@ -12,10 +12,6 @@ const certificateurSettingsCommonWait = async (page: Page) => {
   await Promise.all([
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
-    Promise.race([
-      waitGraphQL(page, "getCertificationAuthorityForHeader"),
-      waitGraphQL(page, "getCertificationAuthorityLocalAccountForHeader"),
-    ]),
     waitCertificationAuthorityStructureCGUQuery(page),
   ]);
 };

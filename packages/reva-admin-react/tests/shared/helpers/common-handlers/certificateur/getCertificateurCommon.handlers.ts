@@ -18,11 +18,7 @@ const emptyCertificationAuthorityStructureCguResponse = {
 };
 
 export const waitCertificationAuthorityStructureCGUQuery = (page: Page) =>
-  Promise.race(
-    CERTIFICATION_AUTHORITY_STRUCTURE_CGU_QUERY_NAMES.map((operationName) =>
-      waitGraphQL(page, operationName),
-    ),
-  );
+  waitGraphQL(page, CERTIFICATION_AUTHORITY_STRUCTURE_CGU_QUERY_NAMES);
 
 const certificateurCommonWait = async (page: Page) => {
   await Promise.all([
