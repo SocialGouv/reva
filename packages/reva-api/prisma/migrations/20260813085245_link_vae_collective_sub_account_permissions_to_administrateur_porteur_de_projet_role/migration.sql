@@ -1,0 +1,6 @@
+insert into
+    role_permission_vae_collective (role, permission)
+values
+    ('ADMINISTRATEUR_PORTEUR_DE_PROJET', 'CREER_SOUS_COMPTE'),
+    ('ADMINISTRATEUR_PORTEUR_DE_PROJET', 'MODIFIER_SOUS_COMPTE'),
+    ('ADMINISTRATEUR_PORTEUR_DE_PROJET', 'SUPPRIMER_SOUS_COMPTE');
