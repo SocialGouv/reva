@@ -99,14 +99,18 @@ const getCandidaciesForAAP = async ({
   });
 };
 
+const TWO_DAYS_AGO = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+
 const createCandidacyWithDematerializedFeasibility = async ({
   organismId,
   decision = FeasibilityStatus.DRAFT,
+  decisionSentAt,
   candidacyActiveStatus = CandidacyStatusStep.PARCOURS_CONFIRME,
   dematerializedFeasibilityFile,
 }: {
   organismId: string;
   decision?: FeasibilityStatus;
+  decisionSentAt?: Date | null;
   candidacyActiveStatus?: CandidacyStatusStep;
   dematerializedFeasibilityFile?: {
     sentToCandidateAt?: Date | null;
@@ -122,6 +126,7 @@ const createCandidacyWithDematerializedFeasibility = async ({
   const feasibility = await createFeasibilityDematerializedHelper({
     candidacyId: candidacy.id,
     decision,
+    decisionSentAt,
   });
 
   if (
@@ -642,6 +647,42 @@ describe("candidacy_getCandidaciesForAAP", () => {
         );
       });
 
+      test("should return ENVOYE_AU_CANDIDAT candidacies with incomplete DFF resent to candidate", async () => {
+        const organism = await createOrganismHelper();
+
+        const incompleteResentToCandidateCandidacy =
+          await createCandidacyWithDematerializedFeasibility({
+            organismId: organism.id,
+            decision: FeasibilityStatus.INCOMPLETE,
+            decisionSentAt: TWO_DAYS_AGO,
+            dematerializedFeasibilityFile: {
+              sentToCandidateAt: new Date(),
+              candidateConfirmationAt: null,
+              swornStatementFileId: null,
+            },
+          });
+
+        await createCandidacyWithDematerializedFeasibility({
+          organismId: organism.id,
+          decision: FeasibilityStatus.INCOMPLETE,
+          decisionSentAt: TWO_DAYS_AGO,
+        });
+
+        const resp = await getCandidaciesForAAP({
+          userKeycloakId:
+            organism.organismOnAccounts[0].account.keycloakId || "",
+          userRole: "manage_candidacy",
+          input: {
+            feasibilityStatuses: [FeasibilityStatusFilter.ENVOYE_AU_CANDIDAT],
+          },
+        });
+
+        expect(resp.candidacy_getCandidaciesForAAP.rows).toHaveLength(1);
+        expect(resp.candidacy_getCandidaciesForAAP.rows[0].id).toBe(
+          incompleteResentToCandidateCandidacy.id,
+        );
+      });
+
       test("should return only PARTIELLEMENT_VALIDE_PAR_LE_CANDIDAT candidacies", async () => {
         const organism = await createOrganismHelper();
 
@@ -680,6 +721,43 @@ describe("candidacy_getCandidaciesForAAP", () => {
         );
       });
 
+      test("should return PARTIELLEMENT_VALIDE_PAR_LE_CANDIDAT candidacies with incomplete DFF partially confirmed by candidate", async () => {
+        const organism = await createOrganismHelper();
+
+        const incompletePartiallyConfirmedCandidacy =
+          await createCandidacyWithDematerializedFeasibility({
+            organismId: organism.id,
+            decision: FeasibilityStatus.INCOMPLETE,
+            decisionSentAt: TWO_DAYS_AGO,
+            dematerializedFeasibilityFile: {
+              candidateConfirmationAt: new Date(),
+              swornStatementFileId: null,
+            },
+          });
+
+        await createCandidacyWithDematerializedFeasibility({
+          organismId: organism.id,
+          decision: FeasibilityStatus.INCOMPLETE,
+          decisionSentAt: TWO_DAYS_AGO,
+        });
+
+        const resp = await getCandidaciesForAAP({
+          userKeycloakId:
+            organism.organismOnAccounts[0].account.keycloakId || "",
+          userRole: "manage_candidacy",
+          input: {
+            feasibilityStatuses: [
+              FeasibilityStatusFilter.PARTIELLEMENT_VALIDE_PAR_LE_CANDIDAT,
+            ],
+          },
+        });
+
+        expect(resp.candidacy_getCandidaciesForAAP.rows).toHaveLength(1);
+        expect(resp.candidacy_getCandidaciesForAAP.rows[0].id).toBe(
+          incompletePartiallyConfirmedCandidacy.id,
+        );
+      });
+
       test("should return only VALIDE_PAR_LE_CANDIDAT candidacies", async () => {
         const organism = await createOrganismHelper();
         const swornStatementFile = await createFileHelper();
@@ -715,6 +793,44 @@ describe("candidacy_getCandidaciesForAAP", () => {
         expect(resp.candidacy_getCandidaciesForAAP.rows).toHaveLength(1);
         expect(resp.candidacy_getCandidaciesForAAP.rows[0].id).toBe(
           valideParLeCandidatCandidacy.id,
+        );
+      });
+
+      test("should return VALIDE_PAR_LE_CANDIDAT candidacies with incomplete DFF confirmed by candidate", async () => {
+        const organism = await createOrganismHelper();
+        const swornStatementFile = await createFileHelper();
+
+        const incompleteConfirmedCandidacy =
+          await createCandidacyWithDematerializedFeasibility({
+            organismId: organism.id,
+            decision: FeasibilityStatus.INCOMPLETE,
+            decisionSentAt: TWO_DAYS_AGO,
+            dematerializedFeasibilityFile: {
+              candidateConfirmationAt: new Date(),
+              swornStatementFileId: swornStatementFile.id,
+            },
+          });
+
+        await createCandidacyWithDematerializedFeasibility({
+          organismId: organism.id,
+          decision: FeasibilityStatus.INCOMPLETE,
+          decisionSentAt: TWO_DAYS_AGO,
+        });
+
+        const resp = await getCandidaciesForAAP({
+          userKeycloakId:
+            organism.organismOnAccounts[0].account.keycloakId || "",
+          userRole: "manage_candidacy",
+          input: {
+            feasibilityStatuses: [
+              FeasibilityStatusFilter.VALIDE_PAR_LE_CANDIDAT,
+            ],
+          },
+        });
+
+        expect(resp.candidacy_getCandidaciesForAAP.rows).toHaveLength(1);
+        expect(resp.candidacy_getCandidaciesForAAP.rows[0].id).toBe(
+          incompleteConfirmedCandidacy.id,
         );
       });
 
@@ -760,6 +876,63 @@ describe("candidacy_getCandidaciesForAAP", () => {
         await createCandidacyWithDematerializedFeasibility({
           organismId: organism.id,
           decision: FeasibilityStatus.ADMISSIBLE,
+        });
+
+        const resp = await getCandidaciesForAAP({
+          userKeycloakId:
+            organism.organismOnAccounts[0].account.keycloakId || "",
+          userRole: "manage_candidacy",
+          input: {
+            feasibilityStatuses: [FeasibilityStatusFilter.INCOMPLET],
+          },
+        });
+
+        expect(resp.candidacy_getCandidaciesForAAP.rows).toHaveLength(1);
+        expect(resp.candidacy_getCandidaciesForAAP.rows[0].id).toBe(
+          incompletCandidacy.id,
+        );
+      });
+
+      test("should not return INCOMPLET candidacies whose incomplete DFF has been resent or confirmed by the candidate", async () => {
+        const organism = await createOrganismHelper();
+        const swornStatementFile = await createFileHelper();
+
+        const incompletCandidacy =
+          await createCandidacyWithDematerializedFeasibility({
+            organismId: organism.id,
+            decision: FeasibilityStatus.INCOMPLETE,
+            decisionSentAt: TWO_DAYS_AGO,
+          });
+
+        await createCandidacyWithDematerializedFeasibility({
+          organismId: organism.id,
+          decision: FeasibilityStatus.INCOMPLETE,
+          decisionSentAt: TWO_DAYS_AGO,
+          dematerializedFeasibilityFile: {
+            sentToCandidateAt: new Date(),
+            candidateConfirmationAt: null,
+            swornStatementFileId: null,
+          },
+        });
+
+        await createCandidacyWithDematerializedFeasibility({
+          organismId: organism.id,
+          decision: FeasibilityStatus.INCOMPLETE,
+          decisionSentAt: TWO_DAYS_AGO,
+          dematerializedFeasibilityFile: {
+            candidateConfirmationAt: new Date(),
+            swornStatementFileId: null,
+          },
+        });
+
+        await createCandidacyWithDematerializedFeasibility({
+          organismId: organism.id,
+          decision: FeasibilityStatus.INCOMPLETE,
+          decisionSentAt: TWO_DAYS_AGO,
+          dematerializedFeasibilityFile: {
+            candidateConfirmationAt: new Date(),
+            swornStatementFileId: swornStatementFile.id,
+          },
         });
 
         const resp = await getCandidaciesForAAP({
