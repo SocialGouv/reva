@@ -364,6 +364,9 @@ export const getCandidaciesForAAP = async ({
         feasibility: {
           decision: "INCOMPLETE",
         },
+        incompleteDffIsSentToCandidate: false,
+        incompleteDffIsConfirmedByCandidate: false,
+        incompleteDffIsPartiallyConfirmedByCandidate: false,
       });
     }
 
