@@ -112,6 +112,7 @@ const MaisonMereAAPPage = () => {
     maisonMereAAP && (
       <div className="flex flex-col flex-1 px-8 py-4">
         <OrganismSummary
+          maisonMereAAPId={maisonMereAAP.id}
           companyName={maisonMereAAP.raisonSociale}
           accountFirstname={maisonMereAAP.gestionnaire.firstname || ""}
           accountLastname={maisonMereAAP.gestionnaire.lastname || ""}
