@@ -1,4 +1,3 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import {
   Account,
   Candidacy,
@@ -15,8 +14,23 @@ import { logger } from "@/modules/shared/logger/logger";
 
 import { getAccountById } from "../account/features/getAccount";
 import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCandidacyAuditEvent";
+import { hasRole } from "../shared/security/middlewares";
+import {
+  isAdmin,
+  isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+  isAdminOrCertificationAuthority,
+  isAdminOrCertificationAuthorityLocalAccountManagerOrCertificationAuthorityLocalAccountOwner,
+  isAdminOrCertificationAuthorityLocalAccountOwner,
+  isAdminOrCertificationAuthorityOwner,
+  isAdminOrCertificationRegistryManagerOfCertificationOrIsCertificationAuthorityStructureMember,
+  isAdminOrIsCertificationAuthorityAccountOrLocalAccountStructureMember,
+  isAdminOrIsCertificationAuthorityStructureMember,
+  isAdminOrIsCertificationAuthorityStructureRegistryManagerMember,
+  isAdminOrManager,
+  isAnyone,
+} from "../shared/security/presets";
+import { withPolicies } from "../shared/security/withPolicies";
 
-import { resolversSecurityMap } from "./certification-authority.security";
 import {
   CertificationAuthority,
   CreateCertificationAuthorityLocalAccountInput,
@@ -610,7 +624,103 @@ const unsafeResolvers = {
   },
 };
 
-export const resolvers = composeResolvers(
-  unsafeResolvers,
-  resolversSecurityMap,
-);
+export const certificationAuthorityResolvers = withPolicies(unsafeResolvers, {
+  Query: {
+    certification_authority_getCertificationAuthority: isAdminOrManager,
+    certification_authority_getCertificationAuthorities: isAdmin,
+    certification_authority_getCertificationAuthorityStructures: isAdmin,
+    certification_authority_getCertificationAuthorityStructure: isAdmin,
+    certification_authority_searchCertificationAuthoritiesAndLocalAccounts:
+      isAdmin,
+    certification_authority_getCertificationAuthorityLocalAccount:
+      isAdminOrCertificationAuthorityLocalAccountOwner,
+    certification_authority_getCertificationAuthoritiesToTransferCandidacy:
+      isAdminOrCertificationAuthority,
+    certification_authority_getCertificationAuthorityLocalAccountsToTransferCandidacy:
+      isAdminOrCertificationAuthority,
+    certification_authority_getParcoursForCertificationAndCertificationAuthority:
+      isAdminOrCertificationAuthorityOwner,
+  },
+  CertificationAuthority: {
+    certificationAuthorityStructures:
+      isAdminOrIsCertificationAuthorityAccountOrLocalAccountStructureMember,
+    account: isAdminOrCertificationAuthorityOwner,
+    certificationsAndParcours: isAdminOrCertificationAuthorityOwner,
+    departments: isAnyone,
+    regions: isAnyone,
+    certifications: isAnyone,
+    certificationAuthorityLocalAccounts: isAdminOrCertificationAuthorityOwner,
+    metabaseDashboardIframeUrl: isAdminOrCertificationAuthorityOwner,
+  },
+  Account: {
+    certificationAuthorityLocalAccount: isAnyone,
+    certificationRegistryManager: isAnyone,
+  },
+  Candidacy: {
+    certificationAuthority:
+      isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+    certificationAuthorityLocalAccounts:
+      isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+    isCandidacyCertificationAuthorityUpdatable:
+      isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
+  },
+  Certification: {
+    certificationAuthorityStructure: isAnyone,
+    certificationAuthorities: isAnyone,
+  },
+  CertificationAuthorityStructure: {
+    certificationAuthorities: isAdminOrIsCertificationAuthorityStructureMember,
+    certificationRegistryManager:
+      isAdminOrIsCertificationAuthorityAccountOrLocalAccountStructureMember,
+    certifications:
+      isAdminOrCertificationRegistryManagerOfCertificationOrIsCertificationAuthorityStructureMember,
+    cgu: isAnyone,
+  },
+  CertificationRegistryManager: {
+    certificationAuthorityStructure:
+      isAdminOrIsCertificationAuthorityStructureRegistryManagerMember,
+  },
+  Mutation: {
+    certification_authority_updateCertificationAuthority:
+      isAdminOrCertificationAuthorityOwner,
+    certification_authority_updateCertificationAuthorityDepartmentsAndCertifications:
+      isAdmin,
+    certification_authority_createCertificationAuthorityLocalAccount:
+      isAdminOrCertificationAuthorityOwner,
+    certification_authority_updateCertificationAuthorityLocalAccountGeneralInformation:
+      isAdminOrCertificationAuthorityLocalAccountManagerOrCertificationAuthorityLocalAccountOwner,
+    certification_authority_updateCertificationAuthorityLocalAccountDepartments:
+      isAnyone, //security handled in resolver
+    certification_authority_deleteCertificationAuthorityLocalAccount: isAnyone, //security handled in resolver
+    certification_authority_updateCertificationAuthorityLocalAccountCertifications:
+      isAnyone, //security handled in resolver
+    certification_authority_transferCandidacyToAnotherCertificationAuthority:
+      isAdminOrCertificationAuthority,
+    certification_authority_transferCandidacyToCertificationAuthorityLocalAccount:
+      isAdminOrCertificationAuthority,
+    certification_authority_createCertificationRegistryManager: isAdmin,
+    certification_authority_updateCertificationRegistryManager: isAdmin,
+    certification_authority_updateCertificationAuthorityStructure: isAdmin,
+    certification_authority_updateCertificationAuthorityStructureCertifications:
+      isAdmin,
+    certification_authority_updateCertificationAuthorityCertifications: isAdmin,
+    certification_authority_createCertificationAuthority: isAdmin,
+    certification_authority_updateCertificationAuthorityDepartments: isAdmin,
+    certification_authority_acceptCgu: [
+      hasRole([
+        "manage_certification_registry",
+        "manage_certification_authority_local_account",
+      ]),
+    ],
+    certification_authority_createCertificationAuthorityStructure: isAdmin,
+    certification_authority_updateParcoursForCertificationAndCertificationAuthority:
+      isAdminOrCertificationAuthorityOwner,
+  },
+  CertificationAuthorityLocalAccount: {
+    certificationAuthority:
+      isAdminOrIsCertificationAuthorityAccountOrLocalAccountStructureMember,
+    account:
+      isAdminOrIsCertificationAuthorityAccountOrLocalAccountStructureMember,
+    paginatedCertifications: isAdminOrCertificationAuthority,
+  },
+});

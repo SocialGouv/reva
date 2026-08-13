@@ -31,7 +31,7 @@ import { candidacyLogResolvers } from "./candidacy-log/candidacy-log.resolvers";
 import { candidacyMenuResolvers } from "./candidacy-menu/candidacy-menu.resolvers";
 import { candidateResolvers } from "./candidate/candidate.resolvers";
 import { certificationAuthorityLoaders } from "./certification-authority/certification-authority.loaders";
-import { resolvers as certificationAuthorityResolvers } from "./certification-authority/certification-authority.resolvers";
+import { certificationAuthorityResolvers } from "./certification-authority/certification-authority.resolvers";
 import { dossierDeValidationResolvers } from "./dossier-de-validation/dossier-de-validation.resolvers";
 import { dematerializedFeasibilityFileResolvers } from "./feasibility/dematerialized-feasibility-file/dematerialized-feasibility-file.resolvers";
 import { feasibilityUploadedPdfResolvers } from "./feasibility/feasibility-uploaded-pdf/feasibility-uploaded-pdf.resolvers";

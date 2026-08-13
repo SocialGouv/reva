@@ -67,13 +67,6 @@ export const isAdminOrFeasibilityManager = accessBy({
   manage_feasibility: isFeasibilityManager,
 });
 
-// eslint-disable-next-line import/no-unused-modules
-export const isAdminCandidacyCompanionOrFeasibilityManager = [
-  hasRole(["admin", "manage_candidacy", "manage_feasibility"]),
-  whenHasRole("manage_candidacy", isCandidacyOwner),
-  whenHasRole("manage_feasibility", isFeasibilityManager),
-];
-
 export const isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate = [
   hasRole(["admin", "manage_candidacy", "manage_feasibility", "candidate"]),
   whenHasRole("manage_candidacy", isCandidacyOwner),
