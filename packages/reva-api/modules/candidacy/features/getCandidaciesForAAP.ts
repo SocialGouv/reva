@@ -269,14 +269,24 @@ export const getCandidaciesForAAP = async ({
       feasibilityStatuses.includes(FeasibilityStatusFilter.ENVOYE_AU_CANDIDAT)
     ) {
       feasibilityWhereInput.push({
-        feasibility: {
-          decision: FeasibilityStatus.DRAFT,
-          dematerializedFeasibilityFile: {
-            sentToCandidateAt: { not: null },
-            candidateConfirmationAt: null,
-            swornStatementFileId: null,
+        OR: [
+          {
+            feasibility: {
+              decision: FeasibilityStatus.DRAFT,
+              dematerializedFeasibilityFile: {
+                sentToCandidateAt: { not: null },
+                candidateConfirmationAt: null,
+                swornStatementFileId: null,
+              },
+            },
           },
-        },
+          {
+            feasibility: {
+              decision: FeasibilityStatus.INCOMPLETE,
+            },
+            incompleteDffIsSentToCandidate: true,
+          },
+        ],
       });
     }
 
@@ -286,13 +296,23 @@ export const getCandidaciesForAAP = async ({
       )
     ) {
       feasibilityWhereInput.push({
-        feasibility: {
-          decision: FeasibilityStatus.DRAFT,
-          dematerializedFeasibilityFile: {
-            candidateConfirmationAt: { not: null },
-            swornStatementFileId: null,
+        OR: [
+          {
+            feasibility: {
+              decision: FeasibilityStatus.DRAFT,
+              dematerializedFeasibilityFile: {
+                candidateConfirmationAt: { not: null },
+                swornStatementFileId: null,
+              },
+            },
           },
-        },
+          {
+            feasibility: {
+              decision: FeasibilityStatus.INCOMPLETE,
+            },
+            incompleteDffIsPartiallyConfirmedByCandidate: true,
+          },
+        ],
       });
     }
 
@@ -302,13 +322,23 @@ export const getCandidaciesForAAP = async ({
       )
     ) {
       feasibilityWhereInput.push({
-        feasibility: {
-          decision: FeasibilityStatus.DRAFT,
-          dematerializedFeasibilityFile: {
-            candidateConfirmationAt: { not: null },
-            swornStatementFileId: { not: null },
+        OR: [
+          {
+            feasibility: {
+              decision: FeasibilityStatus.DRAFT,
+              dematerializedFeasibilityFile: {
+                candidateConfirmationAt: { not: null },
+                swornStatementFileId: { not: null },
+              },
+            },
           },
-        },
+          {
+            feasibility: {
+              decision: FeasibilityStatus.INCOMPLETE,
+            },
+            incompleteDffIsConfirmedByCandidate: true,
+          },
+        ],
       });
     }
 

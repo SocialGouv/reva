@@ -308,14 +308,17 @@ model CandidacyCandidateInfo {
 }
 
 view CandidacyWithLastActiveDfDvJury {
-  candidacyId           String               @map("candidacy_id") @db.Uuid
-  candidacy             Candidacy            @relation(fields: [candidacyId], references: [id])
-  feasibilityId         String?              @map("feasibility_id") @db.Uuid
-  feasibility           Feasibility?         @relation(fields: [feasibilityId], references: [id])
-  dossierDeValidationId String?              @map("dossier_de_validation_id") @db.Uuid
-  dossierDeValidation   DossierDeValidation? @relation(fields: [dossierDeValidationId], references: [id])
-  juryId                String?              @map("jury_id") @db.Uuid
-  jury                  Jury?                @relation(fields: [juryId], references: [id])
+  candidacyId                                  String               @map("candidacy_id") @db.Uuid
+  candidacy                                    Candidacy            @relation(fields: [candidacyId], references: [id])
+  feasibilityId                                String?              @map("feasibility_id") @db.Uuid
+  feasibility                                  Feasibility?         @relation(fields: [feasibilityId], references: [id])
+  dossierDeValidationId                        String?              @map("dossier_de_validation_id") @db.Uuid
+  dossierDeValidation                          DossierDeValidation? @relation(fields: [dossierDeValidationId], references: [id])
+  juryId                                       String?              @map("jury_id") @db.Uuid
+  jury                                         Jury?                @relation(fields: [juryId], references: [id])
+  incompleteDffIsSentToCandidate               Boolean              @map("incomplete_dff_is_sent_to_candidate")
+  incompleteDffIsConfirmedByCandidate          Boolean              @map("incomplete_dff_is_confirmed_by_candidate")
+  incompleteDffIsPartiallyConfirmedByCandidate Boolean              @map("incomplete_dff_is_partially_confirmed_by_candidate")
 
   @@unique([candidacyId])
   @@map("candidacy_with_last_active_df_dv_jury")
