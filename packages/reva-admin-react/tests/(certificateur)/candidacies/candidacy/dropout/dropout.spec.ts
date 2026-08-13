@@ -36,7 +36,7 @@ function createContactDetailsHandlers() {
 }
 
 const { certificateurCommonHandlers, certificateurCommonWait } =
-  getCertificateurCommonHandlers();
+  getCertificateurCommonHandlers({ candidacyId: CANDIDACY_ID });
 
 async function visitDropoutPage(page: Page) {
   await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/candidacy-drop-out`);
@@ -56,7 +56,7 @@ test.describe("Dropout page", () => {
     });
 
     test("should display the dropout page", async ({ page }) => {
-      await login({ page, role: "aap" });
+      await login({ page, role: "certificateur" });
       await visitDropoutPage(page);
 
       await expect(
