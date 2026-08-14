@@ -3,6 +3,7 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import { format, toDate } from "date-fns";
 
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { formatSiret } from "@/utils/formatSiret";
 
 import { GrayCard } from "../card/gray-card/GrayCard";
 
@@ -53,12 +54,6 @@ export const CompanyPreview = (props: Props) => {
   const isSiretAlreadyUsed = company.companySiretAlreadyUsed;
   const isEmailAlreadyUsed = account?.accountEmailAlreadyUsed;
 
-  const getFormattedSiret = (value: string) => {
-    if (!value) return "";
-
-    return value.replace(/(\d{3})(\d{3})(\d{3})(\d{4})/, "$1 $2 $3 $4");
-  };
-
   return (
     <div className={`${className || ""}`}>
       {isSiretAlreadyUsed && !isEmailAlreadyUsed && (
@@ -105,12 +100,12 @@ export const CompanyPreview = (props: Props) => {
           <Badge severity="warning">déjà enregistrée sur France VAE</Badge>
         )}
         <div className="font-bold flex-1 text-right">
-          {getFormattedSiret(company.companySiret)}
+          {formatSiret(company.companySiret)}
         </div>
       </div>
       <GrayCard className="col-span-2">
         <h2 className="col-span-3">
-          Informations liées au SIRET {getFormattedSiret(company.companySiret)}
+          Informations liées au SIRET {formatSiret(company.companySiret)}
         </h2>
 
         {!isLoading && !isFetching && !etablissement && (
