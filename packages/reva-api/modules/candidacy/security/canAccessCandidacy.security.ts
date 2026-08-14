@@ -1,6 +1,9 @@
-import { IFieldResolver, MercuriusContext } from "mercurius";
+import { ErrorWithProps, IFieldResolver, MercuriusContext } from "mercurius";
 
-import { NOT_AUTHORIZED_CANDIDACY_ACCESS } from "@/modules/shared/security/messages";
+import {
+  NOT_AUTHORIZED_CANDIDACY_ACCESS,
+  SESSION_EXPIRED,
+} from "@/modules/shared/security/messages";
 
 import { canAccessCandidacy as canAccessCandidacyFeature } from "../features/canAccessCandidacy";
 
@@ -12,6 +15,12 @@ export const canAccessCandidacy =
     context: MercuriusContext,
     info: any,
   ) => {
+    if (!context.auth.userInfo) {
+      throw new ErrorWithProps(SESSION_EXPIRED, {
+        code: "UNAUTHENTICATED",
+      });
+    }
+
     if (
       !(await canAccessCandidacyFeature({
         roles: context.auth.userInfo.realm_access?.roles || [],
