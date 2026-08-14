@@ -45,6 +45,22 @@ const confirmTrainingForm = ({
   return graphqlClient.request(confirmTrainingFormMutation, { candidacyId });
 };
 
+test("should be able to validate the training when candidacy status is PARCOURS_ENVOYE", async () => {
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus: CandidacyStatusStep.PARCOURS_ENVOYE,
+  });
+
+  const res = await confirmTrainingForm({
+    candidacyId: candidacy.id,
+    role: "candidate",
+    keycloakId: candidacy.candidate?.keycloakId,
+  });
+
+  expect(res.training_confirmTrainingForm).toMatchObject({
+    id: expect.any(String),
+  });
+});
+
 describe("security", () => {
   test("admin: allowed", async () => {
     const candidacy = await createCandidacyHelper({
