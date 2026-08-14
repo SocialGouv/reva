@@ -16,10 +16,12 @@ export const LegalInformationUpdateBlock = ({
   statutValidationInformationsJuridiquesMaisonMereAAP,
   decisions,
   onUpdateButtonClick,
+  hideUpdateButton,
 }: {
   statutValidationInformationsJuridiquesMaisonMereAAP: StatutValidationInformationsJuridiquesMaisonMereAap;
   decisions: Decision[];
   onUpdateButtonClick(): void;
+  hideUpdateButton?: boolean;
 }) => {
   return (
     <div className="flex flex-col gap-8 my-4">
@@ -36,6 +38,7 @@ export const LegalInformationUpdateBlock = ({
           <NeedUpdateStatusBlock
             onUpdateButtonClick={onUpdateButtonClick}
             decisions={decisions}
+            hideUpdateButton={hideUpdateButton}
           />
         )}
       </div>
@@ -62,9 +65,11 @@ const ValidationPendingStatusBlock = () => (
 const NeedUpdateStatusBlock = ({
   onUpdateButtonClick,
   decisions,
+  hideUpdateButton,
 }: {
   onUpdateButtonClick(): void;
   decisions: Decision[];
+  hideUpdateButton?: boolean;
 }) => {
   return (
     <>
@@ -124,9 +129,11 @@ const NeedUpdateStatusBlock = ({
         </li>
       </ul>
       <p>Assurez-vous d'avoir ces documents en version numérique.</p>
-      <Button type="button" className="ml-auto" onClick={onUpdateButtonClick}>
-        Mettre à jour
-      </Button>
+      {!hideUpdateButton && (
+        <Button type="button" className="ml-auto" onClick={onUpdateButtonClick}>
+          Mettre à jour
+        </Button>
+      )}
     </>
   );
 };

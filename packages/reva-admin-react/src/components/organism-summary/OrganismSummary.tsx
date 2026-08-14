@@ -1,7 +1,6 @@
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { format } from "date-fns";
 
-import { LegalInformationTile } from "@/app/(private)/(admin)/maisonMereAAPs/[maisonMereAAPId]/(components)/LegalInformationTile";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 
 import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
@@ -31,7 +30,6 @@ const getTypologyLabel = (typology: Typology) => {
 };
 
 interface OrganismSummaryProps {
-  maisonMereAAPId: string;
   companyName: string;
   accountFirstname: string;
   accountLastname: string;
@@ -51,7 +49,6 @@ interface OrganismSummaryProps {
 }
 
 export const OrganismSummary = ({
-  maisonMereAAPId,
   companyName,
   accountFirstname,
   accountLastname,
@@ -125,13 +122,6 @@ export const OrganismSummary = ({
           accountFirstname,
           accountLastname,
         }}
-      />
-
-      <LegalInformationTile
-        maisonMereAAPId={maisonMereAAPId}
-        statutValidationInformationsJuridiquesMaisonMereAAP={
-          statutValidationInformationsJuridiquesMaisonMereAAP
-        }
       />
 
       <GrayCard className="col-span-2">

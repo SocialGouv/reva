@@ -112,7 +112,6 @@ const MaisonMereAAPPage = () => {
     maisonMereAAP && (
       <div className="flex flex-col flex-1 px-8 py-4">
         <OrganismSummary
-          maisonMereAAPId={maisonMereAAP.id}
           companyName={maisonMereAAP.raisonSociale}
           accountFirstname={maisonMereAAP.gestionnaire.firstname || ""}
           accountLastname={maisonMereAAP.gestionnaire.lastname || ""}
@@ -144,7 +143,10 @@ const MaisonMereAAPPage = () => {
           legalInformationDocumentsDecisions={maisonMereAAP.legalInformationDocumentsDecisions.map(
             (d) => ({
               ...d,
-              aapUpdatedDocumentsAt: toDate(d.aapUpdatedDocumentsAt),
+              aapUpdatedDocumentsAt:
+                d.aapUpdatedDocumentsAt == null
+                  ? null
+                  : toDate(d.aapUpdatedDocumentsAt),
               decisionTakenAt: toDate(d.decisionTakenAt),
             }),
           )}

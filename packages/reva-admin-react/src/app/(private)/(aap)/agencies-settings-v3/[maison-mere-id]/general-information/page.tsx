@@ -10,15 +10,21 @@ import { FieldErrors, UseFormRegister } from "react-hook-form";
 
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { CompanyBadges } from "@/components/company-preview/CompanyPreview.component";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { formatSiret } from "@/utils/formatSiret";
 
-import { LegalStatus, MaisonMereAap } from "@/graphql/generated/graphql";
+import { MaisonMereAap } from "@/graphql/generated/graphql";
 
 import { AdminToggleGestionBranch } from "./_components/AdminToggleGestionBranch";
 import { AttestationReferencement } from "./_components/AttestationReferencement";
 import { LegalInformationUpdateBlock } from "./_components/legal-information-update-block/LegalInformationUpdateBlock";
-import { useGeneralInformationPage } from "./generalInformationPage.hook";
+import { LegalInformationTile } from "./_components/LegalInformationTile";
+import {
+  buildLegalInformationPayload,
+  useGeneralInformationPage,
+} from "./generalInformationPage.hook";
 
 const GeneralInformationPage = () => {
   const router = useRouter();
@@ -45,70 +51,36 @@ const GeneralInformationPage = () => {
     watch,
   } = formHook;
 
+  const { isFeatureActive } = useFeatureflipping();
+  const legalInformationUpdateIsActive = isFeatureActive(
+    "MAISON_MERE_GENERAL_INFORMATION_UPDATE",
+  );
+
   const gestionBranchIsChecked = watch("gestionBranch");
 
   const setGestionBranch = (value: boolean) =>
     setValue("gestionBranch", value, { shouldDirty: true });
 
   const handleFormSubmit = handleSubmit(async (data) => {
-    if (!etablissement) {
+    let payload;
+
+    try {
+      payload = buildLegalInformationPayload({
+        data,
+        etablissement,
+        maisonMereAAPId,
+        currentSiret: maisonMereAAP?.siret,
+      });
+    } catch (error) {
       return setError(
         "siret",
-        {
-          message:
-            "Le numéro est peut-être erroné. Saisissez-le à nouveau et contactez l'AAP si cela ne fonctionne toujours pas.",
-        },
-        { shouldFocus: true },
-      );
-    }
-
-    const {
-      siret,
-      managerFirstname,
-      managerLastname,
-      gestionnaireFirstname,
-      gestionnaireLastname,
-      gestionnaireEmail,
-      phone,
-      gestionBranch,
-    } = data;
-    const { formeJuridique, raisonSociale, qualiopiStatus, dateFermeture } =
-      etablissement;
-
-    if (dateFermeture) {
-      return setError(
-        "siret",
-        {
-          message: "L'établissement est fermé",
-        },
-        { shouldFocus: true },
-      );
-    }
-
-    if (!qualiopiStatus) {
-      return setError(
-        "siret",
-        {
-          message: "L'établissement n'est pas certifié Qualiopi",
-        },
+        { message: (error as Error).message },
         { shouldFocus: true },
       );
     }
 
     try {
-      await updateMaisonMereLegalInformation({
-        statutJuridique: formeJuridique.legalStatus as LegalStatus,
-        raisonSociale,
-        siret,
-        maisonMereAAPId,
-        managerFirstname,
-        managerLastname,
-        gestionnaireFirstname,
-        gestionnaireLastname,
-        gestionnaireEmail,
-        phone,
-        gestionBranch,
-      });
+      await updateMaisonMereLegalInformation(payload);
 
       successToast("Les informations ont été modifiées");
       router.push(backUrl);
@@ -130,12 +102,6 @@ const GeneralInformationPage = () => {
       "A_JOUR" &&
     !!etablissement &&
     !etablissement.dateFermeture;
-
-  const getFormattedSiret = (value: string) => {
-    if (!value) return "";
-
-    return value.replace(/(\d{3})(\d{3})(\d{3})(\d{4})/, "$1 $2 $3 $4");
-  };
 
   return (
     <div className="flex flex-col w-full">
@@ -165,8 +131,8 @@ const GeneralInformationPage = () => {
         {isAdmin && (
           <div className="my-3 flex gap-8">
             <Input
-              label="Numéro de Siret"
-              hintText="Cette modification sera effective sur le compte de l'AAP"
+              label="Numéro SIRET du siège social"
+              hintText="14 chiffres"
               nativeInputProps={register("siret")}
               className="md:w-1/4 mb-0"
             />
@@ -192,7 +158,7 @@ const GeneralInformationPage = () => {
         {maisonMereAAPSuccess && maisonMereAAP && (
           <div className="list-none flex flex-col gap-6 pl-0 my-1">
             <GrayCard className="min-h-[220px]">
-              <h2>Informations liées au SIRET - {getFormattedSiret(siret)}</h2>
+              <h2>Informations liées au SIRET - {formatSiret(siret)}</h2>
               {etablissement && (
                 <>
                   <CompanyBadges
@@ -224,8 +190,21 @@ const GeneralInformationPage = () => {
                 <AccountInfo maisonMereAAP={maisonMereAAP} />
               )}
             </GrayCard>
-            {(isGestionnaireMaisonMereAAP || isAdmin) && (
+            {isAdmin && legalInformationUpdateIsActive && (
+              <div className="my-6">
+                <LegalInformationTile
+                  maisonMereAAPId={maisonMereAAP.id}
+                  statutValidationInformationsJuridiquesMaisonMereAAP={
+                    maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
+                  }
+                />
+              </div>
+            )}
+            {/* Flag off, l'admin garde l'encart historique, sans son bouton de dépôt. */}
+            {(isGestionnaireMaisonMereAAP ||
+              (isAdmin && !legalInformationUpdateIsActive)) && (
               <LegalInformationUpdateBlock
+                hideUpdateButton={isAdmin}
                 onUpdateButtonClick={() =>
                   router.push(
                     `/agencies-settings-v3/${maisonMereAAP.id}/general-information/legal-information-update`,

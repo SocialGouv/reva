@@ -30,7 +30,6 @@ export const LegalInformationTile = ({
 
   return (
     <Tile
-      className="col-span-2"
       title="Mise à jour du compte"
       desc="Vous pouvez demander une mise à jour des informations générales relatives à ce compte ou faire des modifications afin d’aider une structure accompagnatrice dans sa démarche. Ces structures ont la possibilité de faire les mises à jour de leurs informations depuis leur espace avec la possibilité de transmettre leurs pièces justificatives."
       start={<Badge severity={badge.severity}>{badge.label}</Badge>}
@@ -39,7 +38,7 @@ export const LegalInformationTile = ({
       orientation="horizontal"
       enlargeLinkOrButton
       linkProps={{
-        href: `/maisonMereAAPs/${maisonMereAAPId}/legal-information`,
+        href: `/agencies-settings-v3/${maisonMereAAPId}/general-information/legal-information`,
       }}
     />
   );

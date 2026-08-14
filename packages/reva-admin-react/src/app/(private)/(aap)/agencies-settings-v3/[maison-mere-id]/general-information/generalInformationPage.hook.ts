@@ -16,6 +16,8 @@ import {
 
 import { graphql } from "@/graphql/generated";
 import {
+  GetEtablissementForAgenciesSettingsQuery,
+  LegalStatus,
   MaisonMereAap,
   UpdateMaisonMereLegalInformationInput,
 } from "@/graphql/generated/graphql";
@@ -70,6 +72,7 @@ const getMaisonMereAAPGeneralInformationAdminQuery = graphql(`
     organism_getMaisonMereAAPById(maisonMereAAPId: $maisonMereAAPId) {
       id
       siret
+      raisonSociale
       phone
       managerFirstname
       managerLastname
@@ -117,13 +120,62 @@ const schema = z.object({
   gestionBranch: z.boolean(),
 });
 
-type FormValues = z.infer<typeof schema>;
+export type GeneralInformationFormValues = z.infer<typeof schema>;
+
+export type Etablissement =
+  GetEtablissementForAgenciesSettingsQuery["getEtablissement"];
+
+// Lève une erreur dont le message est destiné au champ SIRET.
+export const buildLegalInformationPayload = ({
+  data,
+  etablissement,
+  maisonMereAAPId,
+  currentSiret,
+}: {
+  data: GeneralInformationFormValues;
+  etablissement: Etablissement;
+  maisonMereAAPId: string;
+  currentSiret?: string | null;
+}): UpdateMaisonMereLegalInformationInput => {
+  if (!etablissement) {
+    throw new Error(
+      "Le numéro est peut-être erroné. Saisissez-le à nouveau et contactez l'AAP si cela ne fonctionne toujours pas.",
+    );
+  }
+
+  // Contrôles limités au changement de SIRET: sinon une structure fermée ou
+  // Qualiopi expiré ne pourrait plus corriger son téléphone ni son email.
+  if (data.siret !== currentSiret) {
+    if (etablissement.dateFermeture) {
+      throw new Error("L'établissement est fermé");
+    }
+
+    if (!etablissement.qualiopiStatus) {
+      throw new Error("L'établissement n'est pas certifié Qualiopi");
+    }
+  }
+
+  return {
+    maisonMereAAPId,
+    siret: data.siret,
+    statutJuridique: etablissement.formeJuridique.legalStatus as LegalStatus,
+    raisonSociale: etablissement.raisonSociale,
+    managerFirstname: data.managerFirstname,
+    managerLastname: data.managerLastname,
+    gestionnaireFirstname: data.gestionnaireFirstname,
+    gestionnaireLastname: data.gestionnaireLastname,
+    gestionnaireEmail: data.gestionnaireEmail,
+    phone: data.phone,
+    gestionBranch: data.gestionBranch,
+  };
+};
 
 export const useGeneralInformationPage = () => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
-  const { "maison-mere-id": maisonMereAAPId }: { "maison-mere-id": string } =
-    useParams();
+  const { "maison-mere-id": maisonMereAAPId } = useParams<{
+    "maison-mere-id": string;
+  }>();
   const { isGestionnaireMaisonMereAAP, isAdmin } = useAuth();
 
   const { mutateAsync: updateMaisonMereLegalInformation } = useMutation({
@@ -187,7 +239,7 @@ export const useGeneralInformationPage = () => {
     [maisonMereAAP],
   );
 
-  const formHook = useForm<FormValues>({
+  const formHook = useForm<GeneralInformationFormValues>({
     resolver: zodResolver(schema),
   });
   const { watch, reset } = formHook;
