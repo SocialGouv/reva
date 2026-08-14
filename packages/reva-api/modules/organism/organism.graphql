@@ -88,7 +88,7 @@ type MaisonMereAAPLegalInformationDocumentsDecision {
   decision: MaisonMereAAPLegalInformationDocumentsDecisionEnum!
   internalComment: String!
   aapComment: String!
-  aapUpdatedDocumentsAt: Timestamp!
+  aapUpdatedDocumentsAt: Timestamp
   decisionTakenAt: Timestamp!
 }
 
@@ -175,7 +175,7 @@ input UpdateMaisonMereAAPLegalValidationDecisionInput {
   decision: MaisonMereAAPLegalInformationDocumentsDecisionEnum!
   internalComment: String
   aapComment: String
-  aapUpdatedDocumentsAt: Timestamp!
+  aapUpdatedDocumentsAt: Timestamp
 }
 
 enum ConformiteNormeAccessibilite {

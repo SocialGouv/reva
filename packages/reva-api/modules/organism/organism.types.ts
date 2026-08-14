@@ -66,14 +66,14 @@ export interface UpdateMaisonMereAAPLegalValidationInput {
   decision: LegalInformationValidationDecisionType;
   internalComment?: string;
   aapComment?: string;
-  aapUpdatedDocumentsAt: Date;
+  aapUpdatedDocumentsAt?: Date | null;
 }
 
 export type LegalInformationValidationDecisionInput = {
   decision: "VALIDE" | "DEMANDE_DE_PRECISION";
   internalComment: string;
   aapComment: string;
-  aapUpdatedDocumentsAt: Date;
+  aapUpdatedDocumentsAt?: Date | null;
 };
 
 export type UpdateMaisonMereLegalInformationInput = {

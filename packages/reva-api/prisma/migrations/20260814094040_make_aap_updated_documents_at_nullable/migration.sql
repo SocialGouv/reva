@@ -1,0 +1,2 @@
+ALTER TABLE maison_mere_aap_legal_information_documents_decision
+ALTER COLUMN aap_updated_documents_at DROP NOT NULL;

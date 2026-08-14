@@ -1873,7 +1873,7 @@ model MaisonMereAAPLegalInformationDocumentsDecision {
   decision              MaisonMereAAPLegalInformationDocumentsDecisionEnum
   internalComment       String                                             @map("internal_comment")
   aapComment            String                                             @map("aap_comment")
-  aapUpdatedDocumentsAt DateTime                                           @map("aap_updated_documents_at") @db.Timestamptz(6)
+  aapUpdatedDocumentsAt DateTime?                                          @map("aap_updated_documents_at") @db.Timestamptz(6)
   decisionTakenAt       DateTime                                           @default(now()) @map("decision_taken_at") @db.Timestamptz(6)
   createdAt             DateTime                                           @default(now()) @map("created_at") @db.Timestamptz(6)
 
