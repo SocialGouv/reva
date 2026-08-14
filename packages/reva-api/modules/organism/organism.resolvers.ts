@@ -690,8 +690,8 @@ export const organismResolvers = withPolicies(unsafeResolvers, {
     organism_deleteLieuAccueil: isAdminOrGestionnaireOfMaisonMereAAP,
     organism_updateOrganismAccount: isAnyone,
     organism_updateOrganismDegreesAndFormacodes: isAnyone,
-    organism_updateMaisonMereOrganismsIsActive: isAnyone,
-    organism_updateLegalInformationValidationDecision: isAnyone,
+    organism_updateMaisonMereOrganismsIsActive: isAdmin,
+    organism_updateLegalInformationValidationDecision: isAdmin,
     organism_createLieuAccueilInfo: isAnyone,
   },
   Query: {
