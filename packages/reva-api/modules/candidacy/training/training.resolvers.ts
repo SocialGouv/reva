@@ -1,4 +1,8 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import {
+  isAnyone,
+  isOwnerOrCanManageCandidacy,
+} from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
 import { Candidacy } from "../candidacy.types";
 
@@ -8,7 +12,6 @@ import { getBasicSkillsByCandidacyId } from "./features/getBasicSkillsByCandidac
 import { getMandatoryTrainingsByCandidacyId } from "./features/getMandatoryTrainingsByCandidacyId ";
 import { getTrainings } from "./features/getTrainings";
 import { submitTraining } from "./features/submitTrainingForm";
-import { resolversSecurityMap } from "./training.security";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -49,7 +52,20 @@ const unsafeResolvers = {
   },
 };
 
-export const trainingResolvers = composeResolvers(
-  unsafeResolvers,
-  resolversSecurityMap,
-);
+export const trainingResolvers = withPolicies(unsafeResolvers, {
+  // Reached only through a Candidacy object from an already-gated resolver (e.g.
+  // getCandidacyById, protected by canAccessCandidacy), whose allowed roles are broader
+  // than isOwnerOrCanManageCandidacy (certificateurs, maison mere managers, ...).
+  Candidacy: {
+    mandatoryTrainings: isAnyone,
+    basicSkills: isAnyone,
+  },
+  Query: {
+    training_getTrainings: isAnyone,
+    getBasicSkills: isAnyone,
+  },
+  Mutation: {
+    training_submitTrainingForm: isOwnerOrCanManageCandidacy,
+    training_confirmTrainingForm: isOwnerOrCanManageCandidacy,
+  },
+});

@@ -12,10 +12,11 @@ import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../../graphql/generated";
 
-// `Candidacy.mandatoryTrainings` and `Candidacy.basicSkills` (defined in this module) have no
-// entry of their own in training.security.ts: they are only reachable through a `Candidacy`
-// object obtained from an already-gated resolver (e.g. `getCandidacyById`, protected by
-// `canAccessCandidacy`). These tests verify that gate does transitively protect them too.
+// `Candidacy.mandatoryTrainings` and `Candidacy.basicSkills` (defined in this module) have an
+// `isAnyone` policy of their own in training.resolvers.ts: they are only reachable through a
+// `Candidacy` object obtained from an already-gated resolver (e.g. `getCandidacyById`,
+// protected by `canAccessCandidacy`). These tests verify that gate does transitively protect
+// them too.
 const candidacyTrainingFields = graphql(`
   query candidacyTrainingFields($id: ID!) {
     getCandidacyById(id: $id) {
