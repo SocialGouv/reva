@@ -248,9 +248,11 @@ export const useGeneralInformationPage = () => {
     reset(defaultValues);
   }, [reset, defaultValues]);
 
+  // keepDirtyValues: un refetch react-query écraserait sinon les saisies en cours.
+  // Le bouton "Réinitialiser" passe par handleReset, qui écrase bien tout.
   useEffect(() => {
-    handleReset();
-  }, [handleReset]);
+    reset(defaultValues, { keepDirtyValues: true });
+  }, [reset, defaultValues]);
 
   const siret = watch("siret");
 
