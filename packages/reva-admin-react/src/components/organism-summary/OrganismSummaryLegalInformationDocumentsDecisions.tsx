@@ -9,7 +9,7 @@ export interface OrganismSummaryLegalInformationDocumentsDecisionProps {
   id: string;
   internalComment: string;
   aapComment: string;
-  aapUpdatedDocumentsAt: Date;
+  aapUpdatedDocumentsAt?: Date | null;
   decision: MaisonMereAapLegalInformationDocumentsDecisionEnum;
   decisionTakenAt: Date;
 }
@@ -46,9 +46,11 @@ const OrganismSummaryLegalInformationDocumentsDecision = ({
   className?: string;
 }) => (
   <div className={`grid md:grid-cols-2 ${className || ""}`}>
-    <Info title="Mise à jour par l'AAP le : ">
-      {formatDate(aapUpdatedDocumentsAt, "dd/MM/yyyy")}
-    </Info>
+    {aapUpdatedDocumentsAt && (
+      <Info title="Mise à jour par l'AAP le : ">
+        {formatDate(aapUpdatedDocumentsAt, "dd/MM/yyyy")}
+      </Info>
+    )}
     <Info title="Décision prise le : ">
       {formatDate(decisionTakenAt, "dd/MM/yyyy")}
     </Info>
