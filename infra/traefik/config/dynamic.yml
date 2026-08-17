@@ -11,7 +11,7 @@ http:
         - removeHeader
 
     metabase-reva-incubateur-net:
-      rule: "Host(`metabase.reva.incubateur.net`)"
+      rule: "Host(`metabase.reva.incubateur.net`) && !PathPrefix(`/api/session/reset_password`)"
       service: metabase-reva-incubateur-net
       middlewares:
         - removeHeader
@@ -118,7 +118,7 @@ http:
         - productionAuthIpWhitelist
 
     # metabase-vae-gouv-fr:
-    #   rule: "Host(`metabase.vae.gouv.fr`)"
+    #   rule: "Host(`metabase.vae.gouv.fr`) && !PathPrefix(`/api/session/reset_password`)"
     #   service: metabase-production
     #   middlewares:
     #     - removeHeader
@@ -178,7 +178,7 @@ http:
         - removeHeader
 
     metabase-preprod-vae-gouv-fr:
-      rule: "Host(`metabase.preprod.vae.gouv.fr`)"
+      rule: "Host(`metabase.preprod.vae.gouv.fr`) && !PathPrefix(`/api/session/reset_password`)"
       service: metabase-preprod
       middlewares:
         - removeHeader
