@@ -9,6 +9,9 @@ import { createCertificationHelper } from "@/test/helpers/entities/create-certif
 import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
+import { getGraphQLClient } from "@/test/test-graphql-client";
+
+import { graphql } from "../graphql/generated";
 
 const getCandidacy = ({
   role,
@@ -235,4 +238,29 @@ test("Random Certification local account should not be able to access the candid
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
   expect(obj.errors[0].message).toEqual(NOT_AUTHORIZED_CANDIDACY_ACCESS);
+});
+
+test("get non existing candidacy should yield errors", async () => {
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: "whatever",
+      }),
+    },
+  });
+
+  const getCandidacyById = graphql(`
+    query getCandidacyById_does_not_exist($id: ID!) {
+      getCandidacyById(id: $id) {
+        id
+      }
+    }
+  `);
+
+  await expect(
+    graphqlClient.request(getCandidacyById, {
+      id: "fb53327b-8ed9-4238-8e80-007fa1ddcfe6",
+    }),
+  ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
 });

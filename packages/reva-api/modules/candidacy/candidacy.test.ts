@@ -125,31 +125,6 @@ test("get existing Candidacy with admin user does not update the last opening da
   expect(updatedCandidacy.lastOpenedAt).toBeNull();
 });
 
-test("get non existing candidacy should yield errors", async () => {
-  const graphqlClient = getGraphQLClient({
-    headers: {
-      authorization: authorizationHeaderForUser({
-        role: "admin",
-        keycloakId: "whatever",
-      }),
-    },
-  });
-
-  const getCandidacyById = graphql(`
-    query getCandidacyById_does_not_exist($id: ID!) {
-      getCandidacyById(id: $id) {
-        id
-      }
-    }
-  `);
-
-  await expect(
-    graphqlClient.request(getCandidacyById, {
-      id: "fb53327b-8ed9-4238-8e80-007fa1ddcfe6",
-    }),
-  ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
-});
-
 test("a user can't modify the account information of another candidate", async () => {
   const candidate = await createCandidateHelper();
   const anotherCandidate = await createCandidateHelper();
