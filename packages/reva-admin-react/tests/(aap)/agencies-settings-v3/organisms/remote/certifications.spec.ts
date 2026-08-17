@@ -405,14 +405,21 @@ test.describe("search and filters", () => {
     await showAllCertifications(page);
 
     await expandFilterAccordion(page, "Formacode");
-    await page.getByLabel("Numéro de Formacode").fill("Métallurgie");
 
+    await page.getByLabel("Numéro de Formacode").fill("générale");
+    await expect(page.getByText(/Résultat : 3 sur 3/)).toBeVisible();
+
+    await page.getByLabel("Numéro de Formacode").fill("Agriculture");
+    await expect(page.getByText(/Résultat : 2 sur 2/)).toBeVisible();
+
+    await page.getByLabel("Numéro de Formacode").fill(DOMAIN_CODE);
+    await expect(page.getByText(/Résultat : 2 sur 2/)).toBeVisible();
+
+    await page.getByLabel("Numéro de Formacode").fill("Industrie");
     await expect(page.getByText(/Résultat : 1 sur 1/)).toBeVisible();
-    await expect(
-      page.getByRole("heading", {
-        name: "BTS Agronomie spécialisée",
-      }),
-    ).toBeVisible();
+
+    await page.getByLabel("Numéro de Formacode").fill("Métallurgie");
+    await expect(page.getByText(/Résultat : 0 sur 0/)).toBeVisible();
   });
 
   test("resets filters when clicking Réinitialiser les filtres", async ({

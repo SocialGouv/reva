@@ -109,32 +109,14 @@ export default function RemotePage() {
             </ul>
           </div>
         </EnhancedSectionCard>
-        <EnhancedSectionCard
-          title={
-            isAapFormacodeSelectionV2Enabled
-              ? "Périmètre d’accompagnement"
-              : "Domaines, branches, niveaux et certifications"
-          }
-          titleIconClass={
-            isAapFormacodeSelectionV2Enabled
-              ? "fr-icon-equalizer-fill"
-              : "fr-icon-award-fill"
-          }
-          isEditable
-          buttonOnClickHref={
-            isAapFormacodeSelectionV2Enabled
-              ? `./perimetre-accompagnement`
-              : `/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/remote/formacodes-ccns-degrees`
-          }
-          status={
-            isAapFormacodeSelectionV2Enabled
-              ? undefined
-              : isFormacodesAndLevelsComplete
-                ? "COMPLETED"
-                : "TO_COMPLETE"
-          }
-        >
-          {isAapFormacodeSelectionV2Enabled && (
+        {isAapFormacodeSelectionV2Enabled ? (
+          <EnhancedSectionCard
+            title="Périmètre d’accompagnement"
+            titleIconClass="fr-icon-equalizer-fill"
+            isEditable
+            buttonOnClickHref={`./perimetre-accompagnement`}
+            status={undefined}
+          >
             <>
               {!organism?.certifications ||
               organism?.certifications?.length == 0 ? (
@@ -149,51 +131,61 @@ export default function RemotePage() {
                 </p>
               )}
             </>
-          )}
-          {organism?.formacodes?.[0] && (
-            <Accordion label="Domaines" defaultExpanded>
-              <div className="flex flex-wrap gap-2">
-                {organism?.formacodes?.map((formacode) => (
-                  <Tag key={formacode.code}>
-                    {`${formacode.code} ${formacode.label}`}
-                  </Tag>
-                ))}
-              </div>
-            </Accordion>
-          )}
-          {organism?.conventionCollectives?.[0] && (
-            <Accordion label="Branches" defaultExpanded>
-              <div className="flex flex-wrap gap-2">
-                {organism?.conventionCollectives?.map((ccn) => (
-                  <Tag key={ccn.id}>{ccn.label}</Tag>
-                ))}
-              </div>
-            </Accordion>
-          )}
-          {organism?.managedDegrees?.[0] && (
-            <Accordion label="Niveaux" defaultExpanded>
-              <div className="flex flex-wrap gap-2">
-                {organism?.managedDegrees?.map((d) => (
-                  <Tag key={d.id}>Niveau {d.degree.level}</Tag>
-                ))}
-              </div>
-            </Accordion>
-          )}
-          {organism?.certifications?.[0] && (
-            <Accordion label="Certifications" defaultExpanded>
-              <div className="flex flex-col">
-                {organism.certifications?.map((certification) => (
-                  <Link
-                    key={certification.id}
-                    href={`/certification-details/${certification.id}`}
-                    target="_blank"
-                    className="py-2 text-sm bg-none text-dsfr-blue-france-sun-113 border-dsfr-light-decisions-border-border-default-grey border-b last:border-none"
-                  >{`${certification.codeRncp} - ${certification.label}`}</Link>
-                ))}
-              </div>
-            </Accordion>
-          )}
-        </EnhancedSectionCard>
+          </EnhancedSectionCard>
+        ) : (
+          <EnhancedSectionCard
+            title="Domaines, branches, niveaux et certifications"
+            titleIconClass="fr-icon-award-fill"
+            isEditable
+            buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/remote/formacodes-ccns-degrees`}
+            status={isFormacodesAndLevelsComplete ? "COMPLETED" : "TO_COMPLETE"}
+          >
+            {organism?.formacodes?.[0] && (
+              <Accordion label="Domaines" defaultExpanded>
+                <div className="flex flex-wrap gap-2">
+                  {organism?.formacodes?.map((formacode) => (
+                    <Tag key={formacode.code}>
+                      {`${formacode.code} ${formacode.label}`}
+                    </Tag>
+                  ))}
+                </div>
+              </Accordion>
+            )}
+            {organism?.conventionCollectives?.[0] && (
+              <Accordion label="Branches" defaultExpanded>
+                <div className="flex flex-wrap gap-2">
+                  {organism?.conventionCollectives?.map((ccn) => (
+                    <Tag key={ccn.id}>{ccn.label}</Tag>
+                  ))}
+                </div>
+              </Accordion>
+            )}
+            {organism?.managedDegrees?.[0] && (
+              <Accordion label="Niveaux" defaultExpanded>
+                <div className="flex flex-wrap gap-2">
+                  {organism?.managedDegrees?.map((d) => (
+                    <Tag key={d.id}>Niveau {d.degree.level}</Tag>
+                  ))}
+                </div>
+              </Accordion>
+            )}
+            {organism?.certifications?.[0] && (
+              <Accordion label="Certifications" defaultExpanded>
+                <div className="flex flex-col">
+                  {organism.certifications?.map((certification) => (
+                    <Link
+                      key={certification.id}
+                      href={`/certification-details/${certification.id}`}
+                      target="_blank"
+                      className="py-2 text-sm bg-none text-dsfr-blue-france-sun-113 border-dsfr-light-decisions-border-border-default-grey border-b last:border-none"
+                    >{`${certification.codeRncp} - ${certification.label}`}</Link>
+                  ))}
+                </div>
+              </Accordion>
+            )}
+          </EnhancedSectionCard>
+        )}
+
         <OrganismDisponiblePourVaeCollectiveToggle
           organismId={organismId}
           ToggleLabel={

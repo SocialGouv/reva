@@ -14,6 +14,21 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { Formacode, useCertifications } from "./certifications.hook";
 
+const getDomainFromSubDomains = (
+  formacodes: Formacode[],
+  subDomains: Formacode[],
+): Formacode[] => {
+  return subDomains.reduce((acc, subDomain) => {
+    const domain = formacodes.find(
+      (formacode) => formacode.code === subDomain.parentCode,
+    );
+    if (domain && !acc.some((formacode) => formacode.code === domain.code)) {
+      acc.push(domain);
+    }
+    return acc;
+  }, [] as Formacode[]);
+};
+
 export const Certifications = ({ organismId }: { organismId: string }) => {
   const router = useRouter();
 
@@ -119,12 +134,13 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
 
   if (formacodeSearchFilters.length > 0) {
     certifications = certifications.filter((certification) =>
-      certification.formacodes.some((formacode) =>
-        formacodeSearchFilters.some(
-          (filter) =>
-            formacode.code.toLowerCase().includes(filter.toLowerCase()) ||
-            formacode.label.toLowerCase().includes(filter.toLowerCase()),
-        ),
+      getDomainFromSubDomains(formacodes, certification.formacodes).some(
+        (formacode) =>
+          formacodeSearchFilters.some(
+            (filter) =>
+              formacode.code.toLowerCase().includes(filter.toLowerCase()) ||
+              formacode.label.toLowerCase().includes(filter.toLowerCase()),
+          ),
       ),
     );
   }
@@ -139,18 +155,6 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
 
   const isCertificationCovered = (certificationId: string) => {
     return organism?.certifications?.some((c) => c.id === certificationId);
-  };
-
-  const getDomainFromSubDomains = (subDomains: Formacode[]): Formacode[] => {
-    return subDomains.reduce((acc, subDomain) => {
-      const domain = formacodes.find(
-        (formacode) => formacode.code === subDomain.parentCode,
-      );
-      if (domain && !acc.some((formacode) => formacode.code === domain.code)) {
-        acc.push(domain);
-      }
-      return acc;
-    }, [] as Formacode[]);
   };
 
   return (
@@ -178,7 +182,7 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
                 id={id}
                 placeholder={placeholder}
                 type={type}
-                value={certificationSearchFilter}
+                defaultValue={certificationSearchFilter}
                 onChange={(e) => setCertificationSearchFilter(e.target.value)}
               />
             )}
@@ -202,7 +206,7 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
                     label="Numéro de Formacode"
                     hintText="Domaine, champs sémantique ou mot clé."
                     nativeInputProps={{
-                      value: formacodeSearchFilter,
+                      defaultValue: formacodeSearchFilter,
                       onChange: (e) => setFormacodeSearchFilter(e.target.value),
                     }}
                   />
@@ -279,13 +283,14 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
                         <li>
                           <Tag>Niveau {certification.level}</Tag>
                         </li>
-                        {getDomainFromSubDomains(certification.formacodes).map(
-                          (formacode) => (
-                            <li key={formacode.id}>
-                              <Tag>{`${formacode.code} ${formacode.label}`}</Tag>
-                            </li>
-                          ),
-                        )}
+                        {getDomainFromSubDomains(
+                          formacodes,
+                          certification.formacodes,
+                        ).map((formacode) => (
+                          <li key={formacode.id}>
+                            <Tag>{`${formacode.code} ${formacode.label}`}</Tag>
+                          </li>
+                        ))}
                       </ul>
                     }
                   />
