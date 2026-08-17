@@ -16,6 +16,7 @@ export const updateCandidacyCertificationAuthority = async ({
 }) => {
   const allowedCandidacyStatuses: CandidacyStatusStep[] = [
     "PROJET",
+    "VALIDATION",
     "PRISE_EN_CHARGE",
     "PARCOURS_ENVOYE",
     "PARCOURS_CONFIRME",

@@ -10,6 +10,7 @@ import { updateCandidacyCertificationAuthority } from "./updateCandidacyCertific
 describe("updateCandidacyCertificationAuthority", () => {
   const allowedStatuses: CandidacyStatusStep[] = [
     "PROJET",
+    "VALIDATION",
     "PRISE_EN_CHARGE",
     "PARCOURS_ENVOYE",
     "PARCOURS_CONFIRME",
@@ -18,7 +19,6 @@ describe("updateCandidacyCertificationAuthority", () => {
 
   const blockedStatuses: CandidacyStatusStep[] = [
     "ARCHIVE",
-    "VALIDATION",
     "DOSSIER_FAISABILITE_ENVOYE",
     "DOSSIER_FAISABILITE_COMPLET",
     "DOSSIER_FAISABILITE_RECEVABLE",
