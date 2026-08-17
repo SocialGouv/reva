@@ -1,3 +1,4 @@
+import { FEASIBILITY_DECISIONS_LOCKING_CERTIFICATION_AUTHORITY } from "@/modules/certification-authority/features/isCandidacyCertificationAuthorityUpdatable";
 import { refreshCertificationAuthorityOfCandidacy } from "@/modules/certification-authority/features/refreshCertificationAuthorityOfCandidacy";
 import { prismaClient } from "@/prisma/client";
 
@@ -9,7 +10,9 @@ const refreshCandidacyCertificationAuthorityId = async () => {
       Feasibility: {
         where: {
           isActive: true,
-          decision: { in: ["PENDING", "REJECTED", "ADMISSIBLE", "COMPLETE"] },
+          decision: {
+            in: FEASIBILITY_DECISIONS_LOCKING_CERTIFICATION_AUTHORITY,
+          },
         },
         select: { certificationAuthorityId: true },
       },
