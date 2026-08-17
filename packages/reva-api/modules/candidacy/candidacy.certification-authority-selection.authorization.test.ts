@@ -10,7 +10,7 @@ import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
-import { graphql } from "../../graphql/generated";
+import { graphql } from "../graphql/generated";
 
 const candidacy_updateCertificationAuthority = graphql(`
   mutation candidacy_updateCertificationAuthority(
