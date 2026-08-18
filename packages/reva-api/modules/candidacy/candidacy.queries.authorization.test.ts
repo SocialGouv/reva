@@ -62,6 +62,7 @@ describe("candidacy resolver read authorization", () => {
       const candidacy = await createCandidacyHelper({
         candidacyArgs: { organismId: organism.id },
       });
+      const foreignCandidacy = await createCandidacyHelper();
 
       const response = await query({
         endpoint: "getCandidacies",
@@ -75,6 +76,9 @@ describe("candidacy resolver read authorization", () => {
       expect(response.json()).not.toHaveProperty("errors");
       expect(response.json().data.getCandidacies.rows).toContainEqual({
         id: candidacy.id,
+      });
+      expect(response.json().data.getCandidacies.rows).not.toContainEqual({
+        id: foreignCandidacy.id,
       });
     });
 
@@ -348,11 +352,37 @@ describe("candidacy resolver read authorization", () => {
       ).toBeInstanceOf(Array);
     });
 
+    test("allows the AAP to list only candidacies associated to it", async () => {
+      const organism = await createOrganismHelper();
+      const candidacy = await createCandidacyHelper({
+        candidacyArgs: { organismId: organism.id },
+      });
+      const foreignCandidacy = await createCandidacyHelper();
+
+      const response = await query({
+        endpoint: "candidacy_getCandidaciesForAAP",
+        authorization: asRole(
+          "manage_candidacy",
+          organism.organismOnAccounts[0].account.keycloakId,
+        ),
+        returnFields: "{ rows { id } }",
+      });
+
+      expect(response.json()).not.toHaveProperty("errors");
+      expect(
+        response.json().data.candidacy_getCandidaciesForAAP.rows,
+      ).toContainEqual({ id: candidacy.id });
+      expect(
+        response.json().data.candidacy_getCandidaciesForAAP.rows,
+      ).not.toContainEqual({ id: foreignCandidacy.id });
+    });
+
     test("allows the maison mere manager to list candidacies associated to its maison mere", async () => {
       const organism = await createOrganismHelper();
       const candidacy = await createCandidacyHelper({
         candidacyArgs: { organismId: organism.id },
       });
+      const foreignCandidacy = await createCandidacyHelper();
 
       const response = await query({
         endpoint: "candidacy_getCandidaciesForAAP",
@@ -367,6 +397,9 @@ describe("candidacy resolver read authorization", () => {
       expect(
         response.json().data.candidacy_getCandidaciesForAAP.rows,
       ).toContainEqual({ id: candidacy.id });
+      expect(
+        response.json().data.candidacy_getCandidaciesForAAP.rows,
+      ).not.toContainEqual({ id: foreignCandidacy.id });
     });
 
     test.each<KeyCloakUserRole>([
