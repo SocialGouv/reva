@@ -411,6 +411,27 @@ describe("candidacy resolver read authorization", () => {
       );
     });
 
+    test.each<KeyCloakUserRole>([
+      "manage_certification_registry",
+      "manage_vae_collective",
+    ])(
+      "rejects resolved candidacy fields from the %s role",
+      async (role: KeyCloakUserRole) => {
+        const candidacy = await createCandidacyHelper();
+
+        const response = await query({
+          endpoint: "getCandidacyById",
+          authorization: asRole(role),
+          arguments: { id: candidacy.id },
+          returnFields: "{ id }",
+        });
+
+        expect(response.json().errors[0].message).toBe(
+          NOT_AUTHORIZED_CANDIDACY_ACCESS,
+        );
+      },
+    );
+
     test("rejects resolved candidacy fields from an unauthenticated request", async () => {
       const candidacy = await createCandidacyHelper();
 
