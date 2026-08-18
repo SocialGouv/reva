@@ -205,6 +205,75 @@ describe("candidacy candidate-side resolver authorization", () => {
       });
     });
 
+    test("allows the candidate owning the candidacy to select an organism", async () => {
+      const candidacy = await createCandidacyHelper({
+        candidacyActiveStatus: CandidacyStatusStep.PROJET,
+      });
+      const organism = await createOrganismHelper();
+
+      const response = await mutation({
+        endpoint: "candidacy_selectOrganism",
+        authorization: asRole("candidate", candidacy.candidate!.keycloakId),
+        arguments: { candidacyId: candidacy.id, organismId: organism.id },
+        returnFields: "{ id organismId }",
+      });
+
+      expect(response.json()).not.toHaveProperty("errors");
+      expect(response.json().data.candidacy_selectOrganism).toMatchObject({
+        id: candidacy.id,
+        organismId: organism.id,
+      });
+    });
+
+    test("rejects a random candidate selecting an organism for a candidacy they do not own", async () => {
+      const candidacy = await createCandidacyHelper();
+      const randomCandidate = await createCandidateHelper();
+
+      const response = await mutation({
+        endpoint: "candidacy_selectOrganism",
+        authorization: asRole("candidate", randomCandidate.keycloakId),
+        arguments: {
+          candidacyId: candidacy.id,
+          organismId: faker.string.uuid(),
+        },
+        returnFields: "{ id organismId }",
+      });
+
+      expect(response.json().errors[0].message).toBe(
+        NOT_AUTHORIZED_CANDIDACY_ACCESS,
+      );
+    });
+
+    test.each(unsupportedCandidateWriteRoles)(
+      "rejects the %s role from selecting an organism",
+      async (role: KeyCloakUserRole) => {
+        const response = await mutation({
+          endpoint: "candidacy_selectOrganism",
+          authorization: asRole(role),
+          arguments: {
+            candidacyId: faker.string.uuid(),
+            organismId: faker.string.uuid(),
+          },
+          returnFields: "{ id organismId }",
+        });
+
+        expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+      },
+    );
+
+    test("rejects an unauthenticated request to select an organism", async () => {
+      const response = await mutation({
+        endpoint: "candidacy_selectOrganism",
+        arguments: {
+          candidacyId: faker.string.uuid(),
+          organismId: faker.string.uuid(),
+        },
+        returnFields: "{ id organismId }",
+      });
+
+      expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+    });
+
     test("allows the candidate owning the candidacy to update its goals", async () => {
       const candidacy = await createCandidacyHelper({
         candidacyActiveStatus: CandidacyStatusStep.PROJET,
