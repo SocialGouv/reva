@@ -16,7 +16,7 @@ import {
 } from "@/test/helpers/entities/create-organism-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
-import { graphql } from "../graphql/generated";
+import { graphql } from "../../graphql/generated";
 
 const candidacy_updateCertificationAuthority = graphql(`
   mutation candidacy_updateCertificationAuthority(
