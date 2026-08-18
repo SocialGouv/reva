@@ -201,10 +201,9 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
                   }
                 />
                 <hr className="p-1" />
-                <Accordion label="Formacode" defaultExpanded={false}>
+                <Accordion label="Champs sémantique" defaultExpanded={false}>
                   <Input
-                    label="Numéro de Formacode"
-                    hintText="Domaine, champs sémantique ou mot clé."
+                    label="Champs sémantique"
                     nativeInputProps={{
                       defaultValue: formacodeSearchFilter,
                       onChange: (e) => setFormacodeSearchFilter(e.target.value),

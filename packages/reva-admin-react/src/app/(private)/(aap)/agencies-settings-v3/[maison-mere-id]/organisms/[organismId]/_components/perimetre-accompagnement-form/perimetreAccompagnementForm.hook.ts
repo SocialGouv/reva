@@ -21,6 +21,7 @@ const perimetreAccompagnementQuery = graphql(`
         code
         label
         type
+        parentCode
         countOfChildren
       }
       conventionCollectives {
