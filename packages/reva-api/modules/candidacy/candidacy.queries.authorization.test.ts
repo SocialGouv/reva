@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { CandidacyStatusStep } from "@prisma/client";
 
 import { CANDIDATURE_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import {
@@ -161,6 +162,32 @@ describe("candidacy resolver read authorization", () => {
   });
 
   describe("candidacy_candidacyCountByStatus", () => {
+    test("allows the maison mere manager to count only candidacies associated to its maison mere", async () => {
+      const organism = await createOrganismHelper();
+      await createCandidacyHelper({
+        candidacyActiveStatus: CandidacyStatusStep.PARCOURS_CONFIRME,
+        candidacyArgs: { organismId: organism.id },
+      });
+      await createCandidacyHelper({
+        candidacyActiveStatus: CandidacyStatusStep.PARCOURS_CONFIRME,
+      });
+
+      const response = await query({
+        endpoint: "candidacy_candidacyCountByStatus",
+        authorization: asRole(
+          "gestion_maison_mere_aap",
+          organism.maisonMereAAP!.gestionnaire.keycloakId,
+        ),
+        returnFields: "{ ACTIVE_HORS_ABANDON PARCOURS_CONFIRME_HORS_ABANDON }",
+      });
+
+      expect(response.json()).not.toHaveProperty("errors");
+      expect(response.json().data.candidacy_candidacyCountByStatus).toEqual({
+        ACTIVE_HORS_ABANDON: 1,
+        PARCOURS_CONFIRME_HORS_ABANDON: 1,
+      });
+    });
+
     test("rejects the candidate role", async () => {
       const response = await query({
         endpoint: "candidacy_candidacyCountByStatus",
