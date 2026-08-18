@@ -17,7 +17,7 @@ import { createReorientationReasonHelper } from "@/test/helpers/entities/create-
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
-import { graphql } from "../graphql/generated";
+import { graphql } from "../../graphql/generated";
 
 const getCandidacy = ({
   role,
