@@ -201,7 +201,7 @@ export const Certifications = ({ organismId }: { organismId: string }) => {
                   }
                 />
                 <hr className="p-1" />
-                <Accordion label="Champs sémantique" defaultExpanded={false}>
+                <Accordion label="Formacode" defaultExpanded={false}>
                   <Input
                     label="Champs sémantique"
                     nativeInputProps={{

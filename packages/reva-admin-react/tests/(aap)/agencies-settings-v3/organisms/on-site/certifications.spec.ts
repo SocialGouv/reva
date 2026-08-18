@@ -272,9 +272,7 @@ test.describe("when accessing the page", () => {
         name: "Afficher les certifications couvertes uniquement",
       }),
     ).toBeChecked();
-    await expect(
-      page.getByRole("button", { name: "Champs sémantique" }),
-    ).toBeVisible();
+    await expect(page.getByRole("button", { name: "Formacode" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Niveau" })).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Réinitialiser les filtres" }),
@@ -409,7 +407,7 @@ test.describe("search and filters", () => {
 
     await showAllCertifications(page);
 
-    await expandFilterAccordion(page, "Champs sémantique");
+    await expandFilterAccordion(page, "Formacode");
 
     await page.getByLabel("Champs sémantique").fill("générale");
     await expect(page.getByText(/Résultat : 3 sur 3/)).toBeVisible();
