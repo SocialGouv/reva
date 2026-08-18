@@ -18,6 +18,10 @@ const ORGANISM_ID = "b162e2fc-f640-4802-8808-45b99689b671";
 const MAISON_MERE_ID = "733540e0-1bb1-4b8d-a66d-97fc992ff522";
 const DEGREE_3_ID = "degree-3-id";
 const DEGREE_4_ID = "degree-4-id";
+const DOMAIN_1_ID = "domain-1-id";
+const DOMAIN_1_CODE = "DOMA";
+const DOMAIN_2_ID = "domain-2-id";
+const DOMAIN_2_CODE = "DOMB";
 const SUB_DOMAIN_1_ID = "sub-domain-1-id";
 const SUB_DOMAIN_1_CODE = "SUB001";
 const SUB_DOMAIN_2_ID = "sub-domain-2-id";
@@ -72,12 +76,14 @@ function createPerimetreAccompagnementHandlers(args?: {
               code: SUB_DOMAIN_1_CODE,
               label: "Sous-domaine 1",
               type: "SUB_DOMAIN",
+              parentCode: DOMAIN_1_CODE,
               countOfChildren: 3,
             },
             {
               code: SUB_DOMAIN_2_CODE,
               label: "Sous-domaine 2",
               type: "SUB_DOMAIN",
+              parentCode: DOMAIN_2_CODE,
               countOfChildren: 2,
             },
           ],
@@ -98,18 +104,32 @@ function createPerimetreAccompagnementHandlers(args?: {
             parentCode: null,
           },
           {
+            id: DOMAIN_1_ID,
+            type: "DOMAIN",
+            code: DOMAIN_1_CODE,
+            label: "Agriculture générale",
+            parentCode: "DOM01",
+          },
+          {
+            id: DOMAIN_2_ID,
+            type: "DOMAIN",
+            code: DOMAIN_2_CODE,
+            label: "Industrie générale",
+            parentCode: "DOM01",
+          },
+          {
             id: SUB_DOMAIN_1_ID,
             type: "SUB_DOMAIN",
             code: SUB_DOMAIN_1_CODE,
             label: "Sous-domaine 1",
-            parentCode: "DOM01",
+            parentCode: DOMAIN_1_CODE,
           },
           {
             id: SUB_DOMAIN_2_ID,
             type: "SUB_DOMAIN",
             code: SUB_DOMAIN_2_CODE,
             label: "Sous-domaine 2",
-            parentCode: "DOM01",
+            parentCode: DOMAIN_2_CODE,
           },
         ],
         getConventionCollectives: [{ id: CCN_ID, label: "CCN Example" }],
@@ -238,7 +258,7 @@ test.describe("when accessing the page", () => {
 
     await expect(page.getByText("Cet organisme couvre :")).toBeVisible();
     await expect(page.getByText("2 champs sémantiques")).toBeVisible();
-    await expect(page.getByText("5 mots clés / descripteurs")).toBeVisible();
+    await expect(page.getByText("2 mots clés / descripteurs")).toBeVisible();
   });
 
   test("displays certifications visibility count", async ({ page }) => {

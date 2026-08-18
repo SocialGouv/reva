@@ -272,7 +272,9 @@ test.describe("when accessing the page", () => {
         name: "Afficher les certifications couvertes uniquement",
       }),
     ).toBeChecked();
-    await expect(page.getByRole("button", { name: "Formacode" })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Champs sémantique" }),
+    ).toBeVisible();
     await expect(page.getByRole("button", { name: "Niveau" })).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Réinitialiser les filtres" }),
@@ -407,21 +409,21 @@ test.describe("search and filters", () => {
 
     await showAllCertifications(page);
 
-    await expandFilterAccordion(page, "Formacode");
+    await expandFilterAccordion(page, "Champs sémantique");
 
-    await page.getByLabel("Numéro de Formacode").fill("générale");
+    await page.getByLabel("Champs sémantique").fill("générale");
     await expect(page.getByText(/Résultat : 3 sur 3/)).toBeVisible();
 
-    await page.getByLabel("Numéro de Formacode").fill("Agriculture");
+    await page.getByLabel("Champs sémantique").fill("Agriculture");
     await expect(page.getByText(/Résultat : 2 sur 2/)).toBeVisible();
 
-    await page.getByLabel("Numéro de Formacode").fill(DOMAIN_CODE);
+    await page.getByLabel("Champs sémantique").fill(DOMAIN_CODE);
     await expect(page.getByText(/Résultat : 2 sur 2/)).toBeVisible();
 
-    await page.getByLabel("Numéro de Formacode").fill("Industrie");
+    await page.getByLabel("Champs sémantique").fill("Industrie");
     await expect(page.getByText(/Résultat : 1 sur 1/)).toBeVisible();
 
-    await page.getByLabel("Numéro de Formacode").fill("Métallurgie");
+    await page.getByLabel("Champs sémantique").fill("Métallurgie");
     await expect(page.getByText(/Résultat : 0 sur 0/)).toBeVisible();
   });
 

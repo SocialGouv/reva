@@ -190,6 +190,14 @@ export const PerimetreAccompagnementForm = ({
     }
   }, [activeCertifications]);
 
+  const domainsFromSubDomains = useMemo(() => {
+    return formacodes.filter((formacode) =>
+      organismFormacodes.some(
+        (subDomain) => subDomain.parentCode === formacode.code,
+      ),
+    );
+  }, [formacodes, organismFormacodes]);
+
   return (
     <div className="flex flex-col flex-1">
       {organismAndReferentialStatus === "error" && (
@@ -248,9 +256,9 @@ export const PerimetreAccompagnementForm = ({
 
                   <div className="flex flex-row justify-between gap-4 mb-4">
                     <div className="flex flex-wrap gap-2">
-                      <Tag>{`${organismFormacodes.length} champs sémantiques`}</Tag>
+                      <Tag>{`${domainsFromSubDomains.length} champs sémantiques`}</Tag>
 
-                      <Tag>{`${organismFormacodes.reduce((acc, formacode) => acc + formacode.countOfChildren, 0)} mots clés / descripteurs`}</Tag>
+                      <Tag>{`${organismFormacodes.length} mots clés / descripteurs`}</Tag>
                     </div>
 
                     <Button
