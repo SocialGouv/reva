@@ -1,8 +1,11 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
-
 import { getCertificationById } from "@/modules/referential/features/getCertificationById";
+import {
+  isAdminOrCandidacyCompanion,
+  isAdminOrOwnerOfCandidacy,
+  isAnyone,
+} from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 
-import { resolversSecurityMap } from "./certification.security";
 import { updateCertificationOfCandidacy } from "./features/updateCertificationOfCandidacy";
 import { updateCertificationWithinOrganismScope } from "./features/updateCertificationWithinOrganismScope";
 
@@ -42,7 +45,14 @@ const unsafeResolvers = {
   },
 };
 
-export const certificationResolvers = composeResolvers(
-  unsafeResolvers,
-  resolversSecurityMap,
-);
+export const certificationResolvers = withPolicies(unsafeResolvers, {
+  Candidacy: {
+    certification: isAnyone,
+  },
+  Query: {},
+  Mutation: {
+    candidacy_certification_updateCertification: isAdminOrOwnerOfCandidacy,
+    candidacy_certification_updateCertificationWithinOrganismScope:
+      isAdminOrCandidacyCompanion,
+  },
+});
