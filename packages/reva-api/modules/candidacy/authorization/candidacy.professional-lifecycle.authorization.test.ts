@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { CandidacyStatusStep } from "@prisma/client";
+import { format } from "date-fns";
 
 import {
   NOT_AUTHORIZED,
@@ -16,7 +17,76 @@ import {
   attachCollaborateurAccountToOrganism,
   createOrganismHelper,
 } from "@/test/helpers/entities/create-organism-helper";
-import { injectGraphql } from "@/test/helpers/graphql-helper";
+import { getGraphQLClient } from "@/test/test-graphql-client";
+
+import { graphql } from "../../graphql/generated";
+
+const candidacy_unarchiveById = graphql(`
+  mutation candidacy_unarchiveById_authorization($candidacyId: ID!) {
+    candidacy_unarchiveById(candidacyId: $candidacyId) {
+      id
+      status
+    }
+  }
+`);
+
+const candidacy_submitTypologyForm = graphql(`
+  mutation candidacy_submitTypologyForm_authorization(
+    $candidacyId: ID!
+    $typology: CandidateTypology!
+  ) {
+    candidacy_submitTypologyForm(
+      candidacyId: $candidacyId
+      typology: $typology
+    ) {
+      id
+      typology
+    }
+  }
+`);
+
+const candidacy_dropOut = graphql(`
+  mutation candidacy_dropOut_authorization(
+    $candidacyId: UUID!
+    $dropOut: DropOutInput!
+  ) {
+    candidacy_dropOut(candidacyId: $candidacyId, dropOut: $dropOut) {
+      id
+    }
+  }
+`);
+
+const candidacy_submitEndAccompagnement = graphql(`
+  mutation candidacy_submitEndAccompagnement_authorization(
+    $candidacyId: UUID!
+    $endAccompagnementDate: Timestamp!
+    $endAccompagnementReason: EndAccompagnementReason!
+  ) {
+    candidacy_submitEndAccompagnement(
+      candidacyId: $candidacyId
+      endAccompagnementDate: $endAccompagnementDate
+      endAccompagnementReason: $endAccompagnementReason
+    ) {
+      id
+      endAccompagnementStatus
+    }
+  }
+`);
+
+const candidacy_archiveById = graphql(`
+  mutation candidacy_archiveById_authorization(
+    $candidacyId: ID!
+    $archivingReason: CandidacyArchivingReason!
+  ) {
+    candidacy_archiveById(
+      candidacyId: $candidacyId
+      archivingReason: $archivingReason
+    ) {
+      id
+      status
+    }
+  }
+`);
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
@@ -24,29 +94,49 @@ const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
     keycloakId: keycloakId ?? faker.string.uuid(),
   });
 
-const mutation = ({
-  endpoint,
-  authorization,
-  arguments: mutationArguments,
-  enumFields,
-  returnFields,
-}: {
-  endpoint: string;
-  authorization?: string;
-  arguments?: Record<string, unknown>;
-  enumFields?: string[];
-  returnFields: string;
-}) =>
-  injectGraphql({
-    fastify: global.testApp,
-    authorization,
-    payload: {
-      requestType: "mutation",
-      endpoint,
-      arguments: mutationArguments,
-      enumFields,
-      returnFields,
-    },
+const getClient = (authorization?: string) =>
+  getGraphQLClient({
+    headers: authorization ? { authorization } : undefined,
+  });
+
+const unarchive = (authorization: string | undefined, candidacyId: string) =>
+  getClient(authorization).request(candidacy_unarchiveById, { candidacyId });
+
+const submitTypology = (
+  authorization: string | undefined,
+  candidacyId: string,
+  typology: "BENEVOLE" | "RETRAITE" = "BENEVOLE",
+) =>
+  getClient(authorization).request(candidacy_submitTypologyForm, {
+    candidacyId,
+    typology,
+  });
+
+const dropOut = (
+  authorization: string | undefined,
+  candidacyId: string,
+  dropOutReasonId = faker.string.uuid(),
+) =>
+  getClient(authorization).request(candidacy_dropOut, {
+    candidacyId,
+    dropOut: { dropOutReasonId },
+  });
+
+const submitEndAccompagnement = (
+  authorization: string | undefined,
+  candidacyId: string,
+  endAccompagnementDate = faker.date.past(),
+) =>
+  getClient(authorization).request(candidacy_submitEndAccompagnement, {
+    candidacyId,
+    endAccompagnementDate: format(endAccompagnementDate, "yyyy-MM-dd"),
+    endAccompagnementReason: "CONTRAT_ACCOMPAGNEMENT_TERMINE",
+  });
+
+const archive = (authorization: string | undefined, candidacyId: string) =>
+  getClient(authorization).request(candidacy_archiveById, {
+    candidacyId,
+    archivingReason: "INACTIVITE_CANDIDAT",
   });
 
 const createForeignAapAuthorization = async () => {
@@ -68,41 +158,29 @@ const createForeignMaisonMereManagerAuthorization = async () => {
 };
 
 interface MutationCase {
-  endpoint: string;
-  buildArguments: (candidacyId: string) => Record<string, unknown>;
-  enumFields?: string[];
-  returnFields: string;
+  operationName: string;
+  request: (
+    authorization: string | undefined,
+    candidacyId: string,
+  ) => Promise<unknown>;
 }
 
 const adminOrCompanionMutationCases: MutationCase[] = [
   {
-    endpoint: "candidacy_unarchiveById",
-    buildArguments: (candidacyId) => ({ candidacyId }),
-    returnFields: "{ id }",
+    operationName: "candidacy_unarchiveById",
+    request: unarchive,
   },
   {
-    endpoint: "candidacy_submitTypologyForm",
-    buildArguments: (candidacyId) => ({ candidacyId, typology: "BENEVOLE" }),
-    enumFields: ["typology"],
-    returnFields: "{ id }",
+    operationName: "candidacy_submitTypologyForm",
+    request: submitTypology,
   },
   {
-    endpoint: "candidacy_dropOut",
-    buildArguments: (candidacyId) => ({
-      candidacyId,
-      dropOut: { dropOutReasonId: faker.string.uuid() },
-    }),
-    returnFields: "{ id }",
+    operationName: "candidacy_dropOut",
+    request: dropOut,
   },
   {
-    endpoint: "candidacy_submitEndAccompagnement",
-    buildArguments: (candidacyId) => ({
-      candidacyId,
-      endAccompagnementDate: faker.date.past(),
-      endAccompagnementReason: "CONTRAT_ACCOMPAGNEMENT_TERMINE",
-    }),
-    enumFields: ["endAccompagnementReason"],
-    returnFields: "{ id }",
+    operationName: "candidacy_submitEndAccompagnement",
+    request: submitEndAccompagnement,
   },
 ];
 
@@ -116,65 +194,40 @@ const unsupportedProfessionalRoles: KeyCloakUserRole[] = [
 describe("candidacy lifecycle resolver authorization", () => {
   describe("admin or candidacy companion mutations", () => {
     describe.each(adminOrCompanionMutationCases)(
-      "$endpoint",
+      "$operationName",
       (mutationCase: MutationCase) => {
-        const { endpoint, buildArguments, enumFields, returnFields } =
-          mutationCase;
+        const { request } = mutationCase;
 
         test("rejects a random AAP for a candidacy outside its scope", async () => {
           const candidacy = await createCandidacyHelper();
-          const response = await mutation({
-            endpoint,
-            authorization: await createForeignAapAuthorization(),
-            arguments: buildArguments(candidacy.id),
-            enumFields,
-            returnFields,
-          });
-
-          expect(response.json().errors[0].message).toBe(
-            NOT_AUTHORIZED_CANDIDACY_MANAGE,
-          );
+          await expect(
+            request(await createForeignAapAuthorization(), candidacy.id),
+          ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_MANAGE);
         });
 
         test("rejects a maison mere manager from another maison mere", async () => {
           const candidacy = await createCandidacyHelper();
-          const response = await mutation({
-            endpoint,
-            authorization: await createForeignMaisonMereManagerAuthorization(),
-            arguments: buildArguments(candidacy.id),
-            enumFields,
-            returnFields,
-          });
-
-          expect(response.json().errors[0].message).toBe(
-            NOT_AUTHORIZED_CANDIDACY_MANAGE,
-          );
+          await expect(
+            request(
+              await createForeignMaisonMereManagerAuthorization(),
+              candidacy.id,
+            ),
+          ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_MANAGE);
         });
 
         test.each<KeyCloakUserRole>([
           "candidate",
           ...unsupportedProfessionalRoles,
         ])("rejects the %s role", async (role: KeyCloakUserRole) => {
-          const response = await mutation({
-            endpoint,
-            authorization: asRole(role),
-            arguments: buildArguments(faker.string.uuid()),
-            enumFields,
-            returnFields,
-          });
-
-          expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+          await expect(
+            request(asRole(role), faker.string.uuid()),
+          ).rejects.toThrowError(NOT_AUTHORIZED);
         });
 
         test("rejects an unauthenticated request", async () => {
-          const response = await mutation({
-            endpoint,
-            arguments: buildArguments(faker.string.uuid()),
-            enumFields,
-            returnFields,
-          });
-
-          expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+          await expect(
+            request(undefined, faker.string.uuid()),
+          ).rejects.toThrowError(SESSION_EXPIRED);
         });
       },
     );
@@ -191,15 +244,9 @@ describe("candidacy lifecycle resolver authorization", () => {
         },
       });
 
-      const response = await mutation({
-        endpoint: "candidacy_unarchiveById",
-        authorization: asRole("admin"),
-        arguments: { candidacyId: candidacy.id },
-        returnFields: "{ id status }",
-      });
+      const response = await unarchive(asRole("admin"), candidacy.id);
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_unarchiveById).toMatchObject({
+      expect(response.candidacy_unarchiveById).toMatchObject({
         id: candidacy.id,
         status: "PROJET",
       });
@@ -219,15 +266,12 @@ describe("candidacy lifecycle resolver authorization", () => {
         },
       });
 
-      const response = await mutation({
-        endpoint: "candidacy_unarchiveById",
-        authorization: asRole("manage_candidacy", aapKeycloakId),
-        arguments: { candidacyId: candidacy.id },
-        returnFields: "{ id status }",
-      });
+      const response = await unarchive(
+        asRole("manage_candidacy", aapKeycloakId),
+        candidacy.id,
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_unarchiveById).toMatchObject({
+      expect(response.candidacy_unarchiveById).toMatchObject({
         id: candidacy.id,
         status: "PROJET",
       });
@@ -255,18 +299,15 @@ describe("candidacy lifecycle resolver authorization", () => {
         },
       });
 
-      const response = await mutation({
-        endpoint: "candidacy_unarchiveById",
-        authorization: asRole(
+      const response = await unarchive(
+        asRole(
           "gestion_maison_mere_aap",
           maisonMereAAP.gestionnaire.keycloakId,
         ),
-        arguments: { candidacyId: candidacy.id },
-        returnFields: "{ id status }",
-      });
+        candidacy.id,
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_unarchiveById).toMatchObject({
+      expect(response.candidacy_unarchiveById).toMatchObject({
         id: candidacy.id,
         status: "PROJET",
       });
@@ -275,16 +316,13 @@ describe("candidacy lifecycle resolver authorization", () => {
     test("allows an admin to update the candidacy typology", async () => {
       const candidacy = await createCandidacyHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_submitTypologyForm",
-        authorization: asRole("admin"),
-        arguments: { candidacyId: candidacy.id, typology: "RETRAITE" },
-        enumFields: ["typology"],
-        returnFields: "{ id typology }",
-      });
+      const response = await submitTypology(
+        asRole("admin"),
+        candidacy.id,
+        "RETRAITE",
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_submitTypologyForm).toMatchObject({
+      expect(response.candidacy_submitTypologyForm).toMatchObject({
         id: candidacy.id,
         typology: "RETRAITE",
       });
@@ -295,16 +333,13 @@ describe("candidacy lifecycle resolver authorization", () => {
       const aapKeycloakId =
         candidacy.organism!.organismOnAccounts[0].account.keycloakId;
 
-      const response = await mutation({
-        endpoint: "candidacy_submitTypologyForm",
-        authorization: asRole("manage_candidacy", aapKeycloakId),
-        arguments: { candidacyId: candidacy.id, typology: "RETRAITE" },
-        enumFields: ["typology"],
-        returnFields: "{ id typology }",
-      });
+      const response = await submitTypology(
+        asRole("manage_candidacy", aapKeycloakId),
+        candidacy.id,
+        "RETRAITE",
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_submitTypologyForm).toMatchObject({
+      expect(response.candidacy_submitTypologyForm).toMatchObject({
         id: candidacy.id,
         typology: "RETRAITE",
       });
@@ -324,19 +359,16 @@ describe("candidacy lifecycle resolver authorization", () => {
         candidacyArgs: { organismId: organism.id },
       });
 
-      const response = await mutation({
-        endpoint: "candidacy_submitTypologyForm",
-        authorization: asRole(
+      const response = await submitTypology(
+        asRole(
           "gestion_maison_mere_aap",
           maisonMereAAP.gestionnaire.keycloakId,
         ),
-        arguments: { candidacyId: candidacy.id, typology: "RETRAITE" },
-        enumFields: ["typology"],
-        returnFields: "{ id typology }",
-      });
+        candidacy.id,
+        "RETRAITE",
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_submitTypologyForm).toMatchObject({
+      expect(response.candidacy_submitTypologyForm).toMatchObject({
         id: candidacy.id,
         typology: "RETRAITE",
       });
@@ -349,17 +381,8 @@ describe("candidacy lifecycle resolver authorization", () => {
       });
       const dropOutReason = await createDropOutReasonHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_dropOut",
-        authorization: asRole("admin"),
-        arguments: {
-          candidacyId: candidacy.id,
-          dropOut: { dropOutReasonId: dropOutReason.id },
-        },
-        returnFields: "{ id }",
-      });
+      await dropOut(asRole("admin"), candidacy.id, dropOutReason.id);
 
-      expect(response.json()).not.toHaveProperty("errors");
       expect(
         await prismaClient.candidacyDropOut.findUnique({
           where: { candidacyId: candidacy.id },
@@ -376,17 +399,12 @@ describe("candidacy lifecycle resolver authorization", () => {
         candidacy.organism!.organismOnAccounts[0].account.keycloakId;
       const dropOutReason = await createDropOutReasonHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_dropOut",
-        authorization: asRole("manage_candidacy", aapKeycloakId),
-        arguments: {
-          candidacyId: candidacy.id,
-          dropOut: { dropOutReasonId: dropOutReason.id },
-        },
-        returnFields: "{ id }",
-      });
+      await dropOut(
+        asRole("manage_candidacy", aapKeycloakId),
+        candidacy.id,
+        dropOutReason.id,
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
       expect(
         await prismaClient.candidacyDropOut.findUnique({
           where: { candidacyId: candidacy.id },
@@ -411,20 +429,15 @@ describe("candidacy lifecycle resolver authorization", () => {
       });
       const dropOutReason = await createDropOutReasonHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_dropOut",
-        authorization: asRole(
+      await dropOut(
+        asRole(
           "gestion_maison_mere_aap",
           maisonMereAAP.gestionnaire.keycloakId,
         ),
-        arguments: {
-          candidacyId: candidacy.id,
-          dropOut: { dropOutReasonId: dropOutReason.id },
-        },
-        returnFields: "{ id }",
-      });
+        candidacy.id,
+        dropOutReason.id,
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
       expect(
         await prismaClient.candidacyDropOut.findUnique({
           where: { candidacyId: candidacy.id },
@@ -436,22 +449,13 @@ describe("candidacy lifecycle resolver authorization", () => {
       const candidacy = await createCandidacyHelper();
       const endAccompagnementDate = faker.date.past();
 
-      const response = await mutation({
-        endpoint: "candidacy_submitEndAccompagnement",
-        authorization: asRole("admin"),
-        arguments: {
-          candidacyId: candidacy.id,
-          endAccompagnementDate,
-          endAccompagnementReason: "CONTRAT_ACCOMPAGNEMENT_TERMINE",
-        },
-        enumFields: ["endAccompagnementReason"],
-        returnFields: "{ id endAccompagnementStatus }",
-      });
+      const response = await submitEndAccompagnement(
+        asRole("admin"),
+        candidacy.id,
+        endAccompagnementDate,
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(
-        response.json().data.candidacy_submitEndAccompagnement,
-      ).toMatchObject({
+      expect(response.candidacy_submitEndAccompagnement).toMatchObject({
         id: candidacy.id,
         endAccompagnementStatus: "PENDING",
       });
@@ -463,22 +467,13 @@ describe("candidacy lifecycle resolver authorization", () => {
         candidacy.organism!.organismOnAccounts[0].account.keycloakId;
       const endAccompagnementDate = faker.date.past();
 
-      const response = await mutation({
-        endpoint: "candidacy_submitEndAccompagnement",
-        authorization: asRole("manage_candidacy", aapKeycloakId),
-        arguments: {
-          candidacyId: candidacy.id,
-          endAccompagnementDate,
-          endAccompagnementReason: "CONTRAT_ACCOMPAGNEMENT_TERMINE",
-        },
-        enumFields: ["endAccompagnementReason"],
-        returnFields: "{ id endAccompagnementStatus }",
-      });
+      const response = await submitEndAccompagnement(
+        asRole("manage_candidacy", aapKeycloakId),
+        candidacy.id,
+        endAccompagnementDate,
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(
-        response.json().data.candidacy_submitEndAccompagnement,
-      ).toMatchObject({
+      expect(response.candidacy_submitEndAccompagnement).toMatchObject({
         id: candidacy.id,
         endAccompagnementStatus: "PENDING",
       });
@@ -499,25 +494,16 @@ describe("candidacy lifecycle resolver authorization", () => {
       });
       const endAccompagnementDate = faker.date.past();
 
-      const response = await mutation({
-        endpoint: "candidacy_submitEndAccompagnement",
-        authorization: asRole(
+      const response = await submitEndAccompagnement(
+        asRole(
           "gestion_maison_mere_aap",
           maisonMereAAP.gestionnaire.keycloakId,
         ),
-        arguments: {
-          candidacyId: candidacy.id,
-          endAccompagnementDate,
-          endAccompagnementReason: "CONTRAT_ACCOMPAGNEMENT_TERMINE",
-        },
-        enumFields: ["endAccompagnementReason"],
-        returnFields: "{ id endAccompagnementStatus }",
-      });
+        candidacy.id,
+        endAccompagnementDate,
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(
-        response.json().data.candidacy_submitEndAccompagnement,
-      ).toMatchObject({
+      expect(response.candidacy_submitEndAccompagnement).toMatchObject({
         id: candidacy.id,
         endAccompagnementStatus: "PENDING",
       });
@@ -525,42 +511,23 @@ describe("candidacy lifecycle resolver authorization", () => {
   });
 
   describe("candidacy_archiveById", () => {
-    const endpoint = "candidacy_archiveById";
-    const buildArguments = (candidacyId: string) => ({
-      candidacyId,
-      archivingReason: "INACTIVITE_CANDIDAT",
-    });
-    const enumFields = ["archivingReason"];
-    const returnFields = "{ id status }";
-
     test("allows an admin to archive the candidacy", async () => {
       const candidacy = await createCandidacyHelper();
 
-      const response = await mutation({
-        endpoint,
-        authorization: asRole("admin"),
-        arguments: buildArguments(candidacy.id),
-        enumFields,
-        returnFields,
-      });
+      const response = await archive(asRole("admin"), candidacy.id);
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data[endpoint].id).toBe(candidacy.id);
+      expect(response.candidacy_archiveById.id).toBe(candidacy.id);
     });
 
     test("allows the candidate owning the candidacy to archive it", async () => {
       const candidacy = await createCandidacyHelper();
 
-      const response = await mutation({
-        endpoint,
-        authorization: asRole("candidate", candidacy.candidate!.keycloakId),
-        arguments: buildArguments(candidacy.id),
-        enumFields,
-        returnFields,
-      });
+      const response = await archive(
+        asRole("candidate", candidacy.candidate!.keycloakId),
+        candidacy.id,
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data[endpoint].id).toBe(candidacy.id);
+      expect(response.candidacy_archiveById.id).toBe(candidacy.id);
     });
 
     test("allows the AAP associated to the candidacy to archive it", async () => {
@@ -568,16 +535,12 @@ describe("candidacy lifecycle resolver authorization", () => {
       const aapKeycloakId =
         candidacy.organism!.organismOnAccounts[0].account.keycloakId;
 
-      const response = await mutation({
-        endpoint,
-        authorization: asRole("manage_candidacy", aapKeycloakId),
-        arguments: buildArguments(candidacy.id),
-        enumFields,
-        returnFields,
-      });
+      const response = await archive(
+        asRole("manage_candidacy", aapKeycloakId),
+        candidacy.id,
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data[endpoint].id).toBe(candidacy.id);
+      expect(response.candidacy_archiveById.id).toBe(candidacy.id);
     });
 
     test("allows the maison mere manager of the AAP associated to the candidacy to archive it", async () => {
@@ -594,92 +557,56 @@ describe("candidacy lifecycle resolver authorization", () => {
         candidacyArgs: { organismId: organism.id },
       });
 
-      const response = await mutation({
-        endpoint,
-        authorization: asRole(
+      const response = await archive(
+        asRole(
           "gestion_maison_mere_aap",
           maisonMereAAP.gestionnaire.keycloakId,
         ),
-        arguments: buildArguments(candidacy.id),
-        enumFields,
-        returnFields,
-      });
+        candidacy.id,
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data[endpoint].id).toBe(candidacy.id);
+      expect(response.candidacy_archiveById.id).toBe(candidacy.id);
     });
 
     test("rejects a random candidate for a candidacy they do not own", async () => {
       const candidacy = await createCandidacyHelper();
       const randomCandidate = await createCandidateHelper();
 
-      const response = await mutation({
-        endpoint,
-        authorization: asRole("candidate", randomCandidate.keycloakId),
-        arguments: buildArguments(candidacy.id),
-        enumFields,
-        returnFields,
-      });
-
-      expect(response.json().errors[0].message).toBe(
-        NOT_AUTHORIZED_CANDIDACY_ACCESS,
-      );
+      await expect(
+        archive(asRole("candidate", randomCandidate.keycloakId), candidacy.id),
+      ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
     });
 
     test("rejects a random AAP for a candidacy outside its scope", async () => {
       const candidacy = await createCandidacyHelper();
-      const response = await mutation({
-        endpoint,
-        authorization: await createForeignAapAuthorization(),
-        arguments: buildArguments(candidacy.id),
-        enumFields,
-        returnFields,
-      });
-
-      expect(response.json().errors[0].message).toBe(
-        NOT_AUTHORIZED_CANDIDACY_MANAGE,
-      );
+      await expect(
+        archive(await createForeignAapAuthorization(), candidacy.id),
+      ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_MANAGE);
     });
 
     test("rejects a maison mere manager from another maison mere", async () => {
       const candidacy = await createCandidacyHelper();
-      const response = await mutation({
-        endpoint,
-        authorization: await createForeignMaisonMereManagerAuthorization(),
-        arguments: buildArguments(candidacy.id),
-        enumFields,
-        returnFields,
-      });
-
-      expect(response.json().errors[0].message).toBe(
-        NOT_AUTHORIZED_CANDIDACY_MANAGE,
-      );
+      await expect(
+        archive(
+          await createForeignMaisonMereManagerAuthorization(),
+          candidacy.id,
+        ),
+      ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_MANAGE);
     });
 
     test.each(unsupportedProfessionalRoles)(
       "rejects the %s role",
       async (role: KeyCloakUserRole) => {
-        const response = await mutation({
-          endpoint,
-          authorization: asRole(role),
-          arguments: buildArguments(faker.string.uuid()),
-          enumFields,
-          returnFields,
-        });
-
-        expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+        await expect(
+          archive(asRole(role), faker.string.uuid()),
+        ).rejects.toThrowError(NOT_AUTHORIZED);
       },
     );
 
     test("rejects an unauthenticated request", async () => {
-      const response = await mutation({
-        endpoint,
-        arguments: buildArguments(faker.string.uuid()),
-        enumFields,
-        returnFields,
-      });
-
-      expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+      await expect(
+        archive(undefined, faker.string.uuid()),
+      ).rejects.toThrowError(SESSION_EXPIRED);
     });
   });
 });

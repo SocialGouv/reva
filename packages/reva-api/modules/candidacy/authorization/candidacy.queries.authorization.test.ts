@@ -11,7 +11,92 @@ import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
-import { injectGraphql } from "@/test/helpers/graphql-helper";
+import { getGraphQLClient } from "@/test/test-graphql-client";
+
+import { graphql } from "../../graphql/generated";
+
+const getCandidaciesDocument = graphql(`
+  query getCandidacies_authorization {
+    getCandidacies {
+      rows {
+        id
+      }
+    }
+  }
+`);
+
+const getRandomOrganismsForCandidacyDocument = graphql(`
+  query getRandomOrganismsForCandidacy_authorization($candidacyId: UUID!) {
+    getRandomOrganismsForCandidacy(candidacyId: $candidacyId) {
+      totalRows
+    }
+  }
+`);
+
+const searchOrganismsForCandidacyAsAdminDocument = graphql(`
+  query candidacy_searchOrganismsForCandidacyAsAdmin_authorization(
+    $candidacyId: UUID!
+  ) {
+    candidacy_searchOrganismsForCandidacyAsAdmin(candidacyId: $candidacyId) {
+      rows {
+        id
+      }
+    }
+  }
+`);
+
+const candidacyCountByStatusDocument = graphql(`
+  query candidacy_candidacyCountByStatus_authorization {
+    candidacy_candidacyCountByStatus {
+      ACTIVE_HORS_ABANDON
+      PARCOURS_CONFIRME_HORS_ABANDON
+    }
+  }
+`);
+
+const deniedCandidacyCountByStatusDocument = graphql(`
+  query candidacy_candidacyCountByStatus_denied_authorization {
+    candidacy_candidacyCountByStatus {
+      PROJET_HORS_ABANDON
+    }
+  }
+`);
+
+const getCandidacyCcnsDocument = graphql(`
+  query candidacy_getCandidacyCcns_authorization {
+    candidacy_getCandidacyCcns {
+      rows {
+        id
+      }
+    }
+  }
+`);
+
+const canAccessCandidacyDocument = graphql(`
+  query candidacy_canAccessCandidacy_authorization($candidacyId: ID!) {
+    candidacy_canAccessCandidacy(candidacyId: $candidacyId)
+  }
+`);
+
+const getCandidaciesForCertificationAuthorityDocument = graphql(`
+  query candidacy_getCandidaciesForCertificationAuthority_authorization {
+    candidacy_getCandidaciesForCertificationAuthority {
+      rows {
+        id
+      }
+    }
+  }
+`);
+
+const getCandidaciesForAAPDocument = graphql(`
+  query candidacy_getCandidaciesForAAP_authorization {
+    candidacy_getCandidaciesForAAP {
+      rows {
+        id
+      }
+    }
+  }
+`);
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
@@ -19,41 +104,53 @@ const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
     keycloakId: keycloakId ?? faker.string.uuid(),
   });
 
-const query = ({
-  endpoint,
-  authorization,
-  arguments: queryArguments,
-  returnFields,
-}: {
-  endpoint: string;
-  authorization?: string;
-  arguments?: Record<string, unknown>;
-  returnFields: string;
-}) =>
-  injectGraphql({
-    fastify: global.testApp,
-    authorization,
-    payload: {
-      requestType: "query",
-      endpoint,
-      arguments: queryArguments,
-      returnFields,
-    },
+const getClient = (authorization?: string) =>
+  getGraphQLClient({
+    headers: authorization ? { authorization } : undefined,
   });
+
+const getCandidacies = (authorization?: string) =>
+  getClient(authorization).request(getCandidaciesDocument);
+
+const getRandomOrganismsForCandidacy = (candidacyId: string) =>
+  getClient().request(getRandomOrganismsForCandidacyDocument, { candidacyId });
+
+const searchOrganismsForCandidacyAsAdmin = (
+  authorization: string | undefined,
+  candidacyId: string,
+) =>
+  getClient(authorization).request(searchOrganismsForCandidacyAsAdminDocument, {
+    candidacyId,
+  });
+
+const getCandidacyCountByStatus = (authorization?: string) =>
+  getClient(authorization).request(candidacyCountByStatusDocument);
+
+const getDeniedCandidacyCountByStatus = (authorization?: string) =>
+  getClient(authorization).request(deniedCandidacyCountByStatusDocument);
+
+const getCandidacyCcns = (authorization?: string) =>
+  getClient(authorization).request(getCandidacyCcnsDocument);
+
+const canAccessCandidacy = (candidacyId: string) =>
+  getClient().request(canAccessCandidacyDocument, { candidacyId });
+
+const getCandidaciesForCertificationAuthority = (authorization?: string) =>
+  getClient(authorization).request(
+    getCandidaciesForCertificationAuthorityDocument,
+  );
+
+const getCandidaciesForAAP = (authorization?: string) =>
+  getClient(authorization).request(getCandidaciesForAAPDocument);
 
 describe("candidacy resolver read authorization", () => {
   describe("getCandidacies", () => {
     test("allows an admin to list every candidacy", async () => {
       const candidacy = await createCandidacyHelper();
 
-      const response = await query({
-        endpoint: "getCandidacies",
-        authorization: asRole("admin"),
-        returnFields: "{ rows { id } }",
-      });
+      const response = await getCandidacies(asRole("admin"));
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.getCandidacies.rows).toContainEqual({
+      expect(response.getCandidacies.rows).toContainEqual({
         id: candidacy.id,
       });
     });
@@ -65,20 +162,17 @@ describe("candidacy resolver read authorization", () => {
       });
       const foreignCandidacy = await createCandidacyHelper();
 
-      const response = await query({
-        endpoint: "getCandidacies",
-        authorization: asRole(
+      const response = await getCandidacies(
+        asRole(
           "gestion_maison_mere_aap",
           organism.maisonMereAAP!.gestionnaire.keycloakId,
         ),
-        returnFields: "{ rows { id } }",
-      });
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.getCandidacies.rows).toContainEqual({
+      expect(response.getCandidacies.rows).toContainEqual({
         id: candidacy.id,
       });
-      expect(response.json().data.getCandidacies.rows).not.toContainEqual({
+      expect(response.getCandidacies.rows).not.toContainEqual({
         id: foreignCandidacy.id,
       });
     });
@@ -90,45 +184,30 @@ describe("candidacy resolver read authorization", () => {
       "manage_certification_registry",
       "manage_vae_collective",
     ])("rejects the %s role", async (role: KeyCloakUserRole) => {
-      const response = await query({
-        endpoint: "getCandidacies",
-        authorization: asRole(role),
-        returnFields: "{ rows { id } }",
-      });
-
-      expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+      await expect(getCandidacies(asRole(role))).rejects.toThrowError(
+        NOT_AUTHORIZED,
+      );
     });
 
     test("rejects an unauthenticated request", async () => {
-      const response = await query({
-        endpoint: "getCandidacies",
-        returnFields: "{ rows { id } }",
-      });
-
-      expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+      await expect(getCandidacies()).rejects.toThrowError(SESSION_EXPIRED);
     });
   });
 
   test("allows an unauthenticated user to request an organism search for a candidacy", async () => {
-    const response = await query({
-      endpoint: "getRandomOrganismsForCandidacy",
-      arguments: { candidacyId: faker.string.uuid() },
-      returnFields: "{ totalRows }",
-    });
-
-    expect(response.json().errors[0].message).toBe(CANDIDATURE_NON_TROUVEE);
+    await expect(
+      getRandomOrganismsForCandidacy(faker.string.uuid()),
+    ).rejects.toThrowError(CANDIDATURE_NON_TROUVEE);
   });
 
   describe("candidacy_searchOrganismsForCandidacyAsAdmin", () => {
     test("allows an admin to request an organism search", async () => {
-      const response = await query({
-        endpoint: "candidacy_searchOrganismsForCandidacyAsAdmin",
-        authorization: asRole("admin"),
-        arguments: { candidacyId: faker.string.uuid() },
-        returnFields: "{ rows { id } }",
-      });
-
-      expect(response.json().errors[0].message).toBe(CANDIDATURE_NON_TROUVEE);
+      await expect(
+        searchOrganismsForCandidacyAsAdmin(
+          asRole("admin"),
+          faker.string.uuid(),
+        ),
+      ).rejects.toThrowError(CANDIDATURE_NON_TROUVEE);
     });
 
     test.each<KeyCloakUserRole>([
@@ -140,24 +219,15 @@ describe("candidacy resolver read authorization", () => {
       "manage_certification_registry",
       "manage_vae_collective",
     ])("rejects the %s role", async (role: KeyCloakUserRole) => {
-      const response = await query({
-        endpoint: "candidacy_searchOrganismsForCandidacyAsAdmin",
-        authorization: asRole(role),
-        arguments: { candidacyId: faker.string.uuid() },
-        returnFields: "{ rows { id } }",
-      });
-
-      expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+      await expect(
+        searchOrganismsForCandidacyAsAdmin(asRole(role), faker.string.uuid()),
+      ).rejects.toThrowError(NOT_AUTHORIZED);
     });
 
     test("rejects an unauthenticated request", async () => {
-      const response = await query({
-        endpoint: "candidacy_searchOrganismsForCandidacyAsAdmin",
-        arguments: { candidacyId: faker.string.uuid() },
-        returnFields: "{ rows { id } }",
-      });
-
-      expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+      await expect(
+        searchOrganismsForCandidacyAsAdmin(undefined, faker.string.uuid()),
+      ).rejects.toThrowError(SESSION_EXPIRED);
     });
   });
 
@@ -172,30 +242,23 @@ describe("candidacy resolver read authorization", () => {
         candidacyActiveStatus: CandidacyStatusStep.PARCOURS_CONFIRME,
       });
 
-      const response = await query({
-        endpoint: "candidacy_candidacyCountByStatus",
-        authorization: asRole(
+      const response = await getCandidacyCountByStatus(
+        asRole(
           "gestion_maison_mere_aap",
           organism.maisonMereAAP!.gestionnaire.keycloakId,
         ),
-        returnFields: "{ ACTIVE_HORS_ABANDON PARCOURS_CONFIRME_HORS_ABANDON }",
-      });
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_candidacyCountByStatus).toEqual({
+      expect(response.candidacy_candidacyCountByStatus).toEqual({
         ACTIVE_HORS_ABANDON: 1,
         PARCOURS_CONFIRME_HORS_ABANDON: 1,
       });
     });
 
     test("rejects the candidate role", async () => {
-      const response = await query({
-        endpoint: "candidacy_candidacyCountByStatus",
-        authorization: asRole("candidate"),
-        returnFields: "{ PROJET_HORS_ABANDON }",
-      });
-
-      expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+      await expect(
+        getDeniedCandidacyCountByStatus(asRole("candidate")),
+      ).rejects.toThrowError(NOT_AUTHORIZED);
     });
 
     test.each<KeyCloakUserRole>([
@@ -204,24 +267,19 @@ describe("candidacy resolver read authorization", () => {
       "manage_certification_registry",
       "manage_vae_collective",
     ])("rejects the %s role", async (role: KeyCloakUserRole) => {
-      const response = await query({
-        endpoint: "candidacy_candidacyCountByStatus",
-        authorization: asRole(role),
-        returnFields: "{ PROJET_HORS_ABANDON }",
-      });
-
-      expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+      await expect(
+        getDeniedCandidacyCountByStatus(asRole(role)),
+      ).rejects.toThrowError(NOT_AUTHORIZED);
     });
 
     test("rejects an unauthenticated request", async () => {
-      const response = await query({
-        endpoint: "candidacy_candidacyCountByStatus",
-        returnFields: "{ PROJET_HORS_ABANDON }",
-      });
-
       // TODO: improve the policy code to return a proper SESSION_EXPIRED
-      expect(response.json()).toHaveProperty("errors");
-      expect(response.json().data).toBeNull();
+      await expect(getDeniedCandidacyCountByStatus()).rejects.toMatchObject({
+        response: {
+          errors: expect.any(Array),
+          data: null,
+        },
+      });
     });
   });
 
@@ -234,16 +292,9 @@ describe("candidacy resolver read authorization", () => {
     ])(
       "allows the %s role to list collective agreements",
       async (role: KeyCloakUserRole) => {
-        const response = await query({
-          endpoint: "candidacy_getCandidacyCcns",
-          authorization: asRole(role),
-          returnFields: "{ rows { id } }",
-        });
+        const response = await getCandidacyCcns(asRole(role));
 
-        expect(response.json()).not.toHaveProperty("errors");
-        expect(
-          response.json().data.candidacy_getCandidacyCcns.rows,
-        ).toBeInstanceOf(Array);
+        expect(response.candidacy_getCandidacyCcns.rows).toBeInstanceOf(Array);
       },
     );
 
@@ -253,69 +304,47 @@ describe("candidacy resolver read authorization", () => {
       "manage_certification_registry",
       "manage_vae_collective",
     ])("rejects the %s role", async (role: KeyCloakUserRole) => {
-      const response = await query({
-        endpoint: "candidacy_getCandidacyCcns",
-        authorization: asRole(role),
-        returnFields: "{ rows { id } }",
-      });
-
-      expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+      await expect(getCandidacyCcns(asRole(role))).rejects.toThrowError(
+        NOT_AUTHORIZED,
+      );
     });
 
     test("rejects an unauthenticated request", async () => {
-      const response = await query({
-        endpoint: "candidacy_getCandidacyCcns",
-        returnFields: "{ rows { id } }",
-      });
-
-      expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+      await expect(getCandidacyCcns()).rejects.toThrowError(SESSION_EXPIRED);
     });
   });
 
   test("allows an unauthenticated request to check candidacy access", async () => {
     const candidacy = await createCandidacyHelper();
 
-    const response = await query({
-      endpoint: "candidacy_canAccessCandidacy",
-      arguments: { candidacyId: candidacy.id },
-      returnFields: "",
-    });
+    const response = await canAccessCandidacy(candidacy.id);
 
-    expect(response.json()).not.toHaveProperty("errors");
-    expect(response.json().data.candidacy_canAccessCandidacy).toBe(false);
+    expect(response.candidacy_canAccessCandidacy).toBe(false);
   });
 
   describe("candidacy_getCandidaciesForCertificationAuthority", () => {
     test("allows an admin to list candidacies", async () => {
-      const response = await query({
-        endpoint: "candidacy_getCandidaciesForCertificationAuthority",
-        authorization: asRole("admin"),
-        returnFields: "{ rows { id } }",
-      });
+      const response = await getCandidaciesForCertificationAuthority(
+        asRole("admin"),
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
       expect(
-        response.json().data.candidacy_getCandidaciesForCertificationAuthority
-          .rows,
+        response.candidacy_getCandidaciesForCertificationAuthority.rows,
       ).toBeInstanceOf(Array);
     });
 
     test("allows a certification authority manager to list candidacies", async () => {
       const certificationAuthority = await createCertificationAuthorityHelper();
 
-      const response = await query({
-        endpoint: "candidacy_getCandidaciesForCertificationAuthority",
-        authorization: asRole(
+      const response = await getCandidaciesForCertificationAuthority(
+        asRole(
           "manage_certification_authority_local_account",
           certificationAuthority.Account[0].keycloakId,
         ),
-        returnFields: "{ rows { id } }",
-      });
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
       expect(
-        response.json().data.candidacy_getCandidaciesForCertificationAuthority
-          .rows,
+        response.candidacy_getCandidaciesForCertificationAuthority.rows,
       ).toBeInstanceOf(Array);
     });
 
@@ -323,19 +352,12 @@ describe("candidacy resolver read authorization", () => {
       const localAccount =
         await createCertificationAuthorityLocalAccountHelper();
 
-      const response = await query({
-        endpoint: "candidacy_getCandidaciesForCertificationAuthority",
-        authorization: asRole(
-          "manage_feasibility",
-          localAccount.account.keycloakId,
-        ),
-        returnFields: "{ rows { id } }",
-      });
+      const response = await getCandidaciesForCertificationAuthority(
+        asRole("manage_feasibility", localAccount.account.keycloakId),
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
       expect(
-        response.json().data.candidacy_getCandidaciesForCertificationAuthority
-          .rows,
+        response.candidacy_getCandidaciesForCertificationAuthority.rows,
       ).toBeInstanceOf(Array);
     });
 
@@ -346,37 +368,25 @@ describe("candidacy resolver read authorization", () => {
       "manage_certification_registry",
       "manage_vae_collective",
     ])("rejects the %s role", async (role: KeyCloakUserRole) => {
-      const response = await query({
-        endpoint: "candidacy_getCandidaciesForCertificationAuthority",
-        authorization: asRole(role),
-        returnFields: "{ rows { id } }",
-      });
-
-      expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+      await expect(
+        getCandidaciesForCertificationAuthority(asRole(role)),
+      ).rejects.toThrowError(NOT_AUTHORIZED);
     });
 
     test("rejects an unauthenticated request", async () => {
-      const response = await query({
-        endpoint: "candidacy_getCandidaciesForCertificationAuthority",
-        returnFields: "{ rows { id } }",
-      });
-
-      expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+      await expect(
+        getCandidaciesForCertificationAuthority(),
+      ).rejects.toThrowError(SESSION_EXPIRED);
     });
   });
 
   describe("candidacy_getCandidaciesForAAP", () => {
     test("allows an admin to list candidacies", async () => {
-      const response = await query({
-        endpoint: "candidacy_getCandidaciesForAAP",
-        authorization: asRole("admin"),
-        returnFields: "{ rows { id } }",
-      });
+      const response = await getCandidaciesForAAP(asRole("admin"));
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(
-        response.json().data.candidacy_getCandidaciesForAAP.rows,
-      ).toBeInstanceOf(Array);
+      expect(response.candidacy_getCandidaciesForAAP.rows).toBeInstanceOf(
+        Array,
+      );
     });
 
     test("allows the AAP to list only candidacies associated to it", async () => {
@@ -386,22 +396,19 @@ describe("candidacy resolver read authorization", () => {
       });
       const foreignCandidacy = await createCandidacyHelper();
 
-      const response = await query({
-        endpoint: "candidacy_getCandidaciesForAAP",
-        authorization: asRole(
+      const response = await getCandidaciesForAAP(
+        asRole(
           "manage_candidacy",
           organism.organismOnAccounts[0].account.keycloakId,
         ),
-        returnFields: "{ rows { id } }",
-      });
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(
-        response.json().data.candidacy_getCandidaciesForAAP.rows,
-      ).toContainEqual({ id: candidacy.id });
-      expect(
-        response.json().data.candidacy_getCandidaciesForAAP.rows,
-      ).not.toContainEqual({ id: foreignCandidacy.id });
+      expect(response.candidacy_getCandidaciesForAAP.rows).toContainEqual({
+        id: candidacy.id,
+      });
+      expect(response.candidacy_getCandidaciesForAAP.rows).not.toContainEqual({
+        id: foreignCandidacy.id,
+      });
     });
 
     test("allows the maison mere manager to list candidacies associated to its maison mere", async () => {
@@ -411,22 +418,19 @@ describe("candidacy resolver read authorization", () => {
       });
       const foreignCandidacy = await createCandidacyHelper();
 
-      const response = await query({
-        endpoint: "candidacy_getCandidaciesForAAP",
-        authorization: asRole(
+      const response = await getCandidaciesForAAP(
+        asRole(
           "gestion_maison_mere_aap",
           organism.maisonMereAAP!.gestionnaire.keycloakId,
         ),
-        returnFields: "{ rows { id } }",
-      });
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(
-        response.json().data.candidacy_getCandidaciesForAAP.rows,
-      ).toContainEqual({ id: candidacy.id });
-      expect(
-        response.json().data.candidacy_getCandidaciesForAAP.rows,
-      ).not.toContainEqual({ id: foreignCandidacy.id });
+      expect(response.candidacy_getCandidaciesForAAP.rows).toContainEqual({
+        id: candidacy.id,
+      });
+      expect(response.candidacy_getCandidaciesForAAP.rows).not.toContainEqual({
+        id: foreignCandidacy.id,
+      });
     });
 
     test.each<KeyCloakUserRole>([
@@ -436,22 +440,15 @@ describe("candidacy resolver read authorization", () => {
       "manage_certification_registry",
       "manage_vae_collective",
     ])("rejects the %s role", async (role: KeyCloakUserRole) => {
-      const response = await query({
-        endpoint: "candidacy_getCandidaciesForAAP",
-        authorization: asRole(role),
-        returnFields: "{ rows { id } }",
-      });
-
-      expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+      await expect(getCandidaciesForAAP(asRole(role))).rejects.toThrowError(
+        NOT_AUTHORIZED,
+      );
     });
 
     test("rejects an unauthenticated request", async () => {
-      const response = await query({
-        endpoint: "candidacy_getCandidaciesForAAP",
-        returnFields: "{ rows { id } }",
-      });
-
-      expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+      await expect(getCandidaciesForAAP()).rejects.toThrowError(
+        SESSION_EXPIRED,
+      );
     });
   });
 });

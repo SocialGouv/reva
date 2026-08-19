@@ -7,7 +7,36 @@ import {
 } from "@/modules/shared/security/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
-import { injectGraphql } from "@/test/helpers/graphql-helper";
+import { getGraphQLClient } from "@/test/test-graphql-client";
+
+import { graphql } from "../../graphql/generated";
+
+import type { UpdateCandidateInput } from "../../graphql/generated/graphql";
+
+const candidacy_createCandidacy = graphql(`
+  mutation candidacy_createCandidacy_authorization(
+    $candidateId: UUID!
+    $data: CreateCandidacyInput!
+  ) {
+    candidacy_createCandidacy(candidateId: $candidateId, data: $data) {
+      id
+    }
+  }
+`);
+
+const candidacy_updateContact = graphql(`
+  mutation candidacy_updateContact_authorization(
+    $candidateId: ID!
+    $candidateData: UpdateCandidateInput!
+  ) {
+    candidacy_updateContact(
+      candidateId: $candidateId
+      candidateData: $candidateData
+    ) {
+      id
+    }
+  }
+`);
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
@@ -15,30 +44,41 @@ const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
     keycloakId: keycloakId ?? faker.string.uuid(),
   });
 
-const mutation = ({
-  endpoint,
+const createCandidacy = ({
   authorization,
-  arguments: mutationArguments,
-  enumFields,
-  returnFields,
+  candidateId,
 }: {
-  endpoint: string;
   authorization?: string;
-  arguments?: Record<string, unknown>;
-  enumFields?: string[];
-  returnFields: string;
-}) =>
-  injectGraphql({
-    fastify: global.testApp,
-    authorization,
-    payload: {
-      requestType: "mutation",
-      endpoint,
-      arguments: mutationArguments,
-      enumFields,
-      returnFields,
-    },
+  candidateId: string;
+}) => {
+  const graphqlClient = getGraphQLClient({
+    headers: authorization ? { authorization } : undefined,
   });
+
+  return graphqlClient.request(candidacy_createCandidacy, {
+    candidateId,
+    data: { typeAccompagnement: "ACCOMPAGNE" },
+  });
+};
+
+const updateContact = ({
+  authorization,
+  candidateId,
+  candidateData,
+}: {
+  authorization?: string;
+  candidateId: string;
+  candidateData: UpdateCandidateInput;
+}) => {
+  const graphqlClient = getGraphQLClient({
+    headers: authorization ? { authorization } : undefined,
+  });
+
+  return graphqlClient.request(candidacy_updateContact, {
+    candidateId,
+    candidateData,
+  });
+};
 
 const unsupportedCandidateWriteRoles: KeyCloakUserRole[] = [
   "manage_candidacy",
@@ -54,89 +94,53 @@ describe("candidacy candidate-side resolver authorization", () => {
     test("allows an admin to act on any candidate", async () => {
       const candidate = await createCandidateHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_createCandidacy",
+      const response = await createCandidacy({
         authorization: asRole("admin"),
-        arguments: {
-          candidateId: candidate.id,
-          data: { typeAccompagnement: "ACCOMPAGNE" },
-        },
-        enumFields: ["typeAccompagnement"],
-        returnFields: "{ id }",
+        candidateId: candidate.id,
       });
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_createCandidacy.id).toBeDefined();
+      expect(response.candidacy_createCandidacy?.id).toBeDefined();
     });
 
     test("allows a candidate to create their own candidacy", async () => {
       const candidate = await createCandidateHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_createCandidacy",
+      const response = await createCandidacy({
         authorization: asRole("candidate", candidate.keycloakId),
-        arguments: {
-          candidateId: candidate.id,
-          data: { typeAccompagnement: "ACCOMPAGNE" },
-        },
-        enumFields: ["typeAccompagnement"],
-        returnFields: "{ id }",
+        candidateId: candidate.id,
       });
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_createCandidacy.id).toBeDefined();
+      expect(response.candidacy_createCandidacy?.id).toBeDefined();
     });
 
     test("rejects a random candidate acting on another candidate", async () => {
       const candidate = await createCandidateHelper();
       const randomCandidate = await createCandidateHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_createCandidacy",
-        authorization: asRole("candidate", randomCandidate.keycloakId),
-        arguments: {
+      await expect(
+        createCandidacy({
+          authorization: asRole("candidate", randomCandidate.keycloakId),
           candidateId: candidate.id,
-          data: { typeAccompagnement: "ACCOMPAGNE" },
-        },
-        enumFields: ["typeAccompagnement"],
-        returnFields: "{ id }",
-      });
-
-      expect(response.json().errors[0].message).toBe(
-        NOT_AUTHORIZED_CANDIDACY_ACCESS,
-      );
+        }),
+      ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
     });
 
     test.each(unsupportedCandidateWriteRoles)(
       "rejects the %s role",
       async (role: KeyCloakUserRole) => {
-        const response = await mutation({
-          endpoint: "candidacy_createCandidacy",
-          authorization: asRole(role),
-          arguments: {
+        await expect(
+          createCandidacy({
+            authorization: asRole(role),
             candidateId: faker.string.uuid(),
-            data: { typeAccompagnement: "ACCOMPAGNE" },
-          },
-          enumFields: ["typeAccompagnement"],
-          returnFields: "{ id }",
-        });
-
-        expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+          }),
+        ).rejects.toThrowError(NOT_AUTHORIZED);
       },
     );
 
     test("rejects an unauthenticated request", async () => {
-      const response = await mutation({
-        endpoint: "candidacy_createCandidacy",
-        arguments: {
-          candidateId: faker.string.uuid(),
-          data: { typeAccompagnement: "ACCOMPAGNE" },
-        },
-        enumFields: ["typeAccompagnement"],
-        returnFields: "{ id }",
-      });
-
-      expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+      await expect(
+        createCandidacy({ candidateId: faker.string.uuid() }),
+      ).rejects.toThrowError(SESSION_EXPIRED);
     });
   });
 
@@ -144,75 +148,56 @@ describe("candidacy candidate-side resolver authorization", () => {
     test("allows an admin to act on any candidate", async () => {
       const candidate = await createCandidateHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_updateContact",
+      const response = await updateContact({
         authorization: asRole("admin"),
-        arguments: {
-          candidateId: candidate.id,
-          candidateData: {
-            firstname: candidate.firstname,
-            lastname: candidate.lastname,
-            phone: faker.phone.number(),
-            email: candidate.email,
-          },
+        candidateId: candidate.id,
+        candidateData: {
+          firstname: candidate.firstname,
+          lastname: candidate.lastname,
+          phone: faker.phone.number(),
+          email: candidate.email,
         },
-        returnFields: "{ id }",
       });
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_updateContact.id).toBeDefined();
+      expect(response.candidacy_updateContact?.id).toBeDefined();
     });
 
     test("allows a candidate to update their own contact information", async () => {
       const candidate = await createCandidateHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_updateContact",
+      const response = await updateContact({
         authorization: asRole("candidate", candidate.keycloakId),
-        arguments: {
-          candidateId: candidate.id,
-          candidateData: {
-            firstname: candidate.firstname,
-            lastname: candidate.lastname,
-            phone: faker.phone.number(),
-            email: candidate.email,
-          },
+        candidateId: candidate.id,
+        candidateData: {
+          firstname: candidate.firstname,
+          lastname: candidate.lastname,
+          phone: faker.phone.number(),
+          email: candidate.email,
         },
-        returnFields: "{ id }",
       });
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_updateContact.id).toBe(
-        candidate.id,
-      );
+      expect(response.candidacy_updateContact?.id).toBe(candidate.id);
     });
 
     test("rejects a random candidate acting on another candidate", async () => {
       const candidate = await createCandidateHelper();
       const randomCandidate = await createCandidateHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_updateContact",
-        authorization: asRole("candidate", randomCandidate.keycloakId),
-        arguments: {
+      await expect(
+        updateContact({
+          authorization: asRole("candidate", randomCandidate.keycloakId),
           candidateId: candidate.id,
           candidateData: { phone: faker.phone.number() },
-        },
-        returnFields: "{ id }",
-      });
-
-      expect(response.json().errors[0].message).toBe(
-        NOT_AUTHORIZED_CANDIDACY_ACCESS,
-      );
+        }),
+      ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
     });
 
     test.each(unsupportedCandidateWriteRoles)(
       "rejects the %s role",
       async (role: KeyCloakUserRole) => {
-        const response = await mutation({
-          endpoint: "candidacy_updateContact",
-          authorization: asRole(role),
-          arguments: {
+        await expect(
+          updateContact({
+            authorization: asRole(role),
             candidateId: faker.string.uuid(),
             candidateData: {
               firstname: faker.person.firstName(),
@@ -220,18 +205,14 @@ describe("candidacy candidate-side resolver authorization", () => {
               phone: faker.phone.number(),
               email: faker.internet.email(),
             },
-          },
-          returnFields: "{ id }",
-        });
-
-        expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+          }),
+        ).rejects.toThrowError(NOT_AUTHORIZED);
       },
     );
 
     test("rejects an unauthenticated request", async () => {
-      const response = await mutation({
-        endpoint: "candidacy_updateContact",
-        arguments: {
+      await expect(
+        updateContact({
           candidateId: faker.string.uuid(),
           candidateData: {
             firstname: faker.person.firstName(),
@@ -239,11 +220,8 @@ describe("candidacy candidate-side resolver authorization", () => {
             phone: faker.phone.number(),
             email: faker.internet.email(),
           },
-        },
-        returnFields: "{ id }",
-      });
-
-      expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+        }),
+      ).rejects.toThrowError(SESSION_EXPIRED);
     });
   });
 });

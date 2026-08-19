@@ -15,7 +15,51 @@ import {
   attachCollaborateurAccountToOrganism,
   createOrganismHelper,
 } from "@/test/helpers/entities/create-organism-helper";
-import { injectGraphql } from "@/test/helpers/graphql-helper";
+import { getGraphQLClient } from "@/test/test-graphql-client";
+
+import { graphql } from "../../graphql/generated";
+
+const candidacy_addExperience = graphql(`
+  mutation candidacy_addExperience_authorization(
+    $candidacyId: ID!
+    $experience: ExperienceInput
+  ) {
+    candidacy_addExperience(
+      candidacyId: $candidacyId
+      experience: $experience
+    ) {
+      id
+    }
+  }
+`);
+
+const candidacy_updateExperience = graphql(`
+  mutation candidacy_updateExperience_authorization(
+    $candidacyId: ID!
+    $experienceId: ID!
+    $experience: ExperienceInput
+  ) {
+    candidacy_updateExperience(
+      candidacyId: $candidacyId
+      experienceId: $experienceId
+      experience: $experience
+    ) {
+      id
+    }
+  }
+`);
+
+const candidacy_deleteExperience = graphql(`
+  mutation candidacy_deleteExperience_authorization(
+    $candidacyId: ID!
+    $experienceId: ID!
+  ) {
+    candidacy_deleteExperience(
+      candidacyId: $candidacyId
+      experienceId: $experienceId
+    )
+  }
+`);
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
@@ -23,29 +67,9 @@ const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
     keycloakId: keycloakId ?? faker.string.uuid(),
   });
 
-const mutation = ({
-  endpoint,
-  authorization,
-  arguments: mutationArguments,
-  enumFields,
-  returnFields,
-}: {
-  endpoint: string;
-  authorization?: string;
-  arguments?: Record<string, unknown>;
-  enumFields?: string[];
-  returnFields: string;
-}) =>
-  injectGraphql({
-    fastify: global.testApp,
-    authorization,
-    payload: {
-      requestType: "mutation",
-      endpoint,
-      arguments: mutationArguments,
-      enumFields,
-      returnFields,
-    },
+const getClient = (authorization?: string) =>
+  getGraphQLClient({
+    headers: authorization ? { authorization } : undefined,
   });
 
 const experienceInput = {
@@ -67,67 +91,72 @@ const createExperience = (candidacyId: string) =>
   });
 
 interface ExperienceMutationCase {
-  endpoint: string;
-  buildArguments: (
+  operationName: string;
+  request: (
+    authorization: string | undefined,
     candidacyId: string,
     experienceId?: string,
-  ) => Record<string, unknown>;
-  returnFields: string;
+  ) => Promise<boolean>;
 }
 
 describe("candidacy experience resolver authorization", () => {
   describe("candidacy experiences", () => {
     const experienceMutationCases: ExperienceMutationCase[] = [
       {
-        endpoint: "candidacy_addExperience",
-        buildArguments: (candidacyId: string, _experienceId?: string) => ({
-          candidacyId,
-          experience: experienceInput,
-        }),
-        returnFields: "{ id }",
+        operationName: "candidacy_addExperience",
+        request: async (authorization, candidacyId) => {
+          const response = await getClient(authorization).request(
+            candidacy_addExperience,
+            { candidacyId, experience: experienceInput },
+          );
+          return response.candidacy_addExperience !== null;
+        },
       },
       {
-        endpoint: "candidacy_updateExperience",
-        buildArguments: (candidacyId: string, experienceId?: string) => ({
-          candidacyId,
-          experienceId: experienceId ?? faker.string.uuid(),
-          experience: experienceInput,
-        }),
-        returnFields: "{ id }",
+        operationName: "candidacy_updateExperience",
+        request: async (authorization, candidacyId, experienceId) => {
+          const response = await getClient(authorization).request(
+            candidacy_updateExperience,
+            {
+              candidacyId,
+              experienceId: experienceId ?? faker.string.uuid(),
+              experience: experienceInput,
+            },
+          );
+          return response.candidacy_updateExperience !== null;
+        },
       },
       {
-        endpoint: "candidacy_deleteExperience",
-        buildArguments: (candidacyId: string, experienceId?: string) => ({
-          candidacyId,
-          experienceId: experienceId ?? faker.string.uuid(),
-        }),
-        returnFields: "",
+        operationName: "candidacy_deleteExperience",
+        request: async (authorization, candidacyId, experienceId) => {
+          const response = await getClient(authorization).request(
+            candidacy_deleteExperience,
+            {
+              candidacyId,
+              experienceId: experienceId ?? faker.string.uuid(),
+            },
+          );
+          return response.candidacy_deleteExperience !== null;
+        },
       },
     ];
 
     describe.each(experienceMutationCases)(
-      "$endpoint",
+      "$operationName",
       (mutationCase: ExperienceMutationCase) => {
-        const { endpoint, buildArguments, returnFields } = mutationCase;
+        const { operationName, request } = mutationCase;
         test("allows an admin to manage an experience", async () => {
           const candidacy = await createCandidacyHelper({
             candidacyActiveStatus: CandidacyStatusStep.PROJET,
           });
           const experience =
-            endpoint === "candidacy_addExperience"
+            operationName === "candidacy_addExperience"
               ? undefined
               : await createExperience(candidacy.id);
 
-          const response = await mutation({
-            endpoint,
-            authorization: asRole("admin"),
-            arguments: buildArguments(candidacy.id, experience?.id),
-            enumFields: ["duration"],
-            returnFields,
-          });
-
-          expect(response.json()).not.toHaveProperty("errors");
-          expect(response.json().data[endpoint]).not.toBeNull();
+          await expect(
+            request(asRole("admin"), candidacy.id, experience?.id),
+          ).resolves.toBe(true);
         });
 
         test("allows the candidate owning the candidacy to manage an experience", async () => {
@@ -135,20 +164,17 @@ describe("candidacy experience resolver authorization", () => {
             candidacyActiveStatus: CandidacyStatusStep.PROJET,
           });
           const experience =
-            endpoint === "candidacy_addExperience"
+            operationName === "candidacy_addExperience"
               ? undefined
               : await createExperience(candidacy.id);
 
-          const response = await mutation({
-            endpoint,
-            authorization: asRole("candidate", candidacy.candidate!.keycloakId),
-            arguments: buildArguments(candidacy.id, experience?.id),
-            enumFields: ["duration"],
-            returnFields,
-          });
-
-          expect(response.json()).not.toHaveProperty("errors");
-          expect(response.json().data[endpoint]).not.toBeNull();
+          await expect(
+            request(
+              asRole("candidate", candidacy.candidate!.keycloakId),
+              candidacy.id,
+              experience?.id,
+            ),
+          ).resolves.toBe(true);
         });
 
         test("allows the AAP associated to the candidacy to manage an experience", async () => {
@@ -156,23 +182,20 @@ describe("candidacy experience resolver authorization", () => {
             candidacyActiveStatus: CandidacyStatusStep.PROJET,
           });
           const experience =
-            endpoint === "candidacy_addExperience"
+            operationName === "candidacy_addExperience"
               ? undefined
               : await createExperience(candidacy.id);
 
-          const response = await mutation({
-            endpoint,
-            authorization: asRole(
-              "manage_candidacy",
-              candidacy.organism!.organismOnAccounts[0].account.keycloakId,
+          await expect(
+            request(
+              asRole(
+                "manage_candidacy",
+                candidacy.organism!.organismOnAccounts[0].account.keycloakId,
+              ),
+              candidacy.id,
+              experience?.id,
             ),
-            arguments: buildArguments(candidacy.id, experience?.id),
-            enumFields: ["duration"],
-            returnFields,
-          });
-
-          expect(response.json()).not.toHaveProperty("errors");
-          expect(response.json().data[endpoint]).not.toBeNull();
+          ).resolves.toBe(true);
         });
 
         test("allows the maison mere manager of the AAP associated to the candidacy to manage an experience", async () => {
@@ -190,23 +213,20 @@ describe("candidacy experience resolver authorization", () => {
             candidacyArgs: { organismId: organism.id },
           });
           const experience =
-            endpoint === "candidacy_addExperience"
+            operationName === "candidacy_addExperience"
               ? undefined
               : await createExperience(candidacy.id);
 
-          const response = await mutation({
-            endpoint,
-            authorization: asRole(
-              "gestion_maison_mere_aap",
-              maisonMereAAP.gestionnaire.keycloakId,
+          await expect(
+            request(
+              asRole(
+                "gestion_maison_mere_aap",
+                maisonMereAAP.gestionnaire.keycloakId,
+              ),
+              candidacy.id,
+              experience?.id,
             ),
-            arguments: buildArguments(candidacy.id, experience?.id),
-            enumFields: ["duration"],
-            returnFields,
-          });
-
-          expect(response.json()).not.toHaveProperty("errors");
-          expect(response.json().data[endpoint]).not.toBeNull();
+          ).resolves.toBe(true);
         });
 
         test("rejects a maison mere manager from another maison mere", async () => {
@@ -214,7 +234,7 @@ describe("candidacy experience resolver authorization", () => {
             candidacyActiveStatus: CandidacyStatusStep.PROJET,
           });
           const experience =
-            endpoint === "candidacy_addExperience"
+            operationName === "candidacy_addExperience"
               ? undefined
               : await createExperience(candidacy.id);
           const foreignOrganism = await createOrganismHelper();
@@ -224,20 +244,13 @@ describe("candidacy experience resolver authorization", () => {
             collaborateurAccountId: foreignManager.id,
           });
 
-          const response = await mutation({
-            endpoint,
-            authorization: asRole(
-              "gestion_maison_mere_aap",
-              foreignManager.keycloakId,
+          await expect(
+            request(
+              asRole("gestion_maison_mere_aap", foreignManager.keycloakId),
+              candidacy.id,
+              experience?.id,
             ),
-            arguments: buildArguments(candidacy.id, experience?.id),
-            enumFields: ["duration"],
-            returnFields,
-          });
-
-          expect(response.json().errors[0].message).toBe(
-            NOT_AUTHORIZED_CANDIDACY_MANAGE,
-          );
+          ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_MANAGE);
         });
 
         test("rejects a random candidate for a candidacy they do not own", async () => {
@@ -245,22 +258,18 @@ describe("candidacy experience resolver authorization", () => {
             candidacyActiveStatus: CandidacyStatusStep.PROJET,
           });
           const experience =
-            endpoint === "candidacy_addExperience"
+            operationName === "candidacy_addExperience"
               ? undefined
               : await createExperience(candidacy.id);
           const randomCandidate = await createCandidateHelper();
 
-          const response = await mutation({
-            endpoint,
-            authorization: asRole("candidate", randomCandidate.keycloakId),
-            arguments: buildArguments(candidacy.id, experience?.id),
-            enumFields: ["duration"],
-            returnFields,
-          });
-
-          expect(response.json().errors[0].message).toBe(
-            NOT_AUTHORIZED_CANDIDACY_ACCESS,
-          );
+          await expect(
+            request(
+              asRole("candidate", randomCandidate.keycloakId),
+              candidacy.id,
+              experience?.id,
+            ),
+          ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
         });
 
         test.each<KeyCloakUserRole>([
@@ -269,26 +278,15 @@ describe("candidacy experience resolver authorization", () => {
           "manage_certification_registry",
           "manage_vae_collective",
         ])("rejects the %s role", async (role: KeyCloakUserRole) => {
-          const response = await mutation({
-            endpoint,
-            authorization: asRole(role),
-            arguments: buildArguments(faker.string.uuid()),
-            enumFields: ["duration"],
-            returnFields,
-          });
-
-          expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+          await expect(
+            request(asRole(role), faker.string.uuid()),
+          ).rejects.toThrowError(NOT_AUTHORIZED);
         });
 
         test("rejects an unauthenticated request", async () => {
-          const response = await mutation({
-            endpoint,
-            arguments: buildArguments(faker.string.uuid()),
-            enumFields: ["duration"],
-            returnFields,
-          });
-
-          expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+          await expect(
+            request(undefined, faker.string.uuid()),
+          ).rejects.toThrowError(SESSION_EXPIRED);
         });
       },
     );
