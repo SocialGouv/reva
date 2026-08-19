@@ -19,7 +19,15 @@ const config: CodegenConfig = {
       },
     },
   },
-  config: { scalars: { Timestamp: "number" } },
+  config: {
+    scalars: {
+      Date: {
+        input: "string",
+        output: "string",
+      },
+      Timestamp: "number",
+    },
+  },
 };
 
 export default config;
