@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { format } from "date-fns";
 
 import {
   NOT_AUTHORIZED,
@@ -13,7 +14,23 @@ import {
   attachCollaborateurAccountToOrganism,
   createOrganismHelper,
 } from "@/test/helpers/entities/create-organism-helper";
-import { injectGraphql } from "@/test/helpers/graphql-helper";
+import { getGraphQLClient } from "@/test/test-graphql-client";
+
+import { graphql } from "../../graphql/generated";
+
+const candidacy_setReadyForJuryEstimatedAt = graphql(`
+  mutation candidacy_setReadyForJuryEstimatedAt_authorization(
+    $candidacyId: UUID!
+    $readyForJuryEstimatedAt: Date!
+  ) {
+    candidacy_setReadyForJuryEstimatedAt(
+      candidacyId: $candidacyId
+      readyForJuryEstimatedAt: $readyForJuryEstimatedAt
+    ) {
+      id
+    }
+  }
+`);
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
@@ -21,30 +38,24 @@ const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
     keycloakId: keycloakId ?? faker.string.uuid(),
   });
 
-const mutation = ({
-  endpoint,
+const setReadyForJuryEstimatedAt = ({
   authorization,
-  arguments: mutationArguments,
-  enumFields,
-  returnFields,
+  candidacyId,
+  readyForJuryEstimatedAt,
 }: {
-  endpoint: string;
   authorization?: string;
-  arguments?: Record<string, unknown>;
-  enumFields?: string[];
-  returnFields: string;
-}) =>
-  injectGraphql({
-    fastify: global.testApp,
-    authorization,
-    payload: {
-      requestType: "mutation",
-      endpoint,
-      arguments: mutationArguments,
-      enumFields,
-      returnFields,
-    },
+  candidacyId: string;
+  readyForJuryEstimatedAt: Date;
+}) => {
+  const graphqlClient = getGraphQLClient({
+    headers: authorization ? { authorization } : undefined,
   });
+
+  return graphqlClient.request(candidacy_setReadyForJuryEstimatedAt, {
+    candidacyId,
+    readyForJuryEstimatedAt: format(readyForJuryEstimatedAt, "yyyy-MM-dd"),
+  });
+};
 
 const createForeignAapAuthorization = async () => {
   const organism = await createOrganismHelper();
@@ -76,18 +87,13 @@ describe("candidacy jury resolver authorization", () => {
     test("allows an admin to update the jury estimate", async () => {
       const candidacy = await createCandidacyHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_setReadyForJuryEstimatedAt",
+      const response = await setReadyForJuryEstimatedAt({
         authorization: asRole("admin"),
-        arguments: {
-          candidacyId: candidacy.id,
-          readyForJuryEstimatedAt: faker.date.soon({ days: 100 }),
-        },
-        returnFields: "{ id }",
+        candidacyId: candidacy.id,
+        readyForJuryEstimatedAt: faker.date.soon({ days: 100 }),
       });
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_setReadyForJuryEstimatedAt.id).toBe(
+      expect(response.candidacy_setReadyForJuryEstimatedAt.id).toBe(
         candidacy.id,
       );
     });
@@ -95,18 +101,13 @@ describe("candidacy jury resolver authorization", () => {
     test("allows the candidate owning the candidacy to update the jury estimate", async () => {
       const candidacy = await createCandidacyHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_setReadyForJuryEstimatedAt",
+      const response = await setReadyForJuryEstimatedAt({
         authorization: asRole("candidate", candidacy.candidate!.keycloakId),
-        arguments: {
-          candidacyId: candidacy.id,
-          readyForJuryEstimatedAt: faker.date.soon({ days: 100 }),
-        },
-        returnFields: "{ id }",
+        candidacyId: candidacy.id,
+        readyForJuryEstimatedAt: faker.date.soon({ days: 100 }),
       });
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_setReadyForJuryEstimatedAt.id).toBe(
+      expect(response.candidacy_setReadyForJuryEstimatedAt.id).toBe(
         candidacy.id,
       );
     });
@@ -116,18 +117,13 @@ describe("candidacy jury resolver authorization", () => {
       const aapKeycloakId =
         candidacy.organism!.organismOnAccounts[0].account.keycloakId;
 
-      const response = await mutation({
-        endpoint: "candidacy_setReadyForJuryEstimatedAt",
+      const response = await setReadyForJuryEstimatedAt({
         authorization: asRole("manage_candidacy", aapKeycloakId),
-        arguments: {
-          candidacyId: candidacy.id,
-          readyForJuryEstimatedAt: faker.date.soon({ days: 100 }),
-        },
-        returnFields: "{ id }",
+        candidacyId: candidacy.id,
+        readyForJuryEstimatedAt: faker.date.soon({ days: 100 }),
       });
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_setReadyForJuryEstimatedAt.id).toBe(
+      expect(response.candidacy_setReadyForJuryEstimatedAt.id).toBe(
         candidacy.id,
       );
     });
@@ -146,21 +142,16 @@ describe("candidacy jury resolver authorization", () => {
         candidacyArgs: { organismId: organism.id },
       });
 
-      const response = await mutation({
-        endpoint: "candidacy_setReadyForJuryEstimatedAt",
+      const response = await setReadyForJuryEstimatedAt({
         authorization: asRole(
           "gestion_maison_mere_aap",
           maisonMereAAP.gestionnaire.keycloakId,
         ),
-        arguments: {
-          candidacyId: candidacy.id,
-          readyForJuryEstimatedAt: faker.date.soon({ days: 100 }),
-        },
-        returnFields: "{ id }",
+        candidacyId: candidacy.id,
+        readyForJuryEstimatedAt: faker.date.soon({ days: 100 }),
       });
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_setReadyForJuryEstimatedAt.id).toBe(
+      expect(response.candidacy_setReadyForJuryEstimatedAt.id).toBe(
         candidacy.id,
       );
     });
@@ -169,83 +160,57 @@ describe("candidacy jury resolver authorization", () => {
       const candidacy = await createCandidacyHelper();
       const randomCandidate = await createCandidateHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_setReadyForJuryEstimatedAt",
-        authorization: asRole("candidate", randomCandidate.keycloakId),
-        arguments: {
+      await expect(
+        setReadyForJuryEstimatedAt({
+          authorization: asRole("candidate", randomCandidate.keycloakId),
           candidacyId: candidacy.id,
           readyForJuryEstimatedAt: faker.date.soon({ days: 100 }),
-        },
-        returnFields: "{ id }",
-      });
-
-      expect(response.json().errors[0].message).toBe(
-        NOT_AUTHORIZED_CANDIDACY_ACCESS,
-      );
+        }),
+      ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
     });
 
     test("rejects a random AAP for a candidacy outside its scope", async () => {
       const candidacy = await createCandidacyHelper();
-      const response = await mutation({
-        endpoint: "candidacy_setReadyForJuryEstimatedAt",
-        authorization: await createForeignAapAuthorization(),
-        arguments: {
+      await expect(
+        setReadyForJuryEstimatedAt({
+          authorization: await createForeignAapAuthorization(),
           candidacyId: candidacy.id,
           readyForJuryEstimatedAt: faker.date.soon({ days: 100 }),
-        },
-        returnFields: "{ id }",
-      });
-
-      expect(response.json().errors[0].message).toBe(
-        NOT_AUTHORIZED_CANDIDACY_MANAGE,
-      );
+        }),
+      ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_MANAGE);
     });
 
     test("rejects a maison mere manager from another maison mere", async () => {
       const candidacy = await createCandidacyHelper();
-      const response = await mutation({
-        endpoint: "candidacy_setReadyForJuryEstimatedAt",
-        authorization: await createForeignMaisonMereManagerAuthorization(),
-        arguments: {
+      await expect(
+        setReadyForJuryEstimatedAt({
+          authorization: await createForeignMaisonMereManagerAuthorization(),
           candidacyId: candidacy.id,
           readyForJuryEstimatedAt: faker.date.soon({ days: 100 }),
-        },
-        returnFields: "{ id }",
-      });
-
-      expect(response.json().errors[0].message).toBe(
-        NOT_AUTHORIZED_CANDIDACY_MANAGE,
-      );
+        }),
+      ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_MANAGE);
     });
 
     test.each(unsupportedProfessionalRoles)(
       "rejects the %s role",
       async (role: KeyCloakUserRole) => {
-        const response = await mutation({
-          endpoint: "candidacy_setReadyForJuryEstimatedAt",
-          authorization: asRole(role),
-          arguments: {
+        await expect(
+          setReadyForJuryEstimatedAt({
+            authorization: asRole(role),
             candidacyId: faker.string.uuid(),
             readyForJuryEstimatedAt: faker.date.soon({ days: 100 }),
-          },
-          returnFields: "{ id }",
-        });
-
-        expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+          }),
+        ).rejects.toThrowError(NOT_AUTHORIZED);
       },
     );
 
     test("rejects an unauthenticated request", async () => {
-      const response = await mutation({
-        endpoint: "candidacy_setReadyForJuryEstimatedAt",
-        arguments: {
+      await expect(
+        setReadyForJuryEstimatedAt({
           candidacyId: faker.string.uuid(),
           readyForJuryEstimatedAt: faker.date.soon({ days: 100 }),
-        },
-        returnFields: "{ id }",
-      });
-
-      expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+        }),
+      ).rejects.toThrowError(SESSION_EXPIRED);
     });
   });
 });

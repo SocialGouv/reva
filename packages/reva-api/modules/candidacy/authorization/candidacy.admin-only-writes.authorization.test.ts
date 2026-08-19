@@ -9,7 +9,71 @@ import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyDropOutHelper } from "@/test/helpers/entities/create-candidacy-drop-out-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
-import { injectGraphql } from "@/test/helpers/graphql-helper";
+import { getGraphQLClient } from "@/test/test-graphql-client";
+
+import { graphql } from "../../graphql/generated";
+
+const candidacy_selectOrganismAsAdmin = graphql(`
+  mutation candidacy_selectOrganismAsAdmin_authorization(
+    $candidacyId: UUID!
+    $organismId: UUID!
+  ) {
+    candidacy_selectOrganismAsAdmin(
+      candidacyId: $candidacyId
+      organismId: $organismId
+    ) {
+      id
+    }
+  }
+`);
+
+const candidacy_validateDropOut = graphql(`
+  mutation candidacy_validateDropOut_authorization($candidacyId: UUID!) {
+    candidacy_validateDropOut(candidacyId: $candidacyId) {
+      id
+    }
+  }
+`);
+
+const candidacy_cancelDropOutById = graphql(`
+  mutation candidacy_cancelDropOutById_authorization($candidacyId: UUID!) {
+    candidacy_cancelDropOutById(candidacyId: $candidacyId) {
+      id
+    }
+  }
+`);
+
+const candidacy_setTypeAccompagnementToAutonome = graphql(`
+  mutation candidacy_setTypeAccompagnementToAutonome_authorization(
+    $candidacyId: UUID!
+    $reason: String
+  ) {
+    candidacy_setTypeAccompagnementToAutonome(
+      candidacyId: $candidacyId
+      reason: $reason
+    ) {
+      id
+      typeAccompagnement
+    }
+  }
+`);
+
+const candidacy_updateFinanceModule = graphql(`
+  mutation candidacy_updateFinanceModule_authorization(
+    $candidacyId: UUID!
+    $financeModule: FinanceModule!
+    $reason: String
+  ) {
+    candidacy_updateFinanceModule(
+      candidacyId: $candidacyId
+      financeModule: $financeModule
+      reason: $reason
+    ) {
+      id
+      financeModule
+    }
+  }
+`);
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
@@ -17,74 +81,81 @@ const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
     keycloakId: keycloakId ?? faker.string.uuid(),
   });
 
-const mutation = ({
-  endpoint,
-  authorization,
-  arguments: mutationArguments,
-  enumFields,
-  returnFields,
-}: {
-  endpoint: string;
-  authorization?: string;
-  arguments?: Record<string, unknown>;
-  enumFields?: string[];
-  returnFields: string;
-}) =>
-  injectGraphql({
-    fastify: global.testApp,
-    authorization,
-    payload: {
-      requestType: "mutation",
-      endpoint,
-      arguments: mutationArguments,
-      enumFields,
-      returnFields,
-    },
+const getClient = (authorization?: string) =>
+  getGraphQLClient({
+    headers: authorization ? { authorization } : undefined,
+  });
+
+const selectOrganismAsAdmin = (
+  authorization: string | undefined,
+  candidacyId: string,
+) =>
+  getClient(authorization).request(candidacy_selectOrganismAsAdmin, {
+    candidacyId,
+    organismId: faker.string.uuid(),
+  });
+
+const validateDropOut = (
+  authorization: string | undefined,
+  candidacyId: string,
+) =>
+  getClient(authorization).request(candidacy_validateDropOut, { candidacyId });
+
+const cancelDropOutById = (
+  authorization: string | undefined,
+  candidacyId: string,
+) =>
+  getClient(authorization).request(candidacy_cancelDropOutById, {
+    candidacyId,
+  });
+
+const setTypeAccompagnementToAutonome = (
+  authorization: string | undefined,
+  candidacyId: string,
+) =>
+  getClient(authorization).request(candidacy_setTypeAccompagnementToAutonome, {
+    candidacyId,
+    reason: faker.lorem.sentence(),
+  });
+
+const updateFinanceModule = (
+  authorization: string | undefined,
+  candidacyId: string,
+) =>
+  getClient(authorization).request(candidacy_updateFinanceModule, {
+    candidacyId,
+    financeModule: "unireva",
+    reason: faker.lorem.sentence(),
   });
 
 interface MutationCase {
-  endpoint: string;
-  buildArguments: (candidacyId: string) => Record<string, unknown>;
-  enumFields?: string[];
-  returnFields: string;
+  operationName: string;
+  request: (
+    authorization: string | undefined,
+    candidacyId: string,
+  ) => Promise<unknown>;
 }
 
 const adminOnlyMutationCases: MutationCase[] = [
   {
-    endpoint: "candidacy_selectOrganismAsAdmin",
-    buildArguments: (candidacyId) => ({
-      candidacyId,
-      organismId: faker.string.uuid(),
-    }),
-    returnFields: "{ id }",
+    operationName: "candidacy_selectOrganismAsAdmin",
+    request: selectOrganismAsAdmin,
   },
   {
-    endpoint: "candidacy_validateDropOut",
-    buildArguments: (candidacyId) => ({ candidacyId }),
-    returnFields: "{ id }",
+    operationName: "candidacy_validateDropOut",
+    request: validateDropOut,
   },
   {
-    endpoint: "candidacy_cancelDropOutById",
-    buildArguments: (candidacyId) => ({ candidacyId }),
-    returnFields: "{ id }",
+    operationName: "candidacy_cancelDropOutById",
+    request: cancelDropOutById,
   },
   {
-    endpoint: "candidacy_setTypeAccompagnementToAutonome",
-    buildArguments: (candidacyId) => ({
-      candidacyId,
-      reason: faker.lorem.sentence(),
-    }),
-    returnFields: "{ id }",
+    operationName: "candidacy_setTypeAccompagnementToAutonome",
+    request: setTypeAccompagnementToAutonome,
   },
   {
-    endpoint: "candidacy_updateFinanceModule",
-    buildArguments: (candidacyId) => ({
-      candidacyId,
-      financeModule: "unireva",
-      reason: faker.lorem.sentence(),
-    }),
-    enumFields: ["financeModule"],
-    returnFields: "{ id }",
+    operationName: "candidacy_updateFinanceModule",
+    request: updateFinanceModule,
   },
 ];
 
@@ -98,10 +169,9 @@ const unsupportedProfessionalRoles: KeyCloakUserRole[] = [
 describe("candidacy professional and admin resolver authorization", () => {
   describe("admin-only mutations", () => {
     describe.each(adminOnlyMutationCases)(
-      "$endpoint",
+      "$operationName",
       (mutationCase: MutationCase) => {
-        const { endpoint, buildArguments, enumFields, returnFields } =
-          mutationCase;
+        const { request } = mutationCase;
 
         test.each<KeyCloakUserRole>([
           "candidate",
@@ -109,26 +179,15 @@ describe("candidacy professional and admin resolver authorization", () => {
           "gestion_maison_mere_aap",
           ...unsupportedProfessionalRoles,
         ])("rejects the %s role", async (role: KeyCloakUserRole) => {
-          const response = await mutation({
-            endpoint,
-            authorization: asRole(role),
-            arguments: buildArguments(faker.string.uuid()),
-            enumFields,
-            returnFields,
-          });
-
-          expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+          await expect(
+            request(asRole(role), faker.string.uuid()),
+          ).rejects.toThrowError(NOT_AUTHORIZED);
         });
 
         test("rejects an unauthenticated request", async () => {
-          const response = await mutation({
-            endpoint,
-            arguments: buildArguments(faker.string.uuid()),
-            enumFields,
-            returnFields,
-          });
-
-          expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+          await expect(
+            request(undefined, faker.string.uuid()),
+          ).rejects.toThrowError(SESSION_EXPIRED);
         });
       },
     );
@@ -136,14 +195,8 @@ describe("candidacy professional and admin resolver authorization", () => {
     test("allows an admin to validate a candidacy dropout", async () => {
       const dropOut = await createCandidacyDropOutHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_validateDropOut",
-        authorization: asRole("admin"),
-        arguments: { candidacyId: dropOut.candidacyId },
-        returnFields: "{ id }",
-      });
+      await validateDropOut(asRole("admin"), dropOut.candidacyId);
 
-      expect(response.json()).not.toHaveProperty("errors");
       const updatedDropOut =
         await prismaClient.candidacyDropOut.findUniqueOrThrow({
           where: { candidacyId: dropOut.candidacyId },
@@ -154,14 +207,8 @@ describe("candidacy professional and admin resolver authorization", () => {
     test("allows an admin to cancel a candidacy dropout", async () => {
       const dropOut = await createCandidacyDropOutHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_cancelDropOutById",
-        authorization: asRole("admin"),
-        arguments: { candidacyId: dropOut.candidacyId },
-        returnFields: "{ id }",
-      });
+      await cancelDropOutById(asRole("admin"), dropOut.candidacyId);
 
-      expect(response.json()).not.toHaveProperty("errors");
       expect(
         await prismaClient.candidacyDropOut.findUnique({
           where: { candidacyId: dropOut.candidacyId },
@@ -179,39 +226,23 @@ describe("candidacy professional and admin resolver authorization", () => {
         },
       });
 
-      const response = await mutation({
-        endpoint: "candidacy_setTypeAccompagnementToAutonome",
-        authorization: asRole("admin"),
-        arguments: {
-          candidacyId: candidacy.id,
-          reason: faker.lorem.sentence(),
-        },
-        returnFields: "{ id typeAccompagnement }",
-      });
+      const response = await setTypeAccompagnementToAutonome(
+        asRole("admin"),
+        candidacy.id,
+      );
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(
-        response.json().data.candidacy_setTypeAccompagnementToAutonome,
-      ).toMatchObject({ id: candidacy.id, typeAccompagnement: "AUTONOME" });
+      expect(response.candidacy_setTypeAccompagnementToAutonome).toMatchObject({
+        id: candidacy.id,
+        typeAccompagnement: "AUTONOME",
+      });
     });
 
     test("allows an admin to update the candidacy finance module", async () => {
       const candidacy = await createCandidacyHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_updateFinanceModule",
-        authorization: asRole("admin"),
-        arguments: {
-          candidacyId: candidacy.id,
-          financeModule: "unireva",
-          reason: faker.lorem.sentence(),
-        },
-        enumFields: ["financeModule"],
-        returnFields: "{ id financeModule }",
-      });
+      const response = await updateFinanceModule(asRole("admin"), candidacy.id);
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_updateFinanceModule).toMatchObject({
+      expect(response.candidacy_updateFinanceModule).toMatchObject({
         id: candidacy.id,
         financeModule: "unireva",
       });

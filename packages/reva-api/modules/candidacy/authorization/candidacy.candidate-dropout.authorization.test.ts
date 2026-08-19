@@ -6,7 +6,23 @@ import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper"
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
 import { createDropOutReasonHelper } from "@/test/helpers/entities/create-drop-out-reason-helper";
-import { injectGraphql } from "@/test/helpers/graphql-helper";
+import { getGraphQLClient } from "@/test/test-graphql-client";
+
+import { graphql } from "../../graphql/generated";
+
+const candidacy_candidateDropOutCandidacy = graphql(`
+  mutation candidacy_candidateDropOutCandidacy_authorization(
+    $candidacyId: UUID!
+    $dropOut: DropOutInput!
+  ) {
+    candidacy_candidateDropOutCandidacy(
+      candidacyId: $candidacyId
+      dropOut: $dropOut
+    ) {
+      id
+    }
+  }
+`);
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
@@ -14,35 +30,27 @@ const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
     keycloakId: keycloakId ?? faker.string.uuid(),
   });
 
-const mutation = ({
-  endpoint,
+const candidateDropOutCandidacy = ({
   authorization,
-  arguments: mutationArguments,
-  enumFields,
-  returnFields,
+  candidacyId,
+  dropOutReasonId,
 }: {
-  endpoint: string;
   authorization?: string;
-  arguments?: Record<string, unknown>;
-  enumFields?: string[];
-  returnFields: string;
-}) =>
-  injectGraphql({
-    fastify: global.testApp,
-    authorization,
-    payload: {
-      requestType: "mutation",
-      endpoint,
-      arguments: mutationArguments,
-      enumFields,
-      returnFields,
-    },
+  candidacyId: string;
+  dropOutReasonId: string;
+}) => {
+  const graphqlClient = getGraphQLClient({
+    headers: authorization ? { authorization } : undefined,
   });
+
+  return graphqlClient.request(candidacy_candidateDropOutCandidacy, {
+    candidacyId,
+    dropOut: { dropOutReasonId },
+  });
+};
 
 describe("candidacy candidate-side resolver authorization", () => {
   describe("candidacy_candidateDropOutCandidacy", () => {
-    const dropOut = (dropOutReasonId: string) => ({ dropOutReasonId });
-
     test("allows the candidate owning the candidacy to drop it out", async () => {
       const candidacy = await createCandidacyHelper({
         candidacyActiveStatus:
@@ -50,18 +58,13 @@ describe("candidacy candidate-side resolver authorization", () => {
       });
       const dropOutReason = await createDropOutReasonHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_candidateDropOutCandidacy",
+      const response = await candidateDropOutCandidacy({
         authorization: asRole("candidate", candidacy.candidate!.keycloakId),
-        arguments: {
-          candidacyId: candidacy.id,
-          dropOut: dropOut(dropOutReason.id),
-        },
-        returnFields: "{ id }",
+        candidacyId: candidacy.id,
+        dropOutReasonId: dropOutReason.id,
       });
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_candidateDropOutCandidacy.id).toBe(
+      expect(response.candidacy_candidateDropOutCandidacy.id).toBe(
         candidacy.id,
       );
     });
@@ -70,19 +73,13 @@ describe("candidacy candidate-side resolver authorization", () => {
       const candidacy = await createCandidacyHelper();
       const randomCandidate = await createCandidateHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_candidateDropOutCandidacy",
-        authorization: asRole("candidate", randomCandidate.keycloakId),
-        arguments: {
+      await expect(
+        candidateDropOutCandidacy({
+          authorization: asRole("candidate", randomCandidate.keycloakId),
           candidacyId: candidacy.id,
-          dropOut: dropOut(faker.string.uuid()),
-        },
-        returnFields: "{ id }",
-      });
-
-      expect(response.json().errors[0].message).toBe(
-        NOT_AUTHORIZED_CANDIDACY_ACCESS,
-      );
+          dropOutReasonId: faker.string.uuid(),
+        }),
+      ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
     });
 
     test.each<KeyCloakUserRole>([
@@ -98,37 +95,25 @@ describe("candidacy candidate-side resolver authorization", () => {
       async (role: KeyCloakUserRole) => {
         const candidacy = await createCandidacyHelper();
 
-        const response = await mutation({
-          endpoint: "candidacy_candidateDropOutCandidacy",
-          authorization: asRole(role),
-          arguments: {
+        await expect(
+          candidateDropOutCandidacy({
+            authorization: asRole(role),
             candidacyId: candidacy.id,
-            dropOut: dropOut(faker.string.uuid()),
-          },
-          returnFields: "{ id }",
-        });
-
-        expect(response.json().errors[0].message).toBe(
-          NOT_AUTHORIZED_CANDIDACY_ACCESS,
-        );
+            dropOutReasonId: faker.string.uuid(),
+          }),
+        ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
       },
     );
 
     test("rejects an unauthenticated request", async () => {
       const candidacy = await createCandidacyHelper();
 
-      const response = await mutation({
-        endpoint: "candidacy_candidateDropOutCandidacy",
-        arguments: {
+      await expect(
+        candidateDropOutCandidacy({
           candidacyId: candidacy.id,
-          dropOut: dropOut(faker.string.uuid()),
-        },
-        returnFields: "{ id }",
-      });
-
-      expect(response.json().errors[0].message).toBe(
-        NOT_AUTHORIZED_CANDIDACY_ACCESS,
-      );
+          dropOutReasonId: faker.string.uuid(),
+        }),
+      ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
     });
   });
 });

@@ -12,7 +12,18 @@ import {
   attachCollaborateurAccountToOrganism,
   createOrganismHelper,
 } from "@/test/helpers/entities/create-organism-helper";
-import { injectGraphql } from "@/test/helpers/graphql-helper";
+import { getGraphQLClient } from "@/test/test-graphql-client";
+
+import { graphql } from "../../graphql/generated";
+
+const candidacy_takeOver = graphql(`
+  mutation candidacy_takeOver_authorization($candidacyId: ID!) {
+    candidacy_takeOver(candidacyId: $candidacyId) {
+      id
+      status
+    }
+  }
+`);
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
@@ -20,30 +31,19 @@ const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
     keycloakId: keycloakId ?? faker.string.uuid(),
   });
 
-const mutation = ({
-  endpoint,
+const takeOver = ({
   authorization,
-  arguments: mutationArguments,
-  enumFields,
-  returnFields,
+  candidacyId,
 }: {
-  endpoint: string;
   authorization?: string;
-  arguments?: Record<string, unknown>;
-  enumFields?: string[];
-  returnFields: string;
-}) =>
-  injectGraphql({
-    fastify: global.testApp,
-    authorization,
-    payload: {
-      requestType: "mutation",
-      endpoint,
-      arguments: mutationArguments,
-      enumFields,
-      returnFields,
-    },
+  candidacyId: string;
+}) => {
+  const graphqlClient = getGraphQLClient({
+    headers: authorization ? { authorization } : undefined,
   });
+
+  return graphqlClient.request(candidacy_takeOver, { candidacyId });
+};
 
 const createScopedMaisonMereManager = async ({
   status,
@@ -96,15 +96,12 @@ describe("candidacy professional and admin resolver authorization", () => {
         status: CandidacyStatusStep.VALIDATION,
       });
 
-      const response = await mutation({
-        endpoint: "candidacy_takeOver",
+      const response = await takeOver({
         authorization,
-        arguments: { candidacyId: candidacy.id },
-        returnFields: "{ id status }",
+        candidacyId: candidacy.id,
       });
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.candidacy_takeOver).toMatchObject({
+      expect(response.candidacy_takeOver).toMatchObject({
         id: candidacy.id,
         status: "PRISE_EN_CHARGE",
       });
@@ -115,40 +112,30 @@ describe("candidacy professional and admin resolver authorization", () => {
         candidacyActiveStatus: CandidacyStatusStep.VALIDATION,
       });
 
-      const response = await mutation({
-        endpoint: "candidacy_takeOver",
-        authorization: await createForeignMaisonMereManagerAuthorization(),
-        arguments: { candidacyId: candidacy.id },
-        returnFields: "{ id }",
-      });
-
-      expect(response.json().errors[0].message).toBe(
-        NOT_AUTHORIZED_CANDIDACY_MANAGE,
-      );
+      await expect(
+        takeOver({
+          authorization: await createForeignMaisonMereManagerAuthorization(),
+          candidacyId: candidacy.id,
+        }),
+      ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_MANAGE);
     });
 
     test.each(unsupportedProfessionalRoles)(
       "rejects the %s role",
       async (role: KeyCloakUserRole) => {
-        const response = await mutation({
-          endpoint: "candidacy_takeOver",
-          authorization: asRole(role),
-          arguments: { candidacyId: faker.string.uuid() },
-          returnFields: "{ id }",
-        });
-
-        expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+        await expect(
+          takeOver({
+            authorization: asRole(role),
+            candidacyId: faker.string.uuid(),
+          }),
+        ).rejects.toThrowError(NOT_AUTHORIZED);
       },
     );
 
     test("rejects an unauthenticated request", async () => {
-      const response = await mutation({
-        endpoint: "candidacy_takeOver",
-        arguments: { candidacyId: faker.string.uuid() },
-        returnFields: "{ id }",
-      });
-
-      expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+      await expect(
+        takeOver({ candidacyId: faker.string.uuid() }),
+      ).rejects.toThrowError(SESSION_EXPIRED);
     });
   });
 });

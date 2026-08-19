@@ -17,7 +17,43 @@ import {
   attachCollaborateurAccountToOrganism,
   createOrganismHelper,
 } from "@/test/helpers/entities/create-organism-helper";
-import { injectGraphql } from "@/test/helpers/graphql-helper";
+import { getGraphQLClient } from "@/test/test-graphql-client";
+
+import { graphql } from "../../graphql/generated";
+
+const getCandidacyCertification = graphql(`
+  query getCandidacyCertification_authorization($id: ID!) {
+    getCandidacyById(id: $id) {
+      certification {
+        id
+      }
+    }
+  }
+`);
+
+const candidacy_certification_updateCertification = graphql(`
+  mutation candidacy_certification_updateCertification_authorization(
+    $candidacyId: ID!
+    $certificationId: ID!
+  ) {
+    candidacy_certification_updateCertification(
+      candidacyId: $candidacyId
+      certificationId: $certificationId
+    )
+  }
+`);
+
+const candidacy_certification_updateCertificationWithinOrganismScope = graphql(`
+  mutation candidacy_certification_updateCertificationWithinOrganismScope_authorization(
+    $candidacyId: ID!
+    $certificationId: ID!
+  ) {
+    candidacy_certification_updateCertificationWithinOrganismScope(
+      candidacyId: $candidacyId
+      certificationId: $certificationId
+    )
+  }
+`);
 
 const asRole = (role: KeyCloakUserRole, keycloakId?: string) =>
   authorizationHeaderForUser({
@@ -33,20 +69,16 @@ const updateCertification = ({
   candidacyId: string;
   certificationId?: string;
   authorization?: string;
-}) =>
-  injectGraphql({
-    fastify: global.testApp,
-    authorization,
-    payload: {
-      requestType: "mutation",
-      endpoint: "candidacy_certification_updateCertification",
-      arguments: {
-        candidacyId,
-        certificationId,
-      },
-      returnFields: "",
-    },
+}) => {
+  const graphqlClient = getGraphQLClient({
+    headers: authorization ? { authorization } : undefined,
   });
+
+  return graphqlClient.request(candidacy_certification_updateCertification, {
+    candidacyId,
+    certificationId,
+  });
+};
 
 const updateCertificationWithinOrganismScope = ({
   candidacyId,
@@ -54,40 +86,35 @@ const updateCertificationWithinOrganismScope = ({
 }: {
   candidacyId: string;
   authorization?: string;
-}) =>
-  injectGraphql({
-    fastify: global.testApp,
-    authorization,
-    payload: {
-      requestType: "mutation",
-      endpoint:
-        "candidacy_certification_updateCertificationWithinOrganismScope",
-      arguments: {
-        candidacyId,
-        certificationId: faker.string.uuid(),
-      },
-      returnFields: "",
-    },
+}) => {
+  const graphqlClient = getGraphQLClient({
+    headers: authorization ? { authorization } : undefined,
   });
+
+  return graphqlClient.request(
+    candidacy_certification_updateCertificationWithinOrganismScope,
+    {
+      candidacyId,
+      certificationId: faker.string.uuid(),
+    },
+  );
+};
 
 describe("candidacy certification resolver authorization", () => {
   describe("Candidacy.certification", () => {
     test("allows the candidate owning the candidacy to access its certification", async () => {
       const candidacy = await createCandidacyHelper();
 
-      const response = await injectGraphql({
-        fastify: global.testApp,
-        authorization: asRole("candidate", candidacy.candidate!.keycloakId),
-        payload: {
-          requestType: "query",
-          endpoint: "getCandidacyById",
-          arguments: { id: candidacy.id },
-          returnFields: "{ certification { id } }",
+      const graphqlClient = getGraphQLClient({
+        headers: {
+          authorization: asRole("candidate", candidacy.candidate!.keycloakId),
         },
       });
+      const response = await graphqlClient.request(getCandidacyCertification, {
+        id: candidacy.id,
+      });
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.getCandidacyById.certification.id).toBe(
+      expect(response.getCandidacyById?.certification?.id).toBe(
         candidacy.certificationId,
       );
     });
@@ -100,13 +127,12 @@ describe("candidacy certification resolver authorization", () => {
       });
       const certification = await createCertificationHelper();
 
-      const response = await updateCertification({
+      await updateCertification({
         candidacyId: candidacy.id,
         certificationId: certification.id,
         authorization: asRole("admin"),
       });
 
-      expect(response.json()).not.toHaveProperty("errors");
       const updatedCandidacy = await prismaClient.candidacy.findUniqueOrThrow({
         where: { id: candidacy.id },
         select: { certificationId: true },
@@ -120,13 +146,12 @@ describe("candidacy certification resolver authorization", () => {
       });
       const certification = await createCertificationHelper();
 
-      const response = await updateCertification({
+      await updateCertification({
         candidacyId: candidacy.id,
         certificationId: certification.id,
         authorization: asRole("candidate", candidacy.candidate!.keycloakId),
       });
 
-      expect(response.json()).not.toHaveProperty("errors");
       const updatedCandidacy = await prismaClient.candidacy.findUniqueOrThrow({
         where: { id: candidacy.id },
         select: { certificationId: true },
@@ -138,14 +163,12 @@ describe("candidacy certification resolver authorization", () => {
       const candidacy = await createCandidacyHelper();
       const randomCandidate = await createCandidateHelper();
 
-      const response = await updateCertification({
-        candidacyId: candidacy.id,
-        authorization: asRole("candidate", randomCandidate.keycloakId),
-      });
-
-      expect(response.json().errors[0].message).toBe(
-        NOT_AUTHORIZED_CANDIDACY_ACCESS,
-      );
+      await expect(
+        updateCertification({
+          candidacyId: candidacy.id,
+          authorization: asRole("candidate", randomCandidate.keycloakId),
+        }),
+      ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
     });
 
     test.each<KeyCloakUserRole>([
@@ -156,31 +179,29 @@ describe("candidacy certification resolver authorization", () => {
       "manage_certification_registry",
       "manage_vae_collective",
     ])("rejects the %s role", async (role: KeyCloakUserRole) => {
-      const response = await updateCertification({
-        candidacyId: faker.string.uuid(),
-        authorization: asRole(role),
-      });
-
-      expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+      await expect(
+        updateCertification({
+          candidacyId: faker.string.uuid(),
+          authorization: asRole(role),
+        }),
+      ).rejects.toThrowError(NOT_AUTHORIZED);
     });
 
     test("rejects an unauthenticated request", async () => {
-      const response = await updateCertification({
-        candidacyId: faker.string.uuid(),
-      });
-
-      expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+      await expect(
+        updateCertification({ candidacyId: faker.string.uuid() }),
+      ).rejects.toThrowError(SESSION_EXPIRED);
     });
   });
 
   describe("candidacy_certification_updateCertificationWithinOrganismScope", () => {
     test("allows an admin to request a certification update", async () => {
-      const response = await updateCertificationWithinOrganismScope({
-        candidacyId: faker.string.uuid(),
-        authorization: asRole("admin"),
-      });
-
-      expect(response.json().errors[0].message).toBe(CERTIFICATION_NON_TROUVEE);
+      await expect(
+        updateCertificationWithinOrganismScope({
+          candidacyId: faker.string.uuid(),
+          authorization: asRole("admin"),
+        }),
+      ).rejects.toThrowError(CERTIFICATION_NON_TROUVEE);
     });
 
     test("allows the AAP associated to the candidacy to request a certification update", async () => {
@@ -188,12 +209,12 @@ describe("candidacy certification resolver authorization", () => {
       const aapKeycloakId =
         candidacy.organism!.organismOnAccounts[0].account.keycloakId;
 
-      const response = await updateCertificationWithinOrganismScope({
-        candidacyId: candidacy.id,
-        authorization: asRole("manage_candidacy", aapKeycloakId),
-      });
-
-      expect(response.json().errors[0].message).toBe(CERTIFICATION_NON_TROUVEE);
+      await expect(
+        updateCertificationWithinOrganismScope({
+          candidacyId: candidacy.id,
+          authorization: asRole("manage_candidacy", aapKeycloakId),
+        }),
+      ).rejects.toThrowError(CERTIFICATION_NON_TROUVEE);
     });
 
     test("rejects a certification update from a random AAP for a candidacy it is not associated to", async () => {
@@ -202,14 +223,12 @@ describe("candidacy certification resolver authorization", () => {
       const foreignAapKeycloakId =
         foreignOrganism.organismOnAccounts[0].account.keycloakId;
 
-      const response = await updateCertificationWithinOrganismScope({
-        candidacyId: candidacy.id,
-        authorization: asRole("manage_candidacy", foreignAapKeycloakId),
-      });
-
-      expect(response.json().errors[0].message).toBe(
-        NOT_AUTHORIZED_CANDIDACY_MANAGE,
-      );
+      await expect(
+        updateCertificationWithinOrganismScope({
+          candidacyId: candidacy.id,
+          authorization: asRole("manage_candidacy", foreignAapKeycloakId),
+        }),
+      ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_MANAGE);
     });
 
     test("allows the maison mere manager of the AAP associated to the candidacy to request a certification update", async () => {
@@ -226,15 +245,15 @@ describe("candidacy certification resolver authorization", () => {
         candidacyArgs: { organismId: organism.id },
       });
 
-      const response = await updateCertificationWithinOrganismScope({
-        candidacyId: candidacy.id,
-        authorization: asRole(
-          "gestion_maison_mere_aap",
-          maisonMereAAP.gestionnaire.keycloakId,
-        ),
-      });
-
-      expect(response.json().errors[0].message).toBe(CERTIFICATION_NON_TROUVEE);
+      await expect(
+        updateCertificationWithinOrganismScope({
+          candidacyId: candidacy.id,
+          authorization: asRole(
+            "gestion_maison_mere_aap",
+            maisonMereAAP.gestionnaire.keycloakId,
+          ),
+        }),
+      ).rejects.toThrowError(CERTIFICATION_NON_TROUVEE);
     });
 
     test("rejects a certification update from a maison mere manager of another maison mere", async () => {
@@ -246,17 +265,15 @@ describe("candidacy certification resolver authorization", () => {
         collaborateurAccountId: foreignMaisonMereAAP.gestionnaire.id,
       });
 
-      const response = await updateCertificationWithinOrganismScope({
-        candidacyId: candidacy.id,
-        authorization: asRole(
-          "gestion_maison_mere_aap",
-          foreignMaisonMereAAP.gestionnaire.keycloakId,
-        ),
-      });
-
-      expect(response.json().errors[0].message).toBe(
-        NOT_AUTHORIZED_CANDIDACY_MANAGE,
-      );
+      await expect(
+        updateCertificationWithinOrganismScope({
+          candidacyId: candidacy.id,
+          authorization: asRole(
+            "gestion_maison_mere_aap",
+            foreignMaisonMereAAP.gestionnaire.keycloakId,
+          ),
+        }),
+      ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_MANAGE);
     });
 
     test.each<KeyCloakUserRole>([
@@ -266,20 +283,20 @@ describe("candidacy certification resolver authorization", () => {
       "manage_certification_registry",
       "manage_vae_collective",
     ])("rejects the %s role", async (role: KeyCloakUserRole) => {
-      const response = await updateCertificationWithinOrganismScope({
-        candidacyId: faker.string.uuid(),
-        authorization: asRole(role),
-      });
-
-      expect(response.json().errors[0].message).toBe(NOT_AUTHORIZED);
+      await expect(
+        updateCertificationWithinOrganismScope({
+          candidacyId: faker.string.uuid(),
+          authorization: asRole(role),
+        }),
+      ).rejects.toThrowError(NOT_AUTHORIZED);
     });
 
     test("rejects an unauthenticated request", async () => {
-      const response = await updateCertificationWithinOrganismScope({
-        candidacyId: faker.string.uuid(),
-      });
-
-      expect(response.json().errors[0].message).toBe(SESSION_EXPIRED);
+      await expect(
+        updateCertificationWithinOrganismScope({
+          candidacyId: faker.string.uuid(),
+        }),
+      ).rejects.toThrowError(SESSION_EXPIRED);
     });
   });
 });

@@ -14,10 +14,64 @@ import { createDropOutReasonHelper } from "@/test/helpers/entities/create-drop-o
 import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import { createReorientationReasonHelper } from "@/test/helpers/entities/create-reorientation-reason-helper";
-import { injectGraphql } from "@/test/helpers/graphql-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../../graphql/generated";
+
+const getCandidacyById = graphql(`
+  query getCandidacyById_authorization($id: ID!) {
+    getCandidacyById(id: $id) {
+      id
+    }
+  }
+`);
+
+const getCandidacyByIdWithResolvedFields = graphql(`
+  query getCandidacyByIdWithResolvedFields_authorization($id: ID!) {
+    getCandidacyById(id: $id) {
+      id
+      goals {
+        id
+      }
+      experiences {
+        id
+      }
+      candidate {
+        id
+      }
+      organism {
+        id
+      }
+      candidacyStatuses {
+        id
+      }
+      reorientationReason {
+        id
+      }
+      conventionCollective {
+        id
+      }
+      candidacyDropOut {
+        dropOutReason {
+          id
+        }
+      }
+      candidacyOnCandidacyFinancingMethods {
+        id
+        candidacyFinancingMethod {
+          id
+        }
+      }
+      candidateInfo {
+        city
+      }
+      endAccompagnementCandidateDropOutReason {
+        id
+      }
+      feasibilityFileResourceFirstRead
+    }
+  }
+`);
 
 const getCandidacy = ({
   role,
@@ -27,45 +81,39 @@ const getCandidacy = ({
   role: KeyCloakUserRole;
   candidacyId: string;
   keycloakId?: string;
-}) =>
-  injectGraphql({
-    fastify: global.testApp,
-    authorization: authorizationHeaderForUser({
-      role,
-      keycloakId: keycloakId || "whatever",
-    }),
-    payload: {
-      requestType: "query",
-      endpoint: "getCandidacyById",
-      arguments: { id: candidacyId },
-      returnFields: "{id}",
+}) => {
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role,
+        keycloakId: keycloakId || "whatever",
+      }),
     },
   });
+
+  return graphqlClient.request(getCandidacyById, { id: candidacyId });
+};
 
 describe("candidacy resolver read authorization", () => {
   test("allows an admin to access any candidacy", async () => {
     const candidacy = await createCandidacyHelper();
-    const resp = await getCandidacy({
+    const response = await getCandidacy({
       role: "admin",
       candidacyId: candidacy.id,
     });
-    expect(resp.statusCode).toEqual(200);
-    const obj = resp.json();
-    expect(obj.data.getCandidacyById).toMatchObject({
+    expect(response.getCandidacyById).toMatchObject({
       id: candidacy.id,
     });
   });
 
   test("allows the candidate owning the candidacy to access it", async () => {
     const candidacy = await createCandidacyHelper();
-    const resp = await getCandidacy({
+    const response = await getCandidacy({
       role: "candidate",
       keycloakId: candidacy.candidate?.keycloakId,
       candidacyId: candidacy.id,
     });
-    expect(resp.statusCode).toEqual(200);
-    const obj = resp.json();
-    expect(obj.data.getCandidacyById).toMatchObject({
+    expect(response.getCandidacyById).toMatchObject({
       id: candidacy.id,
     });
   });
@@ -74,14 +122,13 @@ describe("candidacy resolver read authorization", () => {
     const candidacy = await createCandidacyHelper();
     const randomCandidate = await createCandidateHelper();
 
-    const resp = await getCandidacy({
-      role: "candidate",
-      keycloakId: randomCandidate.keycloakId,
-      candidacyId: candidacy.id,
-    });
-    expect(resp.statusCode).toEqual(200);
-    const obj = resp.json();
-    expect(obj.errors[0].message).toEqual(NOT_AUTHORIZED_CANDIDACY_ACCESS);
+    await expect(
+      getCandidacy({
+        role: "candidate",
+        keycloakId: randomCandidate.keycloakId,
+        candidacyId: candidacy.id,
+      }),
+    ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
   });
 
   test("allows the AAP associated to the candidacy to access it", async () => {
@@ -92,14 +139,12 @@ describe("candidacy resolver read authorization", () => {
       },
     });
 
-    const resp = await getCandidacy({
+    const response = await getCandidacy({
       role: "manage_candidacy",
       keycloakId: organism.organismOnAccounts[0].account.keycloakId,
       candidacyId: candidacy.id,
     });
-    expect(resp.statusCode).toEqual(200);
-    const obj = resp.json();
-    expect(obj.data.getCandidacyById).toMatchObject({
+    expect(response.getCandidacyById).toMatchObject({
       id: candidacy.id,
     });
   });
@@ -107,14 +152,13 @@ describe("candidacy resolver read authorization", () => {
   test("rejects an AAP not associated to the candidacy", async () => {
     const organism = await createOrganismHelper();
     const candidacy = await createCandidacyHelper();
-    const resp = await getCandidacy({
-      role: "manage_candidacy",
-      keycloakId: organism.organismOnAccounts[0].account.keycloakId,
-      candidacyId: candidacy.id,
-    });
-    expect(resp.statusCode).toEqual(200);
-    const obj = resp.json();
-    expect(obj.errors[0].message).toEqual(NOT_AUTHORIZED_CANDIDACY_ACCESS);
+    await expect(
+      getCandidacy({
+        role: "manage_candidacy",
+        keycloakId: organism.organismOnAccounts[0].account.keycloakId,
+        candidacyId: candidacy.id,
+      }),
+    ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
   });
 
   test("allows the maison mere manager of the AAP associated to the candidacy to access it", async () => {
@@ -125,14 +169,12 @@ describe("candidacy resolver read authorization", () => {
       },
     });
 
-    const resp = await getCandidacy({
+    const response = await getCandidacy({
       role: "gestion_maison_mere_aap",
       keycloakId: organism.maisonMereAAP?.gestionnaire.keycloakId,
       candidacyId: candidacy.id,
     });
-    expect(resp.statusCode).toEqual(200);
-    const obj = resp.json();
-    expect(obj.data.getCandidacyById).toMatchObject({
+    expect(response.getCandidacyById).toMatchObject({
       id: candidacy.id,
     });
   });
@@ -140,14 +182,13 @@ describe("candidacy resolver read authorization", () => {
   test("rejects a maison mere manager outside the candidacy scope", async () => {
     const organism = await createOrganismHelper();
     const candidacy = await createCandidacyHelper();
-    const resp = await getCandidacy({
-      role: "gestion_maison_mere_aap",
-      keycloakId: organism.maisonMereAAP?.gestionnaire.keycloakId,
-      candidacyId: candidacy.id,
-    });
-    expect(resp.statusCode).toEqual(200);
-    const obj = resp.json();
-    expect(obj.errors[0].message).toEqual(NOT_AUTHORIZED_CANDIDACY_ACCESS);
+    await expect(
+      getCandidacy({
+        role: "gestion_maison_mere_aap",
+        keycloakId: organism.maisonMereAAP?.gestionnaire.keycloakId,
+        candidacyId: candidacy.id,
+      }),
+    ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
   });
 
   test("allows the certification authority manager handling the candidacy feasibility file to access it", async () => {
@@ -157,14 +198,12 @@ describe("candidacy resolver read authorization", () => {
       certificationAuthorityId: certificationAuthority.id,
     });
 
-    const resp = await getCandidacy({
+    const response = await getCandidacy({
       role: "manage_certification_authority_local_account",
       keycloakId: certificationAuthority.Account[0].keycloakId,
       candidacyId: feasibility.candidacyId,
     });
-    expect(resp.statusCode).toEqual(200);
-    const obj = resp.json();
-    expect(obj.data.getCandidacyById).toMatchObject({
+    expect(response.getCandidacyById).toMatchObject({
       id: feasibility.candidacyId,
     });
   });
@@ -172,14 +211,13 @@ describe("candidacy resolver read authorization", () => {
   test("rejects a certification authority manager outside the candidacy scope", async () => {
     const certificationAuthority = await createCertificationAuthorityHelper();
     const candidacy = await createCandidacyHelper();
-    const resp = await getCandidacy({
-      role: "manage_certification_authority_local_account",
-      keycloakId: certificationAuthority.Account[0].keycloakId,
-      candidacyId: candidacy.id,
-    });
-    expect(resp.statusCode).toEqual(200);
-    const obj = resp.json();
-    expect(obj.errors[0].message).toEqual(NOT_AUTHORIZED_CANDIDACY_ACCESS);
+    await expect(
+      getCandidacy({
+        role: "manage_certification_authority_local_account",
+        keycloakId: certificationAuthority.Account[0].keycloakId,
+        candidacyId: candidacy.id,
+      }),
+    ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
   });
 
   test("allows the certification local account handling the candidacy feasibility file to access it", async () => {
@@ -223,14 +261,12 @@ describe("candidacy resolver read authorization", () => {
       candidacyId: candidacyInput.id,
     });
 
-    const resp = await getCandidacy({
+    const response = await getCandidacy({
       role: "manage_feasibility",
       keycloakId: certificationAuthorityLocalAccount.account.keycloakId,
       candidacyId: feasibility.candidacyId,
     });
-    expect(resp.statusCode).toEqual(200);
-    const obj = resp.json();
-    expect(obj.data.getCandidacyById).toMatchObject({
+    expect(response.getCandidacyById).toMatchObject({
       id: feasibility.candidacyId,
     });
   });
@@ -239,14 +275,13 @@ describe("candidacy resolver read authorization", () => {
     const certificationAuthorityLocalAccount =
       await createCertificationAuthorityLocalAccountHelper();
     const candidacy = await createCandidacyHelper();
-    const resp = await getCandidacy({
-      role: "manage_feasibility",
-      keycloakId: certificationAuthorityLocalAccount.account.keycloakId,
-      candidacyId: candidacy.id,
-    });
-    expect(resp.statusCode).toEqual(200);
-    const obj = resp.json();
-    expect(obj.errors[0].message).toEqual(NOT_AUTHORIZED_CANDIDACY_ACCESS);
+    await expect(
+      getCandidacy({
+        role: "manage_feasibility",
+        keycloakId: certificationAuthorityLocalAccount.account.keycloakId,
+        candidacyId: candidacy.id,
+      }),
+    ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
   });
 
   test("rejects access to a non-existing candidacy", async () => {
@@ -258,14 +293,6 @@ describe("candidacy resolver read authorization", () => {
         }),
       },
     });
-
-    const getCandidacyById = graphql(`
-      query getCandidacyById_does_not_exist($id: ID!) {
-        getCandidacyById(id: $id) {
-          id
-        }
-      }
-    `);
 
     await expect(
       graphqlClient.request(getCandidacyById, {
@@ -280,27 +307,21 @@ describe("candidacy resolver read authorization", () => {
       keycloakId: keycloakId ?? faker.string.uuid(),
     });
 
-  const query = ({
-    endpoint,
+  const getCandidacyWithResolvedFields = ({
     authorization,
-    arguments: queryArguments,
-    returnFields,
+    candidacyId,
   }: {
-    endpoint: string;
     authorization?: string;
-    arguments?: Record<string, unknown>;
-    returnFields: string;
-  }) =>
-    injectGraphql({
-      fastify: global.testApp,
-      authorization,
-      payload: {
-        requestType: "query",
-        endpoint,
-        arguments: queryArguments,
-        returnFields,
-      },
+    candidacyId: string;
+  }) => {
+    const graphqlClient = getGraphQLClient({
+      headers: authorization ? { authorization } : undefined,
     });
+
+    return graphqlClient.request(getCandidacyByIdWithResolvedFields, {
+      id: candidacyId,
+    });
+  };
 
   describe("resolved candidacy fields", () => {
     test("allows the candidate owning the candidacy to resolve every candidacy field", async () => {
@@ -345,31 +366,12 @@ describe("candidacy resolver read authorization", () => {
         data: { candidacyId: candidacy.id, city: faker.location.city() },
       });
 
-      const response = await query({
-        endpoint: "getCandidacyById",
+      const response = await getCandidacyWithResolvedFields({
         authorization: asRole("candidate", candidacy.candidate!.keycloakId),
-        arguments: { id: candidacy.id },
-        returnFields: `{
-          goals { id }
-          experiences { id }
-          candidate { id }
-          organism { id }
-          candidacyStatuses { id }
-          reorientationReason { id }
-          conventionCollective { id }
-          candidacyDropOut { dropOutReason { id } }
-          candidacyOnCandidacyFinancingMethods {
-            id
-            candidacyFinancingMethod { id }
-          }
-          candidateInfo { city }
-          endAccompagnementCandidateDropOutReason { id }
-          feasibilityFileResourceFirstRead
-        }`,
+        candidacyId: candidacy.id,
       });
 
-      expect(response.json()).not.toHaveProperty("errors");
-      expect(response.json().data.getCandidacyById).toMatchObject({
+      expect(response.getCandidacyById).toMatchObject({
         goals: [{ id: goal.id }],
         experiences: [{ id: experience.id }],
         candidate: { id: candidacy.candidateId },
@@ -398,17 +400,12 @@ describe("candidacy resolver read authorization", () => {
       const candidacy = await createCandidacyHelper();
       const randomCandidate = await createCandidateHelper();
 
-      const response = await query({
-        endpoint: "getCandidacyById",
-        authorization: asRole("candidate", randomCandidate.keycloakId),
-        arguments: { id: candidacy.id },
-        returnFields:
-          "{ goals { id } candidacyDropOut { dropOutReason { id } } }",
-      });
-
-      expect(response.json().errors[0].message).toBe(
-        NOT_AUTHORIZED_CANDIDACY_ACCESS,
-      );
+      await expect(
+        getCandidacyWithResolvedFields({
+          authorization: asRole("candidate", randomCandidate.keycloakId),
+          candidacyId: candidacy.id,
+        }),
+      ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
     });
 
     test.each<KeyCloakUserRole>([
@@ -419,32 +416,27 @@ describe("candidacy resolver read authorization", () => {
       async (role: KeyCloakUserRole) => {
         const candidacy = await createCandidacyHelper();
 
-        const response = await query({
-          endpoint: "getCandidacyById",
-          authorization: asRole(role),
-          arguments: { id: candidacy.id },
-          returnFields: "{ id }",
-        });
-
-        expect(response.json().errors[0].message).toBe(
-          NOT_AUTHORIZED_CANDIDACY_ACCESS,
-        );
+        await expect(
+          getCandidacyWithResolvedFields({
+            authorization: asRole(role),
+            candidacyId: candidacy.id,
+          }),
+        ).rejects.toThrowError(NOT_AUTHORIZED_CANDIDACY_ACCESS);
       },
     );
 
     test("rejects resolved candidacy fields from an unauthenticated request", async () => {
       const candidacy = await createCandidacyHelper();
 
-      const response = await query({
-        endpoint: "getCandidacyById",
-        arguments: { id: candidacy.id },
-        returnFields:
-          "{ goals { id } candidacyDropOut { dropOutReason { id } } }",
-      });
-
       // TODO: improve the policy code to return a proper SESSION_EXPIRED
-      expect(response.json()).toHaveProperty("errors");
-      expect(response.json().data.getCandidacyById).toBeNull();
+      await expect(
+        getCandidacyWithResolvedFields({ candidacyId: candidacy.id }),
+      ).rejects.toMatchObject({
+        response: {
+          errors: expect.any(Array),
+          data: { getCandidacyById: null },
+        },
+      });
     });
   });
 });
