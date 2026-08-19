@@ -25,7 +25,10 @@ const config: CodegenConfig = {
         input: "string",
         output: "string",
       },
-      Timestamp: "number",
+      Timestamp: {
+        input: "Date | string | number",
+        output: "number",
+      },
     },
   },
 };
