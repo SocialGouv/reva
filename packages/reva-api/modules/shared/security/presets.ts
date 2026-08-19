@@ -1,7 +1,6 @@
 import { accessBy, ALLOW } from "./accessBy";
 import {
   allowed,
-  forbidden,
   hasNotRole,
   hasRole,
   isCandidacyOwner,
@@ -34,8 +33,6 @@ export const isCandidacyCompanion = [
   hasRole(["manage_candidacy"]),
   whenHasRole("manage_candidacy", isCandidacyOwner),
 ];
-
-export const defaultSecurity = [forbidden];
 
 export const isAnyone = [allowed];
 

@@ -1,4 +1,3 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import {
   CandidacyTypeAccompagnement,
   CandidateTypology,
@@ -12,6 +11,21 @@ import {
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
 import { logger } from "@/modules/shared/logger/logger";
+import { hasRole } from "@/modules/shared/security/middlewares";
+import { isCandidateOwnerOfCandidacy } from "@/modules/shared/security/middlewares/isCandidateOwnerOfCandidacy.security";
+import {
+  isAdmin,
+  isAdminOrCandidacyCompanion,
+  isAdminOrCertificationAuthority,
+  isAdminOrManager,
+  isAdminOrOwnerOfCandidate,
+  isAdminOrOwnerOfCandidacy,
+  isAnyone,
+  isCandidacyCompanion,
+  isOwnerOrCanManageCandidacy,
+  isOwnerOrCanManageExperienceOfCandidacy,
+} from "@/modules/shared/security/presets";
+import { withPolicies } from "@/modules/shared/security/withPolicies";
 import { prismaClient } from "@/prisma/client";
 
 import {
@@ -80,7 +94,7 @@ import { updateExperienceOfCandidacy } from "./features/updateExperienceOfCandid
 import { updateGoalsOfCandidacy } from "./features/updateGoalsOfCandidacy";
 import { validateDropOutCandidacy } from "./features/validateDropOutCandidacy";
 import { logCandidacyEvent } from "./logCandidacyEvent";
-import { resolversSecurityMap } from "./security/security";
+import { canAccessCandidacy as canAccessCandidacyPolicy } from "./security/canAccessCandidacy.security";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -861,7 +875,72 @@ const unsafeResolvers = {
   },
 };
 
-export const candidacyResolvers = composeResolvers(
-  unsafeResolvers,
-  resolversSecurityMap,
-);
+export const candidacyResolvers = withPolicies(unsafeResolvers, {
+  // Atteints uniquement via une Candidacy déjà filtrée (ex. getCandidacyById /
+  // canAccessCandidacy), dont les rôles autorisés sont plus larges que les
+  // presets d'écriture (certificateurs, gestionnaires de maison mère, …).
+  Candidacy: {
+    goals: isAnyone,
+    experiences: isAnyone,
+    candidate: isAnyone,
+    organism: isAnyone,
+    candidacyStatuses: isAnyone,
+    reorientationReason: isAnyone,
+    conventionCollective: isAnyone,
+    candidacyDropOut: isAnyone,
+    candidacyOnCandidacyFinancingMethods: isAnyone,
+    candidateInfo: isAnyone,
+    endAccompagnementCandidateDropOutReason: isAnyone,
+    feasibilityFileResourceFirstRead: isAnyone,
+  },
+  CandidacyOnCandidacyFinancingMethod: {
+    candidacyFinancingMethod: isAnyone,
+  },
+  CandidacyDropOut: {
+    dropOutReason: isAnyone,
+  },
+  Query: {
+    getCandidacies: isAdminOrManager,
+    candidacy_getCandidaciesForCertificationAuthority:
+      isAdminOrCertificationAuthority,
+    candidacy_getCandidaciesForAAP: isAdminOrManager,
+    getCandidacyById: [canAccessCandidacyPolicy],
+    candidacy_canAccessCandidacy: isAnyone,
+    candidacy_searchOrganismsForCandidacyAsAdmin: isAdmin,
+    candidacy_getCandidacyCcns: [
+      hasRole(["admin", "manage_candidacy", "candidate"]),
+    ],
+    getRandomOrganismsForCandidacy: isAnyone,
+    candidacy_candidacyCountByStatus: isAnyone,
+  },
+  Mutation: {
+    candidacy_updateContact: isAdminOrOwnerOfCandidate,
+    candidacy_createCandidacy: isAdminOrOwnerOfCandidate,
+    candidacy_updateGoals: isAdminOrOwnerOfCandidacy,
+    candidacy_updateExperience: isOwnerOrCanManageExperienceOfCandidacy,
+    candidacy_addExperience: isOwnerOrCanManageCandidacy,
+    candidacy_deleteExperience: isOwnerOrCanManageExperienceOfCandidacy,
+    candidacy_selectOrganism: isAdminOrOwnerOfCandidacy,
+    candidacy_selectOrganismAsAdmin: isAdmin,
+    candidacy_submitCandidacy: isAdminOrOwnerOfCandidacy,
+    candidacy_updateTypeAccompagnement: isAdminOrOwnerOfCandidacy,
+    candidacy_setTypeAccompagnementToAutonome: isAdmin,
+    candidacy_takeOver: isCandidacyCompanion,
+    candidacy_archiveById: isOwnerOrCanManageCandidacy,
+    candidacy_unarchiveById: isAdminOrCandidacyCompanion,
+    candidacy_submitTypologyForm: isAdminOrCandidacyCompanion,
+    candidacy_dropOut: isAdminOrCandidacyCompanion,
+    candidacy_candidateDropOutCandidacy: [isCandidateOwnerOfCandidacy],
+    candidacy_validateDropOut: isAdmin,
+    candidacy_cancelDropOutById: isAdmin,
+    candidacy_setReadyForJuryEstimatedAt: isOwnerOrCanManageCandidacy,
+    candidacy_updateCandidateCandidacyDropoutDecision:
+      isAdminOrOwnerOfCandidacy,
+    candidacy_updateFinanceModule: isAdmin,
+    candidacy_submitEndAccompagnement: isAdminOrCandidacyCompanion,
+    candidacy_updateCandidacyEndAccompagnementDecision:
+      isAdminOrOwnerOfCandidacy,
+    candidacy_updateCertificationAuthority: isOwnerOrCanManageCandidacy,
+    candidacy_markFeasibilityFileResourceFirstAsRead: isAdminOrOwnerOfCandidacy,
+  },
+});
