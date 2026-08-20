@@ -1,6 +1,9 @@
 import { faker } from "@faker-js/faker";
 
-import { NOT_AUTHORIZED_CANDIDACY_ACCESS } from "@/modules/shared/security/messages";
+import {
+  NOT_AUTHORIZED_CANDIDACY_ACCESS,
+  SESSION_EXPIRED,
+} from "@/modules/shared/security/messages";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyCCNHelper } from "@/test/helpers/entities/create-candidacy-ccn-helper";
@@ -428,15 +431,9 @@ describe("candidacy resolver read authorization", () => {
     test("rejects resolved candidacy fields from an unauthenticated request", async () => {
       const candidacy = await createCandidacyHelper();
 
-      // TODO: improve the policy code to return a proper SESSION_EXPIRED
       await expect(
         getCandidacyWithResolvedFields({ candidacyId: candidacy.id }),
-      ).rejects.toMatchObject({
-        response: {
-          errors: expect.any(Array),
-          data: { getCandidacyById: null },
-        },
-      });
+      ).rejects.toThrowError(SESSION_EXPIRED);
     });
   });
 });
