@@ -1,12 +1,18 @@
 import { faker } from "@faker-js/faker";
 
+import * as getKeycloakAdminModule from "@/modules/shared/auth/getKeycloakAdmin";
 import {
   NOT_AUTHORIZED,
+  NOT_AUTHORIZED_MAISON_MERE_ACCESS,
   NOT_AUTHORIZED_ORGANISM_ACCESS,
   SESSION_EXPIRED as UNAUTHENTICATED,
 } from "@/modules/shared/security/messages";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createAccountHelper } from "@/test/helpers/entities/create-account-helper";
+import {
+  attachCollaborateurAccountToMaisonMereAAP,
+  createMaisonMereAapHelper,
+} from "@/test/helpers/entities/create-maison-mere-aap-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 
@@ -193,6 +199,134 @@ describe("organism - autorisation des resolvers", () => {
     test("non authentifié : refusé", async () => {
       const organism = await createOrganismHelper();
       const resp = await call(organism.id);
+      expect(resp.json().errors[0].message).toBe(UNAUTHENTICATED);
+    });
+  });
+
+  describe("organism_updateOrganismAccount (admin ou gestionnaire de la MM)", () => {
+    // La feature appelle Keycloak pour répercuter le changement d'email/nom : on mock l'admin
+    // Keycloak pour isoler le test de l'autorisation.
+    beforeEach(() => {
+      vi.spyOn(getKeycloakAdminModule, "getKeycloakAdmin").mockResolvedValue({
+        users: {
+          findOne: () => Promise.resolve({}),
+          listGroups: () => Promise.resolve([]),
+          update: () => Promise.resolve({}),
+        },
+      } as unknown as Awaited<
+        ReturnType<typeof getKeycloakAdminModule.getKeycloakAdmin>
+      >);
+    });
+
+    const call = (
+      maisonMereAAPId: string,
+      accountId: string,
+      authorization?: string,
+    ) =>
+      injectGraphql({
+        fastify: global.testApp,
+        authorization,
+        payload: {
+          requestType: "mutation",
+          endpoint: "organism_updateOrganismAccount",
+          arguments: {
+            data: {
+              maisonMereAAPId,
+              accountId,
+              accountFirstname: "Jean",
+              accountLastname: "Dupont",
+              accountEmail: "jean.dupont@example.com",
+            },
+          },
+          returnFields: "{ id }",
+        },
+      });
+
+    test("le gestionnaire de la maison mère du compte : autorisé", async () => {
+      const maisonMereAAP = await createMaisonMereAapHelper();
+      const collaborateurAccount = await createAccountHelper();
+      await attachCollaborateurAccountToMaisonMereAAP({
+        maisonMereAAPId: maisonMereAAP.id,
+        collaborateurAccountId: collaborateurAccount.id,
+      });
+
+      const resp = await call(
+        maisonMereAAP.id,
+        collaborateurAccount.id,
+        asRole(
+          "gestion_maison_mere_aap",
+          maisonMereAAP.gestionnaire.keycloakId,
+        ),
+      );
+      expect(resp.json()).not.toHaveProperty("errors");
+    });
+
+    test("l'admin : autorisé", async () => {
+      const maisonMereAAP = await createMaisonMereAapHelper();
+      const collaborateurAccount = await createAccountHelper();
+      await attachCollaborateurAccountToMaisonMereAAP({
+        maisonMereAAPId: maisonMereAAP.id,
+        collaborateurAccountId: collaborateurAccount.id,
+      });
+
+      const resp = await call(
+        maisonMereAAP.id,
+        collaborateurAccount.id,
+        asRole("admin"),
+      );
+      expect(resp.json()).not.toHaveProperty("errors");
+    });
+
+    // Non-régression : ce resolver était sur `isAnyone`, sans aucun contrôle propre au resolver
+    // ni à la feature — n'importe quel appelant (même non gestionnaire de la MM ciblée) pouvait
+    // réécrire l'email/nom d'un compte organisme arbitraire.
+    test("le gestionnaire d'une AUTRE maison mère : refusé", async () => {
+      const maisonMereAAP = await createMaisonMereAapHelper();
+      const autreMaisonMereAAP = await createMaisonMereAapHelper();
+      const collaborateurAccount = await createAccountHelper();
+      await attachCollaborateurAccountToMaisonMereAAP({
+        maisonMereAAPId: maisonMereAAP.id,
+        collaborateurAccountId: collaborateurAccount.id,
+      });
+
+      const resp = await call(
+        maisonMereAAP.id,
+        collaborateurAccount.id,
+        asRole(
+          "gestion_maison_mere_aap",
+          autreMaisonMereAAP.gestionnaire.keycloakId,
+        ),
+      );
+      expect(resp.json().errors[0].message).toBe(
+        NOT_AUTHORIZED_MAISON_MERE_ACCESS,
+      );
+    });
+
+    test("un AAP (manage_candidacy) : refusé", async () => {
+      const maisonMereAAP = await createMaisonMereAapHelper();
+      const collaborateurAccount = await createAccountHelper();
+      await attachCollaborateurAccountToMaisonMereAAP({
+        maisonMereAAPId: maisonMereAAP.id,
+        collaborateurAccountId: collaborateurAccount.id,
+      });
+
+      const resp = await call(
+        maisonMereAAP.id,
+        collaborateurAccount.id,
+        asRole("manage_candidacy"),
+      );
+      expect(resp.json().errors[0].message).toBe(NOT_AUTHORIZED);
+    });
+
+    test("non authentifié : refusé", async () => {
+      const maisonMereAAP = await createMaisonMereAapHelper();
+      const collaborateurAccount = await createAccountHelper();
+      await attachCollaborateurAccountToMaisonMereAAP({
+        maisonMereAAPId: maisonMereAAP.id,
+        collaborateurAccountId: collaborateurAccount.id,
+      });
+
+      const resp = await call(maisonMereAAP.id, collaborateurAccount.id);
       expect(resp.json().errors[0].message).toBe(UNAUTHENTICATED);
     });
   });
