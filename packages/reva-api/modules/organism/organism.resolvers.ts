@@ -688,7 +688,7 @@ export const organismResolvers = withPolicies(unsafeResolvers, {
       isAdminOrGestionnaireOfMaisonMereAAP,
     organism_disableCompteCollaborateur: isAdminOrGestionnaireOfMaisonMereAAP,
     organism_deleteLieuAccueil: isAdminOrGestionnaireOfMaisonMereAAP,
-    organism_updateOrganismAccount: isAnyone,
+    organism_updateOrganismAccount: isAdminOrGestionnaireOfMaisonMereAAP,
     organism_updateOrganismDegreesAndFormacodes: isAnyone,
     organism_updateMaisonMereOrganismsIsActive: isAdmin,
     organism_updateLegalInformationValidationDecision: isAdmin,
