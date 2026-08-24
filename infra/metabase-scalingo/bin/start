@@ -7,12 +7,9 @@ set -e
 
 # Translate various Heroku environment variables to Metabase equivalents
 
-if [ "$PORT" ]; then
-    export MB_JETTY_PORT="$PORT"
-fi
-
 if [ "$SCALINGO_PRIVATE_HOSTNAME"]; then
     export MB_JETTY_HOST="$SCALINGO_PRIVATE_HOSTNAME"
+    export MB_JETTY_PORT="3000"
 fi
 
 # Heroku Postgres
