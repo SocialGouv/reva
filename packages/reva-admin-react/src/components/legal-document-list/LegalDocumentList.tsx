@@ -3,15 +3,37 @@ export const LegalDocumentList = ({
   justificatifIdentiteDirigeantFileUrl,
   lettreDeDelegationFileUrl,
   justificatifIdentiteDelegataireFileUrl,
+  collapsible,
 }: {
   attestationURSSAFFileUrl?: string | null;
   justificatifIdentiteDirigeantFileUrl?: string | null;
   lettreDeDelegationFileUrl?: string | null;
   justificatifIdentiteDelegataireFileUrl?: string | null;
+  collapsible?: boolean;
 }) => {
+  const documents = [
+    {
+      title: "Attestation URSSAF ou attestation MSA",
+      url: attestationURSSAFFileUrl,
+    },
+    {
+      title: "Copie du justificatif d'identité du dirigeant",
+      url: justificatifIdentiteDirigeantFileUrl,
+    },
+    { title: "Lettre de délégation", url: lettreDeDelegationFileUrl },
+    {
+      title: "Copie du justificatif d'identité du délégataire",
+      url: justificatifIdentiteDelegataireFileUrl,
+    },
+  ].filter(
+    (document): document is { title: string; url: string } => !!document.url,
+  );
+
   return (
     <div className="mb-8">
-      <h3>Pièces jointes à vérifier</h3>
+      <h3>
+        {collapsible ? "Pièces justificatives" : "Pièces jointes à vérifier"}
+      </h3>
       <p className="mb-4 text-dsfr-blue-france-sun-113">
         <a
           href="https://www.urssaf.fr/accueil/outils-documentation/outils/verification-attestation.html"
@@ -20,39 +42,36 @@ export const LegalDocumentList = ({
           Lien vers la vérification URSSAF
         </a>
       </p>
-      <div className="grid grid-cols-1 gap-8">
-        {attestationURSSAFFileUrl && (
-          <iframe
-            className="w-full h-[500px]"
-            title="Attestation URSSAF"
-            name="Attestation URSSAF"
-            src={attestationURSSAFFileUrl}
-          ></iframe>
-        )}
-        {justificatifIdentiteDirigeantFileUrl && (
-          <iframe
-            className="w-full h-[500px]"
-            title="Justificatif d'identité du dirigeant"
-            name="Justificatif d'identité du dirigeant"
-            src={justificatifIdentiteDirigeantFileUrl}
-          ></iframe>
-        )}
-        {lettreDeDelegationFileUrl && (
-          <iframe
-            className="w-full h-[500px]"
-            title="Lettre de delegation"
-            name="Lettre de delegation"
-            src={lettreDeDelegationFileUrl}
-          ></iframe>
-        )}
-        {justificatifIdentiteDelegataireFileUrl && (
-          <iframe
-            className="w-full h-[500px]"
-            title="Justificatif d'identité du delegataire"
-            name="Justificatif d'identité du delegataire"
-            src={justificatifIdentiteDelegataireFileUrl}
-          ></iframe>
-        )}
+      <div
+        className={
+          collapsible ? "border-t border-neutral-300" : "grid grid-cols-1 gap-8"
+        }
+      >
+        {documents.map(({ title, url }) => {
+          const preview = (
+            <iframe
+              key={title}
+              className={
+                collapsible ? "w-full h-[500px] mb-4" : "w-full h-[500px]"
+              }
+              title={title}
+              name={title}
+              src={url}
+            ></iframe>
+          );
+
+          return collapsible ? (
+            <details key={title} className="border-b border-neutral-300">
+              <summary className="flex items-center justify-between gap-4 py-3 px-4 cursor-pointer list-none text-dsfr-blue-france-sun-113 [&::-webkit-details-marker]:hidden">
+                <span>{title}</span>
+                <span className="fr-icon-eye-line" aria-hidden="true" />
+              </summary>
+              {preview}
+            </details>
+          ) : (
+            preview
+          );
+        })}
       </div>
     </div>
   );

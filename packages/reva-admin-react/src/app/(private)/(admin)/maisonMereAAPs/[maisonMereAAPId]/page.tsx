@@ -1,21 +1,28 @@
 "use client";
 
+import Badge from "@codegouvfr/react-dsfr/Badge";
 import { useQuery } from "@tanstack/react-query";
-import { toDate } from "date-fns";
+import { format, toDate } from "date-fns";
 import { useParams } from "next/navigation";
 
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import {
+  AccountInfoRows,
+  pendingIfChanged,
+} from "@/app/(private)/(aap)/agencies-settings-v3/[maison-mere-id]/general-information/_components/AccountInfoRows";
+import { InfoRow } from "@/app/(private)/(aap)/agencies-settings-v3/[maison-mere-id]/general-information/_components/InfoRow";
+import { LegalInformationTile } from "@/app/(private)/(aap)/agencies-settings-v3/[maison-mere-id]/general-information/_components/LegalInformationTile";
+import { SiretInformationCard } from "@/app/(private)/(aap)/agencies-settings-v3/[maison-mere-id]/general-information/_components/SiretInformationCard";
+import { useEtablissement } from "@/components/company-preview/CompanyPreview.hooks";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { LegalDocumentList } from "@/components/legal-document-list/LegalDocumentList";
-import { Info } from "@/components/organism-summary/Info";
-import {
-  OrganismSummary,
-  Typology,
-} from "@/components/organism-summary/OrganismSummary";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
 import { PREVIEW_URL_REFETCH_INTERVAL_MS } from "@/constants/previewUrl.constant";
+import { formatSiret } from "@/utils/formatSiret";
 
 import { graphql } from "@/graphql/generated";
 
+import { MandatairesSociauxCard } from "./(components)/MandatairesSociauxCard";
 import ValidationDecisionForm from "./(components)/ValidationDecisionForm";
 
 const getMaisonMereAAP = graphql(`
@@ -25,19 +32,19 @@ const getMaisonMereAAP = graphql(`
       phone
       siret
       raisonSociale
-      dateExpirationCertificationQualiopi
-      statutJuridique
-      typologie
-      siteWeb
       createdAt
       statutValidationInformationsJuridiquesMaisonMereAAP
       managerFirstname
       managerLastname
       legalInformationDocuments {
+        createdAt
         managerFirstname
         managerLastname
-        delegataire
-        createdAt
+        siret
+        gestionnaireFirstname
+        gestionnaireLastname
+        gestionnaireEmail
+        phone
         attestationURSSAFFile {
           previewUrl
         }
@@ -51,37 +58,16 @@ const getMaisonMereAAP = graphql(`
           previewUrl
         }
       }
-      legalInformationDocumentsDecisions {
+      legalInformationDocumentsDecisions(
+        input: { decision: DEMANDE_DE_PRECISION }
+      ) {
         id
-        decision
-        internalComment
-        aapComment
-        aapUpdatedDocumentsAt
-        decision
         decisionTakenAt
-      }
-      maisonMereAAPOnConventionCollectives {
-        ccn {
-          label
-        }
       }
       gestionnaire {
         firstname
         lastname
         email
-      }
-      organisms {
-        id
-        label
-        nomPublic
-        fermePourAbsenceOuConges
-        managedDegrees {
-          id
-          degree {
-            id
-            level
-          }
-        }
       }
     }
   }
@@ -91,6 +77,7 @@ const MaisonMereAAPPage = () => {
   const { maisonMereAAPId }: { maisonMereAAPId: string } = useParams();
 
   const { graphqlClient } = useGraphQlClient();
+  const { isFeatureActive } = useFeatureflipping();
 
   const { data: getMaisonMereAAPResponse, isLoading: isMaisonMereAAPLoading } =
     useQuery({
@@ -104,109 +91,130 @@ const MaisonMereAAPPage = () => {
 
   const maisonMereAAP = getMaisonMereAAPResponse?.organism_getMaisonMereAAPById;
 
+  const { etablissement } = useEtablissement(maisonMereAAP?.siret);
+
   if (isMaisonMereAAPLoading || !maisonMereAAP) {
     return <></>;
   }
 
+  const isAwaitingVerification =
+    maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
+    "EN_ATTENTE_DE_VERIFICATION";
+
+  // Hors vérification en cours, la demande a été traitée: ni avant/après, ni pièces jointes.
+  const legalInformationDocuments = isAwaitingVerification
+    ? maisonMereAAP.legalInformationDocuments
+    : null;
+
+  // Les décisions sont triées de la plus récente à la plus ancienne côté API.
+  const lastUpdateRequest = maisonMereAAP.legalInformationDocumentsDecisions[0];
+
+  const pendingSiret = pendingIfChanged(
+    maisonMereAAP.siret,
+    legalInformationDocuments?.siret,
+  );
+
   return (
-    maisonMereAAP && (
-      <div className="flex flex-col flex-1 px-8 py-4">
-        <OrganismSummary
-          companyName={maisonMereAAP.raisonSociale}
-          accountFirstname={maisonMereAAP.gestionnaire.firstname || ""}
-          accountLastname={maisonMereAAP.gestionnaire.lastname || ""}
-          accountEmail={maisonMereAAP.gestionnaire.email}
-          accountPhoneNumber={maisonMereAAP.phone || ""}
-          companyQualiopiCertificateExpiresAt={toDate(
-            maisonMereAAP.dateExpirationCertificationQualiopi || "",
-          )}
-          companySiret={maisonMereAAP.siret}
-          companyLegalStatus={maisonMereAAP.statutJuridique}
-          companyWebsite={maisonMereAAP.siteWeb}
-          companyTypology={maisonMereAAP.typologie as Typology}
-          ccns={maisonMereAAP.maisonMereAAPOnConventionCollectives.map(
-            (c) => c.ccn.label,
-          )}
-          createdAt={toDate(maisonMereAAP.createdAt)}
-          companyManagerFirstname={
-            maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ==
-            "A_JOUR"
-              ? maisonMereAAP.managerFirstname || undefined
-              : maisonMereAAP.legalInformationDocuments?.managerFirstname
+    <div className="flex flex-col flex-1 px-8 py-4">
+      <SettingsBreadcrumb
+        currentPageLabel={maisonMereAAP.raisonSociale}
+        homeLinkProps={{ href: "/" }}
+        segments={[
+          {
+            label: "Vérifications",
+            linkProps: { href: "/subscriptions/check-legal-information" },
+          },
+        ]}
+      />
+      <h1>{maisonMereAAP.raisonSociale}</h1>
+      <p className="mb-1">
+        Inscrit depuis le :{" "}
+        {format(toDate(maisonMereAAP.createdAt), "dd/MM/yyyy")}
+      </p>
+      {legalInformationDocuments && (
+        <p className="mb-1">
+          Demande de modification envoyée le :{" "}
+          {format(toDate(legalInformationDocuments.createdAt), "dd/MM/yyyy")}
+        </p>
+      )}
+      <div className="flex flex-col gap-6 mt-6">
+        <InfoRow
+          label="Numéro de SIRET"
+          badge={
+            pendingSiret && (
+              <Badge severity="info" small>
+                Modifié
+              </Badge>
+            )
           }
-          companyManagerLastname={
-            maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ==
-            "A_JOUR"
-              ? maisonMereAAP.managerLastname || undefined
-              : maisonMereAAP.legalInformationDocuments?.managerLastname
-          }
-          legalInformationDocumentsDecisions={maisonMereAAP.legalInformationDocumentsDecisions.map(
-            (d) => ({
-              ...d,
-              aapUpdatedDocumentsAt:
-                d.aapUpdatedDocumentsAt == null
-                  ? null
-                  : toDate(d.aapUpdatedDocumentsAt),
-              decisionTakenAt: toDate(d.decisionTakenAt),
-            }),
+          pendingValue={pendingSiret ? formatSiret(pendingSiret) : undefined}
+          emphasis="pending"
+          className="border-t"
+        >
+          {formatSiret(maisonMereAAP.siret)}
+        </InfoRow>
+        <div>
+          <SiretInformationCard
+            siret={maisonMereAAP.siret}
+            etablissement={etablissement}
+          />
+          {!!etablissement?.kbis?.mandatairesSociaux?.length && (
+            <MandatairesSociauxCard
+              mandatairesSociaux={etablissement.kbis.mandatairesSociaux}
+            />
           )}
-          statutValidationInformationsJuridiquesMaisonMereAAP={
-            maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
-          }
+        </div>
+        <AccountInfoRows
+          maisonMereAAP={maisonMereAAP}
+          pendingValues={legalInformationDocuments}
+          emphasis="pending"
+          badgeLabel="Modifié"
         />
-        <GrayCard className="mt-8">
-          <h3>Agences</h3>
-          <ol className="grid grid-cols-1 md:grid-cols-2">
-            {maisonMereAAP.organisms.map((o) => (
-              <li key={o.id} className="ml-4">
-                <h3 className="text-lg font-bold">{o.nomPublic || o.label}</h3>
-                <Info title="Fermée pour absence ou congés:">
-                  <div> {o.fermePourAbsenceOuConges ? "Oui" : "Non"}</div>
-                </Info>
-                <Info title="Niveaux de diplômes couverts:">
-                  <ul>
-                    {o.managedDegrees.map((d) => (
-                      <li key={d.id}>Niveau {d.degree.level}</li>
-                    ))}
-                  </ul>
-                </Info>
-              </li>
-            ))}
-          </ol>
-        </GrayCard>
-        {maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
-          "EN_ATTENTE_DE_VERIFICATION" &&
-          maisonMereAAP.legalInformationDocuments && (
-            <>
-              <LegalDocumentList
-                attestationURSSAFFileUrl={
-                  maisonMereAAP.legalInformationDocuments?.attestationURSSAFFile
-                    ?.previewUrl
-                }
-                justificatifIdentiteDirigeantFileUrl={
-                  maisonMereAAP.legalInformationDocuments
-                    ?.justificatifIdentiteDirigeantFile?.previewUrl
-                }
-                lettreDeDelegationFileUrl={
-                  maisonMereAAP.legalInformationDocuments
-                    ?.lettreDeDelegationFile?.previewUrl
-                }
-                justificatifIdentiteDelegataireFileUrl={
-                  maisonMereAAP.legalInformationDocuments
-                    ?.justificatifIdentiteDelegataireFile?.previewUrl
-                }
-              />
-              <hr />
-              <ValidationDecisionForm
-                maisonMereAAPId={maisonMereAAP.id}
-                aapUpdatedDocumentsAt={
-                  maisonMereAAP.legalInformationDocuments.createdAt
-                }
-              />
-            </>
-          )}
+        {isFeatureActive("MAISON_MERE_GENERAL_INFORMATION_UPDATE") && (
+          <LegalInformationTile
+            isAdmin
+            // En attente de vérification, l'administrateur est déjà sur l'écran de vérification.
+            href={
+              isAwaitingVerification
+                ? undefined
+                : `/agencies-settings-v3/${maisonMereAAP.id}/general-information/legal-information`
+            }
+            statutValidationInformationsJuridiquesMaisonMereAAP={
+              maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
+            }
+            updateRequestedAt={
+              lastUpdateRequest && toDate(lastUpdateRequest.decisionTakenAt)
+            }
+          />
+        )}
+        {legalInformationDocuments && (
+          <>
+            <LegalDocumentList
+              collapsible
+              attestationURSSAFFileUrl={
+                legalInformationDocuments.attestationURSSAFFile?.previewUrl
+              }
+              justificatifIdentiteDirigeantFileUrl={
+                legalInformationDocuments.justificatifIdentiteDirigeantFile
+                  ?.previewUrl
+              }
+              lettreDeDelegationFileUrl={
+                legalInformationDocuments.lettreDeDelegationFile?.previewUrl
+              }
+              justificatifIdentiteDelegataireFileUrl={
+                legalInformationDocuments.justificatifIdentiteDelegataireFile
+                  ?.previewUrl
+              }
+            />
+            <hr />
+            <ValidationDecisionForm
+              maisonMereAAPId={maisonMereAAP.id}
+              aapUpdatedDocumentsAt={legalInformationDocuments.createdAt}
+            />
+          </>
+        )}
       </div>
-    )
+    </div>
   );
 };
 
