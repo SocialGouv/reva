@@ -1,28 +1,38 @@
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { format } from "date-fns";
-
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { Badge } from "@codegouvfr/react-dsfr/Badge";
+import { Card } from "@codegouvfr/react-dsfr/Card";
+import { format, isValid } from "date-fns";
 
 export const SubscriptionRequestCard = ({
   companyName,
   createdAt,
   createdAtLabel,
   href,
+  isActive,
 }: {
   companyName: string;
-  createdAt: Date;
+  createdAt?: Date;
   createdAtLabel: string;
-  href?: string;
+  href: string;
+  isActive?: boolean;
 }) => (
-  <GrayCard>
-    <strong>Raison sociale de la structure</strong>
-    <p>{companyName}</p>
-    <strong>{createdAtLabel}</strong>
-    <p className="mb-0">{format(createdAt, "d MMM yyyy")}</p>
-    {href && (
-      <Button className="ml-auto" linkProps={{ href }}>
-        Voir plus
-      </Button>
-    )}
-  </GrayCard>
+  <li className="list-none">
+    <Card
+      size="small"
+      enlargeLink
+      linkProps={{ href }}
+      start={
+        isActive === false ? (
+          <Badge severity="warning" small noIcon className="mb-2">
+            Invisibilité forcée
+          </Badge>
+        ) : undefined
+      }
+      title={companyName}
+      desc={
+        createdAt && isValid(createdAt)
+          ? `${createdAtLabel} : ${format(createdAt, "dd/MM/yyyy")}`
+          : undefined
+      }
+    />
+  </li>
 );

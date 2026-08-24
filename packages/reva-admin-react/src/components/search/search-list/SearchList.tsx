@@ -20,6 +20,8 @@ interface SearchListProps<T> {
     title?: string;
     placeholder?: string;
   };
+  /** À activer quand la barre de recherche est rendue en dehors de la liste. */
+  hideSearchBar?: boolean;
   searchFilter: string;
   searchResultsPage: SearchResultsPage<T>;
   children?: (searchResult: T) => ReactNode;
@@ -32,6 +34,7 @@ export const SearchList = <T,>({
   title,
   hint,
   searchBarProps,
+  hideSearchBar,
   searchFilter,
   children,
   searchResultsPage,
@@ -90,11 +93,13 @@ export const SearchList = <T,>({
 
       {hint && hint({ totalRows: searchResultsPage.info.totalRows })}
 
-      <SearchFilterBar
-        {...searchBarProps}
-        searchFilter={searchFilter}
-        onSearchFilterChange={onSearchFilterChange}
-      />
+      {!hideSearchBar && (
+        <SearchFilterBar
+          {...searchBarProps}
+          searchFilter={searchFilter}
+          onSearchFilterChange={onSearchFilterChange}
+        />
+      )}
 
       {FilterBar && FilterBar}
 

@@ -21,7 +21,7 @@ const getLegalVerificationPendingSubscriptionRequests = graphql(`
         id
         raisonSociale
         createdAt
-        statutValidationInformationsJuridiquesMaisonMereAAP
+        isActive
       }
       info {
         totalRows
@@ -63,7 +63,7 @@ const ValidatedSubscriptionRequestsPage = () => {
     subscriptionRequestPage &&
     getLegalVerificationPendingSubscriptionRequestsStatus === "success" && (
       <SearchList
-        title="Comptes administrateur vérifiés"
+        hideSearchBar
         searchFilter={searchFilter}
         searchResultsPage={subscriptionRequestPage}
       >
@@ -73,6 +73,7 @@ const ValidatedSubscriptionRequestsPage = () => {
             companyName={r.raisonSociale}
             createdAtLabel="Date de validation de l'inscription"
             createdAt={toDate(r.createdAt)}
+            isActive={r.isActive}
             href={`/maisonMereAAPs/${r.id}`}
           />
         )}

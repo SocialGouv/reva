@@ -60,7 +60,7 @@ const PendingSubscriptionRequestsPage = () => {
     subscriptionRequestPage &&
     getPendingSubscriptionRequestsStatus === "success" && (
       <SearchList
-        title="Inscriptions à vérifier"
+        hideSearchBar
         searchFilter={searchFilter}
         searchResultsPage={subscriptionRequestPage}
       >
@@ -68,7 +68,7 @@ const PendingSubscriptionRequestsPage = () => {
           <SubscriptionRequestCard
             key={r.id}
             companyName={r.companyName}
-            createdAtLabel="Date d'envoi de l'inscription"
+            createdAtLabel="Inscription envoyée le"
             createdAt={toDate(r.createdAt)}
             href={`/subscriptions/${r.id}`}
           />

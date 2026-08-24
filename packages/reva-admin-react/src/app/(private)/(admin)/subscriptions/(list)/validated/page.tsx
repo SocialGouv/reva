@@ -21,6 +21,7 @@ const getValidatedSubscriptionRequests = graphql(`
         id
         raisonSociale
         createdAt
+        isActive
       }
       info {
         totalRows
@@ -58,7 +59,7 @@ const ValidatedSubscriptionRequestsPage = () => {
     subscriptionRequestPage &&
     getValidatedSubscriptionRequestsStatus === "success" && (
       <SearchList
-        title="Comptes administrateur incomplets"
+        hideSearchBar
         searchFilter={searchFilter}
         searchResultsPage={subscriptionRequestPage}
       >
@@ -68,6 +69,7 @@ const ValidatedSubscriptionRequestsPage = () => {
             companyName={r.raisonSociale}
             createdAtLabel="Date de validation de l'inscription"
             createdAt={toDate(r.createdAt)}
+            isActive={r.isActive}
             href={`/maisonMereAAPs/${r.id}`}
           />
         )}

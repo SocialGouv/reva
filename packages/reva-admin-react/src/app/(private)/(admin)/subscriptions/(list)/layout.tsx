@@ -1,10 +1,11 @@
 "use client";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { useQuery } from "@tanstack/react-query";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ReactNode, useCallback, useMemo } from "react";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
 
 import { graphql } from "@/graphql/generated";
 
@@ -41,9 +42,28 @@ const getSubscriptionCountByStatus = graphql(`
 const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
   const { graphqlClient } = useGraphQlClient();
   const currentPathname = usePathname();
+  const router = useRouter();
 
   const searchParams = useSearchParams();
   const searchFilter = searchParams.get("search") || "";
+
+  // La barre de recherche est portée par le layout: elle pilote le `?search=` de l'onglet courant
+  // et les compteurs du menu latéral.
+  const onSearchFilterChange = useCallback(
+    (filter: string) => {
+      const queryParams = new URLSearchParams(searchParams);
+      queryParams.set("page", "1");
+
+      if (filter) {
+        queryParams.set("search", filter);
+      } else {
+        queryParams.delete("search");
+      }
+
+      router.push(`${currentPathname}?${queryParams.toString()}`);
+    },
+    [currentPathname, router, searchParams],
+  );
 
   const { data: getSubscriptionCountByStatusResponse } = useQuery({
     queryKey: ["getSubscriptionCountByStatus", searchFilter],
@@ -108,18 +128,22 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
   );
 
   return (
-    <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
-      <SideMenu
-        className="flex-shrink-0 flex-grow-0 md:basis-[420px]"
-        align="left"
-        burgerMenuButtonText="Inscriptions"
-        sticky
-        fullHeight
-        items={items}
+    <div className="flex flex-col flex-1">
+      <h1>Vérifications</h1>
+      <SearchFilterBar
+        searchFilter={searchFilter}
+        onSearchFilterChange={onSearchFilterChange}
       />
-      <div className="mt-3 w-full">
-        <h1>Vérifications</h1>
-        {children}
+      <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
+        <SideMenu
+          className="flex-shrink-0 flex-grow-0 md:basis-[420px]"
+          align="left"
+          burgerMenuButtonText="Inscriptions"
+          sticky
+          fullHeight
+          items={items}
+        />
+        <div className="w-full">{children}</div>
       </div>
     </div>
   );

@@ -59,7 +59,7 @@ const RejectedSubscriptionRequestsPage = () => {
     subscriptionRequestPage &&
     getRejectedSubscriptionRequestsStatus === "success" && (
       <SearchList
-        title="Inscriptions refusées"
+        hideSearchBar
         searchFilter={searchFilter}
         searchResultsPage={subscriptionRequestPage}
       >
