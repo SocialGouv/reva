@@ -1,6 +1,9 @@
+import Badge from "@codegouvfr/react-dsfr/Badge";
 import { Highlight } from "@codegouvfr/react-dsfr/Highlight";
+import { ReactNode } from "react";
 
 import { GestionnaireMaisonMereAAPSettingsSectionAccountList } from "@/app/(private)/(aap)/agencies-settings-v3/_components/agencies-settings-section/GestionnaireMaisonMereAAPSettingsSectionAccountList";
+import { BadgeCompleted } from "@/components/badge/badge-completed/BadgeCompleted";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { AAPSettingsSummarySectionRemote } from "@/components/settings/aap-settings-summary-section-remote/AAPSettingsSummarySectionRemote";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
@@ -8,6 +11,19 @@ import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { Account, MaisonMereAap, Organism } from "@/graphql/generated/graphql";
 
 import { AAPSettingsSectionOnSite } from "../AAPSettingsSectionOnSite";
+
+// Le badge de la ligne "Informations générales" suit le statut du dossier juridique,
+// quel que soit le rôle qui consulte la page.
+const GENERAL_INFORMATION_BADGES: Record<
+  MaisonMereAap["statutValidationInformationsJuridiquesMaisonMereAAP"],
+  ReactNode
+> = {
+  A_METTRE_A_JOUR: <Badge severity="warning">À mettre à jour</Badge>,
+  EN_ATTENTE_DE_VERIFICATION: (
+    <Badge severity="info">En attente de vérification</Badge>
+  ),
+  A_JOUR: <BadgeCompleted />,
+};
 
 const getRemoteOrganism = ({
   organism,
@@ -78,7 +94,11 @@ export const SettingsSummaryForGestionnaire = ({
       <EnhancedSectionCard
         data-testid="general-information"
         title="Informations générales"
-        status={isGeneralInformationCompleted ? "COMPLETED" : "TO_COMPLETE"}
+        CustomBadge={
+          GENERAL_INFORMATION_BADGES[
+            maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
+          ]
+        }
         isEditable
         buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAP.id}/general-information`}
         titleIconClass="fr-icon-information-fill"

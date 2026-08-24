@@ -6,7 +6,6 @@ export const AapCgu = () => {
     <Notice
       data-testid="new-cgu-notice"
       isClosable
-      className="-mb-8"
       title={
         <>
           Votre accès à la plateforme est actuellement restreint. Vous pouvez

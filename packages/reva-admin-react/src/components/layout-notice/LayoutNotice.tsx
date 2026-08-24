@@ -5,6 +5,7 @@ import { useKeycloakContext } from "../auth/keycloakContext";
 
 import { AapCgu } from "./_components/AppCgu.component";
 import { useAppCgu } from "./_components/AppCgu.hooks";
+import { GeneralInformationUpdateNotice } from "./_components/GeneralInformationUpdateNotice.component";
 
 export const LayoutNotice = () => {
   const { authenticated } = useKeycloakContext();
@@ -27,9 +28,20 @@ export const LayoutNotice = () => {
     return null;
   }
 
-  if (canSeeAapCgu) {
-    return <AapCgu />;
+  // `trailingSlash: true` côté Next: le slash final est à ignorer.
+  const canSeeGeneralInformationUpdate =
+    authenticated &&
+    isGestionnaireMaisonMereAAP &&
+    pathname.replace(/\/$/, "") === "/agencies-settings-v3";
+
+  if (!canSeeAapCgu && !canSeeGeneralInformationUpdate) {
+    return null;
   }
 
-  return null;
+  return (
+    <>
+      {canSeeAapCgu && <AapCgu />}
+      {canSeeGeneralInformationUpdate && <GeneralInformationUpdateNotice />}
+    </>
+  );
 };
