@@ -19,8 +19,9 @@ export const ContactStep = ({
       small
       description="En cas de modification de l'adresse électronique de connexion, une notification sera envoyée sur l'ancienne adresse électronique."
     />
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
       <Input
+        className="md:col-span-3"
         label="Adresse électronique de connexion"
         nativeInputProps={register("gestionnaireEmail")}
         state={errors.gestionnaireEmail ? "error" : "default"}

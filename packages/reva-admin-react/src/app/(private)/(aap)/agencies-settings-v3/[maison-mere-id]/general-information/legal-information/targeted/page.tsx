@@ -2,14 +2,20 @@
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
+import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState } from "react";
 
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
+import { REST_API_URL } from "@/config/config";
+
+import { UpdateMaisonMereLegalInformationInput } from "@/graphql/generated/graphql";
 
 import {
   buildLegalInformationPayload,
+  GeneralInformationFormValues,
   useGeneralInformationPage,
 } from "../../generalInformationPage.hook";
 import { LegalInformationBreadcrumb } from "../_components/LegalInformationBreadcrumb";
@@ -17,13 +23,28 @@ import { LegalInformationBreadcrumb } from "../_components/LegalInformationBread
 import { AdministratorStep } from "./_components/AdministratorStep";
 import { BlockKey, BlockSelectionStep } from "./_components/BlockSelectionStep";
 import { ContactStep } from "./_components/ContactStep";
+import {
+  DocumentsFormValues,
+  DocumentsStep,
+  useDocumentsForm,
+} from "./_components/DocumentsStep";
 import { SiretAndManagerStep } from "./_components/SiretAndManagerStep";
 
 const STEP_TITLES = {
   identity: "Informations relatives au SIRET et à l'identité du dirigeant",
   administrator: "Administrateur du compte",
   contact: "Informations de connexion et de contact",
+  documents: "Pièces justificatives",
 };
+
+type StepKey = keyof typeof STEP_TITLES;
+
+const AAP_STEPS: StepKey[] = [
+  "identity",
+  "administrator",
+  "contact",
+  "documents",
+];
 
 // L'enregistrement valide tous les champs, y compris ceux des blocs non
 // sélectionnés: une valeur invalide déjà en base doit pouvoir être nommée à
@@ -43,12 +64,18 @@ const TargetedLegalInformationUpdatePage = () => {
     maisonMereAAP,
     maisonMereAAPId,
     etablissement,
+    etablissementIsFetching,
+    siretNotFound,
+    isAdmin,
     formHook,
     updateMaisonMereLegalInformation,
   } = useGeneralInformationPage();
 
+  const { accessToken } = useKeycloakContext();
+  const queryClient = useQueryClient();
+
   const [phase, setPhase] = useState<"selection" | "steps" | "success">(
-    "selection",
+    isAdmin ? "selection" : "steps",
   );
   const [selectedBlocks, setSelectedBlocks] = useState<BlockKey[]>([]);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -58,7 +85,7 @@ const TargetedLegalInformationUpdatePage = () => {
     useState<boolean | null>(null);
 
   const {
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
     handleSubmit,
     setError,
     watch,
@@ -81,10 +108,12 @@ const TargetedLegalInformationUpdatePage = () => {
     (managerFirstname !== gestionnaireFirstname ||
       managerLastname !== gestionnaireLastname);
 
+  const documentsForm = useDocumentsForm(administratorIsDifferent);
+
   const isSelected = (key: BlockKey) => selectedBlocks.includes(key);
 
   // Les blocs "Numéro de SIRET" et "Identité du dirigeant" partagent la même étape.
-  const steps = (
+  const adminSteps = (
     [
       isSelected("siret") || isSelected("manager") ? "identity" : null,
       isSelected("administrator") ? "administrator" : null,
@@ -92,9 +121,18 @@ const TargetedLegalInformationUpdatePage = () => {
     ] as const
   ).filter((step) => step !== null);
 
+  const steps: StepKey[] = isAdmin ? adminSteps : AAP_STEPS;
+
   const currentStep = steps[currentStepIndex];
   const isLastStep = currentStepIndex === steps.length - 1;
-  const siretFieldIsVisible = isSelected("siret") && currentStep === "identity";
+  const siretIsEditable = !isAdmin || isSelected("siret");
+  const managerIsEditable = !isAdmin || isSelected("manager");
+  const siretFieldIsVisible = siretIsEditable && currentStep === "identity";
+
+  // Un SIRET introuvable ne donne ni raison sociale ni statut juridique: la suite
+  // du parcours n'aurait rien à enregistrer.
+  const siretBlocksNavigation =
+    siretFieldIsVisible && (etablissementIsFetching || siretNotFound);
 
   const generalInformationUrl = `/agencies-settings-v3/${maisonMereAAPId}/general-information`;
 
@@ -105,45 +143,119 @@ const TargetedLegalInformationUpdatePage = () => {
         : [...blocks, key],
     );
 
-  const handleSave = handleSubmit(
-    async (data) => {
-      let payload;
+  const buildPayloadOrToast = (data: GeneralInformationFormValues) => {
+    try {
+      return buildLegalInformationPayload({
+        data,
+        etablissement,
+        maisonMereAAPId,
+        currentSiret: maisonMereAAP?.siret,
+      });
+    } catch (error) {
+      const message = (error as Error).message;
 
-      try {
-        payload = buildLegalInformationPayload({
-          data,
-          etablissement,
-          maisonMereAAPId,
-          currentSiret: maisonMereAAP?.siret,
-        });
-      } catch (error) {
-        const message = (error as Error).message;
-
-        return siretFieldIsVisible
-          ? setError("siret", { message }, { shouldFocus: true })
-          : errorToast(message);
+      if (siretFieldIsVisible) {
+        setError("siret", { message }, { shouldFocus: true });
+      } else {
+        errorToast(message);
       }
 
-      try {
-        await updateMaisonMereLegalInformation(payload);
-        setPhase("success");
-      } catch (error) {
-        graphqlErrorToast(error);
-      }
-    },
-    (invalidFields) => {
-      const labels = Object.keys(invalidFields).map(
-        (field) => FIELD_LABELS[field] ?? field,
-      );
+      return null;
+    }
+  };
 
-      errorToast(
-        `Impossible d'enregistrer : ${labels.join(", ")} ${labels.length > 1 ? "sont invalides" : "est invalide"}. Sélectionnez le bloc correspondant pour corriger.`,
-      );
-    },
+  const onInvalidFields = (invalidFields: Record<string, unknown>) => {
+    const labels = Object.keys(invalidFields).map(
+      (field) => FIELD_LABELS[field] ?? field,
+    );
+
+    errorToast(
+      `Impossible d'enregistrer : ${labels.join(", ")} ${labels.length > 1 ? "sont invalides" : "est invalide"}. Sélectionnez le bloc correspondant pour corriger.`,
+    );
+  };
+
+  const handleAdminSave = handleSubmit(async (data) => {
+    const payload = buildPayloadOrToast(data);
+
+    if (!payload) {
+      return;
+    }
+
+    try {
+      await updateMaisonMereLegalInformation(payload);
+      setPhase("success");
+    } catch (error) {
+      graphqlErrorToast(error);
+    }
+  }, onInvalidFields);
+
+  const postLegalInformation = async (
+    payload: UpdateMaisonMereLegalInformationInput,
+    files: DocumentsFormValues,
+  ) => {
+    const formData = new FormData();
+
+    formData.append("siret", payload.siret);
+    formData.append("raisonSociale", payload.raisonSociale);
+    formData.append("statutJuridique", payload.statutJuridique);
+    formData.append("managerFirstname", payload.managerFirstname);
+    formData.append("managerLastname", payload.managerLastname);
+    formData.append("gestionnaireFirstname", payload.gestionnaireFirstname);
+    formData.append("gestionnaireLastname", payload.gestionnaireLastname);
+    formData.append("gestionnaireEmail", payload.gestionnaireEmail);
+    formData.append("phone", payload.phone);
+    // Lu par la route pour savoir si la paire délégataire est obligatoire.
+    formData.append("delegataire", administratorIsDifferent.toString());
+
+    Object.entries(files).forEach(([field, fileList]) => {
+      const file = fileList?.[0];
+
+      if (file) {
+        formData.append(field, file);
+      }
+    });
+
+    const result = await fetch(
+      `${REST_API_URL}/maisonMereAAP/${maisonMereAAPId}/legal-information`,
+      {
+        method: "post",
+        headers: { authorization: `Bearer ${accessToken}` },
+        body: formData,
+      },
+    );
+
+    if (!result.ok) {
+      // La route répond en texte brut sur les erreurs de validation, mais en
+      // `{ err }` sur le 403.
+      const body = await result.text();
+
+      try {
+        return errorToast(JSON.parse(body).err ?? body);
+      } catch {
+        return errorToast(body);
+      }
+    }
+
+    queryClient.invalidateQueries({ queryKey: [maisonMereAAPId] });
+    setPhase("success");
+  };
+
+  // Deux formulaires enchaînés: les informations puis les pièces justificatives.
+  const handleAapSubmit = handleSubmit(
+    (data) =>
+      documentsForm.handleSubmit(async (files) => {
+        const payload = buildPayloadOrToast(data);
+
+        if (payload) {
+          await postLegalInformation(payload, files);
+        }
+      })(),
+    onInvalidFields,
   );
 
   const breadcrumb = (
     <LegalInformationBreadcrumb
+      isAdmin={isAdmin}
       maisonMereAAPId={maisonMereAAPId}
       raisonSociale={maisonMereAAP?.raisonSociale}
     />
@@ -154,12 +266,34 @@ const TargetedLegalInformationUpdatePage = () => {
       <div className="flex flex-col md:flex-row md:items-center gap-6 w-full">
         <div className="flex flex-col flex-1">
           <h1 className="text-[40px]">
-            Votre demande de mise à jour a bien été enregistrée.
+            {isAdmin
+              ? "Votre demande de mise à jour a bien été enregistrée."
+              : "Votre demande de mise à jour a bien été envoyée."}
           </h1>
-          <p className="text-xl mb-0">
-            Les modifications sont visibles dès à présent par la structure
-            accompagnatrice, depuis son compte administrateur.
-          </p>
+          {isAdmin ? (
+            <p className="text-xl mb-0">
+              Les modifications sont visibles dès à présent par la structure
+              accompagnatrice, depuis son compte administrateur.
+            </p>
+          ) : (
+            <>
+              <p className="text-xl mb-6">
+                Un administrateur France VAE examinera votre demande dans les
+                plus brefs délais.
+                <br />
+                En attendant la vérification de votre demande, vos informations
+                et votre adresse électronique actuels restent inchangés.
+              </p>
+              <p className="text-xl mb-6">
+                Un courriel de confirmation vous sera envoyé une fois votre
+                demande vérifiée.
+              </p>
+              <p className="text-sm mb-0">
+                Si vous souhaitez apporter d'autres modifications, veuillez
+                attendre que cette demande soit traitée.
+              </p>
+            </>
+          )}
           <Button
             className="mt-10 mr-auto"
             priority="secondary"
@@ -201,6 +335,7 @@ const TargetedLegalInformationUpdatePage = () => {
       <SettingsPageHeader
         breadcrumb={breadcrumb}
         title="Mise à jour des informations générales"
+        chapo="Modifiez les informations souhaitées en cliquant dans l'espace prévu à cet effet."
       />
       <Stepper
         className="mt-6"
@@ -216,10 +351,12 @@ const TargetedLegalInformationUpdatePage = () => {
         onSubmit={(e) => {
           e.preventDefault();
 
-          if (isLastStep) {
-            handleSave();
-          } else {
+          if (!isLastStep) {
             setCurrentStepIndex((index) => index + 1);
+          } else if (isAdmin) {
+            handleAdminSave();
+          } else {
+            handleAapSubmit();
           }
         }}
       >
@@ -227,8 +364,10 @@ const TargetedLegalInformationUpdatePage = () => {
           <SiretAndManagerStep
             formHook={formHook}
             etablissement={etablissement}
-            siretIsSelected={isSelected("siret")}
-            managerIsSelected={isSelected("manager")}
+            etablissementIsFetching={etablissementIsFetching}
+            siretNotFound={siretNotFound}
+            siretIsSelected={siretIsEditable}
+            managerIsSelected={managerIsEditable}
           />
         )}
 
@@ -242,6 +381,13 @@ const TargetedLegalInformationUpdatePage = () => {
 
         {currentStep === "contact" && <ContactStep formHook={formHook} />}
 
+        {currentStep === "documents" && (
+          <DocumentsStep
+            formHook={documentsForm}
+            administratorIsDifferent={administratorIsDifferent}
+          />
+        )}
+
         <div className="flex flex-wrap gap-4 mt-12">
           {currentStepIndex > 0 && (
             <Button
@@ -252,9 +398,31 @@ const TargetedLegalInformationUpdatePage = () => {
               Retour à l'étape {currentStepIndex}
             </Button>
           )}
-          <Button className="ml-auto" type="submit" disabled={isSubmitting}>
+          {/* L'AAP entre dans le parcours par la page de préparation: la première
+              étape doit pouvoir en sortir. */}
+          {currentStepIndex === 0 && !isAdmin && (
+            <Button
+              priority="secondary"
+              linkProps={{ href: generalInformationUrl }}
+            >
+              Annuler
+            </Button>
+          )}
+          {/* isDirty côté admin seulement: les pièces jointes de l'AAP vivent dans
+              un autre formulaire et ne salissent jamais celui-ci. */}
+          <Button
+            className="ml-auto"
+            type="submit"
+            disabled={
+              isSubmitting ||
+              siretBlocksNavigation ||
+              (isAdmin && isLastStep && !isDirty)
+            }
+          >
             {isLastStep
-              ? "Enregistrer"
+              ? isAdmin
+                ? "Enregistrer"
+                : "Envoyer"
               : `Passer à l'étape ${currentStepIndex + 2}`}
           </Button>
         </div>

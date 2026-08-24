@@ -14,11 +14,13 @@ import {
   TotalUpdateRequestModal,
   totalUpdateRequestModal,
 } from "./_components/TotalUpdateRequestModal";
+import { UpdatePreparation } from "./_components/UpdatePreparation";
 import { useLegalInformationUpdateRequest } from "./_components/useLegalInformationUpdateRequest";
 
 const LegalInformationPage = () => {
   const router = useRouter();
-  const { maisonMereAAP, maisonMereAAPId } = useGeneralInformationPage();
+  const { maisonMereAAP, maisonMereAAPId, isAdmin } =
+    useGeneralInformationPage();
   const { sendTotalUpdateRequest, isPending } =
     useLegalInformationUpdateRequest(maisonMereAAPId);
 
@@ -39,11 +41,18 @@ const LegalInformationPage = () => {
     }
   };
 
+  // L'AAP n'a pas d'écran de choix: la tuile ouvre directement la page de
+  // préparation, puis les quatre étapes.
+  if (!isAdmin) {
+    return <UpdatePreparation maisonMereAAPId={maisonMereAAPId} />;
+  }
+
   return (
     <div className="flex flex-col w-full">
       <SettingsPageHeader
         breadcrumb={
           <LegalInformationBreadcrumb
+            isAdmin
             maisonMereAAPId={maisonMereAAPId}
             raisonSociale={maisonMereAAP?.raisonSociale}
           />
