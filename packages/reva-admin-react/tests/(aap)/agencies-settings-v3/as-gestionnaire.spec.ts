@@ -162,7 +162,7 @@ const { aapCommonHandlers } = getAAPCommonHandlers();
 
 test.describe("Gestionnaire AAP settings page", () => {
   test.describe("on the general information section", () => {
-    test("display a 'to complete badge' when account not verified", async ({
+    test("display a 'to update badge' when account not verified", async ({
       page,
       msw,
     }) => {
@@ -179,13 +179,11 @@ test.describe("Gestionnaire AAP settings page", () => {
       await waitForPageQueries(page);
 
       await expect(
-        page
-          .getByTestId("general-information")
-          .getByTestId("to-complete-badge"),
+        page.getByTestId("general-information").getByTestId("to-update-badge"),
       ).toBeVisible();
     });
 
-    test("display a 'completed badge' when account verification is pending", async ({
+    test("display an 'awaiting verification badge' when account verification is pending", async ({
       page,
       msw,
     }) => {
@@ -202,7 +200,9 @@ test.describe("Gestionnaire AAP settings page", () => {
       await waitForPageQueries(page);
 
       await expect(
-        page.getByTestId("general-information").getByTestId("completed-badge"),
+        page
+          .getByTestId("general-information")
+          .getByTestId("awaiting-verification-badge"),
       ).toBeVisible();
     });
 

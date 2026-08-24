@@ -18,9 +18,15 @@ const GENERAL_INFORMATION_BADGES: Record<
   MaisonMereAap["statutValidationInformationsJuridiquesMaisonMereAAP"],
   ReactNode
 > = {
-  A_METTRE_A_JOUR: <Badge severity="warning">À mettre à jour</Badge>,
+  A_METTRE_A_JOUR: (
+    <Badge data-testid="to-update-badge" severity="warning">
+      À mettre à jour
+    </Badge>
+  ),
   EN_ATTENTE_DE_VERIFICATION: (
-    <Badge severity="info">En attente de vérification</Badge>
+    <Badge data-testid="awaiting-verification-badge" severity="info">
+      En attente de vérification
+    </Badge>
   ),
   A_JOUR: <BadgeCompleted />,
 };
