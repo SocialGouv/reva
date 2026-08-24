@@ -195,25 +195,38 @@ function fetch_keycloak_dist() {
   dist_url=$(echo "${download_url}/${dist}" | xargs)
   dist_url="${dist_url%\"}"
   dist_url="${dist_url#\"}"
-  local sha1_dist
-  sha1_dist=$(echo "${dist}.sha1" | xargs)
-  local sha1_url
-  sha1_url=$(echo "${download_url}/${sha1_dist}" | xargs)
-  sha1_url="${sha1_url%\"}"
-  sha1_url="${sha1_url#\"}"
   step "Fetch keycloak ${version} dist"
   if [ -f "${CACHE_DIR}/dist/${dist}" ]; then
     info "File is already downloaded"
   else
     ${CURL} -g -o "${CACHE_DIR}/dist/${dist}" "${dist_url}"
   fi
-  ${CURL} -g -o "${CACHE_DIR}/dist/${dist}.sha1" "${sha1_url}"
+
+  # Keycloak release assets no longer ship a companion .sha1/.md5 file (dropped
+  # after 26.6.x, only a .asc GPG signature remains). GitHub now computes and
+  # exposes a sha256 digest for every release asset via its API, so we verify
+  # against that instead.
+  if [[ -f "$ENV_DIR/GITHUB_ID" ]]; then
+    GITHUB_ID=$(cat "$ENV_DIR/GITHUB_ID")
+  fi
+  if [[ -f "$ENV_DIR/GITHUB_SECRET" ]]; then
+    GITHUB_SECRET=$(cat "$ENV_DIR/GITHUB_SECRET")
+  fi
+  local release_json="${TMP_PATH}/keycloak_release_${version}.json"
+  ${CURL} -G -u "${GITHUB_ID}:${GITHUB_SECRET}" -H "Accept: application/vnd.github.v3+json" -o "${release_json}" "https://api.github.com/repos/keycloak/keycloak/releases/tags/${version}"
+
+  local expected_digest
+  expected_digest=$(jq -r --arg dist "${dist}" '.assets[] | select(.name == $dist) | .digest' "${release_json}")
+  if [[ -z "${expected_digest}" || "${expected_digest}" == "null" ]]; then
+    err "Unable to retrieve checksum digest for ${dist} from GitHub release ${version}"
+    exit 1
+  fi
+  local expected_sha256="${expected_digest#sha256:}"
+
   local file_checksum
-  file_checksum="$(shasum "${CACHE_DIR}/dist/${dist}" | cut -d \  -f 1)"
-  local checksum
-  checksum=$(cat "${CACHE_DIR}/dist/${dist}.sha1")
-  if [ "$checksum" != "$file_checksum" ]; then
-    err "Keycloak checksum file downloaded not valid"
+  file_checksum="$(sha256sum "${CACHE_DIR}/dist/${dist}" | cut -d \  -f 1)"
+  if [ "${expected_sha256}" != "${file_checksum}" ]; then
+    err "Keycloak checksum invalid"
     exit 1
   else
     info "Keycloak checksum valid"
