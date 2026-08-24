@@ -117,12 +117,12 @@ http:
         - removeHeader
         - productionAuthIpWhitelist
 
-    # metabase-vae-gouv-fr:
-    #   rule: "Host(`metabase.vae.gouv.fr`) && !PathPrefix(`/api/session/reset_password`)"
-    #   service: metabase-production
-    #   middlewares:
-    #     - removeHeader
-    #     - add-anti-clickjacking-headers
+    metabase-vae-gouv-fr:
+      rule: "Host(`metabase.vae.gouv.fr`) && !PathPrefix(`/api/session/reset_password`)"
+      service: metabase-production
+      middlewares:
+        - removeHeader
+        - add-anti-clickjacking-headers
 
     espace-pro-react-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/admin2`)"
@@ -479,11 +479,11 @@ http:
         servers:
           - url: "https://auth-reva-beta-gouv-fr.osc-secnum-fr1.scalingo.io/"
 
-    # metabase-production:
-    #   loadBalancer:
-    #     passHostHeader: false
-    #     servers:
-    #       - url: "https://metabase-reva-beta-gouv-fr.osc-secnum-fr1.scalingo.io/"
+    metabase-production:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "http://metabase.ap-ea11d4ca-b911-4dc6-b328-56a5671f6a82.pn-8b508907-a70c-4612-9202-385d8533517b.private-network.internal:3000"
 
     espace-pro-react-production:
       loadBalancer:
