@@ -1,3 +1,4 @@
+import { LegalStatus } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
@@ -7,17 +8,29 @@ import { prismaClient } from "@/prisma/client";
 
 import { deleteOldMaisonMereAAPLegalInformationDocuments } from "./deleteOldMaisonMereAAPLegalInformationDocuments";
 
-export const submitMaisonMereAAPLegalInformationDocuments = async (params: {
+type LegalInformationDocumentsSubmission = {
   maisonMereAAPId: string;
   managerFirstname: string;
   managerLastname: string;
   delegataire: boolean;
+  siret?: string;
+  raisonSociale?: string;
+  statutJuridique?: LegalStatus;
+  gestionnaireFirstname?: string;
+  gestionnaireLastname?: string;
+  gestionnaireEmail?: string;
+  phone?: string;
   attestationURSSAF: UploadedFile;
   justificatifIdentiteDirigeant: UploadedFile;
   lettreDeDelegation?: UploadedFile;
   justificatifIdentiteDelegataire?: UploadedFile;
-}) => {
+};
+
+export const submitMaisonMereAAPLegalInformationDocuments = async (
+  params: LegalInformationDocumentsSubmission,
+) => {
   const { maisonMereAAPId } = params;
+
   const oldDocuments =
     await prismaClient.maisonMereAAPLegalInformationDocuments.findUnique({
       where: { maisonMereAAPId },
@@ -36,20 +49,18 @@ const createMaisonMereAAPLegalInformationDocuments = async ({
   managerFirstname,
   managerLastname,
   delegataire,
+  siret,
+  raisonSociale,
+  statutJuridique,
+  gestionnaireFirstname,
+  gestionnaireLastname,
+  gestionnaireEmail,
+  phone,
   attestationURSSAF,
   justificatifIdentiteDirigeant,
   lettreDeDelegation,
   justificatifIdentiteDelegataire,
-}: {
-  maisonMereAAPId: string;
-  managerFirstname: string;
-  managerLastname: string;
-  delegataire: boolean;
-  attestationURSSAF: UploadedFile;
-  justificatifIdentiteDirigeant: UploadedFile;
-  lettreDeDelegation?: UploadedFile;
-  justificatifIdentiteDelegataire?: UploadedFile;
-}) => {
+}: LegalInformationDocumentsSubmission) => {
   const attestationURSSAFFileId = uuidV4();
   const justificatifIdentiteDirigeantFileId = uuidV4();
   const lettreDeDelegationFileId = uuidV4();
@@ -81,6 +92,13 @@ const createMaisonMereAAPLegalInformationDocuments = async ({
       managerFirstname,
       managerLastname,
       delegataire,
+      siret,
+      raisonSociale,
+      statutJuridique,
+      gestionnaireFirstname,
+      gestionnaireLastname,
+      gestionnaireEmail,
+      phone,
       attestationURSSAFFile: {
         create: {
           id: attestationURSSAFFileId,

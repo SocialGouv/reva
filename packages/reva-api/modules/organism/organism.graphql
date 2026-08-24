@@ -163,6 +163,13 @@ type MaisonMereAAPLegalInformationDocuments {
   managerFirstname: String!
   managerLastname: String!
   delegataire: Boolean!
+  siret: String
+  raisonSociale: String
+  statutJuridique: LegalStatus
+  gestionnaireFirstname: String
+  gestionnaireLastname: String
+  gestionnaireEmail: String
+  phone: String
   attestationURSSAFFile: File!
   justificatifIdentiteDirigeantFile: File!
   lettreDeDelegationFile: File

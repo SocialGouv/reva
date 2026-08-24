@@ -443,6 +443,16 @@ const unsafeResolvers = {
       const statutValidationInformationsJuridiquesMaisonMereAAP =
         params.data.decision === "VALIDE" ? "A_JOUR" : "A_METTRE_A_JOUR";
 
+      // L'application des valeurs en attente peut échouer (SIRET ou email déjà
+      // utilisé): on ne trace la décision qu'une fois le statut appliqué.
+      const maisonMereAAP = await adminUpdateLegalInformationValidationStatus({
+        maisonMereAAPId: params.data.maisonMereAAPId,
+        maisonMereAAPData: {
+          statutValidationInformationsJuridiquesMaisonMereAAP,
+        },
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
+      });
+
       const decision =
         await adminCreateMaisonMereAAPLegalInformationValidationDecision(
           params.data.maisonMereAAPId,
@@ -453,12 +463,6 @@ const unsafeResolvers = {
             aapUpdatedDocumentsAt: params.data.aapUpdatedDocumentsAt,
           },
         );
-      const maisonMereAAP = await adminUpdateLegalInformationValidationStatus({
-        maisonMereAAPId: params.data.maisonMereAAPId,
-        maisonMereAAPData: {
-          statutValidationInformationsJuridiquesMaisonMereAAP,
-        },
-      });
 
       if (params.data.decision === "DEMANDE_DE_PRECISION") {
         await sendLegalInformationDocumentsUpdateNeededEmail({
@@ -652,7 +656,7 @@ export const organismResolvers = withPolicies(unsafeResolvers, {
       isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
     paginatedComptesCollaborateurs:
       isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
-    legalInformationDocuments: isAdmin,
+    legalInformationDocuments: isAdminOrGestionnaireOfMaisonMereAAP,
     legalInformationDocumentsDecisions: isAdminOrGestionnaireOfMaisonMereAAP,
     metabaseDashboardIframeUrl: [isGestionnaireOfMaisonMereAAP],
     // Lu par le layout privé racine (bandeau CGU) pour tous les rôles connectés.

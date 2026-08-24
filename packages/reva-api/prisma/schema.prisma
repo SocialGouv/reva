@@ -1848,6 +1848,13 @@ model MaisonMereAAPLegalInformationDocuments {
   managerFirstname                      String        @map("manager_firstname")
   managerLastname                       String        @map("manager_lastname")
   delegataire                           Boolean       @map("delegataire")
+  siret                                 String?       @map("siret") @db.VarChar(255)
+  raisonSociale                         String?       @map("raison_sociale") @db.VarChar(255)
+  statutJuridique                       LegalStatus?  @map("statut_juridique")
+  gestionnaireFirstname                 String?       @map("gestionnaire_firstname")
+  gestionnaireLastname                  String?       @map("gestionnaire_lastname")
+  gestionnaireEmail                     String?       @map("gestionnaire_email")
+  phone                                 String?       @map("phone") @db.VarChar(50)
   attestationURSSAFFileId               String        @map("attestation_urssaf_file_id") @db.Uuid
   attestationURSSAFFile                 File          @relation("mmaap_attestation_urssaf_file", fields: [attestationURSSAFFileId], references: [id])
   justificatifIdentiteDirigeantFileId   String        @map("justificatif_identite_dirigeant_file_id") @db.Uuid
