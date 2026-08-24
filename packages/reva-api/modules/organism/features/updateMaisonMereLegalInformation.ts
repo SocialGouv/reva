@@ -25,11 +25,13 @@ export const updateMaisonMereLegalInformation = async ({
 }: UpdateMaisonMereLegalInformationInput & {
   userInfo: AAPAuditLogUserInfo;
 }) => {
+  // Plusieurs structures peuvent partager un SIRET: la structure courante doit être
+  // exclue de la recherche, sinon on lui refuse son propre SIRET.
   const maisonMereAAPWithSiret = await prismaClient.maisonMereAAP.findFirst({
-    where: { siret },
+    where: { siret, id: { not: maisonMereAAPId } },
   });
 
-  if (maisonMereAAPWithSiret && maisonMereAAPWithSiret.id !== maisonMereAAPId) {
+  if (maisonMereAAPWithSiret) {
     throw new Error(
       `Ce SIRET est déjà utilisé par la structure "${maisonMereAAPWithSiret.raisonSociale}"`,
     );
