@@ -29,7 +29,10 @@ export const allowFileTypeByDocumentType = {
     ...allowedFileTypesMap.image,
     ...allowedFileTypesMap.pdf,
   ],
-  maisonMereAAPLegalInformationFile: [...allowedFileTypesMap.pdf],
+  maisonMereAAPLegalInformationFile: [
+    ...allowedFileTypesMap.pdf,
+    ...allowedFileTypesMap.image,
+  ],
   dossierDeValidationTemplate: [
     ...allowedFileTypesMap.pdf,
     ...allowedFileTypesMap.image,

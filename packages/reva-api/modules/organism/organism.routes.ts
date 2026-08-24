@@ -1,4 +1,5 @@
 import fastifyMultipart from "@fastify/multipart";
+import { LegalStatus } from "@prisma/client";
 import { FastifyPluginAsync } from "fastify";
 
 import { logger } from "@/modules/shared/logger/logger";
@@ -12,6 +13,13 @@ import { submitMaisonMereAAPLegalInformationDocuments } from "./features/submitM
 interface UpdatedMaisonMereAAPLegalInformationRequestBody {
   managerFirstname: { value: string };
   managerLastname: { value: string };
+  siret?: { value: string };
+  raisonSociale?: { value: string };
+  statutJuridique?: { value: LegalStatus };
+  gestionnaireFirstname?: { value: string };
+  gestionnaireLastname?: { value: string };
+  gestionnaireEmail?: { value: string };
+  phone?: { value: string };
   attestationURSSAF: UploadedFile;
   justificatifIdentiteDirigeant: UploadedFile;
   delegataire?: { value: boolean };
@@ -52,6 +60,36 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
                 type: "string",
               },
             },
+          },
+          siret: {
+            type: "object",
+            properties: { value: { type: "string" } },
+          },
+          raisonSociale: {
+            type: "object",
+            properties: { value: { type: "string" } },
+          },
+          statutJuridique: {
+            type: "object",
+            properties: {
+              value: { type: "string", enum: Object.values(LegalStatus) },
+            },
+          },
+          gestionnaireFirstname: {
+            type: "object",
+            properties: { value: { type: "string" } },
+          },
+          gestionnaireLastname: {
+            type: "object",
+            properties: { value: { type: "string" } },
+          },
+          gestionnaireEmail: {
+            type: "object",
+            properties: { value: { type: "string" } },
+          },
+          phone: {
+            type: "object",
+            properties: { value: { type: "string" } },
           },
           attestationURSSAF: { type: "object" },
           justificatifIdentiteDirigeant: { type: "object" },
@@ -118,11 +156,22 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
           justificatifIdentiteDelegataire,
         ];
 
-        if (files.some((f) => f && !hasValidMimeType(f, ["application/pdf"]))) {
+        if (
+          files.some(
+            (f) =>
+              f &&
+              !hasValidMimeType(f, [
+                "application/pdf",
+                "image/png",
+                "image/jpg",
+                "image/jpeg",
+              ]),
+          )
+        ) {
           return reply
             .status(400)
             .send(
-              `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document PDF.`,
+              `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document au format jpg, png ou pdf.`,
             );
         }
         if (
@@ -146,11 +195,18 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
             .status(400)
             .send(`Un des fichiers obligatoire n'a pas été fourni `);
         }
-        return submitMaisonMereAAPLegalInformationDocuments({
+        return await submitMaisonMereAAPLegalInformationDocuments({
           maisonMereAAPId,
           managerFirstname,
           managerLastname,
           delegataire: !!delegataire,
+          siret: request.body.siret?.value,
+          raisonSociale: request.body.raisonSociale?.value,
+          statutJuridique: request.body.statutJuridique?.value,
+          gestionnaireFirstname: request.body.gestionnaireFirstname?.value,
+          gestionnaireLastname: request.body.gestionnaireLastname?.value,
+          gestionnaireEmail: request.body.gestionnaireEmail?.value,
+          phone: request.body.phone?.value,
           attestationURSSAF,
           justificatifIdentiteDirigeant,
           lettreDeDelegation,
