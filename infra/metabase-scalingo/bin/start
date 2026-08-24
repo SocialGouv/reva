@@ -11,6 +11,10 @@ if [ "$PORT" ]; then
     export MB_JETTY_PORT="$PORT"
 fi
 
+if [ "$SCALINGO_PRIVATE_HOSTNAME"]; then
+    export MB_JETTY_HOST="$SCALINGO_PRIVATE_HOSTNAME"
+fi
+
 # Heroku Postgres
 if [ "$DATABASE_URL" ]; then
     if [[ $DATABASE_URL == *"?"* ]]; then
