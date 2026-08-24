@@ -1,26 +1,31 @@
 "use client";
 
 import Alert from "@codegouvfr/react-dsfr/Alert";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import Input from "@codegouvfr/react-dsfr/Input";
+import Badge from "@codegouvfr/react-dsfr/Badge";
 import { toDate } from "date-fns";
 import { useRouter } from "next/navigation";
-import { ReactNode } from "react";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
 
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import { CompanyBadges } from "@/components/company-preview/CompanyPreview.component";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
+import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
+import {
+  errorToast,
+  graphqlErrorToast,
+  successToast,
+} from "@/components/toast/toast";
 import { formatSiret } from "@/utils/formatSiret";
 
-import { MaisonMereAap } from "@/graphql/generated/graphql";
-
+import {
+  AccountInfoRows,
+  pendingIfChanged,
+} from "./_components/AccountInfoRows";
 import { AdminToggleGestionBranch } from "./_components/AdminToggleGestionBranch";
 import { AttestationReferencement } from "./_components/AttestationReferencement";
+import { InfoRow } from "./_components/InfoRow";
 import { LegalInformationUpdateBlock } from "./_components/legal-information-update-block/LegalInformationUpdateBlock";
 import { LegalInformationTile } from "./_components/LegalInformationTile";
+import { SiretInformationCard } from "./_components/SiretInformationCard";
 import {
   buildLegalInformationPayload,
   useGeneralInformationPage,
@@ -43,10 +48,8 @@ const GeneralInformationPage = () => {
   } = useGeneralInformationPage();
 
   const {
-    formState: { isSubmitting, isDirty, errors },
-    register,
+    formState: { isSubmitting, isDirty },
     handleSubmit,
-    setError,
     setValue,
     watch,
   } = formHook;
@@ -61,41 +64,55 @@ const GeneralInformationPage = () => {
   const setGestionBranch = (value: boolean) =>
     setValue("gestionBranch", value, { shouldDirty: true });
 
-  const handleFormSubmit = handleSubmit(async (data) => {
-    let payload;
+  const backUrl = isAdmin
+    ? `/maison-mere-aap/${maisonMereAAPId}`
+    : "/agencies-settings-v3";
 
-    try {
-      payload = buildLegalInformationPayload({
-        data,
-        etablissement,
-        maisonMereAAPId,
-        currentSiret: maisonMereAAP?.siret,
-      });
-    } catch (error) {
-      return setError(
-        "siret",
-        { message: (error as Error).message },
-        { shouldFocus: true },
-      );
-    }
+  const handleFormSubmit = handleSubmit(
+    async (data) => {
+      let payload;
 
-    try {
-      await updateMaisonMereLegalInformation(payload);
+      try {
+        payload = buildLegalInformationPayload({
+          data,
+          etablissement,
+          maisonMereAAPId,
+          currentSiret: maisonMereAAP?.siret,
+        });
+      } catch (error) {
+        return errorToast((error as Error).message);
+      }
 
-      successToast("Les informations ont été modifiées");
-      router.push(backUrl);
-    } catch (error) {
-      graphqlErrorToast(error);
-    }
-  });
+      try {
+        await updateMaisonMereLegalInformation(payload);
+
+        successToast("Les informations ont été modifiées");
+        router.push(backUrl);
+      } catch (error) {
+        graphqlErrorToast(error);
+      }
+    },
+    () =>
+      errorToast(
+        "Certaines informations enregistrées sont invalides. Corrigez-les depuis la mise à jour des informations générales.",
+      ),
+  );
 
   if (!maisonMereAAP || !maisonMereAAP.gestionnaire) {
     return null;
   }
 
-  const backUrl = isAdmin
-    ? `/maison-mere-aap/${maisonMereAAP?.id}`
-    : "/agencies-settings-v3";
+  const legalInformationUrl = `/agencies-settings-v3/${maisonMereAAP.id}/general-information/legal-information`;
+
+  // Les décisions sont triées de la plus récente à la plus ancienne côté API.
+  const lastUpdateRequest = maisonMereAAP.legalInformationDocumentsDecisions[0];
+  // L'enregistrement en attente survit à une demande de précisions: hors
+  // vérification, il ne décrit plus une demande en cours d'examen.
+  const legalInformationDocuments =
+    maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
+    "EN_ATTENTE_DE_VERIFICATION"
+      ? maisonMereAAP.legalInformationDocuments
+      : null;
 
   const canDownloadAttestationReferencement =
     maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
@@ -103,14 +120,40 @@ const GeneralInformationPage = () => {
     !!etablissement &&
     !etablissement.dateFermeture;
 
-  return (
-    <div className="flex flex-col w-full">
-      <h1>Informations générales</h1>
-      <p>
-        Retrouvez ici les informations renseignées lors de l'inscription. Vous
-        pouvez signaler un changement au support si ces informations ne sont
-        plus à jour.
-      </p>
+  const pendingSiret = pendingIfChanged(
+    maisonMereAAP.siret,
+    legalInformationDocuments?.siret,
+  );
+
+  const emphasis = isAdmin ? "pending" : "current";
+  const badgeLabel = isAdmin ? "Modifié" : "Traitement en cours";
+
+  const breadcrumb = isAdmin ? (
+    <SettingsBreadcrumb
+      currentPageLabel="Informations générales"
+      homeLinkProps={{ href: "/" }}
+      segments={[
+        {
+          label: "Structures accompagnatrices",
+          linkProps: { href: "/maison-mere-aap" },
+        },
+        {
+          label: maisonMereAAP.raisonSociale ?? "Structure",
+          linkProps: { href: `/maison-mere-aap/${maisonMereAAP.id}` },
+        },
+      ]}
+    />
+  ) : (
+    <SettingsBreadcrumb
+      currentPageLabel="Informations générales"
+      segments={[
+        { label: "Paramètres", linkProps: { href: "/agencies-settings-v3" } },
+      ]}
+    />
+  );
+
+  const pageContent = (
+    <>
       {etablissement && (
         <AttestationReferencement
           raisonSociale={etablissement.raisonSociale}
@@ -120,89 +163,67 @@ const GeneralInformationPage = () => {
           }
         />
       )}
-      <form
-        className="flex flex-col"
-        onSubmit={handleFormSubmit}
-        onReset={(e) => {
-          e.preventDefault();
-          handleReset();
-        }}
-      >
-        {isAdmin && (
-          <div className="my-3 flex gap-8">
-            <Input
-              label="Numéro SIRET du siège social"
-              hintText="14 chiffres"
-              nativeInputProps={register("siret")}
-              className="md:w-1/4 mb-0"
-            />
-            {errors.siret ? (
-              <Alert
-                className="hidden md:block w-full "
-                title="Impossible de modifier le numéro de SIRET"
-                severity="error"
-                description={errors.siret?.message}
-              />
-            ) : (
-              <div className="hidden md:block w-full" />
-            )}
-          </div>
-        )}
-        {maisonMereAAPError && (
-          <Alert
-            className="mb-6"
-            severity="error"
-            title="Une erreur est survenue pendant la récupération des informations générales."
+      {maisonMereAAPError && (
+        <Alert
+          className="mb-6"
+          severity="error"
+          title="Une erreur est survenue pendant la récupération des informations générales."
+        />
+      )}
+      {maisonMereAAPSuccess && (
+        <div className="flex flex-col gap-6 my-1">
+          <InfoRow
+            label="Numéro de SIRET"
+            className="border-t"
+            badge={
+              pendingSiret && (
+                <Badge severity="info" small>
+                  {badgeLabel}
+                </Badge>
+              )
+            }
+            pendingValue={pendingSiret ? formatSiret(pendingSiret) : undefined}
+            emphasis={emphasis}
+          >
+            {formatSiret(maisonMereAAP.siret)}
+          </InfoRow>
+          <SiretInformationCard siret={siret} etablissement={etablissement} />
+          <AccountInfoRows
+            maisonMereAAP={maisonMereAAP}
+            pendingValues={legalInformationDocuments}
+            emphasis={emphasis}
+            badgeLabel={badgeLabel}
           />
-        )}
-        {maisonMereAAPSuccess && maisonMereAAP && (
-          <div className="list-none flex flex-col gap-6 pl-0 my-1">
-            <GrayCard className="min-h-[220px]">
-              <h2>Informations liées au SIRET - {formatSiret(siret)}</h2>
-              {etablissement && (
-                <>
-                  <CompanyBadges
-                    className="col-span-3 mb-4"
-                    siegeSocial={etablissement.siegeSocial}
-                    dateFermeture={
-                      etablissement.dateFermeture
-                        ? toDate(etablissement.dateFermeture)
-                        : null
-                    }
-                    qualiopiStatus={!!etablissement.qualiopiStatus}
-                  />
-                  <div className="grid grid-cols-1 md:grid-cols-2">
-                    <Info title="Raison sociale">
-                      {etablissement.raisonSociale}
-                    </Info>
-                    <Info title="Forme juridique">
-                      {etablissement.formeJuridique.libelle}
-                    </Info>
-                  </div>
-                </>
-              )}
-            </GrayCard>
-            <GrayCard>
-              <h2>Dirigeant et administrateur du compte</h2>
-              {isAdmin ? (
-                <AccountInfoForm register={register} errors={errors} />
-              ) : (
-                <AccountInfo maisonMereAAP={maisonMereAAP} />
-              )}
-            </GrayCard>
-            {isAdmin && legalInformationUpdateIsActive && (
-              <div className="my-6">
-                <LegalInformationTile
-                  maisonMereAAPId={maisonMereAAP.id}
-                  statutValidationInformationsJuridiquesMaisonMereAAP={
-                    maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
-                  }
-                />
-              </div>
-            )}
-            {/* Flag off, l'admin garde l'encart historique, sans son bouton de dépôt. */}
-            {(isGestionnaireMaisonMereAAP ||
-              (isAdmin && !legalInformationUpdateIsActive)) && (
+          {legalInformationUpdateIsActive && (
+            <LegalInformationTile
+              isAdmin={isAdmin}
+              href={
+                isAdmin
+                  ? // Une demande en attente se traite depuis la fiche de vérification.
+                    maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
+                    "EN_ATTENTE_DE_VERIFICATION"
+                    ? `/maisonMereAAPs/${maisonMereAAP.id}`
+                    : legalInformationUrl
+                  : maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
+                      "A_METTRE_A_JOUR"
+                    ? legalInformationUrl
+                    : undefined
+              }
+              statutValidationInformationsJuridiquesMaisonMereAAP={
+                maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
+              }
+              updateRequestedAt={
+                lastUpdateRequest && toDate(lastUpdateRequest.decisionTakenAt)
+              }
+              documentsSubmittedAt={
+                legalInformationDocuments &&
+                toDate(legalInformationDocuments.createdAt)
+              }
+            />
+          )}
+          {/* Flag off, l'encart historique reste la seule entrée du parcours. */}
+          {!legalInformationUpdateIsActive &&
+            (isGestionnaireMaisonMereAAP || isAdmin) && (
               <LegalInformationUpdateBlock
                 hideUpdateButton={isAdmin}
                 onUpdateButtonClick={() =>
@@ -221,128 +242,49 @@ const GeneralInformationPage = () => {
                 )}
               />
             )}
-            {isAdmin && (
-              <AdminToggleGestionBranch
-                gestionBranchIsChecked={gestionBranchIsChecked}
-                setGestionBranch={setGestionBranch}
-              />
-            )}
-          </div>
-        )}
-        {isAdmin ? (
+        </div>
+      )}
+    </>
+  );
+
+  return (
+    <div className="flex flex-col w-full">
+      <SettingsPageHeader
+        breadcrumb={breadcrumb}
+        title="Informations générales"
+      />
+      <p>
+        Retrouvez ici les informations renseignées lors de l'inscription. Vous
+        pouvez signaler un changement en cliquant sur “Modifier mes informations
+        générales” en bas de votre écran.
+      </p>
+      {isAdmin ? (
+        // Le formulaire ne sert plus qu'au toggle "Gestion des branches": il n'a
+        // pas de mutation dédiée, cet enregistrement est sa seule persistance.
+        <form
+          className="flex flex-col"
+          onSubmit={handleFormSubmit}
+          onReset={(e) => {
+            e.preventDefault();
+            handleReset();
+          }}
+        >
+          {pageContent}
+          <AdminToggleGestionBranch
+            gestionBranchIsChecked={gestionBranchIsChecked}
+            setGestionBranch={setGestionBranch}
+          />
           <FormButtons
             className="col-span-2"
             formState={{ isSubmitting, isDirty }}
             backUrl={backUrl}
           />
-        ) : (
-          <Button
-            className="mt-12"
-            priority="tertiary"
-            linkProps={{
-              href: backUrl,
-            }}
-          >
-            Retour
-          </Button>
-        )}
-      </form>
+        </form>
+      ) : (
+        pageContent
+      )}
     </div>
   );
 };
 
 export default GeneralInformationPage;
-
-const Info = ({
-  title,
-  children,
-  className,
-}: {
-  title: string;
-  children: ReactNode;
-  className?: string;
-}) => (
-  <dl className={`m-2 ${className || ""}`}>
-    <dt className="mb-1">{title}</dt>
-    <dd className="font-medium">{children}</dd>
-  </dl>
-);
-
-const AccountInfo = ({ maisonMereAAP }: { maisonMereAAP: MaisonMereAap }) => (
-  <div className="grid grid-cols-1 md:grid-cols-2">
-    <Info title="Dirigeant(e)">
-      {maisonMereAAP.managerFirstname} {maisonMereAAP.managerLastname}
-    </Info>
-    <Info title="Administrateur">
-      {maisonMereAAP.gestionnaire.firstname}{" "}
-      {maisonMereAAP.gestionnaire.lastname}
-    </Info>
-    <Info title="Adresse électronique">{maisonMereAAP.gestionnaire.email}</Info>
-    <Info title="Téléphone">{maisonMereAAP.phone}</Info>
-  </div>
-);
-
-const AccountInfoForm = ({
-  register,
-  errors,
-}: {
-  register: UseFormRegister<{
-    managerFirstname: string;
-    managerLastname: string;
-    gestionnaireFirstname: string;
-    gestionnaireLastname: string;
-    gestionnaireEmail: string;
-    siret: string;
-    phone: string;
-    gestionBranch: boolean;
-  }>;
-  errors: FieldErrors<{
-    managerFirstname: string;
-    managerLastname: string;
-    gestionnaireFirstname: string;
-    gestionnaireLastname: string;
-    gestionnaireEmail: string;
-    siret: string;
-    phone: string;
-    gestionBranch: boolean;
-  }>;
-}) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <Input
-      label="Prénom du dirigeant(e)"
-      nativeInputProps={register("managerFirstname")}
-      state={errors.managerFirstname ? "error" : "default"}
-      stateRelatedMessage={errors.managerFirstname?.message}
-    />
-    <Input
-      label="Nom du dirigeant(e)"
-      nativeInputProps={register("managerLastname")}
-      state={errors.managerLastname ? "error" : "default"}
-      stateRelatedMessage={errors.managerLastname?.message}
-    />
-    <Input
-      label="Prénom du gestionnaire"
-      nativeInputProps={register("gestionnaireFirstname")}
-      state={errors.gestionnaireFirstname ? "error" : "default"}
-      stateRelatedMessage={errors.gestionnaireFirstname?.message}
-    />
-    <Input
-      label="Nom du gestionnaire"
-      nativeInputProps={register("gestionnaireLastname")}
-      state={errors.gestionnaireLastname ? "error" : "default"}
-      stateRelatedMessage={errors.gestionnaireLastname?.message}
-    />
-    <Input
-      label="Adresse électronique du gestionnaire"
-      nativeInputProps={register("gestionnaireEmail")}
-      state={errors.gestionnaireEmail ? "error" : "default"}
-      stateRelatedMessage={errors.gestionnaireEmail?.message}
-    />
-    <Input
-      label="Téléphone"
-      nativeInputProps={register("phone")}
-      state={errors.phone ? "error" : "default"}
-      stateRelatedMessage={errors.phone?.message}
-    />
-  </div>
-);

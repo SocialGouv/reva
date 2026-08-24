@@ -40,6 +40,18 @@ const generalInformationQueries = graphql(`
           aapComment
           decisionTakenAt
         }
+        legalInformationDocuments {
+          createdAt
+          managerFirstname
+          managerLastname
+          siret
+          raisonSociale
+          statutJuridique
+          gestionnaireFirstname
+          gestionnaireLastname
+          gestionnaireEmail
+          phone
+        }
         gestionnaire {
           firstname
           lastname
@@ -84,6 +96,18 @@ const getMaisonMereAAPGeneralInformationAdminQuery = graphql(`
         id
         aapComment
         decisionTakenAt
+      }
+      legalInformationDocuments {
+        createdAt
+        managerFirstname
+        managerLastname
+        siret
+        raisonSociale
+        statutJuridique
+        gestionnaireFirstname
+        gestionnaireLastname
+        gestionnaireEmail
+        phone
       }
       gestionnaire {
         firstname
@@ -241,6 +265,7 @@ export const useGeneralInformationPage = () => {
 
   const formHook = useForm<GeneralInformationFormValues>({
     resolver: zodResolver(schema),
+    mode: "onChange",
   });
   const { watch, reset } = formHook;
 
@@ -256,17 +281,28 @@ export const useGeneralInformationPage = () => {
 
   const siret = watch("siret");
 
-  const { data: getEtablissementData } = useQuery({
-    queryKey: [siret],
-    queryFn: () =>
-      graphqlClient.request(getEtablissementQuery, {
-        siret: siret || "",
-      }),
-    enabled: !!siret && siret?.length >= 14,
-  });
+  const siretIsComplete = !!siret && siret.length >= 14;
+
+  const { data: getEtablissementData, isFetching: etablissementIsFetching } =
+    useQuery({
+      queryKey: ["getEtablissement", siret],
+      queryFn: () =>
+        graphqlClient.request(getEtablissementQuery, {
+          siret: siret || "",
+        }),
+      enabled: siretIsComplete,
+    });
 
   const etablissement = getEtablissementData?.getEtablissement;
+
+  // L'annuaire ne renvoie rien pour un SIRET inexistant: sans ce drapeau, l'étape
+  // n'affiche qu'une carte vide.
+  const siretNotFound =
+    siretIsComplete && !etablissementIsFetching && !etablissement;
+
   return {
+    etablissementIsFetching,
+    siretNotFound,
     generalInformationsResponse,
     maisonMereAAPSuccess,
     maisonMereAAPError,
