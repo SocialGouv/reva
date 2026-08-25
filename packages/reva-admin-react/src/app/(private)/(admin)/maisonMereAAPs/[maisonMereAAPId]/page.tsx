@@ -11,10 +11,8 @@ import {
   pendingIfChanged,
 } from "@/app/(private)/(aap)/agencies-settings-v3/[maison-mere-id]/general-information/_components/AccountInfoRows";
 import { InfoRow } from "@/app/(private)/(aap)/agencies-settings-v3/[maison-mere-id]/general-information/_components/InfoRow";
-import { LegalInformationTile } from "@/app/(private)/(aap)/agencies-settings-v3/[maison-mere-id]/general-information/_components/LegalInformationTile";
 import { SiretInformationCard } from "@/app/(private)/(aap)/agencies-settings-v3/[maison-mere-id]/general-information/_components/SiretInformationCard";
 import { useEtablissement } from "@/components/company-preview/CompanyPreview.hooks";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { LegalDocumentList } from "@/components/legal-document-list/LegalDocumentList";
 import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
@@ -61,12 +59,6 @@ const getMaisonMereAAP = graphql(`
           previewUrl
         }
       }
-      legalInformationDocumentsDecisions(
-        input: { decision: DEMANDE_DE_PRECISION }
-      ) {
-        id
-        decisionTakenAt
-      }
       gestionnaire {
         firstname
         lastname
@@ -80,7 +72,6 @@ const MaisonMereAAPPage = () => {
   const { maisonMereAAPId }: { maisonMereAAPId: string } = useParams();
 
   const { graphqlClient } = useGraphQlClient();
-  const { isFeatureActive } = useFeatureflipping();
 
   const { data: getMaisonMereAAPResponse, isLoading: isMaisonMereAAPLoading } =
     useQuery({
@@ -118,9 +109,6 @@ const MaisonMereAAPPage = () => {
   );
 
   const targetedSiret = pendingSiret ?? maisonMereAAP.siret;
-
-  // Les décisions sont triées de la plus récente à la plus ancienne côté API.
-  const lastUpdateRequest = maisonMereAAP.legalInformationDocumentsDecisions[0];
 
   const conflicts = [
     legalInformationDocuments?.siretAlreadyUsed &&
@@ -211,23 +199,6 @@ const MaisonMereAAPPage = () => {
             legalInformationDocuments?.gestionnaireEmailAlreadyUsed
           }
         />
-        {isFeatureActive("MAISON_MERE_GENERAL_INFORMATION_UPDATE") && (
-          <LegalInformationTile
-            isAdmin
-            // En attente de vérification, l'administrateur est déjà sur l'écran de vérification.
-            href={
-              isAwaitingVerification
-                ? undefined
-                : `/agencies-settings-v3/${maisonMereAAP.id}/general-information/legal-information`
-            }
-            statutValidationInformationsJuridiquesMaisonMereAAP={
-              maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
-            }
-            updateRequestedAt={
-              lastUpdateRequest && toDate(lastUpdateRequest.decisionTakenAt)
-            }
-          />
-        )}
         {legalInformationDocuments && (
           <>
             <LegalDocumentList
