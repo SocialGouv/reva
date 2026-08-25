@@ -1,5 +1,6 @@
 "use client";
 
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { useQuery } from "@tanstack/react-query";
 import { format, toDate } from "date-fns";
@@ -45,6 +46,8 @@ const getMaisonMereAAP = graphql(`
         gestionnaireLastname
         gestionnaireEmail
         phone
+        siretAlreadyUsed
+        gestionnaireEmailAlreadyUsed
         attestationURSSAFFile {
           previewUrl
         }
@@ -91,28 +94,40 @@ const MaisonMereAAPPage = () => {
 
   const maisonMereAAP = getMaisonMereAAPResponse?.organism_getMaisonMereAAPById;
 
-  const { etablissement } = useEtablissement(maisonMereAAP?.siret);
+  const isAwaitingVerification =
+    maisonMereAAP?.statutValidationInformationsJuridiquesMaisonMereAAP ===
+    "EN_ATTENTE_DE_VERIFICATION";
+
+  // Hors vérification en cours, la demande a été traitée: ni avant/après, ni pièces jointes.
+  const legalInformationDocuments = isAwaitingVerification
+    ? maisonMereAAP?.legalInformationDocuments
+    : null;
+
+  // L'administrateur vérifie le SIRET visé par la demande, pas celui qu'il remplace.
+  const { etablissement, isLoading: etablissementIsLoading } = useEtablissement(
+    legalInformationDocuments?.siret ?? maisonMereAAP?.siret,
+  );
 
   if (isMaisonMereAAPLoading || !maisonMereAAP) {
     return <></>;
   }
 
-  const isAwaitingVerification =
-    maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
-    "EN_ATTENTE_DE_VERIFICATION";
-
-  // Hors vérification en cours, la demande a été traitée: ni avant/après, ni pièces jointes.
-  const legalInformationDocuments = isAwaitingVerification
-    ? maisonMereAAP.legalInformationDocuments
-    : null;
-
-  // Les décisions sont triées de la plus récente à la plus ancienne côté API.
-  const lastUpdateRequest = maisonMereAAP.legalInformationDocumentsDecisions[0];
-
   const pendingSiret = pendingIfChanged(
     maisonMereAAP.siret,
     legalInformationDocuments?.siret,
   );
+
+  const targetedSiret = pendingSiret ?? maisonMereAAP.siret;
+
+  // Les décisions sont triées de la plus récente à la plus ancienne côté API.
+  const lastUpdateRequest = maisonMereAAP.legalInformationDocumentsDecisions[0];
+
+  const conflicts = [
+    legalInformationDocuments?.siretAlreadyUsed &&
+      "Le numéro de SIRET renseigné est déjà utilisé pour un autre compte France VAE.",
+    legalInformationDocuments?.gestionnaireEmailAlreadyUsed &&
+      "L’adresse électronique renseignée est déjà utilisée pour un autre compte France VAE.",
+  ].filter((conflict) => typeof conflict === "string");
 
   return (
     <div className="flex flex-col flex-1 px-8 py-4">
@@ -138,13 +153,35 @@ const MaisonMereAAPPage = () => {
         </p>
       )}
       <div className="flex flex-col gap-6 mt-6">
+        {conflicts.length > 0 && (
+          <Alert
+            severity="warning"
+            small
+            description={
+              <ul>
+                {conflicts.map((conflict) => (
+                  <li key={conflict}>{conflict}</li>
+                ))}
+              </ul>
+            }
+          />
+        )}
         <InfoRow
           label="Numéro de SIRET"
           badge={
-            pendingSiret && (
-              <Badge severity="info" small>
-                Modifié
-              </Badge>
+            (pendingSiret || legalInformationDocuments?.siretAlreadyUsed) && (
+              <>
+                {pendingSiret && (
+                  <Badge severity="info" small>
+                    Modifié
+                  </Badge>
+                )}
+                {legalInformationDocuments?.siretAlreadyUsed && (
+                  <Badge severity="warning" small>
+                    Déjà enregistré sur France VAE
+                  </Badge>
+                )}
+              </>
             )
           }
           pendingValue={pendingSiret ? formatSiret(pendingSiret) : undefined}
@@ -155,8 +192,9 @@ const MaisonMereAAPPage = () => {
         </InfoRow>
         <div>
           <SiretInformationCard
-            siret={maisonMereAAP.siret}
+            siret={targetedSiret}
             etablissement={etablissement}
+            isLoading={etablissementIsLoading}
           />
           {!!etablissement?.kbis?.mandatairesSociaux?.length && (
             <MandatairesSociauxCard
@@ -169,6 +207,9 @@ const MaisonMereAAPPage = () => {
           pendingValues={legalInformationDocuments}
           emphasis="pending"
           badgeLabel="Modifié"
+          gestionnaireEmailAlreadyUsed={
+            legalInformationDocuments?.gestionnaireEmailAlreadyUsed
+          }
         />
         {isFeatureActive("MAISON_MERE_GENERAL_INFORMATION_UPDATE") && (
           <LegalInformationTile

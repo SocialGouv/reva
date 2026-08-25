@@ -33,11 +33,13 @@ export const AccountInfoRows = ({
   pendingValues,
   emphasis,
   badgeLabel,
+  gestionnaireEmailAlreadyUsed,
 }: {
   maisonMereAAP: CurrentValues;
   pendingValues?: PendingValues | null;
   emphasis: "current" | "pending";
   badgeLabel: string;
+  gestionnaireEmailAlreadyUsed?: boolean;
 }) => {
   const managerName = fullName(
     maisonMereAAP.managerFirstname,
@@ -81,6 +83,7 @@ export const AccountInfoRows = ({
         maisonMereAAP.gestionnaire.email,
         pendingValues?.gestionnaireEmail,
       ),
+      alreadyUsed: gestionnaireEmailAlreadyUsed,
     },
     {
       label: "Téléphone",
@@ -92,16 +95,25 @@ export const AccountInfoRows = ({
   return (
     <div>
       <h2>Dirigeant et administrateur du compte</h2>
-      {rows.map(({ label, currentValue, pendingValue }, index) => (
+      {rows.map(({ label, currentValue, pendingValue, alreadyUsed }, index) => (
         <InfoRow
           key={label}
           label={label}
           className={index === 0 ? "border-t" : undefined}
           badge={
-            pendingValue && (
-              <Badge severity="info" small>
-                {badgeLabel}
-              </Badge>
+            (pendingValue || alreadyUsed) && (
+              <>
+                {pendingValue && (
+                  <Badge severity="info" small>
+                    {badgeLabel}
+                  </Badge>
+                )}
+                {alreadyUsed && (
+                  <Badge severity="warning" small>
+                    Déjà enregistrée sur France VAE
+                  </Badge>
+                )}
+              </>
             )
           }
           pendingValue={pendingValue}
