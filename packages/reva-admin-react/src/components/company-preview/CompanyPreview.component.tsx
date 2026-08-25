@@ -118,13 +118,7 @@ export const CompanyPreview = (props: Props) => {
           />
         )}
 
-        {isLoading && (
-          <>
-            <div className="bg-neutral-200 rounded animate-pulse h-8 w-1/2"></div>
-            <div className="bg-neutral-200 rounded animate-pulse h-24 w-full my-4"></div>
-            <div className="bg-neutral-200 rounded animate-pulse h-6 w-1/3"></div>
-          </>
-        )}
+        {isLoading && <EtablissementSkeleton />}
 
         {etablissement && (
           <CompanyBadges
@@ -248,6 +242,15 @@ const Info = ({
     <dd className="font-bold">{title}</dd>
     <dt className="break-words">{children}</dt>
   </span>
+);
+
+// Attente des informations de l'annuaire, dans le bloc gris qui les accueillera.
+export const EtablissementSkeleton = () => (
+  <>
+    <div className="bg-neutral-200 rounded animate-pulse h-8 w-1/2"></div>
+    <div className="bg-neutral-200 rounded animate-pulse h-24 w-full my-4"></div>
+    <div className="bg-neutral-200 rounded animate-pulse h-6 w-1/3"></div>
+  </>
 );
 
 export const CompanyBadges = ({

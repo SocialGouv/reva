@@ -1,8 +1,12 @@
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import { toDate } from "date-fns";
 import Image from "next/image";
 
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import { CompanyBadges } from "@/components/company-preview/CompanyPreview.component";
+import {
+  CompanyBadges,
+  EtablissementSkeleton,
+} from "@/components/company-preview/CompanyPreview.component";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { formatSiret } from "@/utils/formatSiret";
 
@@ -16,14 +20,26 @@ import { InfoRow } from "./InfoRow";
 export const SiretInformationCard = ({
   siret,
   etablissement,
+  isLoading,
 }: {
   siret: string;
   etablissement:
     | Etablissement
     | GetEtablissementQuery["getEtablissementAsAdmin"];
+  isLoading?: boolean;
 }) => (
   <GrayCard as="div">
     <h2>Informations liées au SIRET - {formatSiret(siret)}</h2>
+    {isLoading && <EtablissementSkeleton />}
+    {/* Recherche terminée et sans résultat: la carte resterait vide, sans rien dire. */}
+    {!isLoading && !etablissement && siret?.length >= 14 && (
+      <Alert
+        className="mr-auto"
+        severity="error"
+        small
+        description="Informations entreprise indisponibles"
+      />
+    )}
     {etablissement && (
       <>
         <CompanyBadges

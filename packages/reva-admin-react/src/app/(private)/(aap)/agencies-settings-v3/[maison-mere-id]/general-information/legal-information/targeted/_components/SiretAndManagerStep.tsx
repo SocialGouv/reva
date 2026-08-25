@@ -55,17 +55,12 @@ export const SiretAndManagerStep = ({
         </div>
       </div>
     )}
-    {etablissementIsFetching ? (
-      <p className="text-dsfrGray-mentionGrey">
-        Recherche de l'établissement en cours...
-      </p>
-    ) : (
-      !siretNotFound && (
-        <SiretInformationCard
-          siret={watch("siret")}
-          etablissement={etablissement}
-        />
-      )
+    {!siretNotFound && (
+      <SiretInformationCard
+        siret={watch("siret")}
+        etablissement={etablissement}
+        isLoading={etablissementIsFetching}
+      />
     )}
     {managerIsSelected && (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
