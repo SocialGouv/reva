@@ -15,6 +15,7 @@ export const GeneralInformationUpdateNotice = () => {
 
   return (
     <Notice
+      severity="warning"
       title={
         <>
           Votre compte doit être mis à jour. Retrouvez les documents à

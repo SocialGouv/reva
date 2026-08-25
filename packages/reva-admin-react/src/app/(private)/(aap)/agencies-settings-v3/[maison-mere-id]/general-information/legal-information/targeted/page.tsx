@@ -364,8 +364,8 @@ const TargetedLegalInformationUpdatePage = () => {
         title="Mise à jour des informations générales"
         chapo="Modifiez les informations souhaitées en cliquant dans l'espace prévu à cet effet."
       />
+      {/* Le chapo de SettingsPageHeader apporte déjà les 48px du dessus. */}
       <Stepper
-        className="mt-6"
         currentStep={currentStepIndex + 1}
         stepCount={steps.length}
         title={STEP_TITLES[currentStep]}
@@ -373,8 +373,9 @@ const TargetedLegalInformationUpdatePage = () => {
           isLastStep ? undefined : STEP_TITLES[steps[currentStepIndex + 1]]
         }
       />
+      {/* 16px ici plus les 32px de marge basse du stepper DSFR font les 48px attendus. */}
       <form
-        className="flex flex-col"
+        className="flex flex-col mt-4"
         onSubmit={(e) => {
           e.preventDefault();
 

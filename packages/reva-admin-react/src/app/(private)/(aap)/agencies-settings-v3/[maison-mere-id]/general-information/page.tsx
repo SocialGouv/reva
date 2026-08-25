@@ -318,6 +318,7 @@ const GeneralInformationPage = () => {
         >
           {pageContent}
           <AdminToggleGestionBranch
+            className="mt-6"
             gestionBranchIsChecked={gestionBranchIsChecked}
             setGestionBranch={setGestionBranch}
           />

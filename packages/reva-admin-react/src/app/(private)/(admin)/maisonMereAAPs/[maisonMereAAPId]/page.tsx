@@ -118,7 +118,7 @@ const MaisonMereAAPPage = () => {
   ].filter((conflict) => typeof conflict === "string");
 
   return (
-    <div className="flex flex-col flex-1 px-8 py-4">
+    <div className="flex flex-col flex-1">
       <SettingsBreadcrumb
         currentPageLabel={maisonMereAAP.raisonSociale}
         homeLinkProps={{ href: "/" }}

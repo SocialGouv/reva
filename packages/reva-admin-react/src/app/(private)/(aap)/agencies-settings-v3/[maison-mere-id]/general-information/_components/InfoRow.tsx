@@ -20,10 +20,14 @@ export const InfoRow = ({
   >
     <div className="flex items-center gap-2">
       <span>{label}</span>
-      {badge}
+      {/* Le libellé peut passer sur deux lignes, les badges non. */}
+      {badge && (
+        <span className="flex shrink-0 gap-2 whitespace-nowrap">{badge}</span>
+      )}
     </div>
     <div className="flex-1 text-right">
-      {pendingValue ? (
+      {/* Sans valeur actuelle, la flèche n'a rien à comparer. */}
+      {pendingValue && children ? (
         <>
           <span
             className={
@@ -42,7 +46,7 @@ export const InfoRow = ({
           </span>
         </>
       ) : (
-        <span className="font-bold">{children}</span>
+        <span className="font-bold">{pendingValue ?? children}</span>
       )}
     </div>
   </div>
