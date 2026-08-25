@@ -107,24 +107,12 @@ export const nonConformityMotives: NonConformityMotive[] = [
   },
 ];
 
-export const getNonConformityMessages = (motiveKeys: string[]) =>
+// Motifs cochés, dans l'ordre du référentiel: c'est celui du courriel et de la
+// prévisualisation du commentaire généré.
+export const getNonConformityMotives = (motiveKeys: string[]) =>
   nonConformityMotives
     .filter(({ key }) => motiveKeys.includes(key))
-    .map(({ message }) => message);
+    .map(({ label, message }) => ({ label, message }));
 
-// Commentaire envoyé à la structure: messages générés dans l'ordre de la liste,
-// puis le commentaire libre saisi par l'administrateur.
-export const buildAapComment = ({
-  motiveKeys,
-  freeComment,
-}: {
-  motiveKeys: string[];
-  freeComment: string;
-}) => {
-  const messages = getNonConformityMessages(motiveKeys);
-  const generatedComment = messages.length
-    ? ["Précisions à apporter :", ...messages.map((m) => `- ${m}`)].join("\n")
-    : "";
-
-  return [generatedComment, freeComment.trim()].filter(Boolean).join("\n\n");
-};
+export const getNonConformityMessages = (motiveKeys: string[]) =>
+  getNonConformityMotives(motiveKeys).map(({ message }) => message);

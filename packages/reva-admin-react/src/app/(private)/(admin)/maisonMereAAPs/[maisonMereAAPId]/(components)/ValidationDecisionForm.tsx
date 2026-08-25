@@ -8,8 +8,8 @@ import { useForm } from "react-hook-form";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import {
-  buildAapComment,
   getNonConformityMessages,
+  getNonConformityMotives,
   nonConformityMotives,
 } from "./nonConformityMotives";
 import { useUpdateMaisonMereAAPLegalValidationDecision } from "./useUpdateMaisonMereAAPLegalValidationDecision";
@@ -58,13 +58,11 @@ export default function ValidationDecisionForm({
         data: {
           maisonMereAAPId: maisonMereAAPId,
           decision: formData.decision,
-          aapComment:
-            formData.decision === "DEMANDE_DE_PRECISION"
-              ? buildAapComment({
-                  motiveKeys: formData.motiveKeys,
-                  freeComment: formData.aapComment,
-                })
-              : "",
+          // L'API assemble le commentaire stocké à partir des motifs et de ce texte.
+          aapComment: isPrecisionRequest ? formData.aapComment : "",
+          nonConformityMotives: isPrecisionRequest
+            ? getNonConformityMotives(formData.motiveKeys)
+            : [],
           internalComment: formData.internalComment,
           aapUpdatedDocumentsAt: aapUpdatedDocumentsAt,
         },
