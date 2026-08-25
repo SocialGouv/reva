@@ -472,6 +472,9 @@ const unsafeResolvers = {
       const statutValidationInformationsJuridiquesMaisonMereAAP =
         params.data.decision === "VALIDE" ? "A_JOUR" : "A_METTRE_A_JOUR";
 
+      const userInfo = buildAAPAuditLogUserInfoFromContext(context);
+      const nonConformityMotives = params.data.nonConformityMotives ?? [];
+
       // L'application des valeurs en attente peut échouer (SIRET ou email déjà
       // utilisé): on ne trace la décision qu'une fois le statut appliqué.
       const maisonMereAAP = await adminUpdateLegalInformationValidationStatus({
@@ -479,10 +482,8 @@ const unsafeResolvers = {
         maisonMereAAPData: {
           statutValidationInformationsJuridiquesMaisonMereAAP,
         },
-        userInfo: buildAAPAuditLogUserInfoFromContext(context),
+        userInfo,
       });
-
-      const nonConformityMotives = params.data.nonConformityMotives ?? [];
 
       const decision =
         await adminCreateMaisonMereAAPLegalInformationValidationDecision(
@@ -497,6 +498,18 @@ const unsafeResolvers = {
             aapUpdatedDocumentsAt: params.data.aapUpdatedDocumentsAt,
           },
         );
+
+      // Jamais invisible sans que la demande soit tracée: c'est elle qui l'explique.
+      if (
+        params.data.decision === "DEMANDE_DE_MISE_A_JOUR_TOTALE" &&
+        params.data.makeInvisible
+      ) {
+        await updateMaisonMereOrganismsIsActive({
+          maisonMereAAPId: params.data.maisonMereAAPId,
+          isActive: false,
+          userInfo,
+        });
+      }
 
       const managerName = `${maisonMereAAP.gestionnaire.firstname} ${maisonMereAAP.gestionnaire.lastname}`;
 

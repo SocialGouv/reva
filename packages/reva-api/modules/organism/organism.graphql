@@ -193,6 +193,8 @@ input UpdateMaisonMereAAPLegalValidationDecisionInput {
   aapComment: String
   aapUpdatedDocumentsAt: Timestamp
   nonConformityMotives: [NonConformityMotiveInput!]
+  "Demande de mise à jour totale: rend la structure invisible le temps de la mise à jour"
+  makeInvisible: Boolean
 }
 
 enum ConformiteNormeAccessibilite {

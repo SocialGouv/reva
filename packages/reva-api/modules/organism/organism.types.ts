@@ -76,6 +76,7 @@ export interface UpdateMaisonMereAAPLegalValidationInput {
   aapComment?: string;
   aapUpdatedDocumentsAt?: Date | null;
   nonConformityMotives?: NonConformityMotive[];
+  makeInvisible?: boolean;
 }
 
 export type LegalInformationValidationDecisionInput = {
