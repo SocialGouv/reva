@@ -47,7 +47,7 @@ export const buildCandidacyFixture = (
     zip: "75001",
     street: "1 rue de Rivoli",
     addressComplement: null,
-    country: { label: "France", isoCode: "fr" },
+    country: { label: "France", isoCode: "FRA", inseeCode: "99100" },
     department: { code: "75", label: "Paris" },
   },
   ...overrides,

@@ -13,7 +13,8 @@ describe("mapGetCandidacyById", () => {
         givenName: "Martin",
         gender: "woman",
         birthdate: "1990-05-15T00:00:00.000Z",
-        country: { label: "France", isoCode: "fr" },
+        country: { label: "France", isoCode: "FRA", inseeCode: "99100" },
+        nationality: "Française",
       },
       organism: {
         label: "Organisme interne",
@@ -34,7 +35,18 @@ describe("mapGetCandidacyById", () => {
     expect(mapped.candidat.dateNaissance).toBe(
       new Date("1990-05-15T00:00:00.000Z").toISOString(),
     );
-    expect(mapped.candidat.adresse.codePays).toBe("FR");
+    expect(mapped.candidat.adresse.ville).toBe("Paris");
+    expect(mapped.candidat.adresse.codePostal).toBe("75001");
+    expect(mapped.candidat.adresse.rue).toBe("1 rue de Rivoli");
+    expect(mapped.candidat.adresse.departement?.code).toBe("75");
+    expect(mapped.candidat.adresse.departement?.nom).toBe("Paris");
+    expect(mapped.candidat.adresse.pays).toBe("France"); // Toujours la France, tant qu'on ne gère que les candidatures pour les résidents sur le territoire national
+    expect(mapped.candidat.adresse.codePays).toBe("FRA"); // Toujours la France, tant qu'on ne gère que les candidatures pour les résidents sur le territoire national
+    expect(mapped.candidat.adresse.codeInseePays).toBe("99100"); // Toujours la France, tant qu'on ne gère que les candidatures pour les résidents sur le territoire national
+    expect(mapped.candidat.nationalite).toBe("Française");
+    expect(mapped.candidat.codePaysDeNaissance).toBe("FRA");
+    expect(mapped.candidat.codeInseePaysDeNaissance).toBe("99100");
+    expect(mapped.candidat.paysDeNaissance).toBe("France");
     expect(mapped.certification.estViseePartiellement).toBe(true);
     expect(mapped.organisme).toEqual({
       nom: "Organisme public",
