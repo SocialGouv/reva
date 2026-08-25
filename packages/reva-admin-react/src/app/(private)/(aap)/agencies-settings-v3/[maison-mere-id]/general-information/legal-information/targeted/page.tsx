@@ -4,7 +4,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
@@ -68,26 +68,36 @@ const TargetedLegalInformationUpdatePage = () => {
   const { accessToken } = useKeycloakContext();
   const queryClient = useQueryClient();
 
-  // L'AAP ne choisit ce qu'il met à jour que sur un compte à jour. Sur une demande
-  // de France VAE il reprend tout, et une demande déjà déposée est remplacée en
-  // entier: une reprise partielle supprimerait les pièces de la précédente.
-  const isTotalUpdate =
-    !isAdmin &&
-    maisonMereAAP?.statutValidationInformationsJuridiquesMaisonMereAAP !==
-      "A_JOUR";
-
-  const [phaseOverride, setPhase] = useState<
-    "selection" | "steps" | "success" | null
-  >(null);
-  const phase = phaseOverride ?? (isTotalUpdate ? "steps" : "selection");
-
+  const [phase, setPhase] = useState<"selection" | "steps" | "success" | null>(
+    null,
+  );
   const [selectedBlocks, setSelectedBlocks] = useState<BlockKey[]>([]);
-  const updatedBlocks = isTotalUpdate ? ALL_BLOCKS : selectedBlocks;
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   // null tant que l'utilisateur n'a pas touché à la case, la valeur est alors
   // dérivée. Porté par la page: l'étape est démontée à chaque navigation.
   const [administratorIsDifferentPerson, setAdministratorIsDifferentPerson] =
     useState<boolean | null>(null);
+
+  const statut =
+    maisonMereAAP?.statutValidationInformationsJuridiquesMaisonMereAAP;
+
+  // L'AAP ne choisit ce qu'il met à jour que sur un compte à jour. Sur une demande
+  // de France VAE il reprend tout, et une demande déjà déposée est remplacée en
+  // entier: une reprise partielle supprimerait les pièces de la précédente.
+  // Décidé une fois, à l'arrivée du statut: un rafraîchissement ne doit pas
+  // renvoyer l'utilisateur à un autre écran en cours de parcours.
+  useEffect(() => {
+    if (isAdmin || !statut || statut === "A_JOUR") {
+      return;
+    }
+
+    setSelectedBlocks(ALL_BLOCKS);
+    setPhase((currentPhase) => currentPhase ?? "steps");
+  }, [isAdmin, statut]);
+
+  // Statut encore inconnu: aucun écran d'entrée ne peut être choisi.
+  const resolvedPhase =
+    phase ?? (isAdmin || statut === "A_JOUR" ? "selection" : null);
 
   const {
     formState: { isSubmitting, isDirty },
@@ -117,13 +127,13 @@ const TargetedLegalInformationUpdatePage = () => {
   const requiredDocuments = isAdmin
     ? []
     : getRequiredDocuments({
-        blocks: updatedBlocks,
+        blocks: selectedBlocks,
         administratorIsDifferent,
       });
 
   const documentsForm = useDocumentsForm(requiredDocuments);
 
-  const isSelected = (key: BlockKey) => updatedBlocks.includes(key);
+  const isSelected = (key: BlockKey) => selectedBlocks.includes(key);
 
   // Les blocs "Numéro de SIRET" et "Identité du dirigeant" partagent la même étape.
   const steps = (
@@ -265,8 +275,7 @@ const TargetedLegalInformationUpdatePage = () => {
     onInvalidFields,
   );
 
-  // Le statut décide de l'écran d'entrée: ne rien afficher avant de le connaître.
-  if (!maisonMereAAP) {
+  if (!resolvedPhase) {
     return null;
   }
 
@@ -274,11 +283,11 @@ const TargetedLegalInformationUpdatePage = () => {
     <LegalInformationBreadcrumb
       isAdmin={isAdmin}
       maisonMereAAPId={maisonMereAAPId}
-      raisonSociale={maisonMereAAP.raisonSociale}
+      raisonSociale={maisonMereAAP?.raisonSociale}
     />
   );
 
-  if (phase === "success") {
+  if (resolvedPhase === "success") {
     return (
       <div className="flex flex-col md:flex-row md:items-center gap-6 w-full">
         <div className="flex flex-col flex-1">
@@ -330,7 +339,7 @@ const TargetedLegalInformationUpdatePage = () => {
     );
   }
 
-  if (phase === "selection") {
+  if (resolvedPhase === "selection") {
     return (
       <div className="flex flex-col w-full">
         <SettingsPageHeader
