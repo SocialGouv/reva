@@ -55,8 +55,10 @@ import { getOrganismsByMaisonAAPId } from "./features/getOrganismsByMaisonAAPId"
 import { getPaginatedComptesCollaborateursByMaisonMereAAPId } from "./features/getPaginatedComptesCollaborateursByMaisonMereAAPId";
 import { getPaginatedOrganismsByMaisonMereAAPId } from "./features/getPaginatedOrganismsByMaisonMereAAPId";
 import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismId";
+import { isCompanySiretAlreadyUsed } from "./features/isCompanySiretAlreadyUsed";
 import { isOrganismAttachedToCertifications } from "./features/isOrganismAttachedToCertifications";
 import { isOrganismVisibleInCandidateSearchResults } from "./features/isOrganismVisibleInCandidateSearchResults";
+import { isPendingGestionnaireEmailAlreadyUsed } from "./features/isPendingGestionnaireEmailAlreadyUsed";
 import { organismHasCandidacies } from "./features/organismHasCandidacies";
 import { searchOrganisms } from "./features/searchOrganisms";
 import { updateFermePourAbsenceOuConges } from "./features/updateFermePourAbsenceOuConges";
@@ -240,6 +242,30 @@ const unsafeResolvers = {
     ) => getMetabaseIframeUrl(maisonMereAAPId),
   },
   MaisonMereAAPLegalInformationDocuments: {
+    siretAlreadyUsed: async ({
+      maisonMereAAPId,
+      siret,
+    }: {
+      maisonMereAAPId: string;
+      siret: string | null;
+    }) =>
+      !!siret &&
+      isCompanySiretAlreadyUsed({
+        companySiret: siret,
+        excludedMaisonMereAAPId: maisonMereAAPId,
+      }),
+    gestionnaireEmailAlreadyUsed: async ({
+      maisonMereAAPId,
+      gestionnaireEmail,
+    }: {
+      maisonMereAAPId: string;
+      gestionnaireEmail: string | null;
+    }) =>
+      !!gestionnaireEmail &&
+      isPendingGestionnaireEmailAlreadyUsed({
+        maisonMereAAPId,
+        gestionnaireEmail,
+      }),
     attestationURSSAFFile: async (
       { maisonMereAAPId }: { maisonMereAAPId: string },
       _: unknown,
@@ -665,6 +691,9 @@ export const organismResolvers = withPolicies(unsafeResolvers, {
     maisonMereAAPOnConventionCollectives: isAnyone,
   },
   MaisonMereAAPLegalInformationDocuments: {
+    // Conflit avec une autre structure: information réservée à la vérification admin.
+    siretAlreadyUsed: isAdmin,
+    gestionnaireEmailAlreadyUsed: isAdmin,
     attestationURSSAFFile: isAdminOrGestionnaireOfMaisonMereAAP,
     justificatifIdentiteDirigeantFile: isAdminOrGestionnaireOfMaisonMereAAP,
     lettreDeDelegationFile: isAdminOrGestionnaireOfMaisonMereAAP,

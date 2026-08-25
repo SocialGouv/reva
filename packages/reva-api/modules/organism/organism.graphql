@@ -170,6 +170,8 @@ type MaisonMereAAPLegalInformationDocuments {
   gestionnaireLastname: String
   gestionnaireEmail: String
   phone: String
+  siretAlreadyUsed: Boolean!
+  gestionnaireEmailAlreadyUsed: Boolean!
   attestationURSSAFFile: File!
   justificatifIdentiteDirigeantFile: File!
   lettreDeDelegationFile: File
