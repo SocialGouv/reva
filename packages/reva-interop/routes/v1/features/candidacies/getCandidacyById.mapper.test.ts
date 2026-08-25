@@ -38,6 +38,7 @@ describe("mapGetCandidacyById", () => {
     expect(mapped.candidat.adresse.ville).toBe("Paris");
     expect(mapped.candidat.adresse.codePostal).toBe("75001");
     expect(mapped.candidat.adresse.rue).toBe("1 rue de Rivoli");
+    expect(mapped.candidat.adresse.complementAdresse).toBe(null);
     expect(mapped.candidat.adresse.departement?.code).toBe("75");
     expect(mapped.candidat.adresse.departement?.nom).toBe("Paris");
     expect(mapped.candidat.adresse.pays).toBe("France"); // Toujours la France, tant qu'on ne gère que les candidatures pour les résidents sur le territoire national

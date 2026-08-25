@@ -318,6 +318,7 @@ export const adresseSchema = {
       maxLength: 255,
       description: "Complément d'adresse",
       example: "Bâtiment A",
+      nullable: true,
     },
     ville: {
       type: "string",

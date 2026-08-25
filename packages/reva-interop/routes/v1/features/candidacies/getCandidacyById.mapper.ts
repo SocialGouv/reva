@@ -117,6 +117,7 @@ export const mapGetCandidacyById = (
       adresse: {
         codePostal: candidacy.candidate.zip || null,
         rue: candidacy.candidate.street || null,
+        complementAdresse: candidacy.candidate.addressComplement || null,
         ville: candidacy.candidate.city || null,
         pays: "France",
         codePays: "FRA",
