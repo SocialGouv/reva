@@ -7,6 +7,7 @@ import { NOT_AUTHORIZED_CANDIDACY_MANAGE } from "@/modules/shared/security/messa
 
 import { UploadedFile } from "../shared/file/file.interface";
 
+import { getRequiredLegalInformationDocuments } from "./features/getRequiredLegalInformationDocuments";
 import { isUserGestionnaireMaisonMereAAPOfMaisonMereAAP } from "./features/isUserGestionnaireMaisonMereAAPOfMaisonMereAAP";
 import { submitMaisonMereAAPLegalInformationDocuments } from "./features/submitMaisonMereAAPLegalInformationDocuments";
 
@@ -20,8 +21,8 @@ interface UpdatedMaisonMereAAPLegalInformationRequestBody {
   gestionnaireLastname?: { value: string };
   gestionnaireEmail?: { value: string };
   phone?: { value: string };
-  attestationURSSAF: UploadedFile;
-  justificatifIdentiteDirigeant: UploadedFile;
+  attestationURSSAF?: UploadedFile;
+  justificatifIdentiteDirigeant?: UploadedFile;
   delegataire?: { value: boolean };
   lettreDeDelegation?: UploadedFile;
   justificatifIdentiteDelegataire?: UploadedFile;
@@ -104,12 +105,7 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
           lettreDeDelegation: { type: "object" },
           justificatifIdentiteDelegataire: { type: "object" },
         },
-        required: [
-          "managerFirstname",
-          "managerLastname",
-          "attestationURSSAF",
-          "justificatifIdentiteDirigeant",
-        ],
+        required: ["managerFirstname", "managerLastname"],
       },
       params: {
         type: "object",
@@ -186,9 +182,28 @@ export const organismRoutes: FastifyPluginAsync = async (server) => {
             );
         }
 
-        const requiredFiles = delegataire
-          ? files
-          : [attestationURSSAF, justificatifIdentiteDirigeant];
+        const filesByDocument = {
+          attestationURSSAF,
+          justificatifIdentiteDirigeant,
+          lettreDeDelegation,
+          justificatifIdentiteDelegataire,
+        };
+
+        const requiredDocuments = await getRequiredLegalInformationDocuments({
+          maisonMereAAPId,
+          submitted: {
+            siret: request.body.siret?.value,
+            managerFirstname,
+            managerLastname,
+            gestionnaireFirstname: request.body.gestionnaireFirstname?.value,
+            gestionnaireLastname: request.body.gestionnaireLastname?.value,
+          },
+          delegataire: !!delegataire,
+        });
+
+        const requiredFiles = requiredDocuments.map(
+          (document) => filesByDocument[document],
+        );
 
         if (requiredFiles.some((f) => !f)) {
           return reply

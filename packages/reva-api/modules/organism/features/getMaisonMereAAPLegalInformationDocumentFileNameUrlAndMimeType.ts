@@ -38,14 +38,14 @@ export const getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType =
 
     switch (fileType) {
       case "attestationURSSAFFile":
-        filename = docs.attestationURSSAFFile.name;
-        mimeType = docs.attestationURSSAFFile.mimeType;
-        filePath = docs.attestationURSSAFFile.path;
+        filename = docs.attestationURSSAFFile?.name || "";
+        mimeType = docs.attestationURSSAFFile?.mimeType || "";
+        filePath = docs.attestationURSSAFFile?.path || "";
         break;
       case "justificatifIdentiteDirigeantFile":
-        filename = docs.justificatifIdentiteDirigeantFile.name;
-        mimeType = docs.justificatifIdentiteDirigeantFile.mimeType;
-        filePath = docs.justificatifIdentiteDirigeantFile.path;
+        filename = docs.justificatifIdentiteDirigeantFile?.name || "";
+        mimeType = docs.justificatifIdentiteDirigeantFile?.mimeType || "";
+        filePath = docs.justificatifIdentiteDirigeantFile?.path || "";
         break;
       case "lettreDeDelegationFile":
         filename = docs.lettreDeDelegationFile?.name || "";

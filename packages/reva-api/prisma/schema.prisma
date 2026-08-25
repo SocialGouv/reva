@@ -1855,10 +1855,10 @@ model MaisonMereAAPLegalInformationDocuments {
   gestionnaireLastname                  String?       @map("gestionnaire_lastname")
   gestionnaireEmail                     String?       @map("gestionnaire_email")
   phone                                 String?       @map("phone") @db.VarChar(50)
-  attestationURSSAFFileId               String        @map("attestation_urssaf_file_id") @db.Uuid
-  attestationURSSAFFile                 File          @relation("mmaap_attestation_urssaf_file", fields: [attestationURSSAFFileId], references: [id])
-  justificatifIdentiteDirigeantFileId   String        @map("justificatif_identite_dirigeant_file_id") @db.Uuid
-  justificatifIdentiteDirigeantFile     File          @relation("mmaap_justificatif_identite_dirigeant_file", fields: [justificatifIdentiteDirigeantFileId], references: [id], map: "mmaap_justificatif_identite_dirigeant_file")
+  attestationURSSAFFileId               String?       @map("attestation_urssaf_file_id") @db.Uuid
+  attestationURSSAFFile                 File?         @relation("mmaap_attestation_urssaf_file", fields: [attestationURSSAFFileId], references: [id])
+  justificatifIdentiteDirigeantFileId   String?       @map("justificatif_identite_dirigeant_file_id") @db.Uuid
+  justificatifIdentiteDirigeantFile     File?         @relation("mmaap_justificatif_identite_dirigeant_file", fields: [justificatifIdentiteDirigeantFileId], references: [id], map: "mmaap_justificatif_identite_dirigeant_file")
   lettreDeDelegationFileId              String?       @map("lettre_de_delegation_file_id") @db.Uuid
   lettreDeDelegationFile                File?         @relation("mmaap_lettre_de_delegation_file", fields: [lettreDeDelegationFileId], references: [id])
   justificatifIdentiteDelegataireFileId String?       @map("justificatif_identite_delegataire_file_id") @db.Uuid

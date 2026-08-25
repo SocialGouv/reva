@@ -20,8 +20,8 @@ type LegalInformationDocumentsSubmission = {
   gestionnaireLastname?: string;
   gestionnaireEmail?: string;
   phone?: string;
-  attestationURSSAF: UploadedFile;
-  justificatifIdentiteDirigeant: UploadedFile;
+  attestationURSSAF?: UploadedFile;
+  justificatifIdentiteDirigeant?: UploadedFile;
   lettreDeDelegation?: UploadedFile;
   justificatifIdentiteDelegataire?: UploadedFile;
 };
@@ -86,6 +86,19 @@ const createMaisonMereAAPLegalInformationDocuments = async ({
     }
   }
 
+  // Seules les pièces exigées par les blocs mis à jour sont transmises.
+  const fileToCreate = (file: UploadedFile | undefined, fileId: string) =>
+    file
+      ? {
+          create: {
+            id: fileId,
+            name: file.filename,
+            path: getFilePath({ maisonMereAAPId, fileId }),
+            mimeType: file.mimetype,
+          },
+        }
+      : undefined;
+
   await prismaClient.maisonMereAAPLegalInformationDocuments.create({
     data: {
       maisonMereAAP: { connect: { id: maisonMereAAPId } },
@@ -99,54 +112,22 @@ const createMaisonMereAAPLegalInformationDocuments = async ({
       gestionnaireLastname,
       gestionnaireEmail,
       phone,
-      attestationURSSAFFile: {
-        create: {
-          id: attestationURSSAFFileId,
-          name: attestationURSSAF.filename,
-          path: getFilePath({
-            maisonMereAAPId,
-            fileId: attestationURSSAFFileId,
-          }),
-          mimeType: attestationURSSAF.mimetype,
-        },
-      },
-      justificatifIdentiteDirigeantFile: {
-        create: {
-          id: justificatifIdentiteDirigeantFileId,
-          name: justificatifIdentiteDirigeant.filename,
-          path: getFilePath({
-            maisonMereAAPId,
-            fileId: justificatifIdentiteDirigeantFileId,
-          }),
-          mimeType: justificatifIdentiteDirigeant.mimetype,
-        },
-      },
-      lettreDeDelegationFile: lettreDeDelegation
-        ? {
-            create: {
-              id: lettreDeDelegationFileId,
-              name: lettreDeDelegation?.filename,
-              path: getFilePath({
-                maisonMereAAPId,
-                fileId: lettreDeDelegationFileId,
-              }),
-              mimeType: lettreDeDelegation?.mimetype,
-            },
-          }
-        : undefined,
-      justificatifIdentiteDelegataireFile: justificatifIdentiteDelegataire
-        ? {
-            create: {
-              id: justificatifIdentiteDelegataireFileId,
-              name: justificatifIdentiteDelegataire.filename,
-              path: getFilePath({
-                maisonMereAAPId,
-                fileId: justificatifIdentiteDelegataireFileId,
-              }),
-              mimeType: justificatifIdentiteDelegataire.mimetype,
-            },
-          }
-        : undefined,
+      attestationURSSAFFile: fileToCreate(
+        attestationURSSAF,
+        attestationURSSAFFileId,
+      ),
+      justificatifIdentiteDirigeantFile: fileToCreate(
+        justificatifIdentiteDirigeant,
+        justificatifIdentiteDirigeantFileId,
+      ),
+      lettreDeDelegationFile: fileToCreate(
+        lettreDeDelegation,
+        lettreDeDelegationFileId,
+      ),
+      justificatifIdentiteDelegataireFile: fileToCreate(
+        justificatifIdentiteDelegataire,
+        justificatifIdentiteDelegataireFileId,
+      ),
     },
   });
 
