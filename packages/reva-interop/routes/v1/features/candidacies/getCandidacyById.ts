@@ -60,6 +60,7 @@ const getCandidacyWithFeasibilityQuery = graphql(`
         country {
           label
           isoCode
+          inseeCode
         }
         department {
           code

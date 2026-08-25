@@ -84,7 +84,11 @@ export const mapGetCandidacyById = (
             nom: candidacy.candidate.birthDepartment?.label,
           }
         : null,
-      nationalite: candidacy.candidate.country?.label || null,
+      nationalite: candidacy.candidate.nationality || null,
+      paysDeNaissance: candidacy.candidate.country?.label || null,
+      codePaysDeNaissance:
+        candidacy.candidate.country?.isoCode?.toUpperCase() || null,
+      codeInseePaysDeNaissance: candidacy.candidate.country?.inseeCode || null,
       situation: {
         intituleCertificationObtenuePlusEleve:
           candidacy.candidate.highestDegreeLabel || null,
@@ -114,8 +118,9 @@ export const mapGetCandidacyById = (
         codePostal: candidacy.candidate.zip || null,
         rue: candidacy.candidate.street || null,
         ville: candidacy.candidate.city || null,
-        pays: candidacy.candidate.country?.label || null,
-        codePays: candidacy.candidate.country?.isoCode?.toUpperCase() || null,
+        pays: "France",
+        codePays: "FRA",
+        codeInseePays: "99100",
         departement: candidacy.candidate.department
           ? {
               code: candidacy.candidate.department.code,
