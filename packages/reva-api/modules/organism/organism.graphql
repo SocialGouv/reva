@@ -180,12 +180,19 @@ type MaisonMereAAPLegalInformationDocuments {
   createdAt: Timestamp!
 }
 
+input NonConformityMotiveInput {
+  label: String!
+  message: String!
+}
+
 input UpdateMaisonMereAAPLegalValidationDecisionInput {
   maisonMereAAPId: UUID!
   decision: MaisonMereAAPLegalInformationDocumentsDecisionEnum!
   internalComment: String
+  "Commentaire libre saisi par l'administrateur, hors motifs générés"
   aapComment: String
   aapUpdatedDocumentsAt: Timestamp
+  nonConformityMotives: [NonConformityMotiveInput!]
 }
 
 enum ConformiteNormeAccessibilite {

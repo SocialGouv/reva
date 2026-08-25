@@ -64,12 +64,18 @@ export interface UpdateOrganimsAccountInput {
   accountEmail: string;
 }
 
+export type NonConformityMotive = {
+  label: string;
+  message: string;
+};
+
 export interface UpdateMaisonMereAAPLegalValidationInput {
   maisonMereAAPId: string;
   decision: LegalInformationValidationDecisionType;
   internalComment?: string;
   aapComment?: string;
   aapUpdatedDocumentsAt?: Date | null;
+  nonConformityMotives?: NonConformityMotive[];
 }
 
 export type LegalInformationValidationDecisionInput = {

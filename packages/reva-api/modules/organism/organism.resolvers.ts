@@ -24,10 +24,13 @@ import { getDegreeById } from "../referential/features/getDegreeByid";
 import {
   sendLegalInformationDocumentsApprovalEmail,
   sendLegalInformationDocumentsUpdateNeededEmail,
+  sendLegalInformationNonConformityEmail,
+  sendLegalInformationTotalUpdateRequestEmail,
 } from "./emails/sendLegalInformationDocumentsDecisionEmail";
 import { acceptCgu } from "./features/acceptCgu";
 import { adminCreateMaisonMereAAPLegalInformationValidationDecision } from "./features/adminCreateMaisonMereAAPLegalInformationValidationDecision";
 import { adminUpdateLegalInformationValidationStatus } from "./features/adminUpdateMaisonMereAAP";
+import { buildLegalInformationAapComment } from "./features/buildLegalInformationAapComment";
 import { createLieuAccueilInfo } from "./features/createLieuAccueilInfo";
 import { createOrganismAccount } from "./features/createOrganismAccount";
 import { createOrUpdateOnSiteOrganismGeneralInformation } from "./features/createOrUpdateOnSiteOrganismGeneralInformation";
@@ -479,27 +482,48 @@ const unsafeResolvers = {
         userInfo: buildAAPAuditLogUserInfoFromContext(context),
       });
 
+      const nonConformityMotives = params.data.nonConformityMotives ?? [];
+
       const decision =
         await adminCreateMaisonMereAAPLegalInformationValidationDecision(
           params.data.maisonMereAAPId,
           {
             decision: params.data.decision,
             internalComment: params.data.internalComment ?? "",
-            aapComment: params.data.aapComment ?? "",
+            aapComment: buildLegalInformationAapComment({
+              nonConformityMotives,
+              freeComment: params.data.aapComment ?? "",
+            }),
             aapUpdatedDocumentsAt: params.data.aapUpdatedDocumentsAt,
           },
         );
 
-      if (params.data.decision === "DEMANDE_DE_PRECISION") {
-        await sendLegalInformationDocumentsUpdateNeededEmail({
+      const managerName = `${maisonMereAAP.gestionnaire.firstname} ${maisonMereAAP.gestionnaire.lastname}`;
+
+      if (params.data.decision === "DEMANDE_DE_MISE_A_JOUR_TOTALE") {
+        await sendLegalInformationTotalUpdateRequestEmail({
           email: maisonMereAAP.gestionnaire.email,
-          managerName: `${maisonMereAAP.gestionnaire.firstname} ${maisonMereAAP.gestionnaire.lastname}`,
-          aapComment: decision.aapComment,
+          structureName: maisonMereAAP.raisonSociale,
         });
+      } else if (params.data.decision === "DEMANDE_DE_PRECISION") {
+        // Sans motif, la demande vient du parcours historique: courriel inchangé.
+        if (nonConformityMotives.length) {
+          await sendLegalInformationNonConformityEmail({
+            email: maisonMereAAP.gestionnaire.email,
+            nonConformityMotives,
+            comment: params.data.aapComment ?? "",
+          });
+        } else {
+          await sendLegalInformationDocumentsUpdateNeededEmail({
+            email: maisonMereAAP.gestionnaire.email,
+            managerName,
+            aapComment: decision.aapComment,
+          });
+        }
       } else if (params.data.decision === "VALIDE") {
         await sendLegalInformationDocumentsApprovalEmail({
           email: maisonMereAAP.gestionnaire.email,
-          managerName: `${maisonMereAAP.gestionnaire.firstname} ${maisonMereAAP.gestionnaire.lastname}`,
+          managerName,
         });
       }
 
