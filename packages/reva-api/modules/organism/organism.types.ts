@@ -19,7 +19,10 @@ type ConformiteNormeAccessibilite =
   | "NON_CONFORME"
   | "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC";
 
-type LegalInformationValidationDecisionType = "VALIDE" | "DEMANDE_DE_PRECISION";
+type LegalInformationValidationDecisionType =
+  | "VALIDE"
+  | "DEMANDE_DE_PRECISION"
+  | "DEMANDE_DE_MISE_A_JOUR_TOTALE";
 
 export interface OrganismInformationsCommerciales {
   nomPublic: string | null;
@@ -70,7 +73,7 @@ export interface UpdateMaisonMereAAPLegalValidationInput {
 }
 
 export type LegalInformationValidationDecisionInput = {
-  decision: "VALIDE" | "DEMANDE_DE_PRECISION";
+  decision: LegalInformationValidationDecisionType;
   internalComment: string;
   aapComment: string;
   aapUpdatedDocumentsAt?: Date | null;

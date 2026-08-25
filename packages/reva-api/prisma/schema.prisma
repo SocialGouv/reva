@@ -1871,6 +1871,7 @@ model MaisonMereAAPLegalInformationDocuments {
 enum MaisonMereAAPLegalInformationDocumentsDecisionEnum {
   VALIDE
   DEMANDE_DE_PRECISION
+  DEMANDE_DE_MISE_A_JOUR_TOTALE
 }
 
 model MaisonMereAAPLegalInformationDocumentsDecision {
