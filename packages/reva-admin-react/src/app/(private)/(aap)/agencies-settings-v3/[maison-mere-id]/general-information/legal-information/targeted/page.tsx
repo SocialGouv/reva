@@ -28,6 +28,7 @@ import {
   DocumentsStep,
   useDocumentsForm,
 } from "./_components/DocumentsStep";
+import { getRequiredDocuments } from "./_components/requiredDocuments";
 import { SiretAndManagerStep } from "./_components/SiretAndManagerStep";
 
 const STEP_TITLES = {
@@ -37,14 +38,7 @@ const STEP_TITLES = {
   documents: "Pièces justificatives",
 };
 
-type StepKey = keyof typeof STEP_TITLES;
-
-const AAP_STEPS: StepKey[] = [
-  "identity",
-  "administrator",
-  "contact",
-  "documents",
-];
+const ALL_BLOCKS: BlockKey[] = ["siret", "manager", "administrator", "contact"];
 
 // L'enregistrement valide tous les champs, y compris ceux des blocs non
 // sélectionnés: une valeur invalide déjà en base doit pouvoir être nommée à
@@ -74,10 +68,21 @@ const TargetedLegalInformationUpdatePage = () => {
   const { accessToken } = useKeycloakContext();
   const queryClient = useQueryClient();
 
-  const [phase, setPhase] = useState<"selection" | "steps" | "success">(
-    isAdmin ? "selection" : "steps",
-  );
+  // L'AAP ne choisit ce qu'il met à jour que sur un compte à jour. Sur une demande
+  // de France VAE il reprend tout, et une demande déjà déposée est remplacée en
+  // entier: une reprise partielle supprimerait les pièces de la précédente.
+  const isTotalUpdate =
+    !isAdmin &&
+    maisonMereAAP?.statutValidationInformationsJuridiquesMaisonMereAAP !==
+      "A_JOUR";
+
+  const [phaseOverride, setPhase] = useState<
+    "selection" | "steps" | "success" | null
+  >(null);
+  const phase = phaseOverride ?? (isTotalUpdate ? "steps" : "selection");
+
   const [selectedBlocks, setSelectedBlocks] = useState<BlockKey[]>([]);
+  const updatedBlocks = isTotalUpdate ? ALL_BLOCKS : selectedBlocks;
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   // null tant que l'utilisateur n'a pas touché à la case, la valeur est alors
   // dérivée. Porté par la page: l'étape est démontée à chaque navigation.
@@ -108,25 +113,32 @@ const TargetedLegalInformationUpdatePage = () => {
     (managerFirstname !== gestionnaireFirstname ||
       managerLastname !== gestionnaireLastname);
 
-  const documentsForm = useDocumentsForm(administratorIsDifferent);
+  // L'administrateur vérifie les pièces hors ligne: elles ne lui sont pas demandées.
+  const requiredDocuments = isAdmin
+    ? []
+    : getRequiredDocuments({
+        blocks: updatedBlocks,
+        administratorIsDifferent,
+      });
 
-  const isSelected = (key: BlockKey) => selectedBlocks.includes(key);
+  const documentsForm = useDocumentsForm(requiredDocuments);
+
+  const isSelected = (key: BlockKey) => updatedBlocks.includes(key);
 
   // Les blocs "Numéro de SIRET" et "Identité du dirigeant" partagent la même étape.
-  const adminSteps = (
+  const steps = (
     [
       isSelected("siret") || isSelected("manager") ? "identity" : null,
       isSelected("administrator") ? "administrator" : null,
       isSelected("contact") ? "contact" : null,
+      requiredDocuments.length ? "documents" : null,
     ] as const
   ).filter((step) => step !== null);
 
-  const steps: StepKey[] = isAdmin ? adminSteps : AAP_STEPS;
-
   const currentStep = steps[currentStepIndex];
   const isLastStep = currentStepIndex === steps.length - 1;
-  const siretIsEditable = !isAdmin || isSelected("siret");
-  const managerIsEditable = !isAdmin || isSelected("manager");
+  const siretIsEditable = isSelected("siret");
+  const managerIsEditable = isSelected("manager");
   const siretFieldIsVisible = siretIsEditable && currentStep === "identity";
 
   // Un SIRET introuvable ne donne ni raison sociale ni statut juridique: la suite
@@ -204,7 +216,7 @@ const TargetedLegalInformationUpdatePage = () => {
     formData.append("gestionnaireLastname", payload.gestionnaireLastname);
     formData.append("gestionnaireEmail", payload.gestionnaireEmail);
     formData.append("phone", payload.phone);
-    // Lu par la route pour savoir si la paire délégataire est obligatoire.
+    // Lu par la route, qui recalcule les pièces obligatoires depuis les valeurs reçues.
     formData.append("delegataire", administratorIsDifferent.toString());
 
     Object.entries(files).forEach(([field, fileList]) => {
@@ -253,11 +265,16 @@ const TargetedLegalInformationUpdatePage = () => {
     onInvalidFields,
   );
 
+  // Le statut décide de l'écran d'entrée: ne rien afficher avant de le connaître.
+  if (!maisonMereAAP) {
+    return null;
+  }
+
   const breadcrumb = (
     <LegalInformationBreadcrumb
       isAdmin={isAdmin}
       maisonMereAAPId={maisonMereAAPId}
-      raisonSociale={maisonMereAAP?.raisonSociale}
+      raisonSociale={maisonMereAAP.raisonSociale}
     />
   );
 
@@ -321,6 +338,7 @@ const TargetedLegalInformationUpdatePage = () => {
           title="Mise à jour des informations générales"
         />
         <BlockSelectionStep
+          isAdmin={isAdmin}
           selectedBlocks={selectedBlocks}
           onToggleBlock={toggleBlock}
           onStart={() => setPhase("steps")}
@@ -384,7 +402,7 @@ const TargetedLegalInformationUpdatePage = () => {
         {currentStep === "documents" && (
           <DocumentsStep
             formHook={documentsForm}
-            administratorIsDifferent={administratorIsDifferent}
+            requiredDocuments={requiredDocuments}
           />
         )}
 

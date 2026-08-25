@@ -11,11 +11,13 @@ const BLOCKS: { key: BlockKey; label: string }[] = [
 ];
 
 export const BlockSelectionStep = ({
+  isAdmin,
   selectedBlocks,
   onToggleBlock,
   onStart,
   cancelUrl,
 }: {
+  isAdmin: boolean;
   selectedBlocks: BlockKey[];
   onToggleBlock: (key: BlockKey) => void;
   onStart: () => void;
@@ -23,9 +25,14 @@ export const BlockSelectionStep = ({
 }) => (
   <>
     <Checkbox
+      small
       className="mt-6"
       legend="Quelles informations souhaitez-vous mettre à jour ?"
-      hintText="Sélectionnez le ou les élément(s) que vous souhaitez modifier. La mise à jour sera effective pour l'AAP dès l'enregistrement de celle-ci. Assurez vous d'avoir vérifié les pièces justificatives nécessaires pour ces modifications."
+      hintText={
+        isAdmin
+          ? "Sélectionnez le ou les élément(s) que vous souhaitez modifier. La mise à jour sera effective pour l'AAP dès l'enregistrement de celle-ci. Assurez vous d'avoir vérifié les pièces justificatives nécessaires pour ces modifications."
+          : "Sélectionnez le ou les élément(s) que vous souhaitez modifier. Les pièces justificatives demandées dépendent de votre sélection. Votre demande sera vérifiée par un administrateur France VAE."
+      }
       options={BLOCKS.map(({ key, label }) => ({
         label,
         nativeInputProps: {

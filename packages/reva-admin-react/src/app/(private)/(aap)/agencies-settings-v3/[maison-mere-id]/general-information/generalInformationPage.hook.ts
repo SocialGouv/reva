@@ -33,10 +33,9 @@ const generalInformationQueries = graphql(`
         managerLastname
         statutValidationInformationsJuridiquesMaisonMereAAP
         typologie
-        legalInformationDocumentsDecisions(
-          input: { decision: DEMANDE_DE_PRECISION }
-        ) {
+        legalInformationDocumentsDecisions {
           id
+          decision
           aapComment
           decisionTakenAt
         }
@@ -90,10 +89,9 @@ const getMaisonMereAAPGeneralInformationAdminQuery = graphql(`
       managerLastname
       statutValidationInformationsJuridiquesMaisonMereAAP
       typologie
-      legalInformationDocumentsDecisions(
-        input: { decision: DEMANDE_DE_PRECISION }
-      ) {
+      legalInformationDocumentsDecisions {
         id
+        decision
         aapComment
         decisionTakenAt
       }

@@ -16,6 +16,8 @@ import {
 } from "@/components/toast/toast";
 import { formatSiret } from "@/utils/formatSiret";
 
+import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
+
 import {
   AccountInfoRows,
   pendingIfChanged,
@@ -31,6 +33,43 @@ import {
   useGeneralInformationPage,
 } from "./generalInformationPage.hook";
 
+const getTileHref = ({
+  isAdmin,
+  maisonMereAAPId,
+  legalInformationUrl,
+  statutValidationInformationsJuridiquesMaisonMereAAP: statut,
+  updateRequested,
+}: {
+  isAdmin: boolean;
+  maisonMereAAPId: string;
+  legalInformationUrl: string;
+  statutValidationInformationsJuridiquesMaisonMereAAP: StatutValidationInformationsJuridiquesMaisonMereAap;
+  updateRequested: boolean;
+}) => {
+  if (isAdmin) {
+    // Une demande déposée se traite depuis la fiche de vérification.
+    if (statut === "EN_ATTENTE_DE_VERIFICATION") {
+      return `/maisonMereAAPs/${maisonMereAAPId}`;
+    }
+
+    // Demande envoyée: l'administrateur attend que la structure la traite.
+    return statut === "A_METTRE_A_JOUR" && updateRequested
+      ? undefined
+      : legalInformationUrl;
+  }
+
+  switch (statut) {
+    // Mise à jour demandée par France VAE: page de préparation puis parcours complet.
+    case "A_METTRE_A_JOUR":
+      return legalInformationUrl;
+    // Self-service: l'AAP choisit lui-même les informations à mettre à jour.
+    case "A_JOUR":
+      return `${legalInformationUrl}/targeted`;
+    default:
+      return undefined;
+  }
+};
+
 const GeneralInformationPage = () => {
   const router = useRouter();
   const {
@@ -39,6 +78,7 @@ const GeneralInformationPage = () => {
     maisonMereAAPSuccess,
     maisonMereAAPError,
     etablissement,
+    etablissementIsFetching,
     isGestionnaireMaisonMereAAP,
     isAdmin,
     siret,
@@ -104,8 +144,12 @@ const GeneralInformationPage = () => {
 
   const legalInformationUrl = `/agencies-settings-v3/${maisonMereAAP.id}/general-information/legal-information`;
 
-  // Les décisions sont triées de la plus récente à la plus ancienne côté API.
-  const lastUpdateRequest = maisonMereAAP.legalInformationDocumentsDecisions[0];
+  // Les décisions sont triées de la plus récente à la plus ancienne côté API. Les
+  // deux types de demande remettent le dossier à mettre à jour, la tuile les annonce.
+  const lastUpdateRequest =
+    maisonMereAAP.legalInformationDocumentsDecisions.find(
+      ({ decision }) => decision !== "VALIDE",
+    );
   // L'enregistrement en attente survit à une demande de précisions: hors
   // vérification, il ne décrit plus une demande en cours d'examen.
   const legalInformationDocuments =
@@ -187,7 +231,11 @@ const GeneralInformationPage = () => {
           >
             {formatSiret(maisonMereAAP.siret)}
           </InfoRow>
-          <SiretInformationCard siret={siret} etablissement={etablissement} />
+          <SiretInformationCard
+            siret={siret}
+            etablissement={etablissement}
+            isLoading={etablissementIsFetching}
+          />
           <AccountInfoRows
             maisonMereAAP={maisonMereAAP}
             pendingValues={legalInformationDocuments}
@@ -197,23 +245,22 @@ const GeneralInformationPage = () => {
           {legalInformationUpdateIsActive && (
             <LegalInformationTile
               isAdmin={isAdmin}
-              href={
-                isAdmin
-                  ? // Une demande en attente se traite depuis la fiche de vérification.
-                    maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
-                    "EN_ATTENTE_DE_VERIFICATION"
-                    ? `/maisonMereAAPs/${maisonMereAAP.id}`
-                    : legalInformationUrl
-                  : maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
-                      "A_METTRE_A_JOUR"
-                    ? legalInformationUrl
-                    : undefined
-              }
+              href={getTileHref({
+                isAdmin,
+                maisonMereAAPId: maisonMereAAP.id,
+                legalInformationUrl,
+                statutValidationInformationsJuridiquesMaisonMereAAP:
+                  maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP,
+                updateRequested: !!lastUpdateRequest,
+              })}
               statutValidationInformationsJuridiquesMaisonMereAAP={
                 maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
               }
               updateRequestedAt={
                 lastUpdateRequest && toDate(lastUpdateRequest.decisionTakenAt)
+              }
+              updateRequestIsTotal={
+                lastUpdateRequest?.decision === "DEMANDE_DE_MISE_A_JOUR_TOTALE"
               }
               documentsSubmittedAt={
                 legalInformationDocuments &&
@@ -234,12 +281,12 @@ const GeneralInformationPage = () => {
                 statutValidationInformationsJuridiquesMaisonMereAAP={
                   maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP
                 }
-                decisions={maisonMereAAP.legalInformationDocumentsDecisions.map(
-                  (d) => ({
+                decisions={maisonMereAAP.legalInformationDocumentsDecisions
+                  .filter(({ decision }) => decision === "DEMANDE_DE_PRECISION")
+                  .map((d) => ({
                     ...d,
                     decisionTakenAt: toDate(d.decisionTakenAt),
-                  }),
-                )}
+                  }))}
               />
             )}
         </div>

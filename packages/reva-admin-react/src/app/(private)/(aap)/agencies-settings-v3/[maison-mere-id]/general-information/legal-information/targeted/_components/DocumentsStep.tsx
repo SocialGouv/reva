@@ -4,13 +4,11 @@ import { z } from "zod";
 
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 
+import { DocumentKey } from "./requiredDocuments";
+
 const ACCEPTED_FILE_TYPES = ".jpg,.jpeg,.png,.pdf";
 const FILE_HINT =
   "Formats supportés : jpg, png, pdf avec un poids maximum de 15Mo";
-
-const requiredFile = z.object({
-  0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
-});
 
 const optionalFile = z
   .object({
@@ -18,47 +16,33 @@ const optionalFile = z
   })
   .optional();
 
-// La paire délégataire dépend de la case cochée à l'étape 2, qui vit dans la
-// page: le schéma est construit à partir de sa valeur.
-const buildSchema = (administratorIsDifferent: boolean) =>
+// Les pièces attendues dépendent des blocs mis à jour, choisis dans la page: le
+// schéma est construit à partir de cette liste.
+const buildSchema = (requiredDocuments: DocumentKey[]) =>
   z
     .object({
-      attestationURSSAF: requiredFile,
-      justificatifIdentiteDirigeant: requiredFile,
+      attestationURSSAF: optionalFile,
+      justificatifIdentiteDirigeant: optionalFile,
       lettreDeDelegation: optionalFile,
       justificatifIdentiteDelegataire: optionalFile,
     })
-    .superRefine(
-      (
-        { lettreDeDelegation, justificatifIdentiteDelegataire },
-        { addIssue },
-      ) => {
-        if (!administratorIsDifferent) {
-          return;
-        }
-
-        if (!lettreDeDelegation?.[0]) {
+    .superRefine((files, { addIssue }) => {
+      for (const document of requiredDocuments) {
+        if (!files[document]?.[0]) {
           addIssue({
-            path: ["lettreDeDelegation[0]"],
+            path: [`${document}[0]`],
             message: "Merci de remplir ce champ",
             code: z.ZodIssueCode.custom,
           });
         }
-        if (!justificatifIdentiteDelegataire?.[0]) {
-          addIssue({
-            path: ["justificatifIdentiteDelegataire[0]"],
-            message: "Merci de remplir ce champ",
-            code: z.ZodIssueCode.custom,
-          });
-        }
-      },
-    );
+      }
+    });
 
 export type DocumentsFormValues = z.infer<ReturnType<typeof buildSchema>>;
 
-export const useDocumentsForm = (administratorIsDifferent: boolean) =>
+export const useDocumentsForm = (requiredDocuments: DocumentKey[]) =>
   useForm<DocumentsFormValues>({
-    resolver: zodResolver(buildSchema(administratorIsDifferent)),
+    resolver: zodResolver(buildSchema(requiredDocuments)),
   });
 
 const identityDocumentDescription = (person: string) => (
@@ -80,50 +64,54 @@ export const DocumentsStep = ({
     register,
     formState: { errors },
   },
-  administratorIsDifferent,
+  requiredDocuments,
 }: {
   formHook: UseFormReturn<DocumentsFormValues>;
-  administratorIsDifferent: boolean;
+  requiredDocuments: DocumentKey[];
 }) => (
   <div className="flex flex-col gap-6 mt-6">
-    <FancyUpload
-      title="Attestation URSSAF ou attestation MSA"
-      description={
-        <>
-          Merci de fournir une attestation URSSAF ou MSA{" "}
-          <strong>datée de moins de 6 mois</strong> qui affiche les informations
-          suivantes :
-          <ul>
-            <li>
-              Le code de sécurité (visible sur l'attestation de vigilance,
-              l'attestation fiscale ou l'attestation MSA) ;
-            </li>
-            <li>
-              Le numéro de SIRET de la structure accompagnatrice (14 chiffres)
-            </li>
-          </ul>
-        </>
-      }
-      hint={FILE_HINT}
-      nativeInputProps={{
-        ...register("attestationURSSAF"),
-        accept: ACCEPTED_FILE_TYPES,
-      }}
-      state={errors.attestationURSSAF ? "error" : "default"}
-      stateRelatedMessage={errors.attestationURSSAF?.[0]?.message}
-    />
-    <FancyUpload
-      title="Copie du justificatif d'identité du dirigeant"
-      description={identityDocumentDescription("du dirigeant")}
-      hint={FILE_HINT}
-      nativeInputProps={{
-        ...register("justificatifIdentiteDirigeant"),
-        accept: ACCEPTED_FILE_TYPES,
-      }}
-      state={errors.justificatifIdentiteDirigeant ? "error" : "default"}
-      stateRelatedMessage={errors.justificatifIdentiteDirigeant?.[0]?.message}
-    />
-    {administratorIsDifferent && (
+    {requiredDocuments.includes("attestationURSSAF") && (
+      <FancyUpload
+        title="Attestation URSSAF ou attestation MSA"
+        description={
+          <>
+            Merci de fournir une attestation URSSAF ou MSA{" "}
+            <strong>datée de moins de 6 mois</strong> qui affiche les
+            informations suivantes :
+            <ul>
+              <li>
+                Le code de sécurité (visible sur l'attestation de vigilance,
+                l'attestation fiscale ou l'attestation MSA) ;
+              </li>
+              <li>
+                Le numéro de SIRET de la structure accompagnatrice (14 chiffres)
+              </li>
+            </ul>
+          </>
+        }
+        hint={FILE_HINT}
+        nativeInputProps={{
+          ...register("attestationURSSAF"),
+          accept: ACCEPTED_FILE_TYPES,
+        }}
+        state={errors.attestationURSSAF ? "error" : "default"}
+        stateRelatedMessage={errors.attestationURSSAF?.[0]?.message}
+      />
+    )}
+    {requiredDocuments.includes("justificatifIdentiteDirigeant") && (
+      <FancyUpload
+        title="Copie du justificatif d'identité du dirigeant"
+        description={identityDocumentDescription("du dirigeant")}
+        hint={FILE_HINT}
+        nativeInputProps={{
+          ...register("justificatifIdentiteDirigeant"),
+          accept: ACCEPTED_FILE_TYPES,
+        }}
+        state={errors.justificatifIdentiteDirigeant ? "error" : "default"}
+        stateRelatedMessage={errors.justificatifIdentiteDirigeant?.[0]?.message}
+      />
+    )}
+    {requiredDocuments.includes("lettreDeDelegation") && (
       <>
         <FancyUpload
           title="Lettre de délégation"

@@ -42,6 +42,9 @@ export const LegalDocumentList = ({
           Lien vers la vérification URSSAF
         </a>
       </p>
+      {/* Absence explicite: l'administrateur doit pouvoir distinguer une mise à jour
+          sans pièce attendue d'une pièce manquante. */}
+      {!documents.length && <p>Aucune pièce transmise pour cette demande.</p>}
       <div
         className={
           collapsible ? "border-t border-neutral-300" : "grid grid-cols-1 gap-8"

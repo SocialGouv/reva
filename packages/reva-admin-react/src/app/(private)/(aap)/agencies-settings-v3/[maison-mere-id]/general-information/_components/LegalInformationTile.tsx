@@ -6,8 +6,8 @@ import { format } from "date-fns";
 import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
 
 type TileContent = {
-  severity: BadgeProps["severity"];
-  badgeLabel: string;
+  severity?: BadgeProps["severity"];
+  badgeLabel?: string;
   title: string;
   desc: string;
   detail?: string;
@@ -16,6 +16,7 @@ type TileContent = {
 type TileContentInput = {
   statutValidationInformationsJuridiquesMaisonMereAAP: StatutValidationInformationsJuridiquesMaisonMereAap;
   updateRequestedAt?: Date | null;
+  updateRequestIsTotal?: boolean;
   documentsSubmittedAt?: Date | null;
 };
 
@@ -28,16 +29,17 @@ const ADMIN_DEFAULT_CONTENT: TileContent = {
   desc: "Vous pouvez demander une mise à jour des informations générales relatives à ce compte ou faire des modifications afin d’aider une structure accompagnatrice dans sa démarche. Ces structures ont la possibilité de faire les mises à jour de leurs informations depuis leur espace avec la possibilité de transmettre leurs pièces justificatives.",
 };
 
+// Compte à jour: l'AAP garde la main pour mettre à jour ses informations lui-même.
 const AAP_DEFAULT_CONTENT: TileContent = {
-  severity: "success",
-  badgeLabel: "Compte à jour",
-  title: "Mise à jour du compte",
-  desc: "Vos informations générales sont à jour. France VAE vous contactera si une mise à jour est nécessaire.",
+  title: "Modifier mes informations générales",
+  desc: "Lors d’une demande de mise à jour, des pièces justificatives vous seront demandées. Votre demande sera ensuite vérifiée par un administrateur France VAE.",
+  detail: "Faire une demande de modification",
 };
 
 const getAdminTileContent = ({
   statutValidationInformationsJuridiquesMaisonMereAAP,
   updateRequestedAt,
+  updateRequestIsTotal,
 }: TileContentInput): TileContent => {
   if (
     statutValidationInformationsJuridiquesMaisonMereAAP === "A_METTRE_A_JOUR" &&
@@ -47,7 +49,9 @@ const getAdminTileContent = ({
       severity: "warning",
       badgeLabel: "Demande de mise à jour en attente",
       title: "Mise à jour du compte",
-      desc: `Un administrateur France VAE a demandé une mise à jour totale des informations le ${format(updateRequestedAt, "dd/MM/yyyy")}`,
+      desc: updateRequestIsTotal
+        ? `Un administrateur France VAE a demandé une mise à jour totale des informations le ${format(updateRequestedAt, "dd/MM/yyyy")}`
+        : `Un administrateur France VAE a demandé des précisions le ${format(updateRequestedAt, "dd/MM/yyyy")}`,
     };
   }
 
@@ -103,30 +107,22 @@ const getAapTileContent = ({
 export const LegalInformationTile = ({
   isAdmin,
   href,
-  statutValidationInformationsJuridiquesMaisonMereAAP,
-  updateRequestedAt,
-  documentsSubmittedAt,
-}: {
+  ...tileContentInput
+}: TileContentInput & {
   isAdmin: boolean;
   // Sans destination, la tuile est une simple carte d'information: c'est la page
   // hôte qui décide si un lien a du sens depuis l'écran affiché.
   href?: string;
-  statutValidationInformationsJuridiquesMaisonMereAAP: StatutValidationInformationsJuridiquesMaisonMereAap;
-  updateRequestedAt?: Date | null;
-  documentsSubmittedAt?: Date | null;
 }) => {
   const getTileContent = isAdmin ? getAdminTileContent : getAapTileContent;
-  const { severity, badgeLabel, title, desc, detail } = getTileContent({
-    statutValidationInformationsJuridiquesMaisonMereAAP,
-    updateRequestedAt,
-    documentsSubmittedAt,
-  });
+  const { severity, badgeLabel, title, desc, detail } =
+    getTileContent(tileContentInput);
 
   const commonProps = {
     title,
     desc,
     detail,
-    start: <Badge severity={severity}>{badgeLabel}</Badge>,
+    start: badgeLabel ? <Badge severity={severity}>{badgeLabel}</Badge> : null,
     pictogram: <Conclusion />,
     small: true,
     orientation: "horizontal" as const,
