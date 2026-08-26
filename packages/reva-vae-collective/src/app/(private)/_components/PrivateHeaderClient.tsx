@@ -8,7 +8,7 @@ import { useKeycloakContext } from "@/components/auth/keycloakContext";
 const PATHS = {
   COHORTES: "/cohortes",
   DASHBOARD: "/dashboard",
-  ACCOUNTS: "/comptes-utilisateurs",
+  ACCOUNTS: "/comptes-utilisateur",
 } as const;
 
 const LABELS = {
