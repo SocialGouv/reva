@@ -32,6 +32,7 @@ import { getRequiredDocuments } from "./_components/requiredDocuments";
 import { SiretAndManagerStep } from "./_components/SiretAndManagerStep";
 
 const STEP_TITLES = {
+  selection: "Choix des informations à mettre à jour",
   identity: "Informations relatives au SIRET et à l'identité du dirigeant",
   administrator: "Administrateur du compte",
   contact: "Informations de connexion et de contact",
@@ -95,9 +96,11 @@ const TargetedLegalInformationUpdatePage = () => {
     setPhase((currentPhase) => currentPhase ?? "steps");
   }, [isAdmin, statut]);
 
+  const hasSelectionStep = isAdmin || statut === "A_JOUR";
+  const stepOffset = hasSelectionStep ? 1 : 0;
+
   // Statut encore inconnu: aucun écran d'entrée ne peut être choisi.
-  const resolvedPhase =
-    phase ?? (isAdmin || statut === "A_JOUR" ? "selection" : null);
+  const resolvedPhase = phase ?? (hasSelectionStep ? "selection" : null);
 
   const {
     formState: { isSubmitting, isDirty },
@@ -147,6 +150,9 @@ const TargetedLegalInformationUpdatePage = () => {
 
   const currentStep = steps[currentStepIndex];
   const isLastStep = currentStepIndex === steps.length - 1;
+  // DSFR ne dessine pas de barre à une seule étape: une sélection vide, qui ne
+  // mène nulle part, annonce quand même deux étapes.
+  const stepCount = Math.max(steps.length, 1) + stepOffset;
   const siretIsEditable = isSelected("siret");
   const managerIsEditable = isSelected("manager");
   const siretFieldIsVisible = siretIsEditable && currentStep === "identity";
@@ -346,6 +352,12 @@ const TargetedLegalInformationUpdatePage = () => {
           breadcrumb={breadcrumb}
           title="Mise à jour des informations générales"
         />
+        <Stepper
+          currentStep={1}
+          stepCount={stepCount}
+          title={STEP_TITLES.selection}
+          nextTitle={steps[0] && STEP_TITLES[steps[0]]}
+        />
         <BlockSelectionStep
           isAdmin={isAdmin}
           selectedBlocks={selectedBlocks}
@@ -366,8 +378,8 @@ const TargetedLegalInformationUpdatePage = () => {
       />
       {/* Le chapo de SettingsPageHeader apporte déjà les 48px du dessus. */}
       <Stepper
-        currentStep={currentStepIndex + 1}
-        stepCount={steps.length}
+        currentStep={currentStepIndex + 1 + stepOffset}
+        stepCount={stepCount}
         title={STEP_TITLES[currentStep]}
         nextTitle={
           isLastStep ? undefined : STEP_TITLES[steps[currentStepIndex + 1]]
@@ -423,7 +435,7 @@ const TargetedLegalInformationUpdatePage = () => {
               priority="secondary"
               onClick={() => setCurrentStepIndex((index) => index - 1)}
             >
-              Retour à l'étape {currentStepIndex}
+              Retour à l'étape {currentStepIndex + stepOffset}
             </Button>
           )}
           {/* L'AAP entre dans le parcours par la page de préparation: la première
@@ -451,7 +463,7 @@ const TargetedLegalInformationUpdatePage = () => {
               ? isAdmin
                 ? "Enregistrer"
                 : "Envoyer"
-              : `Passer à l'étape ${currentStepIndex + 2}`}
+              : `Passer à l'étape ${currentStepIndex + 2 + stepOffset}`}
           </Button>
         </div>
       </form>
