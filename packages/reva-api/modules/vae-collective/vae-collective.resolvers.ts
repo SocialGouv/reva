@@ -5,6 +5,7 @@ import {
 } from "@/modules/shared/security/presets";
 import { withPolicies } from "@/modules/shared/security/withPolicies";
 
+import { getAccountById } from "../account/features/getAccount";
 import { getOrganismById } from "../organism/features/getOrganism";
 import { getCertificationById } from "../referential/features/getCertificationById";
 
@@ -21,6 +22,7 @@ import { getCommanditaireVaeCollectiveByGestionnaireAccountId } from "./features
 import { getCommanditaireVaeCollectiveById } from "./features/getCommanditaireVaeCollectiveById";
 import { getCommanditaireVaeCollectives } from "./features/getCommanditaireVaeCollectives";
 import { getMetabaseDashboardIframeUrlVaeCollective } from "./features/getMetabaseDashboardIframeUrlVaeCollective";
+import { getSousComptesByCommanditaireVaeCollectiveId } from "./features/getSousComptesByCommanditaireVaeCollectiveId";
 import { getUserPermissions } from "./features/getUserPermissions";
 import { publishCohorteVAECollective } from "./features/publishCohorteVAECollective";
 import { updateCohorteVAECollectiveCertification } from "./features/updateCohorteVAECollectiveCertification";
@@ -60,6 +62,10 @@ const unsafeResolvers = {
     certification: async ({ certificationId }: { certificationId: string }) =>
       getCertificationById({ certificationId }),
   },
+  SousCompteVaeCollective: {
+    account: async ({ accountId }: { accountId: string }) =>
+      getAccountById({ id: accountId }),
+  },
   Candidacy: {
     cohorteVaeCollective: async ({
       cohorteVaeCollectiveId,
@@ -88,6 +94,15 @@ const unsafeResolvers = {
     }) =>
       getMetabaseDashboardIframeUrlVaeCollective({
         commanditaireVaeCollectiveId,
+      }),
+    sousComptes: async (
+      { id: commanditaireVaeCollectiveId }: { id: string },
+      { offset, limit }: { offset: number; limit: number },
+    ) =>
+      getSousComptesByCommanditaireVaeCollectiveId({
+        commanditaireVaeCollectiveId,
+        offset,
+        limit,
       }),
   },
   Query: {
@@ -244,6 +259,10 @@ export const vaeCollectiveResolvers = withPolicies(unsafeResolvers, {
     // Uniquement accessible via certificationCohorteVaeCollectives, déjà protégé ci-dessus.
     certification: isAnyone,
   },
+  SousCompteVaeCollective: {
+    // Uniquement accessible via CommanditaireVaeCollective.sousComptes, déjà protégé ci-dessous.
+    account: isAnyone,
+  },
   Candidacy: {
     // Champ d'une candidature déjà protégée par la policy de son parent.
     cohorteVaeCollective: isAnyone,
@@ -251,6 +270,7 @@ export const vaeCollectiveResolvers = withPolicies(unsafeResolvers, {
   CommanditaireVaeCollective: {
     cohorteVaeCollectives: hasVaeCollectivePermission("VOIR_LISTE_COHORTES"),
     metabaseDashboardIframeUrl: hasVaeCollectivePermission("VOIR_STATISTIQUES"),
+    sousComptes: hasVaeCollectivePermission("VOIR_LISTE_SOUS_COMPTES"),
   },
   Query: {
     vaeCollective_getCommanditaireVaeCollective:

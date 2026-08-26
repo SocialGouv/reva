@@ -19,12 +19,23 @@ type CertificationCohorteVaeCollective {
   certification: Certification!
 }
 
+type SousCompteVaeCollective {
+  id: ID!
+  account: Account!
+}
+
+type SousCompteVaeCollectivePage {
+  rows: [SousCompteVaeCollective!]!
+  info: PaginationInfo!
+}
+
 type CommanditaireVaeCollective {
   id: ID!
   raisonSociale: String!
   createdAt: Timestamp!
   cohorteVaeCollectives(offset: Int, limit: Int): CohorteVaeCollectivePage!
   metabaseDashboardIframeUrl: String
+  sousComptes(offset: Int, limit: Int): SousCompteVaeCollectivePage!
 }
 
 type CommanditaireVaeCollectivePage {
