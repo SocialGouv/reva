@@ -27,7 +27,11 @@ export const updateCertificationAuthorityById = async ({
     await prismaClient.certificationAuthority.findUnique({
       where: { id: certificationAuthorityId },
       include: {
-        Account: true,
+        Account: {
+          where: {
+            isApiUser: false,
+          },
+        },
       },
     });
 
