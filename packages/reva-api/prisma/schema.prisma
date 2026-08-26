@@ -558,6 +558,7 @@ model Account {
   accountEmailOtps                   AccountEmailOtp[]
   emailOtpEnabled                    Boolean                              @default(false) @map("email_otp_enabled")
   isApiUser                          Boolean                              @default(false) @map("is_api_user")
+  sousComptesVaeCollectives          SousCompteVaeCollective[]
 
   @@index([email])
   @@index([certificationAuthorityId])
@@ -2021,15 +2022,28 @@ model CandidacyEmail {
 }
 
 model CommanditaireVaeCollective {
-  id                    String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  raisonSociale         String                 @map("raison_sociale") @db.VarChar(255)
-  createdAt             DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt             DateTime?              @map("updated_at") @db.Timestamptz(6)
-  cohorteVaeCollectives CohorteVaeCollective[]
-  gestionnaireAccountId String?                @map("gestionnaire_account_id") @db.Uuid
-  gestionnaire          Account?               @relation(fields: [gestionnaireAccountId], references: [id])
+  id                        String                    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  raisonSociale             String                    @map("raison_sociale") @db.VarChar(255)
+  createdAt                 DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                 DateTime?                 @map("updated_at") @db.Timestamptz(6)
+  cohorteVaeCollectives     CohorteVaeCollective[]
+  gestionnaireAccountId     String?                   @map("gestionnaire_account_id") @db.Uuid
+  gestionnaire              Account?                  @relation(fields: [gestionnaireAccountId], references: [id])
+  sousComptesVaeCollectives SousCompteVaeCollective[]
 
   @@map("commanditaire_vae_collective")
+}
+
+model SousCompteVaeCollective {
+  id                           String                     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  commanditaireVaeCollectiveId String                     @map("commanditaire_vae_collective_id") @db.Uuid
+  commanditaireVaeCollective   CommanditaireVaeCollective @relation(fields: [commanditaireVaeCollectiveId], references: [id])
+  accountId                    String                     @map("account_id") @db.Uuid
+  account                      Account                    @relation(fields: [accountId], references: [id])
+  createdAt                    DateTime                   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                    DateTime?                  @map("updated_at") @db.Timestamptz(6)
+
+  @@map("sous_compte_vae_collective")
 }
 
 model CohorteVaeCollective {
