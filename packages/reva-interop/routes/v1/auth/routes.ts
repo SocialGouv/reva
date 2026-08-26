@@ -143,6 +143,7 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       const account = await createAccount(request.graphqlClient, {
         ...request.body,
         group: "certification_authority",
+        isApiUser: true,
       });
       if (!account || !account.keycloakId) {
         throw new Error("Failed to create account");
