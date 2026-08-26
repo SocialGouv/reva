@@ -3,7 +3,7 @@ import { updateCandidacyCertificationAuthority } from "@/modules/candidacy/featu
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "@/modules/certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
-import { getAccountByCertificationAuthorityId } from "@/modules/certification-authority/features/getAccountByCertificationAuthorityId";
+import { getHumanAccountByCertificationAuthorityId } from "@/modules/certification-authority/features/getHumanAccountByCertificationAuthorityId";
 import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
 import { DOSSIER_FAISABILITE_DEMATERIALISE_NON_TROUVE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
@@ -168,7 +168,7 @@ export const sendDFFToCertificationAuthority = async ({
   if (certificationAuthority?.contactEmail) {
     emails.push(certificationAuthority.contactEmail);
   } else {
-    const account = await getAccountByCertificationAuthorityId({
+    const account = await getHumanAccountByCertificationAuthorityId({
       certificationAuthorityId,
     });
     if (account) {

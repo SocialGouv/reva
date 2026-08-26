@@ -34,8 +34,8 @@ import { updateCandidacyStatus } from "../candidacy/features/updateCandidacyStat
 import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "../certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
-import { getAccountByCertificationAuthorityId } from "../certification-authority/features/getAccountByCertificationAuthorityId";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
+import { getHumanAccountByCertificationAuthorityId } from "../certification-authority/features/getHumanAccountByCertificationAuthorityId";
 import { refreshCertificationAuthorityOfCandidacy } from "../certification-authority/features/refreshCertificationAuthorityOfCandidacy";
 import { UploadedFile } from "../shared/file/file.interface";
 import {
@@ -376,7 +376,7 @@ export const createFeasibility = async ({
   if (certificationAuthority?.contactEmail) {
     emails.push(certificationAuthority?.contactEmail);
   } else {
-    const account = await getAccountByCertificationAuthorityId({
+    const account = await getHumanAccountByCertificationAuthorityId({
       certificationAuthorityId,
     });
     if (account) {

@@ -557,6 +557,7 @@ model Account {
   organismId                         String?                              @db.Uuid
   accountEmailOtps                   AccountEmailOtp[]
   emailOtpEnabled                    Boolean                              @default(false) @map("email_otp_enabled")
+  isApiUser                          Boolean                              @default(false) @map("is_api_user")
 
   @@index([email])
   @@index([certificationAuthorityId])

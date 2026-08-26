@@ -43,7 +43,7 @@ import { createCertificationAuthorityLocalAccount } from "./features/createCerti
 import { createCertificationAuthorityStructure } from "./features/createCertificationAuthorityStructure";
 import { createCertificationRegistryManager } from "./features/createCertificationRegistryManager";
 import { deleteCertificationAuthorityLocalAccount } from "./features/deleteCertificationAuthorityLocalAccount";
-import { getAccountByCertificationAuthorityId } from "./features/getAccountByCertificationAuthorityId";
+import { getHumanAccountByCertificationAuthorityId } from "./features/getHumanAccountByCertificationAuthorityId";
 import { getCandidacyCertificationAuthorityLocalAccounts } from "./features/getCandidacyCertificationAuthorityLocalAccounts";
 import { getCertificationAuthorities } from "./features/getCertificationAuthorities";
 import { getCertificationAuthoritiesByCertificationId } from "./features/getCertificationAuthoritiesByCertificationId";
@@ -124,7 +124,7 @@ const unsafeResolvers = {
         certificationAuthorityId,
       }),
     account: (parent: CertificationAuthority) =>
-      getAccountByCertificationAuthorityId({
+      getHumanAccountByCertificationAuthorityId({
         certificationAuthorityId: parent.id,
       }),
     certificationAuthorityLocalAccounts: (

@@ -22,6 +22,7 @@ input AccountInput {
   group: AccountGroup!
   organismId: UUID
   certificationAuthorityId: UUID
+  isApiUser: Boolean
 }
 
 input GetImpersonateUrlInput {

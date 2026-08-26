@@ -28,6 +28,7 @@ const unsafeResolvers = {
           group: KeyCloakGroup;
           organismId?: string;
           certificationAuthorityId?: string;
+          isApiUser?: boolean;
         };
       },
     ) => createAccount(params.account),

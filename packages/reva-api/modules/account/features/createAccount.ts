@@ -19,12 +19,15 @@ export const createAccount = async (params: {
   certificationAuthorityId?: string;
   maisonMereAAPRaisonSociale?: string;
   dontSendKeycloakEmail?: boolean;
+  isApiUser?: boolean;
 }): Promise<Account> => {
   // On n'envoie pas d'email de définition de mot de passe si le flag dontSendKeycloakEmail est positionné ou si l'envitonnement est sandbox
-  // Les comptes créés dans l'environnement de sandbox sont destinés à une utilisation via API
+  // Les comptes créés dans l'environnement de sandbox ou avec le flag isApiUser sont destinés à une utilisation via API
   // et ne doivent pas recevoir de mail de création de mot de passe
   const dontSendKeycloakEmail =
-    params.dontSendKeycloakEmail || process.env.APP_ENV === "sandbox";
+    params.dontSendKeycloakEmail ||
+    process.env.APP_ENV === "sandbox" ||
+    params.isApiUser;
 
   //assertions on parameters
   if (!params.email) {
@@ -93,6 +96,7 @@ export const createAccount = async (params: {
       lastname: params.lastname,
       organismId: params.organismId,
       certificationAuthorityId: params.certificationAuthorityId,
+      isApiUser: params.isApiUser,
     },
   });
 };

@@ -4,7 +4,7 @@ import { v4 as uuidV4 } from "uuid";
 import { getAccountById } from "@/modules/account/features/getAccount";
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
-import { getAccountByCertificationAuthorityId } from "@/modules/certification-authority/features/getAccountByCertificationAuthorityId";
+import { getHumanAccountByCertificationAuthorityId } from "@/modules/certification-authority/features/getHumanAccountByCertificationAuthorityId";
 import {
   CANDIDATURE_ETE_ABANDONNEE,
   CANDIDATURE_ETE_SUPPRIMEE,
@@ -232,7 +232,7 @@ export const sendDossierDeValidation = async ({
   if (certificationAuthority?.contactEmail) {
     emails.push(certificationAuthority?.contactEmail);
   } else {
-    const account = await getAccountByCertificationAuthorityId({
+    const account = await getHumanAccountByCertificationAuthorityId({
       certificationAuthorityId: certificationAuthority?.id || "",
     });
     if (account) {
