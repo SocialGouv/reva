@@ -31,6 +31,16 @@ export const submitMaisonMereAAPLegalInformationDocuments = async (
 ) => {
   const { maisonMereAAPId } = params;
 
+  const maisonMereAAP = await prismaClient.maisonMereAAP.findUnique({
+    where: { id: maisonMereAAPId },
+    select: { statutValidationInformationsJuridiquesMaisonMereAAP: true },
+  });
+
+  // Lu avant que la soumission ne passe le statut en attente de vérification.
+  const isTotalUpdate =
+    maisonMereAAP?.statutValidationInformationsJuridiquesMaisonMereAAP !==
+    "A_JOUR";
+
   const oldDocuments =
     await prismaClient.maisonMereAAPLegalInformationDocuments.findUnique({
       where: { maisonMereAAPId },
@@ -41,7 +51,10 @@ export const submitMaisonMereAAPLegalInformationDocuments = async (
     await deleteOldMaisonMereAAPLegalInformationDocuments({ maisonMereAAPId });
   }
 
-  return createMaisonMereAAPLegalInformationDocuments(params);
+  return createMaisonMereAAPLegalInformationDocuments({
+    ...params,
+    isTotalUpdate,
+  });
 };
 
 const createMaisonMereAAPLegalInformationDocuments = async ({
@@ -49,6 +62,7 @@ const createMaisonMereAAPLegalInformationDocuments = async ({
   managerFirstname,
   managerLastname,
   delegataire,
+  isTotalUpdate,
   siret,
   raisonSociale,
   statutJuridique,
@@ -60,7 +74,7 @@ const createMaisonMereAAPLegalInformationDocuments = async ({
   justificatifIdentiteDirigeant,
   lettreDeDelegation,
   justificatifIdentiteDelegataire,
-}: LegalInformationDocumentsSubmission) => {
+}: LegalInformationDocumentsSubmission & { isTotalUpdate: boolean }) => {
   const attestationURSSAFFileId = uuidV4();
   const justificatifIdentiteDirigeantFileId = uuidV4();
   const lettreDeDelegationFileId = uuidV4();
@@ -105,6 +119,7 @@ const createMaisonMereAAPLegalInformationDocuments = async ({
       managerFirstname,
       managerLastname,
       delegataire,
+      isTotalUpdate,
       siret,
       raisonSociale,
       statutJuridique,

@@ -1850,6 +1850,7 @@ model MaisonMereAAPLegalInformationDocuments {
   managerFirstname                      String        @map("manager_firstname")
   managerLastname                       String        @map("manager_lastname")
   delegataire                           Boolean       @map("delegataire")
+  isTotalUpdate                         Boolean       @default(true) @map("is_total_update")
   siret                                 String?       @map("siret") @db.VarChar(255)
   raisonSociale                         String?       @map("raison_sociale") @db.VarChar(255)
   statutJuridique                       LegalStatus?  @map("statut_juridique")

@@ -16,12 +16,10 @@ export const adminUpdateLegalInformationValidationStatus = async (params: {
     aapComment?: string;
   };
   userInfo: AAPAuditLogUserInfo;
+  // Non déductible du statut cible: un refus peut aussi laisser la structure à jour.
+  isValidated: boolean;
 }) => {
-  const { maisonMereAAPId, maisonMereAAPData, userInfo } = params;
-
-  const isValidated =
-    maisonMereAAPData.statutValidationInformationsJuridiquesMaisonMereAAP ===
-    "A_JOUR";
+  const { maisonMereAAPId, maisonMereAAPData, userInfo, isValidated } = params;
 
   // Hors du try/catch: le message d'erreur (SIRET ou email déjà utilisé) doit remonter tel quel.
   if (isValidated) {

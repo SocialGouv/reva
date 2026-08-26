@@ -36,6 +36,7 @@ import { createOrganismAccount } from "./features/createOrganismAccount";
 import { createOrUpdateOnSiteOrganismGeneralInformation } from "./features/createOrUpdateOnSiteOrganismGeneralInformation";
 import { createOrUpdateRemoteOrganismGeneralInformation } from "./features/createOrUpdateRemoteOrganismGeneralInformation";
 import { deleteLieuAccueil } from "./features/deleteLieuAccueil";
+import { deleteOldMaisonMereAAPLegalInformationDocuments } from "./features/deleteOldMaisonMereAAPLegalInformationDocuments";
 import { disableCompteCollaborateur } from "./features/disableCompteCollaborateur";
 import { findOrganismOnDegreeByOrganismId } from "./features/findOrganismOnDegreeByOrganismId";
 import { getAccountsByOrganismId } from "./features/getAccountsByOrganismId";
@@ -469,8 +470,20 @@ const unsafeResolvers = {
         throw new Error(NOT_AUTHORIZED);
       }
 
+      // Lue avant toute écriture: la validation supprime la demande en cours.
+      const pendingRequest = await getMaisonMereAAPLegalInformationDocuments({
+        maisonMereAAPId: params.data.maisonMereAAPId,
+      });
+
+      // Demande absente (parcours historique): comportement d'origine.
+      const isSelfServiceRefusal =
+        params.data.decision === "DEMANDE_DE_PRECISION" &&
+        pendingRequest?.isTotalUpdate === false;
+
       const statutValidationInformationsJuridiquesMaisonMereAAP =
-        params.data.decision === "VALIDE" ? "A_JOUR" : "A_METTRE_A_JOUR";
+        params.data.decision === "VALIDE" || isSelfServiceRefusal
+          ? "A_JOUR"
+          : "A_METTRE_A_JOUR";
 
       const userInfo = buildAAPAuditLogUserInfoFromContext(context);
       const nonConformityMotives = params.data.nonConformityMotives ?? [];
@@ -483,6 +496,7 @@ const unsafeResolvers = {
           statutValidationInformationsJuridiquesMaisonMereAAP,
         },
         userInfo,
+        isValidated: params.data.decision === "VALIDE",
       });
 
       const decision =
@@ -498,6 +512,14 @@ const unsafeResolvers = {
             aapUpdatedDocumentsAt: params.data.aapUpdatedDocumentsAt,
           },
         );
+
+      // Aucune re-soumission n'est attendue: sans suppression, les pièces
+      // d'identité resteraient stockées indéfiniment.
+      if (isSelfServiceRefusal) {
+        await deleteOldMaisonMereAAPLegalInformationDocuments({
+          maisonMereAAPId: params.data.maisonMereAAPId,
+        });
+      }
 
       // Jamais invisible sans que la demande soit tracée: c'est elle qui l'explique.
       if (
