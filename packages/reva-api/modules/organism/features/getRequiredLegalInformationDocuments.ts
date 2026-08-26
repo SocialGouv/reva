@@ -76,7 +76,12 @@ export const getRequiredLegalInformationDocuments = async ({
     required.push("attestationURSSAF");
   }
 
-  if (managerChanged) {
+  // Retirer le délégataire rend le compte au dirigeant: son identité est alors
+  // exigée, même si son nom n'a pas bougé.
+  if (
+    managerChanged ||
+    (administratorChanged && !administratorIsAnotherPerson)
+  ) {
     required.push("justificatifIdentiteDirigeant");
   }
 

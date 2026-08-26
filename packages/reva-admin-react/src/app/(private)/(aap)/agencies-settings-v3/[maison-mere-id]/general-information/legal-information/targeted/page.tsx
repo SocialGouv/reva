@@ -127,12 +127,21 @@ const TargetedLegalInformationUpdatePage = () => {
     (managerFirstname !== gestionnaireFirstname ||
       managerLastname !== gestionnaireLastname);
 
+  // Depuis les valeurs en base: seul un compte aujourd'hui tenu par un
+  // délégataire peut le perdre.
+  const administratorWasDifferent =
+    (maisonMereAAP?.gestionnaire?.firstname ?? "") !==
+      (maisonMereAAP?.managerFirstname ?? "") ||
+    (maisonMereAAP?.gestionnaire?.lastname ?? "") !==
+      (maisonMereAAP?.managerLastname ?? "");
+
   // L'administrateur vérifie les pièces hors ligne: elles ne lui sont pas demandées.
   const requiredDocuments = isAdmin
     ? []
     : getRequiredDocuments({
         blocks: selectedBlocks,
         administratorIsDifferent,
+        administratorWasDifferent,
       });
 
   const documentsForm = useDocumentsForm(requiredDocuments);

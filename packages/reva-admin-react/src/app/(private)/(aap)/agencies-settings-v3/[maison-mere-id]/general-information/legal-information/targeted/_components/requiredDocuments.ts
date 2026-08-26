@@ -11,9 +11,11 @@ export type DocumentKey =
 export const getRequiredDocuments = ({
   blocks,
   administratorIsDifferent,
+  administratorWasDifferent,
 }: {
   blocks: BlockKey[];
   administratorIsDifferent: boolean;
+  administratorWasDifferent: boolean;
 }): DocumentKey[] => {
   const required: DocumentKey[] = [];
 
@@ -21,7 +23,14 @@ export const getRequiredDocuments = ({
     required.push("attestationURSSAF");
   }
 
-  if (blocks.includes("manager")) {
+  // Retirer le délégataire rend le compte au dirigeant: son identité est alors
+  // demandée, même si le bloc "dirigeant" n'a pas été coché.
+  if (
+    blocks.includes("manager") ||
+    (blocks.includes("administrator") &&
+      administratorWasDifferent &&
+      !administratorIsDifferent)
+  ) {
     required.push("justificatifIdentiteDirigeant");
   }
 
