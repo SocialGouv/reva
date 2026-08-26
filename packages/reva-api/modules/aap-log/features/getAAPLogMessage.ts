@@ -1,4 +1,15 @@
+import { MaisonMereAAPLegalInformationDocumentsDecisionEnum } from "@prisma/client";
+
 import { AAPLog } from "../aap-log.types";
+
+const DECISION_LABELS: Record<
+  MaisonMereAAPLegalInformationDocumentsDecisionEnum,
+  string
+> = {
+  VALIDE: "demande validée",
+  DEMANDE_DE_PRECISION: "précisions demandées",
+  DEMANDE_DE_MISE_A_JOUR_TOTALE: "mise à jour totale demandée",
+};
 
 type LogMessage = {
   message: string;
@@ -86,6 +97,16 @@ export const getAAPLogMessage = ({
         "Compte collaborateur mis à jour",
         `email: ${details.accountEmail}, maison mère: ${details.maisonMereAAPRaisonSociale}`,
       );
+    case "MAISON_MERE_LEGAL_INFORMATION_DECISION_TAKEN": {
+      const decisionLabel = DECISION_LABELS[details.decision];
+
+      return log(
+        "Décision sur la mise à jour des informations générales",
+        details.internalComment
+          ? `${decisionLabel}, commentaire interne : ${details.internalComment}`
+          : decisionLabel,
+      );
+    }
 
     default:
       return log("Événement inconnu");

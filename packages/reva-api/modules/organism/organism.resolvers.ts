@@ -15,7 +15,10 @@ import { hasRole } from "@/modules/shared/security/middlewares";
 import { isAdmin, isAnyone } from "@/modules/shared/security/presets";
 import { withPolicies } from "@/modules/shared/security/withPolicies";
 
-import { buildAAPAuditLogUserInfoFromContext } from "../aap-log/features/logAAPAuditEvent";
+import {
+  buildAAPAuditLogUserInfoFromContext,
+  logAAPAuditEvent,
+} from "../aap-log/features/logAAPAuditEvent";
 import { getAccountById } from "../account/features/getAccount";
 import { getOrganismsByAccountId } from "../certification-authority/features/getOrganismsByAccountId";
 import { getConventionCollectiveById } from "../referential/features/getConventionCollectiveById";
@@ -561,6 +564,18 @@ const unsafeResolvers = {
           managerName,
         });
       }
+
+      // Tracé en dernier: un échec d'écriture du journal ne doit empêcher ni
+      // l'invisibilisation ni les courriels.
+      await logAAPAuditEvent({
+        eventType: "MAISON_MERE_LEGAL_INFORMATION_DECISION_TAKEN",
+        maisonMereAAPId: params.data.maisonMereAAPId,
+        userInfo,
+        details: {
+          decision: params.data.decision,
+          internalComment: params.data.internalComment ?? undefined,
+        },
+      });
 
       return decision;
     },

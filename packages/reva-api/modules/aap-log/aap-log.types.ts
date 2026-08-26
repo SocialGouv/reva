@@ -1,3 +1,5 @@
+import { MaisonMereAAPLegalInformationDocumentsDecisionEnum } from "@prisma/client";
+
 export type AAPLogUserProfile = "ADMIN" | "AAP";
 
 export type AAPLogEventTypeAndDetails =
@@ -93,6 +95,13 @@ export type AAPLogEventTypeAndDetails =
         maisonMereAAPId: string;
         maisonMereAAPRaisonSociale: string;
         accountEmail: string;
+      };
+    }
+  | {
+      eventType: "MAISON_MERE_LEGAL_INFORMATION_DECISION_TAKEN";
+      details: {
+        decision: MaisonMereAAPLegalInformationDocumentsDecisionEnum;
+        internalComment?: string;
       };
     };
 
