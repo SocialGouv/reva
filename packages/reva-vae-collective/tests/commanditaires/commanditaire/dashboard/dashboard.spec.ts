@@ -90,13 +90,13 @@ test.describe("Pilotage navigation tab", () => {
 
 test.describe("Gestion des comptes navigation tab", () => {
   test.describe("when the VAE_COLLECTIVE_ACCOUNTS feature flag is active", () => {
-    test.describe("and the user has the CREER_SOUS_COMPTE permission", () => {
+    test.describe("and the user has the VOIR_LISTE_SOUS_COMPTES permission", () => {
       test.use({
         mswHandlers: [
           [
             mockCommanditaireVaeCollectiveForCohortesPage(),
             mockQueryActiveFeatures(["VAE_COLLECTIVE_ACCOUNTS"]),
-            mockQueryGetUserPermissions(["CREER_SOUS_COMPTE"]),
+            mockQueryGetUserPermissions(["VOIR_LISTE_SOUS_COMPTES"]),
           ],
           { scope: "test" },
         ],
@@ -117,34 +117,7 @@ test.describe("Gestion des comptes navigation tab", () => {
       });
     });
 
-    test.describe("and the user only has the SUPPRIMER_SOUS_COMPTE permission", () => {
-      test.use({
-        mswHandlers: [
-          [
-            mockCommanditaireVaeCollectiveForCohortesPage(),
-            mockQueryActiveFeatures(["VAE_COLLECTIVE_ACCOUNTS"]),
-            mockQueryGetUserPermissions(["SUPPRIMER_SOUS_COMPTE"]),
-          ],
-          { scope: "test" },
-        ],
-      });
-
-      test("the Gestion des comptes tab should be visible", async ({
-        page,
-      }) => {
-        await login({ page, role: "gestionnaireVaeCollective" });
-
-        await page.goto(
-          "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes",
-        );
-
-        await expect(
-          page.getByRole("link", { name: "Gestion des comptes" }),
-        ).toBeVisible();
-      });
-    });
-
-    test.describe("and the user lacks all accounts permissions", () => {
+    test.describe("and the user lacks the VOIR_LISTE_SOUS_COMPTES permission", () => {
       test.use({
         mswHandlers: [
           [
@@ -177,17 +150,13 @@ test.describe("Gestion des comptes navigation tab", () => {
   });
 
   test.describe("when the VAE_COLLECTIVE_ACCOUNTS feature flag is inactive", () => {
-    test.describe("even though the user has all accounts permissions", () => {
+    test.describe("even though the user has the VOIR_LISTE_SOUS_COMPTES permission", () => {
       test.use({
         mswHandlers: [
           [
             mockCommanditaireVaeCollectiveForCohortesPage(),
             mockQueryActiveFeatures(),
-            mockQueryGetUserPermissions([
-              "CREER_SOUS_COMPTE",
-              "MODIFIER_SOUS_COMPTE",
-              "SUPPRIMER_SOUS_COMPTE",
-            ]),
+            mockQueryGetUserPermissions(["VOIR_LISTE_SOUS_COMPTES"]),
           ],
           { scope: "test" },
         ],

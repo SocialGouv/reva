@@ -29,10 +29,7 @@ export async function PrivateHeader() {
   // sur toutes les pages privées, pas seulement celles d'un commanditaire.
   let canAccessAccountsPage = false;
   try {
-    canAccessAccountsPage =
-      (await hasPermission("CREER_SOUS_COMPTE")) ||
-      (await hasPermission("MODIFIER_SOUS_COMPTE")) ||
-      (await hasPermission("SUPPRIMER_SOUS_COMPTE"));
+    canAccessAccountsPage = await hasPermission("VOIR_LISTE_SOUS_COMPTES");
   } catch (error) {
     console.error("Failed to fetch user permissions:", error);
   }
