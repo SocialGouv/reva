@@ -43,7 +43,6 @@ import { createCertificationAuthorityLocalAccount } from "./features/createCerti
 import { createCertificationAuthorityStructure } from "./features/createCertificationAuthorityStructure";
 import { createCertificationRegistryManager } from "./features/createCertificationRegistryManager";
 import { deleteCertificationAuthorityLocalAccount } from "./features/deleteCertificationAuthorityLocalAccount";
-import { getHumanAccountByCertificationAuthorityId } from "./features/getHumanAccountByCertificationAuthorityId";
 import { getCandidacyCertificationAuthorityLocalAccounts } from "./features/getCandidacyCertificationAuthorityLocalAccounts";
 import { getCertificationAuthorities } from "./features/getCertificationAuthorities";
 import { getCertificationAuthoritiesByCertificationId } from "./features/getCertificationAuthoritiesByCertificationId";
@@ -65,6 +64,7 @@ import { getCertificationsAndParcoursByCertificationAuthorityId } from "./featur
 import { getCertificationsByCertificationAuthorityId } from "./features/getCertificationsByCertificationAuthorityId";
 import { getCertificationsByCertificationStructureId } from "./features/getCertificationsByCertificationStructureId";
 import { getDepartmentsByCertificationAuthorityId } from "./features/getDepartmentsByCertificationAuthorityId";
+import { getHumanAccountByCertificationAuthorityId } from "./features/getHumanAccountByCertificationAuthorityId";
 import { getLastProfessionalCguCertificateur } from "./features/getLastProfessionalCguCertificateur";
 import { getMetabaseIframeUrl } from "./features/getMetabaseIframeUrl";
 import { getPaginatedCertifications } from "./features/getPaginatedCertifications";
