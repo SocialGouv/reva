@@ -69,7 +69,7 @@ export const DocumentsStep = ({
   formHook: UseFormReturn<DocumentsFormValues>;
   requiredDocuments: DocumentKey[];
 }) => (
-  <div className="flex flex-col gap-6 mt-6">
+  <div className="flex flex-col gap-6">
     {requiredDocuments.includes("attestationURSSAF") && (
       <FancyUpload
         title="Attestation URSSAF ou attestation MSA"

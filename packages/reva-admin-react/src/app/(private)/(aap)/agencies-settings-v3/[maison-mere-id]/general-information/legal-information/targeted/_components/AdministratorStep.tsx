@@ -19,8 +19,9 @@ export const AdministratorStep = ({
   onIsDifferentPersonChange: (isDifferentPerson: boolean) => void;
 }) => (
   // mb-0 sur la case: sa marge de fieldset s'ajouterait à celle du gap.
-  <div className="flex flex-col mt-12 gap-4">
+  <div className="flex flex-col gap-4">
     <Checkbox
+      small
       className="mb-0"
       options={[
         {
