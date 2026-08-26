@@ -1,9 +1,9 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import Link from "next/link";
 
 import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 
 import { LegalInformationBreadcrumb } from "./LegalInformationBreadcrumb";
+import { LegalInformationTutorialHelp } from "./LegalInformationTutorialHelp";
 
 export const UpdatePreparation = ({
   maisonMereAAPId,
@@ -24,14 +24,7 @@ export const UpdatePreparation = ({
         title="Mise à jour des informations générales"
       />
       <p>
-        Besoin d’aide dans votre démarche ? Consultez le{" "}
-        <Link
-          className="fr-link"
-          href="https://scribehow.com/o/BKyFuGicTyWaF4_KfL-uQA/viewer/Parametres_du_compte_administrateur_de_lespace_professionnel_AAP__L1t9XG60QgORY97mqc-7tw"
-          target="_blank"
-        >
-          tutoriel sur les paramètres de compte de l'espace professionnel AAP
-        </Link>
+        <LegalInformationTutorialHelp />
       </p>
       <p className="mt-6 mb-2">Veuillez vous munir :</p>
       <ul>

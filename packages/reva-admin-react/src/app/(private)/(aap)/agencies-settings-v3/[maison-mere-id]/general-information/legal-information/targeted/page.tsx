@@ -19,6 +19,7 @@ import {
   useGeneralInformationPage,
 } from "../../generalInformationPage.hook";
 import { LegalInformationBreadcrumb } from "../_components/LegalInformationBreadcrumb";
+import { LegalInformationTutorialHelp } from "../_components/LegalInformationTutorialHelp";
 
 import { AdministratorStep } from "./_components/AdministratorStep";
 import { BlockKey, BlockSelectionStep } from "./_components/BlockSelectionStep";
@@ -351,6 +352,7 @@ const TargetedLegalInformationUpdatePage = () => {
         <SettingsPageHeader
           breadcrumb={breadcrumb}
           title="Mise à jour des informations générales"
+          chapo={<LegalInformationTutorialHelp />}
         />
         <Stepper
           currentStep={1}
