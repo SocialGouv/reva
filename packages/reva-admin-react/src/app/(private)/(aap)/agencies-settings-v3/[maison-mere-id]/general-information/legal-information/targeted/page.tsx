@@ -16,6 +16,7 @@ import { UpdateMaisonMereLegalInformationInput } from "@/graphql/generated/graph
 import {
   buildLegalInformationPayload,
   GeneralInformationFormValues,
+  generalInformationSchema,
   useGeneralInformationPage,
 } from "../../generalInformationPage.hook";
 import { LegalInformationBreadcrumb } from "../_components/LegalInformationBreadcrumb";
@@ -38,6 +39,8 @@ const STEP_TITLES = {
   contact: "Informations de connexion et de contact",
   documents: "Pièces justificatives",
 };
+
+type StepKey = keyof typeof STEP_TITLES;
 
 const ALL_BLOCKS: BlockKey[] = ["siret", "manager", "administrator", "contact"];
 
@@ -108,22 +111,12 @@ const TargetedLegalInformationUpdatePage = () => {
     watch,
   } = formHook;
 
-  const [
-    managerFirstname,
-    managerLastname,
-    gestionnaireFirstname,
-    gestionnaireLastname,
-  ] = watch([
-    "managerFirstname",
-    "managerLastname",
-    "gestionnaireFirstname",
-    "gestionnaireLastname",
-  ]);
+  const values = watch();
 
   const administratorIsDifferent =
     administratorIsDifferentPerson ??
-    (managerFirstname !== gestionnaireFirstname ||
-      managerLastname !== gestionnaireLastname);
+    (values.managerFirstname !== values.gestionnaireFirstname ||
+      values.managerLastname !== values.gestionnaireLastname);
 
   // Depuis les valeurs en base: seul un compte aujourd'hui tenu par un
   // délégataire peut le perdre.
@@ -165,6 +158,36 @@ const TargetedLegalInformationUpdatePage = () => {
   const siretIsEditable = isSelected("siret");
   const managerIsEditable = isSelected("manager");
   const siretFieldIsVisible = siretIsEditable && currentStep === "identity";
+
+  // Chaque étape ne valide que ses propres champs: les blocs non sélectionnés
+  // gardent leurs valeurs en base, éventuellement invalides, et ne doivent pas
+  // bloquer le parcours (elles sont signalées à l'enregistrement).
+  const stepFields: Record<StepKey, (keyof GeneralInformationFormValues)[]> = {
+    identity: [
+      ...(siretIsEditable ? (["siret"] as const) : []),
+      ...(managerIsEditable
+        ? (["managerFirstname", "managerLastname"] as const)
+        : []),
+    ],
+    administrator: ["gestionnaireFirstname", "gestionnaireLastname"],
+    contact: ["gestionnaireEmail", "phone"],
+    documents: [],
+  };
+
+  const documentFiles = documentsForm.watch();
+
+  const stepIsValid = (step: StepKey) =>
+    step === "documents"
+      ? requiredDocuments.every((document) => documentFiles[document]?.[0])
+      : stepFields[step].every(
+          (field) =>
+            generalInformationSchema.shape[field].safeParse(values[field])
+              .success,
+        );
+
+  // Calculé à chaque rendu, y compris hors du parcours: sur l'écran de sélection
+  // et tant qu'aucun bloc n'est coché, il n'y a pas d'étape courante.
+  const currentStepIsValid = !!currentStep && stepIsValid(currentStep);
 
   // Un SIRET introuvable ne donne ni raison sociale ni statut juridique: la suite
   // du parcours n'aurait rien à enregistrer.
@@ -461,6 +484,7 @@ const TargetedLegalInformationUpdatePage = () => {
             disabled={
               isSubmitting ||
               siretBlocksNavigation ||
+              !currentStepIsValid ||
               (isAdmin && isLastStep && !isDirty)
             }
           >

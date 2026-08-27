@@ -131,7 +131,7 @@ const updateMaisonMereLegalInformationMutation = graphql(`
   }
 `);
 
-const schema = z.object({
+export const generalInformationSchema = z.object({
   siret: sanitizedSiret(),
   managerFirstname: sanitizedText(),
   managerLastname: sanitizedText(),
@@ -142,7 +142,9 @@ const schema = z.object({
   gestionBranch: z.boolean(),
 });
 
-export type GeneralInformationFormValues = z.infer<typeof schema>;
+export type GeneralInformationFormValues = z.infer<
+  typeof generalInformationSchema
+>;
 
 export type Etablissement =
   GetEtablissementForAgenciesSettingsQuery["getEtablissement"];
@@ -262,7 +264,7 @@ export const useGeneralInformationPage = () => {
   );
 
   const formHook = useForm<GeneralInformationFormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(generalInformationSchema),
     mode: "onChange",
   });
   const { watch, reset } = formHook;
