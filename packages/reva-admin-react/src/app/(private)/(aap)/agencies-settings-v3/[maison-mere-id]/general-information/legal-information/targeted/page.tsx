@@ -466,9 +466,7 @@ const TargetedLegalInformationUpdatePage = () => {
               Retour à l'étape {currentStepIndex}
             </Button>
           )}
-          {/* L'AAP entre dans le parcours par la page de préparation: la première
-              étape doit pouvoir en sortir. */}
-          {currentStepIndex === 0 && !isAdmin && (
+          {currentStepIndex === 0 && (
             <Button
               priority="secondary"
               linkProps={{ href: generalInformationUrl }}
