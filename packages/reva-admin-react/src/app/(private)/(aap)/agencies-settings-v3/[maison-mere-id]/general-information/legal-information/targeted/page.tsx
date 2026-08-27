@@ -33,7 +33,6 @@ import { getRequiredDocuments } from "./_components/requiredDocuments";
 import { SiretAndManagerStep } from "./_components/SiretAndManagerStep";
 
 const STEP_TITLES = {
-  selection: "Choix des informations à mettre à jour",
   identity: "Informations relatives au SIRET et à l'identité du dirigeant",
   administrator: "Administrateur du compte",
   contact: "Informations de connexion et de contact",
@@ -97,11 +96,10 @@ const TargetedLegalInformationUpdatePage = () => {
     setPhase((currentPhase) => currentPhase ?? "steps");
   }, [isAdmin, statut]);
 
-  const hasSelectionStep = isAdmin || statut === "A_JOUR";
-  const stepOffset = hasSelectionStep ? 1 : 0;
+  const startsOnSelectionScreen = isAdmin || statut === "A_JOUR";
 
   // Statut encore inconnu: aucun écran d'entrée ne peut être choisi.
-  const resolvedPhase = phase ?? (hasSelectionStep ? "selection" : null);
+  const resolvedPhase = phase ?? (startsOnSelectionScreen ? "selection" : null);
 
   const {
     formState: { isSubmitting, isDirty },
@@ -160,9 +158,10 @@ const TargetedLegalInformationUpdatePage = () => {
 
   const currentStep = steps[currentStepIndex];
   const isLastStep = currentStepIndex === steps.length - 1;
-  // DSFR ne dessine pas de barre à une seule étape: une sélection vide, qui ne
-  // mène nulle part, annonce quand même deux étapes.
-  const stepCount = Math.max(steps.length, 1) + stepOffset;
+
+  // DSFR ne dessine aucune barre à une seule étape: un parcours d'un seul bloc
+  // se passe donc de stepper.
+  const stepperIsVisible = steps.length > 1;
   const siretIsEditable = isSelected("siret");
   const managerIsEditable = isSelected("manager");
   const siretFieldIsVisible = siretIsEditable && currentStep === "identity";
@@ -363,12 +362,6 @@ const TargetedLegalInformationUpdatePage = () => {
           title="Mise à jour des informations générales"
           chapo={<LegalInformationTutorialHelp />}
         />
-        <Stepper
-          currentStep={1}
-          stepCount={stepCount}
-          title={STEP_TITLES.selection}
-          nextTitle={steps[0] && STEP_TITLES[steps[0]]}
-        />
         <BlockSelectionStep
           isAdmin={isAdmin}
           selectedBlocks={selectedBlocks}
@@ -388,17 +381,18 @@ const TargetedLegalInformationUpdatePage = () => {
         chapo="Modifiez les informations souhaitées en cliquant dans l'espace prévu à cet effet."
       />
       {/* Le chapo de SettingsPageHeader apporte déjà les 48px du dessus. */}
-      <Stepper
-        currentStep={currentStepIndex + 1 + stepOffset}
-        stepCount={stepCount}
-        title={STEP_TITLES[currentStep]}
-        nextTitle={
-          isLastStep ? undefined : STEP_TITLES[steps[currentStepIndex + 1]]
-        }
-      />
-      {/* 16px ici plus les 32px de marge basse du stepper DSFR font les 48px attendus. */}
+      {stepperIsVisible && (
+        <Stepper
+          currentStep={currentStepIndex + 1}
+          stepCount={steps.length}
+          title={STEP_TITLES[currentStep]}
+          nextTitle={
+            isLastStep ? undefined : STEP_TITLES[steps[currentStepIndex + 1]]
+          }
+        />
+      )}
       <form
-        className="flex flex-col mt-4"
+        className={`flex flex-col ${stepperIsVisible ? "mt-4" : ""}`}
         onSubmit={(e) => {
           e.preventDefault();
 
@@ -446,7 +440,7 @@ const TargetedLegalInformationUpdatePage = () => {
               priority="secondary"
               onClick={() => setCurrentStepIndex((index) => index - 1)}
             >
-              Retour à l'étape {currentStepIndex + stepOffset}
+              Retour à l'étape {currentStepIndex}
             </Button>
           )}
           {/* L'AAP entre dans le parcours par la page de préparation: la première
@@ -474,7 +468,7 @@ const TargetedLegalInformationUpdatePage = () => {
               ? isAdmin
                 ? "Enregistrer"
                 : "Envoyer"
-              : `Passer à l'étape ${currentStepIndex + 2 + stepOffset}`}
+              : `Passer à l'étape ${currentStepIndex + 2}`}
           </Button>
         </div>
       </form>

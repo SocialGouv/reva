@@ -26,7 +26,6 @@ export const BlockSelectionStep = ({
   <>
     <Checkbox
       small
-      className="mt-4"
       legend="Quelles informations souhaitez-vous mettre à jour ?"
       hintText={
         isAdmin
