@@ -56,7 +56,7 @@ export const CertificationCard = ({
       title={certification.label}
       size={size}
       detail={
-        <div className="flex items-center gap-2 mb-3">
+        <span className="flex items-center gap-2 mb-3">
           <Image
             src="/admin2/components/verified-badge.svg"
             alt="Verified badge icon"
@@ -64,7 +64,7 @@ export const CertificationCard = ({
             height={16}
           />
           RNCP {certification.codeRncp}
-        </div>
+        </span>
       }
       endDetail={
         canUpdateCertification ? (
