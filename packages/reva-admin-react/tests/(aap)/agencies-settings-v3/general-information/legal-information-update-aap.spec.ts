@@ -69,7 +69,7 @@ test.describe("Parcours de mise à jour des informations générales - AAP", () 
       .getByRole("checkbox", {
         name: "Informations de connexion et de contact",
       })
-      .check();
+      .check({ force: true });
     await page.getByRole("button", { name: "Commencer" }).click();
 
     await page
@@ -107,7 +107,7 @@ test.describe("Parcours de mise à jour des informations générales - AAP", () 
 
     await page
       .getByRole("checkbox", { name: "Identité du dirigeant", exact: true })
-      .check();
+      .check({ force: true });
     await page.getByRole("button", { name: "Commencer" }).click();
 
     await page.getByLabel("Nom du (de la) dirigeant(e)").fill("Martin");
@@ -144,12 +144,12 @@ test.describe("Parcours de mise à jour des informations générales - AAP", () 
       .getByRole("checkbox", {
         name: "Identité de l'administrateur de compte",
       })
-      .check();
+      .check({ force: true });
     await page.getByRole("button", { name: "Commencer" }).click();
 
     await page
       .getByRole("checkbox", { name: /deux personnes différentes/ })
-      .uncheck();
+      .uncheck({ force: true });
 
     await page.getByRole("button", { name: "Passer à l'étape 2" }).click();
 

@@ -86,12 +86,12 @@ test.describe("Parcours de mise à jour des informations générales - administr
 
     await page
       .getByRole("checkbox", { name: "Identité du dirigeant", exact: true })
-      .check();
+      .check({ force: true });
     await page
       .getByRole("checkbox", {
         name: "Informations de connexion et de contact",
       })
-      .check();
+      .check({ force: true });
     await page.getByRole("button", { name: "Commencer" }).click();
 
     await page.getByLabel("Nom du (de la) dirigeant(e)").fill("Martin");
