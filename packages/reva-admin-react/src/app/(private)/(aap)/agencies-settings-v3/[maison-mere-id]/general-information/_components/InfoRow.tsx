@@ -16,6 +16,7 @@ export const InfoRow = ({
   className?: string;
 }) => (
   <div
+    data-testid={`info-row-${label}`}
     className={`flex items-center gap-6 border-b border-neutral-300 py-2 px-4 text-dsfrGray-labelGrey ${className || ""}`}
   >
     <div className="flex items-center gap-2">
