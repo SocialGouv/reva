@@ -330,4 +330,114 @@ describe("organism - autorisation des resolvers", () => {
       expect(resp.json().errors[0].message).toBe(UNAUTHENTICATED);
     });
   });
+
+  describe("MaisonMereAAP.legalInformationDocuments (admin ou gestionnaire de la maison mère)", () => {
+    // Le champ expose les valeurs en attente et les pièces d'identité déposées : on le lit
+    // via la seule query qui rend une MaisonMereAAP.
+    const call = (maisonMereAAPId: string, authorization?: string) =>
+      injectGraphql({
+        fastify: global.testApp,
+        authorization,
+        payload: {
+          requestType: "query",
+          endpoint: "organism_getMaisonMereAAPById",
+          arguments: { maisonMereAAPId },
+          returnFields: "{ legalInformationDocuments { managerFirstname } }",
+        },
+      });
+
+    // Non-régression : le champ était sur `isAdmin`, le gestionnaire ne pouvait pas relire
+    // sa propre demande. Lu par le chemin de production de l'AAP, dont la query parente est
+    // ouverte à tous : seule la règle du champ protège ici.
+    test("le gestionnaire de la maison mère : autorisé", async () => {
+      const maisonMereAAP = await createMaisonMereAapHelper();
+      const resp = await injectGraphql({
+        fastify: global.testApp,
+        authorization: asRole(
+          "gestion_maison_mere_aap",
+          maisonMereAAP.gestionnaire.keycloakId,
+        ),
+        payload: {
+          requestType: "query",
+          endpoint: "account_getAccountForConnectedUser",
+          returnFields:
+            "{ maisonMereAAP { legalInformationDocuments { managerFirstname } } }",
+        },
+      });
+      expect(resp.json()).not.toHaveProperty("errors");
+    });
+
+    // Le refus vient de la query parente, gardée par la même règle : aucune query
+    // n'expose le champ à un gestionnaire tiers. C'est l'inaccessibilité de la
+    // donnée qui est vérifiée ici, pas la règle du champ elle-même.
+    test("le gestionnaire d'une AUTRE maison mère : refusé", async () => {
+      const maisonMereAAP = await createMaisonMereAapHelper();
+      const autreMaisonMereAAP = await createMaisonMereAapHelper();
+      const resp = await call(
+        maisonMereAAP.id,
+        asRole(
+          "gestion_maison_mere_aap",
+          autreMaisonMereAAP.gestionnaire.keycloakId,
+        ),
+      );
+      expect(resp.json().errors[0].message).toBe(
+        NOT_AUTHORIZED_MAISON_MERE_ACCESS,
+      );
+    });
+
+    test("l'admin : autorisé", async () => {
+      const maisonMereAAP = await createMaisonMereAapHelper();
+      const resp = await call(maisonMereAAP.id, asRole("admin"));
+      expect(resp.json()).not.toHaveProperty("errors");
+    });
+  });
+
+  describe("organism_updateLegalInformationValidationDecision (admin)", () => {
+    // `DEMANDE_DE_PRECISION` sans demande en attente : la décision est enregistrée sans
+    // toucher aux informations de la structure.
+    const call = (maisonMereAAPId: string, authorization?: string) =>
+      injectGraphql({
+        fastify: global.testApp,
+        authorization,
+        payload: {
+          requestType: "mutation",
+          endpoint: "organism_updateLegalInformationValidationDecision",
+          arguments: {
+            data: {
+              maisonMereAAPId,
+              decision: "DEMANDE_DE_PRECISION",
+              internalComment: "Contrôle d'autorisation",
+            },
+          },
+          enumFields: ["decision"],
+          returnFields: "{ id }",
+        },
+      });
+
+    test("l'admin : autorisé", async () => {
+      const maisonMereAAP = await createMaisonMereAapHelper();
+      const resp = await call(maisonMereAAP.id, asRole("admin"));
+      expect(resp.json()).not.toHaveProperty("errors");
+    });
+
+    // Non-régression : cette mutation était sur `isAnyone`, n'importe quel appelant pouvait
+    // décider du statut de validation d'une structure arbitraire.
+    test("le gestionnaire de la maison mère : refusé", async () => {
+      const maisonMereAAP = await createMaisonMereAapHelper();
+      const resp = await call(
+        maisonMereAAP.id,
+        asRole(
+          "gestion_maison_mere_aap",
+          maisonMereAAP.gestionnaire.keycloakId,
+        ),
+      );
+      expect(resp.json().errors[0].message).toBe(NOT_AUTHORIZED);
+    });
+
+    test("non authentifié : refusé", async () => {
+      const maisonMereAAP = await createMaisonMereAapHelper();
+      const resp = await call(maisonMereAAP.id);
+      expect(resp.json().errors[0].message).toBe(UNAUTHENTICATED);
+    });
+  });
 });
