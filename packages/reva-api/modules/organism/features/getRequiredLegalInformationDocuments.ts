@@ -63,12 +63,19 @@ export const getRequiredLegalInformationDocuments = async ({
       maisonMereAAP?.gestionnaire?.lastname,
     );
 
-  // La case du client ne peut qu'ajouter la délégation: deux identités distinctes
-  // l'exigent de toute façon.
+  // Les noms de l'administrateur sont facultatifs: absents, ils ne décrivent pas
+  // un délégataire, le compte reste au dirigeant. Les comparer à vide exigerait
+  // une lettre de délégation d'une structure qui n'en a pas.
   const administratorIsAnotherPerson =
     delegataire ||
-    isDifferent(submitted.gestionnaireFirstname, submitted.managerFirstname) ||
-    isDifferent(submitted.gestionnaireLastname, submitted.managerLastname);
+    isDifferent(
+      submitted.gestionnaireFirstname ?? submitted.managerFirstname,
+      submitted.managerFirstname,
+    ) ||
+    isDifferent(
+      submitted.gestionnaireLastname ?? submitted.managerLastname,
+      submitted.managerLastname,
+    );
 
   const required: LegalInformationDocument[] = [];
 
