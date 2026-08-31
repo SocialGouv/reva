@@ -9,6 +9,7 @@ import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 import * as getKeycloakAdminModule from "../shared/auth/getKeycloakAdmin";
+import * as sendEmailUsingTemplate from "../shared/email/sendEmailUsingTemplate";
 
 const createSousCompteVaeCollectiveMutation = graphql(`
   mutation createSousCompteVaeCollective(
@@ -78,8 +79,10 @@ const mockKeycloakAdmin = () =>
   );
 
 describe("create sous compte vae collective", () => {
-  test("should let an admin create a sous compte for any commanditaire vae collective", async () => {
+  test("should let an admin create a sous compte for any commanditaire vae collective and send an email to the account owner", async () => {
     mockKeycloakAdmin();
+
+    const emailSpy = vi.spyOn(sendEmailUsingTemplate, "sendEmailUsingTemplate");
 
     const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
     const commanditaireVaeCollectiveId =
@@ -107,6 +110,13 @@ describe("create sous compte vae collective", () => {
     });
 
     expect(sousCompte).toMatchObject({ commanditaireVaeCollectiveId });
+
+    expect(emailSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: { email: "john.doe.sous-compte@example.com" },
+        templateId: 732,
+      }),
+    );
   });
 
   test("should let the gestionnaire of the commanditaire create a sous compte for it", async () => {
