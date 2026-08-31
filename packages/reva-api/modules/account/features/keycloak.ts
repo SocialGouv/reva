@@ -33,7 +33,8 @@ type UserProfileType =
   | "organism"
   | "certification_authority"
   | "certification_registry_manager"
-  | "commanditaire_vae_collective";
+  | "commanditaire_vae_collective"
+  | "sous_compte_vae_collective";
 
 export const createAccount = async (params: {
   email: string;
@@ -48,7 +49,8 @@ export const createAccount = async (params: {
     | "gestionnaire_maison_mere_aap"
     | "certification_authority_local_account"
     | "certification_registry_manager"
-    | "commanditaire_vae_collective";
+    | "commanditaire_vae_collective"
+    | "sous_compte_vae_collective";
   dontSendKeycloakEmail?: boolean;
 }): Promise<string> => {
   const { dontSendKeycloakEmail, ...account } = params;
