@@ -11,6 +11,7 @@ import { getCertificationById } from "../referential/features/getCertificationBy
 
 import { createCohorteVaeCollective } from "./features/createCohorteVaeCollective";
 import { createCommanditaireVaeCollective } from "./features/createCommanditaireVaeCollective";
+import { createSousCompteVaeCollective } from "./features/createSousCompteVaeCollective";
 import { deleteCohorteVAECollective } from "./features/deleteCohorteVAECollective";
 import { getCertificationCohortesByCohorteId } from "./features/getCertificationCohortesByCohorteId";
 import { getCohortesVaeCollectivesByCommanditaireVaeCollectiveId } from "./features/getCohortesVaeCollectivesByCommanditaireVaeCollectiveId";
@@ -236,6 +237,26 @@ const unsafeResolvers = {
         gestionnaireFirstname,
         gestionnaireLastname,
       }),
+    vaeCollective_createSousCompteVaeCollective: async (
+      _parent: unknown,
+      {
+        commanditaireVaeCollectiveId,
+        accountFirstname,
+        accountLastname,
+        accountEmail,
+      }: {
+        commanditaireVaeCollectiveId: string;
+        accountFirstname: string;
+        accountLastname: string;
+        accountEmail: string;
+      },
+    ) =>
+      createSousCompteVaeCollective({
+        commanditaireVaeCollectiveId,
+        accountFirstname,
+        accountLastname,
+        accountEmail,
+      }),
   },
 };
 
@@ -300,5 +321,7 @@ export const vaeCollectiveResolvers = withPolicies(unsafeResolvers, {
     vaeCollective_publishCohorteVAECollective:
       hasVaeCollectivePermission("MODIFIER_COHORTE"),
     vaeCollective_createCommanditaireVaeCollective: isAdmin,
+    vaeCollective_createSousCompteVaeCollective:
+      hasVaeCollectivePermission("CREER_SOUS_COMPTE"),
   },
 });

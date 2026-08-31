@@ -126,4 +126,11 @@ type Mutation {
     gestionnaireLastname: String!
     gestionnaireEmail: String!
   ): CommanditaireVaeCollective!
+
+  vaeCollective_createSousCompteVaeCollective(
+    commanditaireVaeCollectiveId: ID!
+    accountFirstname: String!
+    accountLastname: String!
+    accountEmail: String!
+  ): SousCompteVaeCollective!
 }
