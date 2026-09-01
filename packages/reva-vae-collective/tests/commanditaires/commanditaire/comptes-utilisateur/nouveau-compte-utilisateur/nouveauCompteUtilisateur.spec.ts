@@ -55,6 +55,79 @@ test("it should let me create a new compte utilisateur with only the required fi
   );
 });
 
+test("it should create a compte utilisateur without the cohorte creation permission by default", async ({
+  page,
+  msw,
+}) => {
+  let receivedVariables: Record<string, unknown> | undefined;
+  msw.use(
+    fvae.mutation("createSousCompteVaeCollective", ({ variables }) => {
+      receivedVariables = variables;
+      return HttpResponse.json({
+        data: {
+          vaeCollective_createSousCompteVaeCollective: {
+            id: sousCompteId,
+          },
+        },
+      });
+    }),
+  );
+
+  await goToPage(page);
+
+  await page.getByRole("textbox", { name: "Nom", exact: true }).fill("Dupont");
+  await page
+    .getByRole("textbox", { name: "Adresse électronique de connexion" })
+    .fill("dupont@example.com");
+
+  await page.getByRole("button", { name: "Ajouter" }).click();
+
+  await expect(page).toHaveURL(
+    `/vae-collective/commanditaires/${commanditaireId}/comptes-utilisateur/${sousCompteId}`,
+  );
+
+  expect(receivedVariables?.canCreateCohorteVaeCollective).toBe(false);
+});
+
+test("it should let me create a compte utilisateur with the cohorte creation permission enabled", async ({
+  page,
+  msw,
+}) => {
+  let receivedVariables: Record<string, unknown> | undefined;
+  msw.use(
+    fvae.mutation("createSousCompteVaeCollective", ({ variables }) => {
+      receivedVariables = variables;
+      return HttpResponse.json({
+        data: {
+          vaeCollective_createSousCompteVaeCollective: {
+            id: sousCompteId,
+          },
+        },
+      });
+    }),
+  );
+
+  await goToPage(page);
+
+  await page.getByRole("textbox", { name: "Nom", exact: true }).fill("Dupont");
+  await page
+    .getByRole("textbox", { name: "Adresse électronique de connexion" })
+    .fill("dupont@example.com");
+  await page
+    .getByRole("checkbox", {
+      name: "Activer la création de cohorte par ce collaborateur",
+    })
+    .check();
+
+  await page.getByRole("button", { name: "Ajouter" }).click();
+
+  await expect(page).toHaveURL(
+    `/vae-collective/commanditaires/${commanditaireId}/comptes-utilisateur/${sousCompteId}`,
+  );
+
+  expect(receivedVariables?.canCreateCohorteVaeCollective).toBe(true);
+});
+
 test("it should let me create a new compte utilisateur with the optional firstname filled", async ({
   page,
 }) => {

@@ -2,6 +2,7 @@
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
+import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { useParams } from "next/navigation";
 import { useActionState } from "react";
 
@@ -71,8 +72,17 @@ export default function NouveauCompteUtilisateurPage() {
             stateRelatedMessage={state.errors?.accountEmail?.message}
           />
         </div>
+        <ToggleSwitch
+          className="mt-8"
+          labelPosition="left"
+          label="Activer la création de cohorte par ce collaborateur"
+          inputTitle="Activer la création de cohorte par ce collaborateur"
+          name="canCreateCohorteVaeCollective"
+          defaultChecked={false}
+        />
         <input type="hidden" name="commanditaireId" value={commanditaireId} />
-        <div className="flex justify-between mt-12">
+        <hr className="mt-4" />
+        <div className="flex justify-between mt-6">
           <Button
             priority="secondary"
             linkProps={{
