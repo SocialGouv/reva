@@ -73,7 +73,7 @@ import { getCandidacyStatusesByCandidacyId } from "./features/getCandidacyStatus
 import { getDropOutReasonById } from "./features/getDropOutReasonById";
 import { getExperiencesByCandidacyId } from "./features/getExperiencesByCandidacyId";
 import { manuallyUpdateCandidacyCertificationAuthority } from "./features/manuallyUpdateCandidacyCertificationAuthority";
-import { markFeasibilityFileResourceFirstAsRead } from "./features/markFeasibilityFileResourceFirstAsRead";
+import { markFeasibilityFileDematAutonomeResourceAsHidden } from "./features/markFeasibilityFileDematAutonomeResourceAsHidden";
 import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
 import { searchOrganismsForCandidacyAsAdmin } from "./features/searchOrganismsForCandidacyAsAdmin";
 import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidacy";
@@ -124,9 +124,12 @@ const unsafeResolvers = {
     endAccompagnementCandidateDropOutReason: ({
       endAccompagnementCandidateDropOutReasonId: dropOutReasonId,
     }: Candidacy) => getDropOutReasonById({ dropOutReasonId }),
-    feasibilityFileResourceFirstRead: ({
-      feasibilityFileResourceFirstReadAt,
-    }: Candidacy) => !!feasibilityFileResourceFirstReadAt,
+    feasibilityFileDematAutonomeResourceHidden: ({
+      feasibilityFileDematAutonomeResourceHiddenAt,
+    }: Candidacy) => !!feasibilityFileDematAutonomeResourceHiddenAt,
+    feasibilityFileDematAutonomeFirstOpening: ({
+      feasibilityFileDematAutonomeFirstOpeningAt,
+    }: Candidacy) => !!feasibilityFileDematAutonomeFirstOpeningAt,
   },
   CandidacyOnCandidacyFinancingMethod: {
     candidacyFinancingMethod: ({
@@ -863,14 +866,16 @@ const unsafeResolvers = {
         ...input,
         userInfo: buildCandidacyAuditLogUserInfo(context),
       }),
-    candidacy_markFeasibilityFileResourceFirstAsRead: async (
+    candidacy_markFeasibilityFileDematAutonomeResourceAsHidden: async (
       _parent: unknown,
       input: {
         candidacyId: string;
       },
+      context: GraphqlContext,
     ) =>
-      markFeasibilityFileResourceFirstAsRead({
+      markFeasibilityFileDematAutonomeResourceAsHidden({
         ...input,
+        context,
       }),
   },
 };
@@ -891,7 +896,8 @@ export const candidacyResolvers = withPolicies(unsafeResolvers, {
     candidacyOnCandidacyFinancingMethods: isAnyone,
     candidateInfo: isAnyone,
     endAccompagnementCandidateDropOutReason: isAnyone,
-    feasibilityFileResourceFirstRead: isAnyone,
+    feasibilityFileDematAutonomeResourceHidden: isAnyone,
+    feasibilityFileDematAutonomeFirstOpening: isAnyone,
   },
   CandidacyOnCandidacyFinancingMethod: {
     candidacyFinancingMethod: isAnyone,
@@ -941,6 +947,7 @@ export const candidacyResolvers = withPolicies(unsafeResolvers, {
     candidacy_updateCandidacyEndAccompagnementDecision:
       isAdminOrOwnerOfCandidacy,
     candidacy_updateCertificationAuthority: isOwnerOrCanManageCandidacy,
-    candidacy_markFeasibilityFileResourceFirstAsRead: isAdminOrOwnerOfCandidacy,
+    candidacy_markFeasibilityFileDematAutonomeResourceAsHidden:
+      isAdminOrOwnerOfCandidacy,
   },
 });

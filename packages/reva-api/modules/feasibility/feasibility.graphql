@@ -108,6 +108,9 @@ type Mutation {
   feasibility_updateFeasibilityFileTemplateFirstReadAt(
     candidacyId: ID!
   ): Candidacy!
+  feasibility_updateFeasibilityFileDematAutonomeFirstOpeningAt(
+    candidacyId: ID!
+  ): Candidacy!
   feasibility_revokeCertificationAuthorityDecision(
     feasibilityId: ID!
     reason: String

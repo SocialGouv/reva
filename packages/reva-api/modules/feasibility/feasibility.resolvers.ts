@@ -20,6 +20,7 @@ import { FeasibilityCategoryFilter } from "./feasibility.types";
 import { getFeasibilityHistory } from "./features/getFeasibilityHistory";
 import { getWarningOnFeasibilitySubmissionForCandidacyId } from "./features/getWarningOnFeasibealitySubmissionForCandidacyId";
 import { revokeCertificationAuthorityDecision } from "./features/revokeCertificationAuthorityDecision";
+import { updateFeasibilityFileDematAutonomeFirstOpeningAt } from "./features/updateFeasibilityFileDematAutonomeFirstOpeningAt";
 import { updateFeasibilityFileTemplateFirstReadAt } from "./features/updateFeasibilityFileTemplateFirstReadAt";
 
 const unsafeResolvers = {
@@ -94,6 +95,15 @@ const unsafeResolvers = {
       { candidacyId }: { candidacyId: string },
       context: GraphqlContext,
     ) => updateFeasibilityFileTemplateFirstReadAt({ candidacyId, context }),
+    feasibility_updateFeasibilityFileDematAutonomeFirstOpeningAt: (
+      _parent: unknown,
+      { candidacyId }: { candidacyId: string },
+      context: GraphqlContext,
+    ) =>
+      updateFeasibilityFileDematAutonomeFirstOpeningAt({
+        candidacyId,
+        context,
+      }),
     feasibility_revokeCertificationAuthorityDecision: (
       _parent: unknown,
       { feasibilityId, reason }: { feasibilityId: string; reason?: string },
@@ -139,6 +149,8 @@ export const feasibilityResolvers = withPolicies(unsafeResolvers, {
   },
   Mutation: {
     feasibility_updateFeasibilityFileTemplateFirstReadAt:
+      isAdminOrOwnerOfCandidacy,
+    feasibility_updateFeasibilityFileDematAutonomeFirstOpeningAt:
       isAdminOrOwnerOfCandidacy,
     feasibility_revokeCertificationAuthorityDecision: isAdmin,
   },

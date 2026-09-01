@@ -198,6 +198,14 @@ export type CandidacyLogEventTypeAndDetails =
       details: { feasibilityFileTemplateFirstReadAt: Date };
     }
   | {
+      eventType: "FEASIBILITY_FILE_DEMAT_AUTONOME_FIRST_OPENING_AT_UPDATED";
+      details: { feasibilityFileDematAutonomeFirstOpeningAt: Date };
+    }
+  | {
+      eventType: "FEASIBILITY_FILE_DEMAT_AUTONOME_RESOURCE_HIDDEN_AT_UPDATED";
+      details: { feasibilityFileDematAutonomeResourceHiddenAt: Date };
+    }
+  | {
       eventType: "CANDIDACY_CERTIFICATION_AUTHORITY_UPDATED";
       details: {
         certificationAuthorityId: string;

@@ -92,8 +92,8 @@ export const DashboardAutonomeTilesGroup = ({
             candidacyIsAutonome
             isFeasibilityDemat={isFeasibilityDemat}
             feasibility={feasibility}
-            feasibilityFileResourceFirstRead={
-              candidacy.feasibilityFileResourceFirstRead
+            feasibilityFileDematAutonomeResourceHidden={
+              candidacy.feasibilityFileDematAutonomeResourceHidden
             }
           />
           <DossierValidationTile

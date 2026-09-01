@@ -110,12 +110,12 @@ export const FeasibilityTile = ({
   feasibility,
   isFeasibilityDemat,
   candidacyIsAutonome,
-  feasibilityFileResourceFirstRead,
+  feasibilityFileDematAutonomeResourceHidden,
 }: {
   feasibility: FeasibilityUseCandidateForDashboard;
   isFeasibilityDemat?: boolean;
   candidacyIsAutonome?: boolean;
-  feasibilityFileResourceFirstRead?: boolean;
+  feasibilityFileDematAutonomeResourceHidden?: boolean;
 }) => {
   const router = useRouter();
 
@@ -158,7 +158,7 @@ export const FeasibilityTile = ({
     : "./feasibility";
 
   if (candidacyIsAutonome && isFeasibilityDemat) {
-    feasibilityUrl = feasibilityFileResourceFirstRead
+    feasibilityUrl = feasibilityFileDematAutonomeResourceHidden
       ? "./feasibility-demat-autonome"
       : "./feasibility-demat-autonome-resources";
   }
