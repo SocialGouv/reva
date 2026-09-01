@@ -10,11 +10,13 @@ export const createSousCompteVaeCollective = async ({
   accountFirstname,
   accountLastname,
   accountEmail,
+  canCreateCohorteVaeCollective,
 }: {
   commanditaireVaeCollectiveId: string;
   accountFirstname: string;
   accountLastname: string;
   accountEmail: string;
+  canCreateCohorteVaeCollective: boolean;
 }) => {
   const account = await createAccount({
     email: accountEmail,
@@ -33,6 +35,14 @@ export const createSousCompteVaeCollective = async ({
       },
     });
 
+  if (canCreateCohorteVaeCollective) {
+    await prismaClient.permissionSpecificToSousCompteVaeCollective.create({
+      data: {
+        sousCompteVaeCollectiveId: sousCompteVaeCollective.id,
+        permission: "CREER_COHORTE",
+      },
+    });
+  }
   await sendSetupPasswordEmail({ email: accountEmail });
 
   return sousCompteVaeCollective;

@@ -244,11 +244,13 @@ const unsafeResolvers = {
         accountFirstname,
         accountLastname,
         accountEmail,
+        canCreateCohorteVaeCollective,
       }: {
         commanditaireVaeCollectiveId: string;
         accountFirstname: string;
         accountLastname: string;
         accountEmail: string;
+        canCreateCohorteVaeCollective: boolean;
       },
     ) =>
       createSousCompteVaeCollective({
@@ -256,6 +258,7 @@ const unsafeResolvers = {
         accountFirstname,
         accountLastname,
         accountEmail,
+        canCreateCohorteVaeCollective,
       }),
   },
 };
