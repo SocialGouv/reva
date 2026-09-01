@@ -1,5 +1,4 @@
 import { CertificationStatus } from "@prisma/client";
-import { isAfter, isBefore, isEqual, startOfToday } from "date-fns";
 
 import { CERTIFICATION_PAS_ETE_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
@@ -7,6 +6,7 @@ import { prismaClient } from "@/prisma/client";
 import { ValidateCertificationInput } from "../referential.types";
 
 import { getCertificationWithReducedRequirementsById } from "./getCertificationWithReducedRequirementsById";
+import { updateCertificationsVisibility } from "./updateCertificationsVisibility";
 
 export const validateCertification = async ({
   certificationId,
@@ -47,32 +47,23 @@ export const validateCertification = async ({
     throw new Error("La description de la certification n'est pas complète");
   }
 
-  const isTodayBetweenAvalaibleAtAndRncpExpiresAt =
-    isAfter(startOfToday(), certification.availableAt) &&
-    isBefore(startOfToday(), certification.rncpExpiresAt);
-
-  const isTodayEqualsToAvailableAt = isEqual(
-    startOfToday(),
-    certification.availableAt,
-  );
-  const idTodayEqualsToRncpExpiresAt = isEqual(
-    startOfToday(),
-    certification.rncpExpiresAt,
-  );
-
-  const visible =
-    isTodayEqualsToAvailableAt ||
-    isTodayBetweenAvalaibleAtAndRncpExpiresAt ||
-    idTodayEqualsToRncpExpiresAt;
-
-  return await prismaClient.certification.update({
-    where: { id: certificationId },
-    data: {
-      status: "VALIDE_PAR_CERTIFICATEUR",
-      visible,
-      certificationStatusHistory: {
-        create: { status: "VALIDE_PAR_CERTIFICATEUR" },
+  return prismaClient.$transaction(async (tx) => {
+    await tx.certification.update({
+      where: { id: certificationId },
+      data: {
+        status: "VALIDE_PAR_CERTIFICATEUR",
+        certificationStatusHistory: {
+          create: { status: "VALIDE_PAR_CERTIFICATEUR" },
+        },
       },
-    },
+    });
+
+    // Visibility also depends on status/dates, which just changed, and on
+    // having a certification authority assigned, so it must be recomputed here.
+    await updateCertificationsVisibility([certificationId], tx);
+
+    return tx.certification.findUniqueOrThrow({
+      where: { id: certificationId },
+    });
   });
 };

@@ -3,6 +3,8 @@ import { prismaClient } from "@/prisma/client";
 
 import { UpdateCertificationStructureAndCertificationAuthoritiesInput } from "../referential.types";
 
+import { updateCertificationsVisibility } from "./updateCertificationsVisibility";
+
 export const updateCertificationStructureAndCertificationAuthorities = async ({
   certificationId,
   certificationAuthorityStructureId,
@@ -72,6 +74,10 @@ export const updateCertificationStructureAndCertificationAuthorities = async ({
           certificationAuthorityStructureId,
         },
       });
+
+      // A certification can only be visible if it has at least one certification
+      // authority assigned, so visibility must be recomputed after this change.
+      await updateCertificationsVisibility([certificationId], tx);
     });
   }
   // Update Certification Authority Structure on certification
@@ -159,6 +165,10 @@ export const updateCertificationStructureAndCertificationAuthorities = async ({
           certificationAuthorityStructureId,
         },
       });
+
+      // A certification can only be visible if it has at least one certification
+      // authority assigned, so visibility must be recomputed after this change.
+      await updateCertificationsVisibility([certificationId], tx);
     });
   }
 

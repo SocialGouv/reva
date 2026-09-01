@@ -1,5 +1,6 @@
 import { CertificationAuthority } from "@prisma/client";
 
+import { updateCertificationsVisibility } from "@/modules/referential/features/updateCertificationsVisibility";
 import { prismaClient } from "@/prisma/client";
 
 import { refreshCertificationAuthorityOfCandidacies } from "./refreshCertificationAuthorityOfCandidacies";
@@ -13,6 +14,13 @@ export const updateCertificationAuthorityDepartmentsAndCertifications = async ({
   departmentIds: string[];
   certificationIds: string[];
 }): Promise<CertificationAuthority> => {
+  const previousCertificationIds = (
+    await prismaClient.certificationAuthorityOnCertification.findMany({
+      where: { certificationAuthorityId },
+      select: { certificationId: true },
+    })
+  ).map(({ certificationId }) => certificationId);
+
   const result = await prismaClient.$transaction([
     //delete old certifications associations and create the new ones
     prismaClient.certificationAuthorityOnCertification.deleteMany({
@@ -52,6 +60,13 @@ export const updateCertificationAuthorityDepartmentsAndCertifications = async ({
       where: { id: certificationAuthorityId },
     }),
   ]);
+
+  // Certifications gaining or losing their last certification authority here
+  // may become visible or invisible, so recompute for both the old and new sets.
+  await updateCertificationsVisibility(
+    [...new Set([...previousCertificationIds, ...certificationIds])],
+    prismaClient,
+  );
 
   await refreshCertificationAuthorityOfCandidacies({
     updatedCertificationAuthorityId: certificationAuthorityId,

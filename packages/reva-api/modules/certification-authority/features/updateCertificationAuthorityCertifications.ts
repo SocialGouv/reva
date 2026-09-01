@@ -1,5 +1,6 @@
 import { CertificationAuthority } from "@prisma/client";
 
+import { updateCertificationsVisibility } from "@/modules/referential/features/updateCertificationsVisibility";
 import { AUTORITE_CERTIFICATION_NON_TROUVEE } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
 
@@ -93,6 +94,13 @@ export const updateCertificationAuthorityCertifications = async ({
     await tx.certificationAuthorityLocalAccountOnCertification.createMany({
       data: certificationAuthorityLocalAccountOnCertifications,
     });
+
+    // Certifications gaining or losing their last certification authority here
+    // may become visible or invisible, so recompute for both sides of the diff.
+    await updateCertificationsVisibility(
+      [...deletedCertificationIds, ...addedCertificationIds],
+      tx,
+    );
   });
 
   const departmentIds = (

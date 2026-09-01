@@ -60,3 +60,39 @@ test("should not assign a candidacy that already has a certification authority",
   });
   expect(updated?.certificationAuthorityId).toEqual(existingCa.id);
 });
+
+test("makes the certification visible once it is assigned a certification authority", async () => {
+  const certification = await createCertificationHelper({ visible: false });
+  const certificationAuthority = await createCertificationAuthorityHelper();
+
+  await updateCertificationAuthorityCertifications({
+    certificationAuthorityId: certificationAuthority.id,
+    certificationIds: [certification.id],
+  });
+
+  const updated = await prismaClient.certification.findUnique({
+    where: { id: certification.id },
+  });
+  expect(updated?.visible).toBe(true);
+});
+
+test("makes the certification invisible once its last certification authority is unassigned", async () => {
+  const certification = await createCertificationHelper({ visible: true });
+  const certificationAuthority = await createCertificationAuthorityHelper();
+  await prismaClient.certificationAuthorityOnCertification.create({
+    data: {
+      certificationId: certification.id,
+      certificationAuthorityId: certificationAuthority.id,
+    },
+  });
+
+  await updateCertificationAuthorityCertifications({
+    certificationAuthorityId: certificationAuthority.id,
+    certificationIds: [],
+  });
+
+  const updated = await prismaClient.certification.findUnique({
+    where: { id: certification.id },
+  });
+  expect(updated?.visible).toBe(false);
+});

@@ -10,6 +10,7 @@ export const setCertificationsVisibleOrNotUsingStatusAndAvailabilityDate = () =>
         status: "VALIDE_PAR_CERTIFICATEUR",
         availableAt: { lte: startOfToday() },
         rncpExpiresAt: { gte: startOfToday() },
+        certificationAuthorityOnCertification: { some: {} },
       },
       data: { visible: true },
     }),
