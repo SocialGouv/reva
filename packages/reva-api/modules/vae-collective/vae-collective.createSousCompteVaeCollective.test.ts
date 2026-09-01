@@ -17,12 +17,14 @@ const createSousCompteVaeCollectiveMutation = graphql(`
     $accountFirstname: String!
     $accountLastname: String!
     $accountEmail: String!
+    $canCreateCohorteVaeCollective: Boolean!
   ) {
     vaeCollective_createSousCompteVaeCollective(
       commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
       accountFirstname: $accountFirstname
       accountLastname: $accountLastname
       accountEmail: $accountEmail
+      canCreateCohorteVaeCollective: $canCreateCohorteVaeCollective
     ) {
       id
       account {
@@ -40,6 +42,7 @@ const createSousCompteVaeCollective = ({
   accountFirstname,
   accountLastname,
   accountEmail,
+  canCreateCohorteVaeCollective = false,
   role,
   keycloakId,
 }: {
@@ -47,6 +50,7 @@ const createSousCompteVaeCollective = ({
   accountFirstname: string;
   accountLastname: string;
   accountEmail: string;
+  canCreateCohorteVaeCollective?: boolean;
   role: KeyCloakUserRole;
   keycloakId?: string;
 }) => {
@@ -61,6 +65,7 @@ const createSousCompteVaeCollective = ({
     accountFirstname,
     accountLastname,
     accountEmail,
+    canCreateCohorteVaeCollective,
   });
 };
 
@@ -117,6 +122,72 @@ describe("create sous compte vae collective", () => {
         templateId: 732,
       }),
     );
+  });
+
+  test("should create a CREER_COHORTE permission when canCreateCohorteVaeCollective is true", async () => {
+    mockKeycloakAdmin();
+
+    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+    const commanditaireVaeCollectiveId =
+      cohorteVaeCollective.commanditaireVaeCollectiveId;
+
+    const res = await createSousCompteVaeCollective({
+      commanditaireVaeCollectiveId,
+      accountFirstname: "John",
+      accountLastname: "Doe",
+      accountEmail: "john.doe.can-create-cohorte@example.com",
+      canCreateCohorteVaeCollective: true,
+      role: "admin",
+      keycloakId: "1b0e7046-ca61-4259-b716-785f36ab79b2",
+    });
+
+    const permission =
+      await prismaClient.permissionSpecificToSousCompteVaeCollective.findUnique(
+        {
+          where: {
+            permission_sousCompteVaeCollectiveId: {
+              permission: "CREER_COHORTE",
+              sousCompteVaeCollectiveId:
+                res.vaeCollective_createSousCompteVaeCollective.id,
+            },
+          },
+        },
+      );
+
+    expect(permission).not.toBeNull();
+  });
+
+  test("should not create a CREER_COHORTE permission when canCreateCohorteVaeCollective is false", async () => {
+    mockKeycloakAdmin();
+
+    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+    const commanditaireVaeCollectiveId =
+      cohorteVaeCollective.commanditaireVaeCollectiveId;
+
+    const res = await createSousCompteVaeCollective({
+      commanditaireVaeCollectiveId,
+      accountFirstname: "John",
+      accountLastname: "Doe",
+      accountEmail: "john.doe.cannot-create-cohorte@example.com",
+      canCreateCohorteVaeCollective: false,
+      role: "admin",
+      keycloakId: "1b0e7046-ca61-4259-b716-785f36ab79b2",
+    });
+
+    const permission =
+      await prismaClient.permissionSpecificToSousCompteVaeCollective.findUnique(
+        {
+          where: {
+            permission_sousCompteVaeCollectiveId: {
+              permission: "CREER_COHORTE",
+              sousCompteVaeCollectiveId:
+                res.vaeCollective_createSousCompteVaeCollective.id,
+            },
+          },
+        },
+      );
+
+    expect(permission).toBeNull();
   });
 
   test("should let the gestionnaire of the commanditaire create a sous compte for it", async () => {

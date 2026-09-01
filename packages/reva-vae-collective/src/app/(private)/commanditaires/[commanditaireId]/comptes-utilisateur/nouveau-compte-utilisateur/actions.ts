@@ -28,6 +28,7 @@ const createSousCompteVaeCollectiveMutation = graphql(`
       accountFirstname: $accountFirstname
       accountLastname: $accountLastname
       accountEmail: $accountEmail
+      canCreateCohorteVaeCollective: false
     ) {
       id
     }
