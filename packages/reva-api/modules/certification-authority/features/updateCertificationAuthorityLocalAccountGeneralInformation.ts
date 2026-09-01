@@ -19,23 +19,12 @@ export const updateCertificationAuthorityLocalAccountGeneralInformation =
     input: UpdateCertificationAuthorityLocalAccountGeneralInformationInput;
     userRoles: KeyCloakUserRole[];
   }) => {
-    const oldAccounts = await prismaClient.account.findMany({
+    const oldAccount = await prismaClient.account.findFirst({
       where: {
-        certificationAuthorityLocalAccount: {
-          some: {
-            id: certificationAuthorityLocalAccountId,
-          },
-        },
+        certificationAuthorityLocalAccountId,
+        isApiUser: false,
       },
     });
-
-    if (oldAccounts.length > 1) {
-      throw new Error(
-        "Plusieurs comptes utilisateurs du compte local certification trouvés",
-      );
-    }
-
-    const oldAccount = oldAccounts[0];
 
     if (!oldAccount) {
       throw new Error(

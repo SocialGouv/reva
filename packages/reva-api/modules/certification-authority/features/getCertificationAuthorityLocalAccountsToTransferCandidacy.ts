@@ -88,28 +88,31 @@ export const getCertificationAuthorityLocalAccountsToTransferCandidacy =
     const whereClause: Prisma.CertificationAuthorityLocalAccountWhereInput = {
       certificationAuthorityId: { in: certificationAuthorityIds },
 
-      account: {
-        keycloakId: { not: keycloakId },
-        OR: [
-          {
-            firstname: {
-              contains: searchFilter,
-              mode: "insensitive",
+      Account: {
+        some: {
+          keycloakId: { not: keycloakId },
+          isApiUser: false,
+          OR: [
+            {
+              firstname: {
+                contains: searchFilter,
+                mode: "insensitive",
+              },
             },
-          },
-          {
-            lastname: {
-              contains: searchFilter,
-              mode: "insensitive",
+            {
+              lastname: {
+                contains: searchFilter,
+                mode: "insensitive",
+              },
             },
-          },
-          {
-            email: {
-              contains: searchFilter,
-              mode: "insensitive",
+            {
+              email: {
+                contains: searchFilter,
+                mode: "insensitive",
+              },
             },
-          },
-        ],
+          ],
+        },
       },
     };
 

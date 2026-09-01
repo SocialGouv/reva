@@ -1,4 +1,3 @@
-import { getAccountById } from "@/modules/account/features/getAccount";
 import { updateCandidacyCertificationAuthority } from "@/modules/candidacy/features/updateCandidacyCertificationAuthority";
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
@@ -162,6 +161,11 @@ export const sendDFFToCertificationAuthority = async ({
           some: { candidacyId },
         },
       },
+      include: {
+        Account: {
+          where: { isApiUser: false },
+        },
+      },
     });
 
   const emails = [];
@@ -177,8 +181,9 @@ export const sendDFFToCertificationAuthority = async ({
   }
 
   for (const cala of certificationAuthorityLocalAccounts) {
-    const account = await getAccountById({ id: cala.accountId });
-    emails.push(account.email);
+    for (const account of cala.Account) {
+      emails.push(account.email);
+    }
   }
 
   const feasibilityUrl = getBackofficeUrl({

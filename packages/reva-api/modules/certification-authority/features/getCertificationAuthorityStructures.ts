@@ -71,27 +71,29 @@ export const getCertificationAuthorityStructures = async ({
                 {
                   certificationAuthorityLocalAccount: {
                     some: {
-                      account: {
-                        OR: [
-                          {
-                            firstname: {
-                              contains: searchFilter,
-                              mode: "insensitive",
+                      Account: {
+                        some: {
+                          OR: [
+                            {
+                              firstname: {
+                                contains: searchFilter,
+                                mode: "insensitive",
+                              },
                             },
-                          },
-                          {
-                            lastname: {
-                              contains: searchFilter,
-                              mode: "insensitive",
+                            {
+                              lastname: {
+                                contains: searchFilter,
+                                mode: "insensitive",
+                              },
                             },
-                          },
-                          {
-                            email: {
-                              contains: searchFilter,
-                              mode: "insensitive",
+                            {
+                              email: {
+                                contains: searchFilter,
+                                mode: "insensitive",
+                              },
                             },
-                          },
-                        ],
+                          ],
+                        },
                       },
                     },
                   },

@@ -57,17 +57,7 @@ export const isFeasibilityManager =
         where: { keycloakId: context.auth.userInfo.sub },
       });
 
-      if (!account) {
-        throw new Error(NOT_AUTHORIZED_CANDIDACY_MANAGE);
-      }
-
-      //use the accountId instead of account:{keycloadId ...} in order to be able to use a findUnique and let prisma batch the queries
-      const certificationAuthorityLocalAccount =
-        await prismaClient.certificationAuthorityLocalAccount.findUnique({
-          where: { accountId: account.id },
-        });
-
-      if (!certificationAuthorityLocalAccount) {
+      if (!account?.certificationAuthorityLocalAccountId) {
         throw new Error(NOT_AUTHORIZED_CANDIDACY_MANAGE);
       }
 
@@ -78,7 +68,7 @@ export const isFeasibilityManager =
               certificationAuthorityLocalAccountId_candidacyId: {
                 candidacyId: candidacyId,
                 certificationAuthorityLocalAccountId:
-                  certificationAuthorityLocalAccount.id,
+                  account.certificationAuthorityLocalAccountId,
               },
             },
           },

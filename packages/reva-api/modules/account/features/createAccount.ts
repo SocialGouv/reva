@@ -17,6 +17,7 @@ export const createAccount = async (params: {
   group: KeyCloakGroup;
   organismId?: string;
   certificationAuthorityId?: string;
+  certificationAuthorityLocalAccountId?: string;
   maisonMereAAPRaisonSociale?: string;
   dontSendKeycloakEmail?: boolean;
   isApiUser?: boolean;
@@ -96,6 +97,8 @@ export const createAccount = async (params: {
       lastname: params.lastname,
       organismId: params.organismId,
       certificationAuthorityId: params.certificationAuthorityId,
+      certificationAuthorityLocalAccountId:
+        params.certificationAuthorityLocalAccountId,
       isApiUser: params.isApiUser,
     },
   });

@@ -12,7 +12,6 @@ import {
 } from "@/modules/shared/error/functionalError";
 import { logger } from "@/modules/shared/logger/logger";
 
-import { getAccountById } from "../account/features/getAccount";
 import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { hasRole } from "../shared/security/middlewares";
 import {
@@ -65,6 +64,7 @@ import { getCertificationsByCertificationAuthorityId } from "./features/getCerti
 import { getCertificationsByCertificationStructureId } from "./features/getCertificationsByCertificationStructureId";
 import { getDepartmentsByCertificationAuthorityId } from "./features/getDepartmentsByCertificationAuthorityId";
 import { getHumanAccountByCertificationAuthorityId } from "./features/getHumanAccountByCertificationAuthorityId";
+import { getHumanAccountByCertificationAuthorityLocalAccountId } from "./features/getHumanAccountByCertificationAuthorityLocalAccountId";
 import { getLastProfessionalCguCertificateur } from "./features/getLastProfessionalCguCertificateur";
 import { getMetabaseIframeUrl } from "./features/getMetabaseIframeUrl";
 import { getPaginatedCertifications } from "./features/getPaginatedCertifications";
@@ -163,9 +163,9 @@ const unsafeResolvers = {
       getCertificationAuthorityById({
         id: parent.certificationAuthorityId,
       }),
-    account: (parent: CertificationAuthorityLocalAccount, _: unknown) =>
-      getAccountById({
-        id: parent.accountId,
+    account: (parent: CertificationAuthorityLocalAccount) =>
+      getHumanAccountByCertificationAuthorityLocalAccountId({
+        certificationAuthorityLocalAccountId: parent.id,
       }),
     paginatedCertifications: (
       parent: CertificationAuthorityLocalAccount,

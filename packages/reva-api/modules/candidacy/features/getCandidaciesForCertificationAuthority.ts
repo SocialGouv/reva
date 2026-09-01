@@ -357,15 +357,12 @@ const resolveCertificationAuthorityInfo = async (
     }
 
     // Certification Authority local account
-    if (
-      account.certificationAuthorityLocalAccount?.[0]?.certificationAuthorityId
-    ) {
+    if (account.certificationAuthorityLocalAccount?.certificationAuthorityId) {
       return {
         certificationAuthorityId:
-          account.certificationAuthorityLocalAccount[0]
-            .certificationAuthorityId,
+          account.certificationAuthorityLocalAccount.certificationAuthorityId,
         certificationAuthorityLocalAccountId:
-          account.certificationAuthorityLocalAccount[0].id,
+          account.certificationAuthorityLocalAccount.id,
       };
     }
 

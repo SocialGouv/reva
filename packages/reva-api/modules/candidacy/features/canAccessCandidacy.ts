@@ -113,12 +113,7 @@ export const canAccessCandidacy = async ({
       return false;
     }
 
-    const certificationAuthorityLocalAccount =
-      await prismaClient.certificationAuthorityLocalAccount.findFirst({
-        where: { accountId: account.id },
-      });
-
-    if (!certificationAuthorityLocalAccount) {
+    if (!account.certificationAuthorityLocalAccountId) {
       return false;
     }
 
@@ -129,7 +124,7 @@ export const canAccessCandidacy = async ({
             certificationAuthorityLocalAccountId_candidacyId: {
               candidacyId: candidacyId,
               certificationAuthorityLocalAccountId:
-                certificationAuthorityLocalAccount.id,
+                account.certificationAuthorityLocalAccountId,
             },
           },
         },

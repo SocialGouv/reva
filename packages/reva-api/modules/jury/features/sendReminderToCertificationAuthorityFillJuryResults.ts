@@ -1,6 +1,5 @@
 import { endOfDay, startOfDay, sub } from "date-fns";
 
-import { getAccountById } from "@/modules/account/features/getAccount";
 import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
@@ -23,7 +22,13 @@ export const sendReminderToCertificationAuthorityFillJuryResults = async () => {
         include: {
           certificationAuthorityLocalAccountOnCandidacy: {
             include: {
-              certificationAuthorityLocalAccount: true,
+              certificationAuthorityLocalAccount: {
+                include: {
+                  Account: {
+                    where: { isApiUser: false },
+                  },
+                },
+              },
             },
           },
         },
@@ -40,10 +45,9 @@ export const sendReminderToCertificationAuthorityFillJuryResults = async () => {
 
       for (const cala of jury.candidacy
         .certificationAuthorityLocalAccountOnCandidacy) {
-        const account = await getAccountById({
-          id: cala.certificationAuthorityLocalAccount.accountId,
-        });
-        emails.push(account.email);
+        for (const account of cala.certificationAuthorityLocalAccount.Account) {
+          emails.push(account.email);
+        }
       }
 
       await sendFillJuryResultsCertificationAuthorityEmail({

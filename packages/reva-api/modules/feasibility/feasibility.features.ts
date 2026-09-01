@@ -25,7 +25,6 @@ import {
 import { prismaClient } from "@/prisma/client";
 
 import { Account } from "../account/account.types";
-import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
 import { updateCandidacyCertificationAuthority } from "../candidacy/features/updateCandidacyCertificationAuthority";
@@ -370,6 +369,11 @@ export const createFeasibility = async ({
           some: { candidacyId },
         },
       },
+      include: {
+        Account: {
+          where: { isApiUser: false },
+        },
+      },
     });
 
   const emails = [];
@@ -385,8 +389,9 @@ export const createFeasibility = async ({
   }
 
   for (const cala of certificationAuthorityLocalAccounts) {
-    const account = await getAccountById({ id: cala.accountId });
-    emails.push(account.email);
+    for (const account of cala.Account) {
+      emails.push(account.email);
+    }
   }
 
   if (emails.length) {

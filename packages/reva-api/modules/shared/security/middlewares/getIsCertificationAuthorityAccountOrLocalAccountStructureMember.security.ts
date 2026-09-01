@@ -86,14 +86,13 @@ export const getIsCertificationAuthorityAccountOrLocalAccountStructureMember =
       });
 
       userAccountAuthorityStructureIds = toStructureIds(
-        userAccount?.certificationAuthorityLocalAccount?.[0]
-          ?.certificationAuthority
+        userAccount?.certificationAuthorityLocalAccount?.certificationAuthority
           ?.certificationAuthorityOnCertificationAuthorityStructure,
       );
 
       userCertificationAuthorityId =
-        userAccount?.certificationAuthorityLocalAccount?.[0]
-          ?.certificationAuthority?.id;
+        userAccount?.certificationAuthorityLocalAccount?.certificationAuthority
+          ?.id;
     }
 
     if (!userAccount) {

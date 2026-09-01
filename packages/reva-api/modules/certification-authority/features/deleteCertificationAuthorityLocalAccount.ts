@@ -9,19 +9,18 @@ export const deleteCertificationAuthorityLocalAccount = async ({
   const certificationAuthorityLocalAccount =
     await prismaClient.certificationAuthorityLocalAccount.findUnique({
       where: { id: certificationAuthorityLocalAccountId },
+      include: { Account: true },
     });
 
   if (!certificationAuthorityLocalAccount) {
     throw new Error("Le compte certificateur local n'a pas été trouvé");
   }
 
-  const result = await prismaClient.certificationAuthorityLocalAccount.delete({
+  for (const account of certificationAuthorityLocalAccount.Account) {
+    await deleteAccount({ accountId: account.id });
+  }
+
+  return prismaClient.certificationAuthorityLocalAccount.delete({
     where: { id: certificationAuthorityLocalAccountId },
   });
-
-  await deleteAccount({
-    accountId: certificationAuthorityLocalAccount.accountId,
-  });
-
-  return result;
 };

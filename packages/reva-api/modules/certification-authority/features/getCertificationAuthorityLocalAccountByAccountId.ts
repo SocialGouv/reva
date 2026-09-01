@@ -1,14 +1,21 @@
 import { prismaClient } from "@/prisma/client";
 
-export const getCertificationAuthorityLocalAccountByAccountId = ({
+export const getCertificationAuthorityLocalAccountByAccountId = async ({
   accountId,
 }: {
   accountId: string;
-}) =>
-  prismaClient.certificationAuthorityLocalAccount.findFirst({
-    where: { accountId },
+}) => {
+  const account = await prismaClient.account.findUnique({
+    where: { id: accountId },
     include: {
-      certificationAuthorityLocalAccountOnDepartment: true,
-      certificationAuthorityLocalAccountOnCertification: true,
+      certificationAuthorityLocalAccount: {
+        include: {
+          certificationAuthorityLocalAccountOnDepartment: true,
+          certificationAuthorityLocalAccountOnCertification: true,
+        },
+      },
     },
   });
+
+  return account?.certificationAuthorityLocalAccount ?? null;
+};

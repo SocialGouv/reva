@@ -26,8 +26,10 @@ export const isCertificationAuthorityLocalAccountOwner =
     const certificationAuthorityLocalAccount =
       await prismaClient.certificationAuthorityLocalAccount.findFirst({
         where: {
-          account: {
-            keycloakId: context.auth.userInfo.sub,
+          Account: {
+            some: {
+              keycloakId: context.auth.userInfo.sub,
+            },
           },
           id: localAccountId,
         },

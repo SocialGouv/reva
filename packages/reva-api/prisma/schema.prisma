@@ -538,30 +538,32 @@ model Country {
 }
 
 model Account {
-  id                                 String                               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  email                              String                               @unique @db.VarChar(255)
-  firstname                          String?                              @db.VarChar(255)
-  lastname                           String?                              @db.VarChar(255)
-  certificationAuthority             CertificationAuthority?              @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
-  certificationAuthorityId           String?                              @map("certification_authority_id") @db.Uuid
-  keycloakId                         String                               @unique @map("keycloak_id") @db.Uuid
-  maisonMereAAP                      MaisonMereAAP[]
-  featureBetaTest                    FeatureBetaTest[]
-  certificationAuthorityLocalAccount CertificationAuthorityLocalAccount[]
-  certificationRegistryManager       CertificationRegistryManager[]
-  disabledAt                         DateTime?                            @map("disabled_at") @db.Timestamptz(6)
-  commanditaireVaeCollective         CommanditaireVaeCollective[]
-  organismOnAccounts                 OrganismOnAccount[]
-  maisonMereAAPs                     MaisonMereAAPOnAccount[]
-  organism                           Organism?                            @relation(fields: [organismId], references: [id])
-  organismId                         String?                              @db.Uuid
-  accountEmailOtps                   AccountEmailOtp[]
-  emailOtpEnabled                    Boolean                              @default(false) @map("email_otp_enabled")
-  isApiUser                          Boolean                              @default(false) @map("is_api_user")
-  sousComptesVaeCollectives          SousCompteVaeCollective[]
+  id                                   String                               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email                                String                               @unique @db.VarChar(255)
+  firstname                            String?                              @db.VarChar(255)
+  lastname                             String?                              @db.VarChar(255)
+  certificationAuthority               CertificationAuthority?              @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
+  certificationAuthorityId             String?                              @map("certification_authority_id") @db.Uuid
+  certificationAuthorityLocalAccount   CertificationAuthorityLocalAccount?  @relation(fields: [certificationAuthorityLocalAccountId], references: [id], onDelete: NoAction)
+  certificationAuthorityLocalAccountId String?                              @map("certification_authority_local_account_id") @db.Uuid
+  keycloakId                           String                               @unique @map("keycloak_id") @db.Uuid
+  maisonMereAAP                        MaisonMereAAP[]
+  featureBetaTest                      FeatureBetaTest[]
+  certificationRegistryManager         CertificationRegistryManager[]
+  disabledAt                           DateTime?                            @map("disabled_at") @db.Timestamptz(6)
+  commanditaireVaeCollective           CommanditaireVaeCollective[]
+  organismOnAccounts                   OrganismOnAccount[]
+  maisonMereAAPs                       MaisonMereAAPOnAccount[]
+  organism                             Organism?                            @relation(fields: [organismId], references: [id])
+  organismId                           String?                              @db.Uuid
+  accountEmailOtps                     AccountEmailOtp[]
+  emailOtpEnabled                      Boolean                              @default(false) @map("email_otp_enabled")
+  isApiUser                            Boolean                              @default(false) @map("is_api_user")
+  sousComptesVaeCollectives            SousCompteVaeCollective[]
 
   @@index([email])
   @@index([certificationAuthorityId])
+  @@index([certificationAuthorityLocalAccountId])
   @@index([keycloakId])
   @@map("account")
 }
@@ -1236,15 +1238,13 @@ model CertificationAuthorityLocalAccount {
   contactPhone                                      String?                                             @map("contact_phone") @db.VarChar(25)
   createdAt                                         DateTime                                            @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                                         DateTime?                                           @map("updated_at") @db.Timestamptz(6)
-  accountId                                         String                                              @unique @map("account_id") @db.Uuid
-  account                                           Account                                             @relation(fields: [accountId], references: [id])
+  Account                                           Account[]
   certificationAuthorityLocalAccountOnCertification CertificationAuthorityLocalAccountOnCertification[]
   certificationAuthorityLocalAccountOnDepartment    CertificationAuthorityLocalAccountOnDepartment[]
   certificationAuthority                            CertificationAuthority                              @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
   certificationAuthorityId                          String                                              @map("certification_authority_id") @db.Uuid
   certificationAuthorityLocalAccountOnCandidacy     CertificationAuthorityLocalAccountOnCandidacy[]
 
-  @@index([accountId])
   @@index([certificationAuthorityId])
   @@map("certification_authority_local_account")
 }

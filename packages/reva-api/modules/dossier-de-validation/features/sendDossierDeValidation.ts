@@ -1,7 +1,6 @@
 import { CandidacyStatusStep, FeasibilityStatus } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 
-import { getAccountById } from "@/modules/account/features/getAccount";
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { getHumanAccountByCertificationAuthorityId } from "@/modules/certification-authority/features/getHumanAccountByCertificationAuthorityId";
@@ -226,6 +225,11 @@ export const sendDossierDeValidation = async ({
           some: { candidacyId },
         },
       },
+      include: {
+        Account: {
+          where: { isApiUser: false },
+        },
+      },
     });
 
   const emails = [];
@@ -241,8 +245,9 @@ export const sendDossierDeValidation = async ({
   }
 
   for (const cala of certificationAuthorityLocalAccounts) {
-    const account = await getAccountById({ id: cala.accountId });
-    emails.push(account.email);
+    for (const account of cala.Account) {
+      emails.push(account.email);
+    }
   }
 
   if (emails.length) {

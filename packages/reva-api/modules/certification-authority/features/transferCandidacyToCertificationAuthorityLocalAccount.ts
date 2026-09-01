@@ -73,10 +73,17 @@ export const transferCandidacyToCertificationAuthorityLocalAccount =
           id: certificationAuthorityLocalAccountId,
         },
         include: {
-          account: true,
+          Account: {
+            where: { isApiUser: false },
+          },
         },
       });
     if (!certificationAuthorityLocalAccount) {
+      throw new Error(COMPTE_LOCAL_AUTORITE_CERTIFICATION_NON_TROUVE);
+    }
+
+    const humanAccount = certificationAuthorityLocalAccount.Account[0];
+    if (!humanAccount) {
       throw new Error(COMPTE_LOCAL_AUTORITE_CERTIFICATION_NON_TROUVE);
     }
 
@@ -183,7 +190,7 @@ export const transferCandidacyToCertificationAuthorityLocalAccount =
 
     const candidateName = `${candidacy.candidate?.firstname} ${candidacy.candidate?.lastname}`;
 
-    const { firstname, lastname } = certificationAuthorityLocalAccount.account;
+    const { firstname, lastname } = humanAccount;
 
     let newCertificationAuthorityName = lastname || "";
     if (firstname) {
@@ -204,8 +211,7 @@ export const transferCandidacyToCertificationAuthorityLocalAccount =
         "CANDIDACY_TRANSFERRED_TO_CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT",
       details: {
         certificationAuthorityLocalAccountId,
-        certificationAuthorityLocalAccountAccountEmail:
-          certificationAuthorityLocalAccount.account.email,
+        certificationAuthorityLocalAccountAccountEmail: humanAccount.email,
         certificationAuthorityTransferReason: transferReason,
       },
       ...userInfo,
@@ -220,7 +226,7 @@ export const transferCandidacyToCertificationAuthorityLocalAccount =
       });
 
       const previousCertificationAuthorityLocalAccount =
-        account?.certificationAuthorityLocalAccount?.[0];
+        account?.certificationAuthorityLocalAccount;
 
       if (previousCertificationAuthorityLocalAccount) {
         previousCertificationAuthorityName = account.lastname || "";
@@ -249,7 +255,7 @@ export const transferCandidacyToCertificationAuthorityLocalAccount =
     }
 
     sendCandidacyTransferToNewCertificationAuthorityEmail({
-      email: certificationAuthorityLocalAccount.account.email,
+      email: humanAccount.email,
       previousCertificationAuthorityName,
       candidateName,
       newCertificationAuthorityName,
