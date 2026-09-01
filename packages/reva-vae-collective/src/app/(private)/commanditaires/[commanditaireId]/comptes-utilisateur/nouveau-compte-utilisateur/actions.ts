@@ -22,13 +22,14 @@ const createSousCompteVaeCollectiveMutation = graphql(`
     $accountFirstname: String!
     $accountLastname: String!
     $accountEmail: String!
+    $canCreateCohorteVaeCollective: Boolean!
   ) {
     vaeCollective_createSousCompteVaeCollective(
       commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
       accountFirstname: $accountFirstname
       accountLastname: $accountLastname
       accountEmail: $accountEmail
-      canCreateCohorteVaeCollective: false
+      canCreateCohorteVaeCollective: $canCreateCohorteVaeCollective
     ) {
       id
     }
@@ -41,8 +42,13 @@ export const createSousCompteVaeCollective = async (
 ) => {
   const accessToken = await getAccessTokenFromCookie();
 
-  const { accountFirstname, accountLastname, accountEmail, commanditaireId } =
-    Object.fromEntries(formData.entries());
+  const {
+    accountFirstname,
+    accountLastname,
+    accountEmail,
+    commanditaireId,
+    canCreateCohorteVaeCollective,
+  } = Object.fromEntries(formData.entries());
 
   for (const [fieldName, field] of Object.entries({
     accountLastname,
@@ -74,6 +80,7 @@ export const createSousCompteVaeCollective = async (
         accountFirstname: accountFirstname.toString(),
         accountLastname: accountLastname.toString(),
         accountEmail: accountEmail.toString(),
+        canCreateCohorteVaeCollective: canCreateCohorteVaeCollective === "on",
       },
       {
         fetchOptions: {
