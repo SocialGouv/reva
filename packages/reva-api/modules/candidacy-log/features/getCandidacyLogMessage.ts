@@ -302,6 +302,24 @@ export const getCandidacyLogMessage = ({
         format(details.feasibilityFileTemplateFirstReadAt, "dd/MM/yyyy"),
       );
 
+    case "FEASIBILITY_FILE_DEMAT_AUTONOME_FIRST_OPENING_AT_UPDATED":
+      return log(
+        "Date de première ouverture du dossier de recevabilité dématérialisé autonome ",
+        format(
+          details.feasibilityFileDematAutonomeFirstOpeningAt,
+          "dd/MM/yyyy",
+        ),
+      );
+
+    case "FEASIBILITY_FILE_DEMAT_AUTONOME_RESOURCE_HIDDEN_AT_UPDATED":
+      return log(
+        "Date de masquage de la page de ressources du dossier de recevabilité dématérialisé autonome ",
+        format(
+          details.feasibilityFileDematAutonomeResourceHiddenAt,
+          "dd/MM/yyyy",
+        ),
+      );
+
     case "CANDIDACY_CERTIFICATION_AUTHORITY_UPDATED":
       return log(
         "Certificateur de la candidature modifié",

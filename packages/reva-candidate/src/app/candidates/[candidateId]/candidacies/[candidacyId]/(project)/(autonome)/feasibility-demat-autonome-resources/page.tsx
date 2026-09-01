@@ -14,7 +14,7 @@ import { graphqlErrorToast } from "@/components/toast/toast";
 import { useFeasibilityDematAutonomeResourcesPage } from "./feasibility-demat-autonome-resources.hook";
 
 const schema = z.object({
-  feasibilityFileResourceFirstRead: z.boolean(),
+  feasibilityFileDematAutonomeResourceHidden: z.boolean(),
 });
 
 type FeasibilityDematAutonomeResourcesForm = z.infer<typeof schema>;
@@ -22,15 +22,18 @@ type FeasibilityDematAutonomeResourcesForm = z.infer<typeof schema>;
 export default function FeasibilityDematAutonomeResourcesPage() {
   const router = useRouter();
 
-  const { candidacy, markFeasibilityFileResourceFirstAsRead } =
-    useFeasibilityDematAutonomeResourcesPage();
+  const {
+    candidacy,
+    markFeasibilityFileDematAutonomeResourceAsHidden,
+    updateFeasibilityFileDematAutonomeFirstOpeningAt,
+  } = useFeasibilityDematAutonomeResourcesPage();
 
   const defaultValues = useMemo(
     () => ({
-      feasibilityFileResourceFirstRead:
-        candidacy?.feasibilityFileResourceFirstRead || false,
+      feasibilityFileDematAutonomeResourceHidden:
+        candidacy?.feasibilityFileDematAutonomeResourceHidden || false,
     }),
-    [candidacy?.feasibilityFileResourceFirstRead],
+    [candidacy?.feasibilityFileDematAutonomeResourceHidden],
   );
 
   const {
@@ -56,8 +59,14 @@ export default function FeasibilityDematAutonomeResourcesPage() {
     }
 
     try {
-      if (data.feasibilityFileResourceFirstRead) {
-        await markFeasibilityFileResourceFirstAsRead.mutateAsync({
+      if (data.feasibilityFileDematAutonomeResourceHidden) {
+        await markFeasibilityFileDematAutonomeResourceAsHidden.mutateAsync({
+          candidacyId: candidacy.id,
+        });
+      }
+
+      if (!candidacy.feasibilityFileDematAutonomeFirstOpening) {
+        await updateFeasibilityFileDematAutonomeFirstOpeningAt.mutateAsync({
           candidacyId: candidacy.id,
         });
       }
@@ -153,10 +162,12 @@ export default function FeasibilityDematAutonomeResourcesPage() {
           <Checkbox
             small
             state={
-              errors.feasibilityFileResourceFirstRead ? "error" : "default"
+              errors.feasibilityFileDematAutonomeResourceHidden
+                ? "error"
+                : "default"
             }
             stateRelatedMessage={
-              errors.feasibilityFileResourceFirstRead?.message
+              errors.feasibilityFileDematAutonomeResourceHidden?.message
             }
             options={[
               {
@@ -164,7 +175,7 @@ export default function FeasibilityDematAutonomeResourcesPage() {
                 hintText:
                   "Toutes ces informations sont disponibles en tout temps depuis la section ressources.",
                 nativeInputProps: {
-                  ...register("feasibilityFileResourceFirstRead"),
+                  ...register("feasibilityFileDematAutonomeResourceHidden"),
                 },
               },
             ]}
@@ -176,7 +187,7 @@ export default function FeasibilityDematAutonomeResourcesPage() {
             submitButtonLabel="Commencer"
             formState={{
               isSubmitting,
-              canSubmit: !candidacy.feasibilityFileResourceFirstRead,
+              canSubmit: !candidacy.feasibilityFileDematAutonomeResourceHidden,
             }}
           />
         </form>

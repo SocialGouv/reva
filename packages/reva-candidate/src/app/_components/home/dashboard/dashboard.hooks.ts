@@ -64,7 +64,8 @@ const GET_CANDIDACY_BY_ID_FOR_DASHBOARD = graphql(`
         adresseCodePostal
         adresseVille
       }
-      feasibilityFileResourceFirstRead
+      feasibilityFileDematAutonomeResourceHidden
+      feasibilityFileDematAutonomeFirstOpening
       feasibility {
         feasibilityFileSentAt
         decision

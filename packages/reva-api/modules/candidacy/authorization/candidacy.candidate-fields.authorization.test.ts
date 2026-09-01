@@ -76,15 +76,15 @@ const candidacy_updateCandidacyEndAccompagnementDecision = graphql(`
   }
 `);
 
-const candidacy_markFeasibilityFileResourceFirstAsRead = graphql(`
-  mutation candidacy_markFeasibilityFileResourceFirstAsRead_authorization(
+const candidacy_markFeasibilityFileDematAutonomeResourceAsHidden = graphql(`
+  mutation candidacy_markFeasibilityFileDematAutonomeResourceAsHidden_authorization(
     $candidacyId: UUID!
   ) {
-    candidacy_markFeasibilityFileResourceFirstAsRead(
+    candidacy_markFeasibilityFileDematAutonomeResourceAsHidden(
       candidacyId: $candidacyId
     ) {
       id
-      feasibilityFileResourceFirstRead
+      feasibilityFileDematAutonomeResourceHidden
     }
   }
 `);
@@ -155,12 +155,12 @@ const updateCandidacyEndAccompagnementDecision = (
     { candidacyId, endAccompagnement },
   );
 
-const markFeasibilityFileResourceFirstAsRead = (
+const markFeasibilityFileDematAutonomeResourceAsHidden = (
   authorization: string | undefined,
   candidacyId: string,
 ) =>
   getClient(authorization).request(
-    candidacy_markFeasibilityFileResourceFirstAsRead,
+    candidacy_markFeasibilityFileDematAutonomeResourceAsHidden,
     { candidacyId },
   );
 
@@ -222,8 +222,9 @@ describe("candidacy candidate-side resolver authorization", () => {
         adminBusinessError: () => CANDIDATURE_NON_TROUVEE,
       },
       {
-        operationName: "candidacy_markFeasibilityFileResourceFirstAsRead",
-        request: markFeasibilityFileResourceFirstAsRead,
+        operationName:
+          "candidacy_markFeasibilityFileDematAutonomeResourceAsHidden",
+        request: markFeasibilityFileDematAutonomeResourceAsHidden,
         adminBusinessError: () => CANDIDATURE_NON_TROUVEE,
       },
     ];
@@ -386,21 +387,21 @@ describe("candidacy candidate-side resolver authorization", () => {
       expect(updatedCandidacy.endAccompagnementStatus).toBe("NOT_REQUESTED");
     });
 
-    test("allows the candidate owning the candidacy to mark the feasibility resource as read", async () => {
+    test("allows the candidate owning the candidacy to mark the feasibility resource as hidden", async () => {
       const candidacy = await createCandidacyHelper({
-        candidacyArgs: { feasibilityFileResourceFirstReadAt: null },
+        candidacyArgs: { feasibilityFileDematAutonomeResourceHiddenAt: null },
       });
 
-      const response = await markFeasibilityFileResourceFirstAsRead(
+      const response = await markFeasibilityFileDematAutonomeResourceAsHidden(
         asRole("candidate", candidacy.candidate!.keycloakId),
         candidacy.id,
       );
 
       expect(
-        response.candidacy_markFeasibilityFileResourceFirstAsRead,
+        response.candidacy_markFeasibilityFileDematAutonomeResourceAsHidden,
       ).toMatchObject({
         id: candidacy.id,
-        feasibilityFileResourceFirstRead: true,
+        feasibilityFileDematAutonomeResourceHidden: true,
       });
     });
   });

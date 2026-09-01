@@ -466,6 +466,78 @@ describe("feasibility - autorisation des resolvers", () => {
     });
   });
 
+  describe("feasibility_updateFeasibilityFileDematAutonomeFirstOpeningAt", () => {
+    const call = (candidacyId: string, authorization?: string) =>
+      injectGraphql({
+        fastify: global.testApp,
+        authorization,
+        payload: {
+          requestType: "mutation",
+          endpoint:
+            "feasibility_updateFeasibilityFileDematAutonomeFirstOpeningAt",
+          arguments: { candidacyId },
+          returnFields: "{ id }",
+        },
+      });
+
+    test("l'admin : autorisé", async () => {
+      const { candidacy } = await creerCandidatureAvecDossier();
+      const resp = await call(candidacy.id, asRole("admin"));
+      expect(resp.json()).not.toHaveProperty("errors");
+      expect(
+        resp.json().data
+          .feasibility_updateFeasibilityFileDematAutonomeFirstOpeningAt.id,
+      ).toBe(candidacy.id);
+    });
+
+    test("le candidat propriétaire : autorisé", async () => {
+      const { candidacy, candidatKeycloakId } =
+        await creerCandidatureAvecDossier();
+      const resp = await call(
+        candidacy.id,
+        asRole("candidate", candidatKeycloakId),
+      );
+      expect(resp.json()).not.toHaveProperty("errors");
+    });
+
+    test("un candidat qui n'est pas le propriétaire : refusé", async () => {
+      const { candidacy } = await creerCandidatureAvecDossier();
+      const autreCandidat = await createCandidateHelper();
+      const resp = await call(
+        candidacy.id,
+        asRole("candidate", autreCandidat.keycloakId),
+      );
+      expect(resp.json().errors[0].message).toBe(
+        NOT_AUTHORIZED_CANDIDACY_ACCESS,
+      );
+    });
+
+    test("l'AAP accompagnateur : refusé sur le rôle", async () => {
+      const { candidacy, aapKeycloakId } = await creerCandidatureAvecDossier();
+      const resp = await call(
+        candidacy.id,
+        asRole("manage_candidacy", aapKeycloakId),
+      );
+      expect(resp.json().errors[0].message).toBe(NOT_AUTHORIZED);
+    });
+
+    test("le certificateur : refusé sur le rôle", async () => {
+      const { candidacy, certificateurKeycloakId } =
+        await creerCandidatureAvecDossier();
+      const resp = await call(
+        candidacy.id,
+        asRole("manage_feasibility", certificateurKeycloakId),
+      );
+      expect(resp.json().errors[0].message).toBe(NOT_AUTHORIZED);
+    });
+
+    test("non authentifié : refusé", async () => {
+      const { candidacy } = await creerCandidatureAvecDossier();
+      const resp = await call(candidacy.id);
+      expect(resp.json().errors[0].message).toBe(SESSION_EXPIRED);
+    });
+  });
+
   describe("feasibility_revokeCertificationAuthorityDecision", () => {
     const call = (feasibilityId: string, authorization?: string) =>
       injectGraphql({

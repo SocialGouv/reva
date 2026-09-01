@@ -71,7 +71,8 @@ const getCandidacyByIdWithResolvedFields = graphql(`
       endAccompagnementCandidateDropOutReason {
         id
       }
-      feasibilityFileResourceFirstRead
+      feasibilityFileDematAutonomeResourceHidden
+      feasibilityFileDematAutonomeFirstOpening
     }
   }
 `);
@@ -337,7 +338,7 @@ describe("candidacy resolver read authorization", () => {
           reorientationReasonId: reorientationReason.id,
           endAccompagnementCandidateDropOutReasonId:
             endAccompagnementDropOutReason.id,
-          feasibilityFileResourceFirstReadAt: new Date(),
+          feasibilityFileDematAutonomeResourceHiddenAt: new Date(),
         },
       });
       const candidacyDropOut = await createCandidacyDropOutHelper({
@@ -395,7 +396,7 @@ describe("candidacy resolver read authorization", () => {
         endAccompagnementCandidateDropOutReason: {
           id: endAccompagnementDropOutReason.id,
         },
-        feasibilityFileResourceFirstRead: true,
+        feasibilityFileDematAutonomeResourceHidden: true,
       });
     });
 

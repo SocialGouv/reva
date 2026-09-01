@@ -13,7 +13,8 @@ export interface Candidacy {
   createdAt: Date;
   financeModule: FinanceModule;
   endAccompagnementCandidateDropOutReasonId?: string | null;
-  feasibilityFileResourceFirstReadAt?: Date | null;
+  feasibilityFileDematAutonomeResourceHiddenAt?: Date | null;
+  feasibilityFileDematAutonomeFirstOpeningAt?: Date | null;
 }
 
 type FinanceModule = "unireva" | "unifvae" | "hors_plateforme";

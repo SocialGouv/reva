@@ -15,14 +15,27 @@ const getCandidacyByIdForFeasibilityDematAutonomeResourcesPage = graphql(`
   ) {
     getCandidacyById(id: $candidacyId) {
       id
-      feasibilityFileResourceFirstRead
+      feasibilityFileDematAutonomeResourceHidden
+      feasibilityFileDematAutonomeFirstOpening
     }
   }
 `);
 
-const markFeasibilityFileResourceFirstAsReadMutation = graphql(`
-  mutation markFeasibilityFileResourceFirstAsRead($candidacyId: UUID!) {
-    candidacy_markFeasibilityFileResourceFirstAsRead(
+const markFeasibilityFileDematAutonomeResourceAsHiddenMutation = graphql(`
+  mutation markFeasibilityFileDematAutonomeResourceAsHidden(
+    $candidacyId: UUID!
+  ) {
+    candidacy_markFeasibilityFileDematAutonomeResourceAsHidden(
+      candidacyId: $candidacyId
+    ) {
+      id
+    }
+  }
+`);
+
+const updateFeasibilityFileDematAutonomeFirstOpeningAtMutation = graphql(`
+  mutation updateFeasibilityFileDematAutonomeFirstOpeningAt($candidacyId: ID!) {
+    feasibility_updateFeasibilityFileDematAutonomeFirstOpeningAt(
       candidacyId: $candidacyId
     ) {
       id
@@ -53,11 +66,33 @@ export const useFeasibilityDematAutonomeResourcesPage = () => {
       ),
   });
 
-  const markFeasibilityFileResourceFirstAsRead = useMutation({
+  const markFeasibilityFileDematAutonomeResourceAsHidden = useMutation({
     mutationFn: ({ candidacyId }: { candidacyId: string }) =>
-      graphqlClient.request(markFeasibilityFileResourceFirstAsReadMutation, {
-        candidacyId,
-      }),
+      graphqlClient.request(
+        markFeasibilityFileDematAutonomeResourceAsHiddenMutation,
+        {
+          candidacyId,
+        },
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          "candidacy",
+          "getCandidacyByIdForFeasibilityDematAutonomeResourcesPage",
+          candidacyId,
+        ],
+      });
+    },
+  });
+
+  const updateFeasibilityFileDematAutonomeFirstOpeningAt = useMutation({
+    mutationFn: ({ candidacyId }: { candidacyId: string }) =>
+      graphqlClient.request(
+        updateFeasibilityFileDematAutonomeFirstOpeningAtMutation,
+        {
+          candidacyId,
+        },
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [
@@ -75,6 +110,7 @@ export const useFeasibilityDematAutonomeResourcesPage = () => {
     candidacyId,
     candidacy,
     queryStatus,
-    markFeasibilityFileResourceFirstAsRead,
+    markFeasibilityFileDematAutonomeResourceAsHidden,
+    updateFeasibilityFileDematAutonomeFirstOpeningAt,
   };
 };
