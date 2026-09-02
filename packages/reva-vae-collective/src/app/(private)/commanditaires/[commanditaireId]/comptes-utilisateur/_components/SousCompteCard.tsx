@@ -20,7 +20,7 @@ export const SousCompteCard = ({
         </Tag>
       ) : undefined
     }
-    title={`${firstname} ${lastname}`}
+    title={`${lastname} ${firstname}`}
     linkProps={{ href: onClickHref }}
     enlargeLink
   />
