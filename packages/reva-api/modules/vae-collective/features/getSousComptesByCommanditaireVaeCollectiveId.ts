@@ -18,9 +18,10 @@ export const getSousComptesByCommanditaireVaeCollectiveId = async ({
     .sousComptesVaeCollectives({
       skip: offset,
       take: limit,
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: [
+        { account: { lastname: "asc" } },
+        { account: { firstname: "asc" } },
+      ],
     });
 
   const sousComptesCount = await prismaClient.sousCompteVaeCollective.count({
