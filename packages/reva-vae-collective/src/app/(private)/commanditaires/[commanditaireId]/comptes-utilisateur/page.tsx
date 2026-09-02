@@ -40,6 +40,7 @@ const getSousComptes = async ({
               }
               rows {
                 id
+                canCreateCohorteVaeCollective
                 account {
                   firstname
                   lastname
@@ -119,6 +120,7 @@ export default async function ComptesUtilisateurPage({
             <SousCompteCard
               firstname={sousCompte.account?.firstname || ""}
               lastname={sousCompte.account?.lastname || ""}
+              canCreateCohorte={sousCompte.canCreateCohorteVaeCollective}
               onClickHref={`/commanditaires/${commanditaireId}/comptes-utilisateur/${sousCompte.id}/`}
             />
           </li>

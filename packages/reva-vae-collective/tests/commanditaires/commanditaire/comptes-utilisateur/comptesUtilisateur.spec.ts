@@ -67,10 +67,12 @@ test.describe("Commanditaire with multiple sous comptes", () => {
                     rows: [
                       {
                         id: "dd419130-551f-40ca-9b49-730eeb95ed2d",
+                        canCreateCohorteVaeCollective: true,
                         account: { firstname: "Jean", lastname: "Dupont" },
                       },
                       {
                         id: "4f1c2693-b625-491b-8b91-c7b3875d86b1",
+                        canCreateCohorteVaeCollective: false,
                         account: { firstname: "Marie", lastname: "Curie" },
                       },
                     ],
@@ -115,6 +117,24 @@ test.describe("Commanditaire with multiple sous comptes", () => {
     );
   });
 
+  test("it should display the create cohorte tag only for sous comptes allowed to create a cohorte", async ({
+    page,
+  }) => {
+    await login({ page, role: "gestionnaireVaeCollective" });
+
+    await page.goto(pageUrl);
+
+    const jeanCard = page.locator(".fr-card", { hasText: "Jean Dupont" });
+    const marieCard = page.locator(".fr-card", { hasText: "Marie Curie" });
+
+    await expect(
+      jeanCard.getByText("Création de cohorte activée"),
+    ).toBeVisible();
+    await expect(
+      marieCard.getByText("Création de cohorte activée"),
+    ).not.toBeVisible();
+  });
+
   test("it should lead me to the new compte utilisateur page when i click on the add collaborateur button", async ({
     page,
   }) => {
@@ -131,11 +151,13 @@ test.describe("Commanditaire with multiple sous comptes", () => {
 test.describe("Commanditaire with more than one page of sous comptes", () => {
   const firstPageRows = Array.from({ length: 10 }, (_, i) => ({
     id: `sous-compte-page1-${i}`,
+    canCreateCohorteVaeCollective: false,
     account: { firstname: "Jean", lastname: `Dupont${i}` },
   }));
   const secondPageRows = [
     {
       id: "sous-compte-page2-0",
+      canCreateCohorteVaeCollective: false,
       account: { firstname: "Marie", lastname: "Curie" },
     },
   ];
