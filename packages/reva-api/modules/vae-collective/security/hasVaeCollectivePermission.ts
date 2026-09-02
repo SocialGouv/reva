@@ -36,9 +36,13 @@ const checkUserPermission =
     context: MercuriusContext,
     info: any,
   ) => {
+    const userKeycloakId = context.auth?.userInfo?.sub || "";
     const userKeycloakRoles = context.auth?.userInfo?.realm_access?.roles || [];
 
-    const userPermissions = await getUserPermissions({ userKeycloakRoles });
+    const userPermissions = await getUserPermissions({
+      userKeycloakId,
+      userKeycloakRoles,
+    });
     const hasPermission = userPermissions.includes(permission);
 
     if (!hasPermission) {

@@ -155,6 +155,7 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) =>
       getUserPermissions({
+        userKeycloakId: context.auth.userInfo?.sub || "",
         userKeycloakRoles: context.auth.userInfo?.realm_access?.roles || [],
       }),
   },
