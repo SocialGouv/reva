@@ -5,7 +5,7 @@ const REGEX_SPECIAL_CHARACTERS_MESSAGE =
   "Les caractères spéciaux ne sont pas autorisés";
 const REGEX_ZIP_CODE = /^\d{5}$/;
 const REGEX_ZIP_CODE_MESSAGE = "Le code postal doit contenir 5 chiffres";
-const REGEX_PHONE = /^\+?\d{10,12}$/;
+const REGEX_PHONE = /^\+?(\d\s?){10,12}$/;
 const REGEX_PHONE_MESSAGE =
   "Le numéro de téléphone doit commencer par + (facultatif) suivi de 10 à 12 chiffres";
 const DEFAULT_MAX_LENGTH = 10000;

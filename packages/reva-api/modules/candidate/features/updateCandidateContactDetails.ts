@@ -53,15 +53,17 @@ export const updateCandidateContactDetails = async ({
     });
   }
 
+  const noSpacePhone = phone.replace(/\s/g, "");
+
   const result = await prismaClient.candidate.update({
     where: { id: candidateId },
-    data: { phone },
+    data: { phone: noSpacePhone },
   });
 
   await logCandidacyAuditEvent({
     eventType: "CANDIDATE_CONTACT_DETAILS_UPDATED",
     candidacyId,
-    details: { phone, email },
+    details: { phone: noSpacePhone, email },
     ...userInfo,
   });
 

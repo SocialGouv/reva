@@ -108,6 +108,10 @@ export const updateCandidate = async ({
     }
   }
 
+  if (candidateInput.phone) {
+    candidateInput.phone = candidateInput.phone.replace(/\s/g, "");
+  }
+
   const isNewZip =
     candidateToUpdate.zip === null ||
     candidateToUpdate.zip !== candidateInput.zip;

@@ -111,7 +111,7 @@ export const ContactInformationForm = ({
       street: data.street,
       zip: data.zip,
       city: data.city,
-      phone: data.phone,
+      phone: data.phone.replace(/\s/g, ""),
       email: data.email,
       addressComplement: data.addressComplement,
     };
