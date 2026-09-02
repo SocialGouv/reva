@@ -99,8 +99,8 @@ test.describe("Commanditaire with multiple sous comptes", () => {
       page.getByRole("heading", { name: "Gestion des comptes" }),
     ).toBeVisible();
 
-    await expect(page.getByRole("link", { name: "Jean Dupont" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Marie Curie" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Dupont Jean" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Curie Marie" })).toBeVisible();
   });
 
   test("it should lead me to the compte utilisateur details page when i click on a sous compte", async ({
@@ -110,7 +110,7 @@ test.describe("Commanditaire with multiple sous comptes", () => {
 
     await page.goto(pageUrl);
 
-    await page.getByRole("link", { name: "Jean Dupont" }).click();
+    await page.getByRole("link", { name: "Dupont Jean" }).click();
 
     await expect(page).toHaveURL(
       `${pageUrl}/dd419130-551f-40ca-9b49-730eeb95ed2d`,
@@ -124,8 +124,8 @@ test.describe("Commanditaire with multiple sous comptes", () => {
 
     await page.goto(pageUrl);
 
-    const jeanCard = page.locator(".fr-card", { hasText: "Jean Dupont" });
-    const marieCard = page.locator(".fr-card", { hasText: "Marie Curie" });
+    const jeanCard = page.locator(".fr-card", { hasText: "Dupont Jean" });
+    const marieCard = page.locator(".fr-card", { hasText: "Curie Marie" });
 
     await expect(
       jeanCard.getByText("Création de cohorte activée"),
@@ -198,15 +198,15 @@ test.describe("Commanditaire with more than one page of sous comptes", () => {
     await page.goto(pageUrl);
 
     await expect(
-      page.getByRole("link", { name: "Jean Dupont0" }),
+      page.getByRole("link", { name: "Dupont0 Jean" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Marie Curie" }),
+      page.getByRole("link", { name: "Curie Marie" }),
     ).not.toBeVisible();
 
     await page.getByRole("link", { name: "2", exact: true }).click();
 
     await expect(page).toHaveURL(`${pageUrl}?page=2`);
-    await expect(page.getByRole("link", { name: "Marie Curie" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Curie Marie" })).toBeVisible();
   });
 });
