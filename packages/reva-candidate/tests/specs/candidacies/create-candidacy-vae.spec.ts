@@ -2,11 +2,13 @@ import {
   expect,
   graphql,
   test,
+  type Page,
 } from "next/experimental/testmode/playwright/msw";
 
 import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
+import { createOrganismEntity } from "@tests/helpers/entities/create-organism.entity";
 import {
   createCandidacyGuardsAndDashboardHandlers,
   createCandidaciesGuardsHandlers,
@@ -28,6 +30,49 @@ const candidacy = createCandidacyEntity({
   status: "PROJET",
   typeAccompagnement: "ACCOMPAGNE",
 });
+const organism = createOrganismEntity({
+  label: "Organisme Accompagnateur",
+  adresseNumeroEtNomDeRue: "12 rue de la VAE",
+  adresseCodePostal: "75011",
+  adresseVille: "Paris",
+  telephone: "01 02 03 04 05",
+});
+const cohorteVaeCollective = {
+  id: "12345678",
+  nom: "Cohorte VAE Collective",
+  codeInscription: "12345678",
+  commanditaireVaeCollective: {
+    raisonSociale: "Société VAE Collective",
+  },
+  organism,
+};
+
+async function expectCohorteAndOrganismToBeDisplayed(page: Page) {
+  await expect(
+    page.getByRole("heading", { name: cohorteVaeCollective.nom }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      cohorteVaeCollective.commanditaireVaeCollective.raisonSociale,
+      { exact: true },
+    ),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Accompagnateur de la cohorte", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText(organism.label, { exact: true })).toBeVisible();
+  await expect(
+    page.getByText(organism.adresseNumeroEtNomDeRue as string, { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(`${organism.adresseCodePostal} ${organism.adresseVille}`, {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(organism.telephone as string, { exact: true }),
+  ).toBeVisible();
+}
 
 function createCandidaciesHandlers() {
   return [
@@ -44,14 +89,7 @@ function createCandidaciesHandlers() {
     fvae.query(
       "getVaeCollectiveCohortForCreateCandidacy",
       graphQLResolver({
-        cohorteVaeCollective: {
-          id: "12345678",
-          nom: "Cohorte VAE Collective",
-          codeInscription: "12345678",
-          commanditaireVaeCollective: {
-            raisonSociale: "Société VAE Collective",
-          },
-        },
+        cohorteVaeCollective,
       }),
     ),
     fvae.mutation(
@@ -146,6 +184,8 @@ test.describe("create candidacy vae from candidacies page", () => {
       page.getByRole("heading", { name: "Rejoindre cette VAE collective" }),
     ).toBeVisible();
 
+    await expectCohorteAndOrganismToBeDisplayed(page);
+
     const rejoindreCohorteButton = page.getByRole("button", {
       name: "Rejoindre cette cohorte",
     });
@@ -169,5 +209,21 @@ test.describe("create candidacy vae from candidacies page", () => {
     await expect(page).toHaveURL(
       `candidates/${candidate.id}/candidacies/${candidacy.id}/`,
     );
+  });
+
+  test("displays the organism associated with the cohorte", async ({
+    page,
+  }) => {
+    await loginAndWaitForCandidaciesInitialLoad(page);
+
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/create/vae-collective/12345678/`,
+    );
+
+    await expect(
+      page.getByRole("heading", { name: "Rejoindre cette VAE collective" }),
+    ).toBeVisible();
+
+    await expectCohorteAndOrganismToBeDisplayed(page);
   });
 });

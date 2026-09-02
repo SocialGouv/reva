@@ -14,6 +14,15 @@ const GET_VAE_COLLECTIVE_COHORT_FOR_CREATE_CANDIDACY = graphql(`
       commanditaireVaeCollective {
         raisonSociale
       }
+      organism {
+        id
+        label
+        nomPublic
+        adresseNumeroEtNomDeRue
+        adresseCodePostal
+        adresseVille
+        telephone
+      }
     }
   }
 `);

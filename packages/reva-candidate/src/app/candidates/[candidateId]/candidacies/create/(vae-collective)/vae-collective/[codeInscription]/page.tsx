@@ -3,6 +3,7 @@
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Card } from "@codegouvfr/react-dsfr/Card";
+import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { useRouter } from "next/navigation";
 
 import { useGetVaeCollectiveCohort } from "./getVaeCollective.hook";
@@ -50,20 +51,47 @@ export default function RejoindreVaeCollectivePage() {
         </p>
 
         {cohorteVaeCollective && (
-          <Card
-            size="small"
-            title={cohorteVaeCollective?.nom}
-            detail={
-              <div className="flex items-center gap-1">
-                <span className="fr-icon-building-fill fr-icon--sm" />
-                {cohorteVaeCollective.commanditaireVaeCollective.raisonSociale}
-              </div>
-            }
-            classes={{
-              detail: "mt-2",
-              end: "m-0 p-0",
-            }}
-          />
+          <>
+            <Card
+              className="shadow"
+              size="small"
+              title={cohorteVaeCollective?.nom}
+              detail={
+                <div className="flex items-center gap-1">
+                  <span className="fr-icon-building-fill fr-icon--sm" />
+                  {
+                    cohorteVaeCollective.commanditaireVaeCollective
+                      .raisonSociale
+                  }
+                </div>
+              }
+              classes={{
+                detail: "mt-2",
+                end: "m-0 p-0",
+              }}
+            />
+
+            <Tile
+              orientation="horizontal"
+              title={<p>Accompagnateur de la cohorte</p>}
+              desc={
+                <p className="flex flex-col text-sm">
+                  <span>{cohorteVaeCollective.organism?.label}</span>
+                  <span>
+                    {cohorteVaeCollective.organism?.adresseNumeroEtNomDeRue}
+                  </span>
+                  <span>
+                    {cohorteVaeCollective.organism?.adresseCodePostal}{" "}
+                    {cohorteVaeCollective.organism?.adresseVille}
+                  </span>
+                  <span>{cohorteVaeCollective.organism?.telephone}</span>
+                </p>
+              }
+              classes={{
+                content: "p-0",
+              }}
+            />
+          </>
         )}
 
         <div className="flex flex-row justify-end mt-6">
