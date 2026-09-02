@@ -9,6 +9,7 @@ import { getAccountById } from "../account/features/getAccount";
 import { getOrganismById } from "../organism/features/getOrganism";
 import { getCertificationById } from "../referential/features/getCertificationById";
 
+import { canSousCompteCreateCohorteVaeCollective } from "./features/canSousCompteCreateCohorteVaeCollective";
 import { createCohorteVaeCollective } from "./features/createCohorteVaeCollective";
 import { createCommanditaireVaeCollective } from "./features/createCommanditaireVaeCollective";
 import { createSousCompteVaeCollective } from "./features/createSousCompteVaeCollective";
@@ -66,6 +67,12 @@ const unsafeResolvers = {
   SousCompteVaeCollective: {
     account: async ({ accountId }: { accountId: string }) =>
       getAccountById({ id: accountId }),
+    canCreateCohorteVaeCollective: async ({
+      id: sousCompteVaeCollectiveId,
+    }: {
+      id: string;
+    }) =>
+      canSousCompteCreateCohorteVaeCollective({ sousCompteVaeCollectiveId }),
   },
   Candidacy: {
     cohorteVaeCollective: async ({
@@ -287,6 +294,8 @@ export const vaeCollectiveResolvers = withPolicies(unsafeResolvers, {
   SousCompteVaeCollective: {
     // Uniquement accessible via CommanditaireVaeCollective.sousComptes, déjà protégé ci-dessous.
     account: isAnyone,
+    // Uniquement accessible via CommanditaireVaeCollective.sousComptes, déjà protégé ci-dessous.
+    canCreateCohorteVaeCollective: isAnyone,
   },
   Candidacy: {
     // Champ d'une candidature déjà protégée par la policy de son parent.
