@@ -8,7 +8,11 @@ import {
 import { login } from "../../../shared/utils/auth/login";
 import { mockQueryActiveFeatures } from "../../../shared/utils/mockActiveFeatures";
 import { mockQueryGetUserPermissions } from "../../../shared/utils/mockGetUserPermissions";
+
 const fvae = graphql.link("https://reva-api/api/graphql");
+
+const commanditaireId = "115c2693-b625-491b-8b91-c7b3875d86a0";
+const pageUrl = `/vae-collective/commanditaires/${commanditaireId}/comptes-utilisateur`;
 
 test.describe("Commanditaire with no sous compte", () => {
   test.use({
@@ -20,9 +24,10 @@ test.describe("Commanditaire with no sous compte", () => {
             return HttpResponse.json({
               data: {
                 vaeCollective_getCommanditaireVaeCollective: {
-                  id: "115c2693-b625-491b-8b91-c7b3875d86a0",
+                  id: commanditaireId,
                   sousComptes: {
                     rows: [],
+                    info: { totalRows: 0 },
                   },
                 },
               },
@@ -41,17 +46,13 @@ test.describe("Commanditaire with no sous compte", () => {
   }) => {
     await login({ page, role: "gestionnaireVaeCollective" });
 
-    await page.goto(
-      "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/comptes-utilisateur",
-    );
+    await page.goto(pageUrl);
 
-    await expect(page).toHaveURL(
-      "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/comptes-utilisateur/aucun-compte-utilisateur",
-    );
+    await expect(page).toHaveURL(`${pageUrl}/aucun-compte-utilisateur`);
   });
 });
 
-test.describe("Commanditaire with at least one sous compte", () => {
+test.describe("Commanditaire with multiple sous comptes", () => {
   test.use({
     mswHandlers: [
       [
@@ -61,9 +62,19 @@ test.describe("Commanditaire with at least one sous compte", () => {
             return HttpResponse.json({
               data: {
                 vaeCollective_getCommanditaireVaeCollective: {
-                  id: "115c2693-b625-491b-8b91-c7b3875d86a0",
+                  id: commanditaireId,
                   sousComptes: {
-                    rows: [{ id: "dd419130-551f-40ca-9b49-730eeb95ed2d" }],
+                    rows: [
+                      {
+                        id: "dd419130-551f-40ca-9b49-730eeb95ed2d",
+                        account: { firstname: "Jean", lastname: "Dupont" },
+                      },
+                      {
+                        id: "4f1c2693-b625-491b-8b91-c7b3875d86b1",
+                        account: { firstname: "Marie", lastname: "Curie" },
+                      },
+                    ],
+                    info: { totalRows: 2 },
                   },
                 },
               },
@@ -77,15 +88,103 @@ test.describe("Commanditaire with at least one sous compte", () => {
     ],
   });
 
-  test("it should display the comptes-utilisateur page", async ({ page }) => {
+  test("it should display the sous comptes list", async ({ page }) => {
     await login({ page, role: "gestionnaireVaeCollective" });
 
-    await page.goto(
-      "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/comptes-utilisateur",
-    );
+    await page.goto(pageUrl);
 
     await expect(
       page.getByRole("heading", { name: "Gestion des comptes" }),
     ).toBeVisible();
+
+    await expect(page.getByRole("link", { name: "Jean Dupont" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Marie Curie" })).toBeVisible();
+  });
+
+  test("it should lead me to the compte utilisateur details page when i click on a sous compte", async ({
+    page,
+  }) => {
+    await login({ page, role: "gestionnaireVaeCollective" });
+
+    await page.goto(pageUrl);
+
+    await page.getByRole("link", { name: "Jean Dupont" }).click();
+
+    await expect(page).toHaveURL(
+      `${pageUrl}/dd419130-551f-40ca-9b49-730eeb95ed2d`,
+    );
+  });
+
+  test("it should lead me to the new compte utilisateur page when i click on the add collaborateur button", async ({
+    page,
+  }) => {
+    await login({ page, role: "gestionnaireVaeCollective" });
+
+    await page.goto(pageUrl);
+
+    await page.getByRole("link", { name: "Ajouter un collaborateur" }).click();
+
+    await expect(page).toHaveURL(`${pageUrl}/nouveau-compte-utilisateur`);
+  });
+});
+
+test.describe("Commanditaire with more than one page of sous comptes", () => {
+  const firstPageRows = Array.from({ length: 10 }, (_, i) => ({
+    id: `sous-compte-page1-${i}`,
+    account: { firstname: "Jean", lastname: `Dupont${i}` },
+  }));
+  const secondPageRows = [
+    {
+      id: "sous-compte-page2-0",
+      account: { firstname: "Marie", lastname: "Curie" },
+    },
+  ];
+
+  test.use({
+    mswHandlers: [
+      [
+        fvae.query(
+          "commanditaireVaeCollectiveForComptesUtilisateurPage",
+          ({ variables }) => {
+            const rows =
+              variables.offset === 0 ? firstPageRows : secondPageRows;
+            return HttpResponse.json({
+              data: {
+                vaeCollective_getCommanditaireVaeCollective: {
+                  id: commanditaireId,
+                  sousComptes: {
+                    rows,
+                    info: { totalRows: 11 },
+                  },
+                },
+              },
+            });
+          },
+        ),
+        mockQueryActiveFeatures(),
+        mockQueryGetUserPermissions(),
+      ],
+      { scope: "test" },
+    ],
+  });
+
+  test("it should display only the first 10 sous comptes and navigate to the next page", async ({
+    page,
+  }) => {
+    await login({ page, role: "gestionnaireVaeCollective" });
+
+    await page.goto(pageUrl);
+
+    await expect(
+      page.getByRole("link", { name: "Jean Dupont0" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Marie Curie" }),
+    ).not.toBeVisible();
+
+    await page.getByRole("link", { name: "2", exact: true }).click();
+
+    await expect(page).toHaveURL(`${pageUrl}?page=2`);
+    await expect(page.getByRole("link", { name: "Marie Curie" })).toBeVisible();
   });
 });
