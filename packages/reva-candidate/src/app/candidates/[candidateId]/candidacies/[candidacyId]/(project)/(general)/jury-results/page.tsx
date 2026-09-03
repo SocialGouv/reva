@@ -89,22 +89,33 @@ export default function JuryResultsPage() {
             {candidacy.historyJury && candidacy.historyJury.length > 0 && (
               <Tabs
                 tabs={candidacy.historyJury
-                  .map((j) => {
+                  .map((pastJury) => {
+                    // Les blocs validés précédemment (dans une session précédente) sont affichés séparément des blocs validés dans la session courante.
+                    // On prend tous les blocs validés précédemment et on soustrait ceux qui sont présents dans la session courante.
+                    // Chaque session ne contient que les blocs explicitements validés ou échoués pour ladite session.
+                    const previouslyValidatedBlocksForThisSession =
+                      candidacy.jury?.previouslyValidatedBlocks?.filter(
+                        (previousBlock) =>
+                          pastJury.juryResultByCompetenceBlocs?.every(
+                            (result) =>
+                              result.competenceBloc.id !== previousBlock.id,
+                          ),
+                      );
                     return {
-                      label: format(j.dateOfSession, "dd/MM/yyyy"),
+                      label: format(pastJury.dateOfSession, "dd/MM/yyyy"),
                       content:
-                        j.juryResultByCompetenceBlocs &&
-                        j.juryResultByCompetenceBlocs.length > 0 ? (
+                        pastJury.juryResultByCompetenceBlocs &&
+                        pastJury.juryResultByCompetenceBlocs.length > 0 ? (
                           <ResultatCardWithBlocks
                             jury={{
-                              id: j.id,
-                              result: j.result!,
-                              informationOfResult: j.informationOfResult,
+                              id: pastJury.id,
+                              result: pastJury.result!,
+                              informationOfResult: pastJury.informationOfResult,
                               juryResultByCompetenceBlocs:
-                                j.juryResultByCompetenceBlocs,
+                                pastJury.juryResultByCompetenceBlocs,
                             }}
                             previouslyValidatedBlocks={
-                              j.previouslyValidatedBlocks
+                              previouslyValidatedBlocksForThisSession
                             }
                             additionalInformation={
                               linkToOpenFeasibilityCompetenceBlocksModal
@@ -113,9 +124,9 @@ export default function JuryResultsPage() {
                         ) : (
                           <ResultatCard
                             jury={{
-                              id: j.id,
-                              result: j.result!,
-                              informationOfResult: j.informationOfResult,
+                              id: pastJury.id,
+                              result: pastJury.result!,
+                              informationOfResult: pastJury.informationOfResult,
                             }}
                           />
                         ),
@@ -136,7 +147,7 @@ export default function JuryResultsPage() {
                               jury.juryResultByCompetenceBlocs,
                           }}
                           previouslyValidatedBlocks={
-                            jury.previouslyValidatedBlocks
+                            candidacy.jury?.previouslyValidatedBlocks
                           }
                           additionalInformation={
                             linkToOpenFeasibilityCompetenceBlocksModal
