@@ -539,27 +539,27 @@ model Country {
 }
 
 model Account {
-  id                                   String                               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  email                                String                               @unique @db.VarChar(255)
-  firstname                            String?                              @db.VarChar(255)
-  lastname                             String?                              @db.VarChar(255)
-  certificationAuthority               CertificationAuthority?              @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
-  certificationAuthorityId             String?                              @map("certification_authority_id") @db.Uuid
-  certificationAuthorityLocalAccount   CertificationAuthorityLocalAccount?  @relation(fields: [certificationAuthorityLocalAccountId], references: [id], onDelete: NoAction)
-  certificationAuthorityLocalAccountId String?                              @map("certification_authority_local_account_id") @db.Uuid
-  keycloakId                           String                               @unique @map("keycloak_id") @db.Uuid
+  id                                   String                              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email                                String                              @unique @db.VarChar(255)
+  firstname                            String?                             @db.VarChar(255)
+  lastname                             String?                             @db.VarChar(255)
+  certificationAuthority               CertificationAuthority?             @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
+  certificationAuthorityId             String?                             @map("certification_authority_id") @db.Uuid
+  certificationAuthorityLocalAccount   CertificationAuthorityLocalAccount? @relation(fields: [certificationAuthorityLocalAccountId], references: [id], onDelete: NoAction)
+  certificationAuthorityLocalAccountId String?                             @map("certification_authority_local_account_id") @db.Uuid
+  keycloakId                           String                              @unique @map("keycloak_id") @db.Uuid
   maisonMereAAP                        MaisonMereAAP[]
   featureBetaTest                      FeatureBetaTest[]
   certificationRegistryManager         CertificationRegistryManager[]
-  disabledAt                           DateTime?                            @map("disabled_at") @db.Timestamptz(6)
+  disabledAt                           DateTime?                           @map("disabled_at") @db.Timestamptz(6)
   commanditaireVaeCollective           CommanditaireVaeCollective[]
   organismOnAccounts                   OrganismOnAccount[]
   maisonMereAAPs                       MaisonMereAAPOnAccount[]
-  organism                             Organism?                            @relation(fields: [organismId], references: [id])
-  organismId                           String?                              @db.Uuid
+  organism                             Organism?                           @relation(fields: [organismId], references: [id])
+  organismId                           String?                             @db.Uuid
   accountEmailOtps                     AccountEmailOtp[]
-  emailOtpEnabled                      Boolean                              @default(false) @map("email_otp_enabled")
-  isApiUser                            Boolean                              @default(false) @map("is_api_user")
+  emailOtpEnabled                      Boolean                             @default(false) @map("email_otp_enabled")
+  isApiUser                            Boolean                             @default(false) @map("is_api_user")
   sousComptesVaeCollectives            SousCompteVaeCollective[]
 
   @@index([email])
@@ -1435,6 +1435,7 @@ model JuryResultByCompetenceBloc {
   competenceBloc            CertificationCompetenceBloc @relation(fields: [competenceBlocId], references: [id])
   isCompetenceBlocValidated Boolean                     @default(false) @map("is_competence_bloc_validated")
 
+  @@unique([juryId, competenceBlocId])
   @@map("jury_result_by_competence_bloc")
 }
 

@@ -75,7 +75,10 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
     isResultTemporary = true;
   }
 
-  if (jury.result) {
+  // On interdit normalement la modification du résultat de jury
+  // sauf si le résultat est PARTIAL_SUCCESS_PENDING_CONFIRMATION
+  // car dans ce cas, le résultat est temporaire et peut être modifié ultérieurement.
+  if (jury.result && jury.result !== "PARTIAL_SUCCESS_PENDING_CONFIRMATION") {
     throw new Error(RESULTAT_JURY_DEJA_ETE_RENSEIGNE);
   }
 
@@ -88,9 +91,20 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
       isResultTemporary,
       dateOfResult: new Date(),
       juryResultByCompetenceBlocs: {
-        create: juryInfo.juryResultByCompetenceBlocs?.map((competenceBloc) => ({
-          competenceBlocId: competenceBloc.competenceBlocId,
-          isCompetenceBlocValidated: competenceBloc.isCompetenceBlocValidated,
+        upsert: juryInfo.juryResultByCompetenceBlocs?.map((competenceBloc) => ({
+          where: {
+            juryId_competenceBlocId: {
+              juryId: jury.id,
+              competenceBlocId: competenceBloc.competenceBlocId,
+            },
+          },
+          update: {
+            isCompetenceBlocValidated: competenceBloc.isCompetenceBlocValidated,
+          },
+          create: {
+            competenceBlocId: competenceBloc.competenceBlocId,
+            isCompetenceBlocValidated: competenceBloc.isCompetenceBlocValidated,
+          },
         })),
       },
       informationOfResult:
