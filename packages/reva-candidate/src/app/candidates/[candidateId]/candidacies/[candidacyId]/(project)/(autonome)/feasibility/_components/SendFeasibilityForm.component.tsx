@@ -365,7 +365,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
                   candidacy?.warningOnFeasibilitySubmission === "NONE" &&
                   certificationValidOrDFIncomplete,
               }}
-              backUrl="/"
+              backUrl="../"
               submitButtonLabel="Envoyer"
             />
           </>
