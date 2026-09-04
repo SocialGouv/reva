@@ -25,6 +25,7 @@ import { getCommanditaireVaeCollectiveById } from "./features/getCommanditaireVa
 import { getCommanditaireVaeCollectives } from "./features/getCommanditaireVaeCollectives";
 import { getMetabaseDashboardIframeUrlVaeCollective } from "./features/getMetabaseDashboardIframeUrlVaeCollective";
 import { getSousComptesByCommanditaireVaeCollectiveId } from "./features/getSousComptesByCommanditaireVaeCollectiveId";
+import { getSousCompteVaeCollectiveById } from "./features/getSousCompteVaeCollectiveById";
 import { getUserPermissions } from "./features/getUserPermissions";
 import { publishCohorteVAECollective } from "./features/publishCohorteVAECollective";
 import { updateCohorteVAECollectiveCertification } from "./features/updateCohorteVAECollectiveCertification";
@@ -164,6 +165,17 @@ const unsafeResolvers = {
       getUserPermissions({
         userKeycloakId: context.auth.userInfo?.sub || "",
         userKeycloakRoles: context.auth.userInfo?.realm_access?.roles || [],
+      }),
+    vaeCollective_getSousCompteVaeCollective: async (
+      _parent: unknown,
+      {
+        sousCompteVaeCollectiveId,
+      }: {
+        sousCompteVaeCollectiveId: string;
+      },
+    ) =>
+      getSousCompteVaeCollectiveById({
+        sousCompteVaeCollectiveId,
       }),
   },
   Mutation: {
@@ -319,6 +331,8 @@ export const vaeCollectiveResolvers = withPolicies(unsafeResolvers, {
       hasVaeCollectivePermission("VOIR_COHORTE"),
     vaeCollective_commanditaireVaeCollectives: isAdmin,
     vaeCollective_getUserPermissions: isAnyone,
+    vaeCollective_getSousCompteVaeCollective:
+      hasVaeCollectivePermission("VOIR_SOUS_COMPTE"),
   },
   Mutation: {
     vaeCollective_createCohorteVaeCollective:

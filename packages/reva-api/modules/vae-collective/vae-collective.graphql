@@ -88,6 +88,10 @@ type Query {
     cohorteVaeCollectiveId: ID!
   ): CohorteVaeCollective!
   vaeCollective_getUserPermissions: [PermissionVaeCollective!]!
+  vaeCollective_getSousCompteVaeCollective(
+    commanditaireVaeCollectiveId: ID!
+    sousCompteVaeCollectiveId: ID!
+  ): SousCompteVaeCollective!
 }
 
 type Mutation {
