@@ -26,7 +26,7 @@ export const getMetabaseIframeUrl = async (maisonMereAapId: string) => {
       dashboard: hasVaecoCandidacies ? 272 : 182,
     },
     params: {
-      id_maison_mere: [maisonMereAapId],
+      id_maison_mere: maisonMereAapId,
     },
     exp: Math.round(Date.now() / 1000) + 30 * 60, // 30 minute expiration
   };
