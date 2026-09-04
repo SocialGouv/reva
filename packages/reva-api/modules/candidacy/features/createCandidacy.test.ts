@@ -3,6 +3,7 @@ import { FeasibilityFormat } from "@prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
+import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import { createCohorteVaeCollectiveHelper } from "@/test/helpers/entities/create-vae-collective-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
@@ -26,6 +27,9 @@ const createCandidacyMutation = graphql(`
       id
       feasibilityFormat
       typeAccompagnement
+      organism {
+        id
+      }
       cohorteVaeCollective {
         id
       }
@@ -75,6 +79,7 @@ describe("createCandidacy", () => {
       expect(result.candidacy_createCandidacy?.typeAccompagnement).toBe(
         typeAccompagnement,
       );
+      expect(result.candidacy_createCandidacy?.organism).toBeNull();
     },
   );
 
@@ -102,6 +107,34 @@ describe("createCandidacy", () => {
     expect(result.candidacy_createCandidacy?.typeAccompagnement).toBe(
       "ACCOMPAGNE",
     );
+    expect(result.candidacy_createCandidacy?.cohorteVaeCollective?.id).toBe(
+      cohorte.id,
+    );
+    expect(result.candidacy_createCandidacy?.organism).toBeNull();
+  });
+
+  test("should assign the cohorte organism to the candidacy for VAE Collective", async () => {
+    const candidate = await createCandidateHelper();
+    const organism = await createOrganismHelper();
+    const cohorte = await createCohorteVaeCollectiveHelper({
+      organism: { connect: { id: organism.id } },
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "candidate",
+          keycloakId: candidate.keycloakId,
+        }),
+      },
+    });
+
+    const result = await graphqlClient.request(createCandidacyMutation, {
+      candidateId: candidate.id,
+      cohorteVaeCollectiveId: cohorte.id,
+    });
+
+    expect(result.candidacy_createCandidacy?.organism?.id).toBe(organism.id);
     expect(result.candidacy_createCandidacy?.cohorteVaeCollective?.id).toBe(
       cohorte.id,
     );

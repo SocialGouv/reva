@@ -7,11 +7,13 @@ import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 import { IncompleteBadge } from "./IncompleteBadge";
 
 export const OrganismTile = ({
+  isVaeCollective,
   hasSelectedOrganism,
   candidacyStatus,
   hasSelectedCertification,
   endAccompagnementConfirmed,
 }: {
+  isVaeCollective?: boolean;
   hasSelectedOrganism: boolean;
   candidacyStatus: CandidacyStatusStep;
   hasSelectedCertification: boolean; // in some cases (vae collective) the candidate can register without selecting a certification
@@ -58,6 +60,21 @@ export const OrganismTile = ({
     imageSvg: true,
     className: "h-[200px]",
   };
+
+  if (isVaeCollective && hasSelectedOrganism) {
+    return (
+      <Tile
+        {...commonProps}
+        disabled
+        desc={
+          <span className="text-xs text-dsfrGray-mentionGrey">
+            Selectionné par le porteur de projet
+          </span>
+        }
+        buttonProps={{ onClick: () => router.push("./set-organism") }}
+      />
+    );
+  }
 
   if (tileDisabled) {
     return (

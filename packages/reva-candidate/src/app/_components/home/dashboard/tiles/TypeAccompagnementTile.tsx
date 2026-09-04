@@ -7,9 +7,11 @@ import { TypeAccompagnement } from "@/graphql/generated/graphql";
 export const TypeAccompagnementTile = ({
   disabled = false,
   typeAccompagnement,
+  isVaeCollective,
 }: {
   disabled: boolean;
   typeAccompagnement: TypeAccompagnement;
+  isVaeCollective?: boolean;
 }) => {
   const router = useRouter();
   const getDesc = () => {
@@ -19,6 +21,8 @@ export const TypeAccompagnementTile = ({
   const accompanimentBadge =
     typeAccompagnement === "AUTONOME" ? (
       <Tag small>Autonome</Tag>
+    ) : isVaeCollective ? (
+      <Tag small>Accompagné / VAE collective</Tag>
     ) : (
       <Tag small>Accompagné</Tag>
     );
@@ -33,6 +37,10 @@ export const TypeAccompagnementTile = ({
     imageSvg: true,
     className: "h-[200px]",
   };
+
+  if (isVaeCollective) {
+    return <Tile {...commonProps} />;
+  }
 
   if (disabled) {
     return (

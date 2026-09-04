@@ -52,6 +52,7 @@ export const DashboardVaeCollectiveTilesGroup = ({
             readOnly={isParcoursConfirme}
           />
           <TypeAccompagnementTile
+            isVaeCollective
             typeAccompagnement={candidacy.typeAccompagnement}
             disabled
           />
@@ -64,6 +65,7 @@ export const DashboardVaeCollectiveTilesGroup = ({
             readOnly={candidacyAlreadySubmitted}
           />
           <OrganismTile
+            isVaeCollective
             hasSelectedCertification={!!candidacy.certification?.id}
             hasSelectedOrganism={hasSelectedOrganism}
             candidacyStatus={candidacy.status}

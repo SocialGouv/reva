@@ -33,6 +33,18 @@ export const createCandidacy = async ({
       ? "DEMATERIALIZED"
       : "UPLOADED_PDF";
 
+  let cohorteVaeCollective;
+
+  if (cohorteVaeCollectiveId) {
+    cohorteVaeCollective = await prismaClient.cohorteVaeCollective.findUnique({
+      where: { id: cohorteVaeCollectiveId },
+    });
+
+    if (!cohorteVaeCollective) {
+      throw new Error("Cohorte VAÉ collective non trouvée");
+    }
+  }
+
   // Row-level lock per candidate to avoid duplicate candidacies under concurrency
   // If a diffrent transaction tries to aquire the lock while the first one still holds it, it will fail and rollback
   await prismaClient.$queryRaw`SELECT id FROM candidate WHERE id = ${candidateId}::uuid FOR UPDATE NOWAIT`;
@@ -54,6 +66,7 @@ export const createCandidacy = async ({
       status: "PROJET",
       financeModule: "hors_plateforme",
       cohorteVaeCollectiveId,
+      organismId: cohorteVaeCollective?.organismId,
       feasibilityFormat,
       candidacyStatuses: {
         create: {
