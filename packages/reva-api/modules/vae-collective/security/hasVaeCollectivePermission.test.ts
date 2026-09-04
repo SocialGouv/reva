@@ -2,6 +2,7 @@ import { PermissionVaeCollective } from "@prisma/client";
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
 import { NOT_AUTHORIZED_RESOURCE_ACCESS } from "@/modules/shared/security/messages";
+import { createSousCompteVaeCollectiveHelper } from "@/test/helpers/entities/create-sous-compte-vae-collective-helper";
 import { createCohorteVaeCollectiveHelper } from "@/test/helpers/entities/create-vae-collective-helper";
 
 import { hasVaeCollectivePermission } from "./hasVaeCollectivePermission";
@@ -179,6 +180,76 @@ describe("hasVaeCollectivePermission", () => {
         {
           commanditaireVaeCollectiveId: cohorte.commanditaireVaeCollectiveId,
           cohorteVaeCollectiveId: otherCohorte.id,
+        },
+        context,
+      ),
+    ).rejects.toThrow(NOT_AUTHORIZED_RESOURCE_ACCESS);
+  });
+
+  test("lets a manage_vae_collective gestionnaire through for a sous-compte-scoped permission when they own both the commanditaire and the sous compte", async () => {
+    const cohorte = await createCohorteVaeCollectiveHelper();
+    const gestionnaireKeycloakId =
+      cohorte.commanditaireVaeCollective?.gestionnaire?.keycloakId;
+    if (!gestionnaireKeycloakId) {
+      throw new Error("Gestionnaire keycloak id not found");
+    }
+    const sousCompte = await createSousCompteVaeCollectiveHelper({
+      commanditaireVaeCollectiveId: cohorte.commanditaireVaeCollectiveId,
+    });
+
+    const policy = hasVaeCollectivePermission(
+      PermissionVaeCollective.VOIR_SOUS_COMPTE,
+    );
+    const context = makeContext({
+      roles: ["manage_vae_collective"],
+      keycloakId: gestionnaireKeycloakId,
+    });
+    const finalResolver = vi.fn().mockResolvedValue("resolved");
+
+    await expect(
+      runPolicy(
+        policy,
+        {
+          commanditaireVaeCollectiveId: cohorte.commanditaireVaeCollectiveId,
+          sousCompteVaeCollectiveId: sousCompte.id,
+        },
+        context,
+        finalResolver,
+      ),
+    ).resolves.toBe("resolved");
+    expect(finalResolver).toHaveBeenCalledOnce();
+  });
+
+  test("denies a manage_vae_collective gestionnaire for a sous-compte-scoped permission when the sous compte does not belong to the commanditaire they own", async () => {
+    const cohorte = await createCohorteVaeCollectiveHelper();
+    const otherCohorte = await createCohorteVaeCollectiveHelper();
+    const gestionnaireKeycloakId =
+      cohorte.commanditaireVaeCollective?.gestionnaire?.keycloakId;
+    if (!gestionnaireKeycloakId) {
+      throw new Error("Gestionnaire keycloak id not found");
+    }
+    const sousCompteOfOtherCommanditaire =
+      await createSousCompteVaeCollectiveHelper({
+        commanditaireVaeCollectiveId: otherCohorte.commanditaireVaeCollectiveId,
+      });
+
+    const policy = hasVaeCollectivePermission(
+      PermissionVaeCollective.VOIR_SOUS_COMPTE,
+    );
+    const context = makeContext({
+      roles: ["manage_vae_collective"],
+      keycloakId: gestionnaireKeycloakId,
+    });
+
+    // The gestionnaire owns cohorte.commanditaireVaeCollectiveId, but points
+    // at another commanditaire's sous compte: isGestionnaireOfCommanditaireVaeCollective
+    // alone would let this through, so this pins the extra sous-compte-ownership check.
+    await expect(
+      runPolicy(
+        policy,
+        {
+          commanditaireVaeCollectiveId: cohorte.commanditaireVaeCollectiveId,
+          sousCompteVaeCollectiveId: sousCompteOfOtherCommanditaire.id,
         },
         context,
       ),

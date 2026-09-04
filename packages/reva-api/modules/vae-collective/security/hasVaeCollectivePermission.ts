@@ -5,6 +5,7 @@ import { NOT_AUTHORIZED_RESOURCE_ACCESS } from "@/modules/shared/security/messag
 import { hasRole, whenHasRole } from "@/modules/shared/security/middlewares";
 import { isGestionnaireOfCohorteVaeCollective } from "@/modules/shared/security/middlewares/isGestionnaireOfCohorteVaeCollective";
 import { isGestionnaireOfCommanditaireVaeCollective } from "@/modules/shared/security/middlewares/isGestionnaireOfCommanditaireVaeCollective";
+import { isGestionnaireOfSousCompteVaeCollective } from "@/modules/shared/security/middlewares/isGestionnaireOfSousCompteVaeCollective";
 
 import { getUserPermissions } from "../features/getUserPermissions";
 
@@ -14,14 +15,38 @@ import { getUserPermissions } from "../features/getUserPermissions";
 const COHORTE_SCOPED_PERMISSIONS: ReadonlySet<PermissionVaeCollective> =
   new Set(["VOIR_COHORTE", "MODIFIER_COHORTE", "SUPPRIMER_COHORTE"]);
 
+// Permissions portant sur un sous-compte précis : le simple rattachement au
+// commanditaire ne suffit pas, il faut aussi vérifier que le sous-compte visé
+// (args.sousCompteVaeCollectiveId) appartient bien à ce commanditaire.
+const SOUS_COMPTE_SCOPED_PERMISSIONS: ReadonlySet<PermissionVaeCollective> =
+  new Set([
+    "VOIR_SOUS_COMPTE",
+    "MODIFIER_SOUS_COMPTE",
+    "SUPPRIMER_SOUS_COMPTE",
+  ]);
+
 export const hasVaeCollectivePermission = (
   permission: PermissionVaeCollective,
 ) => [
   hasRole(["admin", "manage_vae_collective"]),
+
+  // Dans le cas d'un profil gestionnaire
+  // Si la permission est portée sur une cohorte, on vérifie que l'utilisateur
+  // est gestionnaire de la cohorte. Sinon, on vérifie que l'utilisateur est gestionnaire du commanditaire.
   whenHasRole(
     "manage_vae_collective",
     COHORTE_SCOPED_PERMISSIONS.has(permission)
       ? isGestionnaireOfCohorteVaeCollective
+      : isGestionnaireOfCommanditaireVaeCollective,
+  ),
+
+  // Dans le cas d'un profil gestionnaire
+  // Si la permission est portée sur un sous-compte, on vérifie que l'utilisateur
+  // est gestionnaire du sous-compte. Sinon, on vérifie que l'utilisateur est gestionnaire du commanditaire.
+  whenHasRole(
+    "manage_vae_collective",
+    SOUS_COMPTE_SCOPED_PERMISSIONS.has(permission)
+      ? isGestionnaireOfSousCompteVaeCollective
       : isGestionnaireOfCommanditaireVaeCollective,
   ),
   whenHasRole("manage_vae_collective", checkUserPermission(permission)),
