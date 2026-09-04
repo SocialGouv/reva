@@ -5,7 +5,7 @@ import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/Enh
 
 export default function AddCertificationPage() {
   return (
-    <div data-testid="add-certification-page">
+    <div className="w-full" data-testid="add-certification-page">
       <h1>Ajout d'une certification</h1>
       <p className="mb-12 text-xl">
         Pour faciliter l’ajout, renseignez le code RNCP pour pré-remplir le

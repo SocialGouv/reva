@@ -59,7 +59,7 @@ export default function CertificationDescriptionPage() {
   });
 
   return (
-    <div data-testid="add-fc-certification-page">
+    <div className="w-full" data-testid="add-fc-certification-page">
       <h1>Descriptif de la certification</h1>
       <p className="mb-12 text-xl">
         Pour faciliter l’ajout, renseignez le code RNCP pour pré-remplir le

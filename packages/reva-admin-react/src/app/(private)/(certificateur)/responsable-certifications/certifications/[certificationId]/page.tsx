@@ -124,7 +124,10 @@ const PageContent = ({
     (hasReducedRequirements || Boolean(certification.additionalInfo));
 
   return (
-    <div data-testid="certification-registry-manager-update-certification-page">
+    <div
+      className="w-full"
+      data-testid="certification-registry-manager-update-certification-page"
+    >
       <h1>
         {certification.codeRncp} - {certification.label}
       </h1>

@@ -76,7 +76,7 @@ const PageContent = ({
     false;
 
   return (
-    <div data-testid="update-certification-page">
+    <div className="w-full" data-testid="update-certification-page">
       <h1>{certification.label}</h1>
       <p className="mb-12 text-xl">
         Pour faciliter l’ajout, renseignez le code RNCP pour pré-remplir le
