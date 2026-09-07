@@ -140,4 +140,10 @@ type Mutation {
     accountEmail: String!
     canCreateCohorteVaeCollective: Boolean!
   ): SousCompteVaeCollective!
+
+  vaeCollective_updateSousCompteVaeCollective(
+    commanditaireVaeCollectiveId: ID!
+    sousCompteVaeCollectiveId: ID!
+    canCreateCohorteVaeCollective: Boolean!
+  ): SousCompteVaeCollective!
 }

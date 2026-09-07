@@ -31,6 +31,7 @@ import { publishCohorteVAECollective } from "./features/publishCohorteVAECollect
 import { updateCohorteVAECollectiveCertification } from "./features/updateCohorteVAECollectiveCertification";
 import { updateCohorteVAECollectiveOrganism } from "./features/updateCohorteVAECollectiveOrganism";
 import { updateNomCohorteVaeCollective } from "./features/updateNomCohorteVaeCollective";
+import { updateSousCompteVaeCollective } from "./features/updateSousCompteVaeCollective";
 import { hasVaeCollectivePermission } from "./security/hasVaeCollectivePermission";
 
 const unsafeResolvers = {
@@ -280,6 +281,21 @@ const unsafeResolvers = {
         accountEmail,
         canCreateCohorteVaeCollective,
       }),
+    vaeCollective_updateSousCompteVaeCollective: async (
+      _parent: unknown,
+      {
+        sousCompteVaeCollectiveId,
+        canCreateCohorteVaeCollective,
+      }: {
+        commanditaireVaeCollectiveId: string;
+        sousCompteVaeCollectiveId: string;
+        canCreateCohorteVaeCollective: boolean;
+      },
+    ) =>
+      updateSousCompteVaeCollective({
+        sousCompteVaeCollectiveId,
+        canCreateCohorteVaeCollective,
+      }),
   },
 };
 
@@ -350,5 +366,8 @@ export const vaeCollectiveResolvers = withPolicies(unsafeResolvers, {
     vaeCollective_createCommanditaireVaeCollective: isAdmin,
     vaeCollective_createSousCompteVaeCollective:
       hasVaeCollectivePermission("CREER_SOUS_COMPTE"),
+    vaeCollective_updateSousCompteVaeCollective: hasVaeCollectivePermission(
+      "MODIFIER_SOUS_COMPTE",
+    ),
   },
 });
