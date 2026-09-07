@@ -35,6 +35,20 @@ const getCertificationAuthorityLocalAccountForHeaderQuery = graphql(`
   }
 `);
 
+const getCertificationAuthorityStructureForHeaderQuery = graphql(`
+  query getCertificationAuthorityStructureForHeader {
+    account_getAccountForConnectedUser {
+      certificationRegistryManager {
+        id
+        certificationAuthorityStructure {
+          id
+          metabaseDashboardIframeUrlForRegistryManager
+        }
+      }
+    }
+  }
+`);
+
 const getCohortesVaeCollectivesForConnectedAapQuery = graphql(`
   query getCohortesVaeCollectivesForConnectedAapForHeaderComponent {
     cohortesVaeCollectivesForConnectedAap {
@@ -128,6 +142,7 @@ const getNavigationTabs = ({
   isCertificationRegistryManager,
   isAdminCertificationAuthority,
   metabaseDashboardIframeUrl,
+  metabaseDashboardIframeUrlForRegistryManager,
   shouldShowAapMetabaseDashboard,
   showAAPVaeCollectivesTab,
   certificationAuthorityId,
@@ -140,6 +155,7 @@ const getNavigationTabs = ({
   isCertificationRegistryManager: boolean;
   isAdminCertificationAuthority: boolean;
   metabaseDashboardIframeUrl?: string | null;
+  metabaseDashboardIframeUrlForRegistryManager?: string | null;
   shouldShowAapMetabaseDashboard?: boolean;
   showAAPVaeCollectivesTab: boolean;
   certificationAuthorityId?: string;
@@ -259,6 +275,15 @@ const getNavigationTabs = ({
       href: PATHS.CERTIFICATEUR_HELP,
       isActive: currentPathname.startsWith(PATHS.CERTIFICATEUR_HELP),
     }),
+    ...(metabaseDashboardIframeUrlForRegistryManager
+      ? [
+          createTab({
+            text: LABELS.STATISTIQUES,
+            href: PATHS.STATISTIQUES,
+            isActive: currentPathname.startsWith(PATHS.STATISTIQUES),
+          }),
+        ]
+      : []),
   ];
 
   const certificationAuthorityAdminTabs = [
@@ -366,6 +391,19 @@ export const Header = () => {
     enabled: isCertificationAuthorityLocalAccount && !isAdmin,
   });
 
+  const { data: getCertificationAuthorityStructureForHeader } = useQuery({
+    queryKey: ["certificateur", "getCertificationAuthorityStructureForHeader"],
+    queryFn: () =>
+      graphqlClient.request(getCertificationAuthorityStructureForHeaderQuery),
+    enabled: isCertificationRegistryManager && !isAdmin,
+  });
+
+  const metabaseDashboardIframeUrlForRegistryManager =
+    getCertificationAuthorityStructureForHeader
+      ?.account_getAccountForConnectedUser?.certificationRegistryManager
+      ?.certificationAuthorityStructure
+      ?.metabaseDashboardIframeUrlForRegistryManager;
+
   const metabaseDashboardIframeUrl =
     getCertificationAuthorityForHeader?.account_getAccountForConnectedUser
       ?.certificationAuthority?.metabaseDashboardIframeUrl;
@@ -399,6 +437,7 @@ export const Header = () => {
     isCertificationRegistryManager,
     isAdminCertificationAuthority,
     metabaseDashboardIframeUrl,
+    metabaseDashboardIframeUrlForRegistryManager,
     shouldShowAapMetabaseDashboard,
     showAAPVaeCollectivesTab,
     certificationAuthorityId,
