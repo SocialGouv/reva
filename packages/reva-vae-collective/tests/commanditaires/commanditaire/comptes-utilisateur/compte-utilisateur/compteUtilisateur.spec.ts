@@ -84,7 +84,7 @@ test.describe("Compte utilisateur allowed to create a cohorte", () => {
     await expect(page.getByText("jean.dupont@example.com")).toBeVisible();
   });
 
-  test("it should display the create cohorte toggle as checked and disabled", async ({
+  test("it should display the create cohorte toggle as checked", async ({
     page,
   }) => {
     await login({ page, role: "gestionnaireVaeCollective" });
@@ -96,7 +96,6 @@ test.describe("Compte utilisateur allowed to create a cohorte", () => {
     });
 
     await expect(toggle).toBeChecked();
-    await expect(toggle).toBeDisabled();
   });
 });
 
@@ -173,6 +172,140 @@ test.describe("Compte utilisateur not allowed to create a cohorte", () => {
     const toggle = page.getByRole("checkbox", {
       name: "Activer la création de cohorte par ce collaborateur",
     });
+
+    await expect(toggle).not.toBeChecked();
+  });
+});
+
+test.describe("Updating the cohorte creation permission", () => {
+  test.use({
+    mswHandlers: [
+      [mockQueryActiveFeatures(), mockQueryGetUserPermissions()],
+      { scope: "test" },
+    ],
+  });
+
+  test("it should call the update mutation with the toggled value when I switch it off", async ({
+    page,
+    msw,
+  }) => {
+    let receivedVariables: Record<string, unknown> | undefined;
+    msw.use(
+      mockGetSousCompteVaeCollective({ canCreateCohorteVaeCollective: true }),
+      fvae.mutation("updateSousCompteVaeCollective", ({ variables }) => {
+        receivedVariables = variables;
+        return HttpResponse.json({
+          data: {
+            vaeCollective_updateSousCompteVaeCollective: {
+              id: sousCompteVaeCollectiveId,
+              canCreateCohorteVaeCollective: false,
+            },
+          },
+        });
+      }),
+    );
+
+    await login({ page, role: "gestionnaireVaeCollective" });
+    await page.goto(pageUrl);
+
+    await page
+      .getByRole("checkbox", {
+        name: "Activer la création de cohorte par ce collaborateur",
+      })
+      .click();
+
+    await expect(() => {
+      expect(receivedVariables).toMatchObject({
+        commanditaireVaeCollectiveId: commanditaireId,
+        sousCompteVaeCollectiveId,
+        canCreateCohorteVaeCollective: false,
+      });
+    }).toPass();
+  });
+
+  test("it should call the update mutation with the toggled value when I switch it on", async ({
+    page,
+    msw,
+  }) => {
+    let receivedVariables: Record<string, unknown> | undefined;
+    msw.use(
+      mockGetSousCompteVaeCollective({ canCreateCohorteVaeCollective: false }),
+      fvae.mutation("updateSousCompteVaeCollective", ({ variables }) => {
+        receivedVariables = variables;
+        return HttpResponse.json({
+          data: {
+            vaeCollective_updateSousCompteVaeCollective: {
+              id: sousCompteVaeCollectiveId,
+              canCreateCohorteVaeCollective: true,
+            },
+          },
+        });
+      }),
+    );
+
+    await login({ page, role: "gestionnaireVaeCollective" });
+    await page.goto(pageUrl);
+
+    await page
+      .getByRole("checkbox", {
+        name: "Activer la création de cohorte par ce collaborateur",
+      })
+      .click();
+
+    await expect(() => {
+      expect(receivedVariables).toMatchObject({
+        commanditaireVaeCollectiveId: commanditaireId,
+        sousCompteVaeCollectiveId,
+        canCreateCohorteVaeCollective: true,
+      });
+    }).toPass();
+  });
+
+  test("it should reflect the persisted value after the toggle is switched off", async ({
+    page,
+    msw,
+  }) => {
+    let canCreateCohorteVaeCollective = true;
+    msw.use(
+      fvae.query("getSousCompteVaeCollective", () =>
+        HttpResponse.json({
+          data: {
+            vaeCollective_getSousCompteVaeCollective: {
+              id: sousCompteVaeCollectiveId,
+              canCreateCohorteVaeCollective,
+              account: {
+                firstname: "Jean",
+                lastname: "Dupont",
+                email: "jean.dupont@example.com",
+              },
+            },
+          },
+        }),
+      ),
+      fvae.mutation("updateSousCompteVaeCollective", ({ variables }) => {
+        canCreateCohorteVaeCollective =
+          variables.canCreateCohorteVaeCollective as boolean;
+        return HttpResponse.json({
+          data: {
+            vaeCollective_updateSousCompteVaeCollective: {
+              id: sousCompteVaeCollectiveId,
+              canCreateCohorteVaeCollective,
+            },
+          },
+        });
+      }),
+    );
+
+    await login({ page, role: "gestionnaireVaeCollective" });
+    await page.goto(pageUrl);
+
+    const toggle = page.getByRole("checkbox", {
+      name: "Activer la création de cohorte par ce collaborateur",
+    });
+
+    await expect(toggle).toBeChecked();
+
+    await toggle.click();
 
     await expect(toggle).not.toBeChecked();
   });

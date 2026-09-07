@@ -15,10 +15,10 @@ export default async function UpdateCohortNamePage({
 }) {
   const { commanditaireId, sousCompteVaeCollectiveId } = await params;
 
-  const sousCompte = await getSousCompteVaeCollective(
-    commanditaireId,
+  const sousCompte = await getSousCompteVaeCollective({
+    commanditaireVaeCollectiveId: commanditaireId,
     sousCompteVaeCollectiveId,
-  );
+  });
 
   if (!sousCompte) {
     throw new Error("Compte utilisateur non trouvé");
@@ -42,6 +42,8 @@ export default async function UpdateCohortNamePage({
         {sousCompte?.account?.lastname} {sousCompte?.account?.firstname}
       </h1>
       <SousCompteVaeCollectiveForm
+        commanditaireId={commanditaireId}
+        sousCompteVaeCollectiveId={sousCompteVaeCollectiveId}
         email={sousCompte?.account?.email}
         canCreateCohorteVaeCollective={
           sousCompte?.canCreateCohorteVaeCollective

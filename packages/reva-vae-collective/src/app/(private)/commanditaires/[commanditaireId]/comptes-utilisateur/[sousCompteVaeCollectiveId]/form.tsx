@@ -1,10 +1,16 @@
 "use client";
 import ToggleSwitch from "@codegouvfr/react-dsfr/ToggleSwitch";
 
+import { updateSousCompteVaeCollective } from "./actions";
+
 export const SousCompteVaeCollectiveForm = ({
+  commanditaireId,
+  sousCompteVaeCollectiveId,
   email,
   canCreateCohorteVaeCollective,
 }: {
+  commanditaireId: string;
+  sousCompteVaeCollectiveId: string;
   email: string;
   canCreateCohorteVaeCollective: boolean;
 }) => (
@@ -19,8 +25,13 @@ export const SousCompteVaeCollectiveForm = ({
       label="Activer la création de cohorte par ce collaborateur"
       labelPosition="left"
       checked={canCreateCohorteVaeCollective}
-      onChange={() => {}}
-      disabled
+      onChange={() =>
+        updateSousCompteVaeCollective({
+          commanditaireVaeCollectiveId: commanditaireId,
+          sousCompteVaeCollectiveId,
+          canCreateCohorteVaeCollective: !canCreateCohorteVaeCollective,
+        })
+      }
     />
     <hr className="pb-1" />
   </div>
