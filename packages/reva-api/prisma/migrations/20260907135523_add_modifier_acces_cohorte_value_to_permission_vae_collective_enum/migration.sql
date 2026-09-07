@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "PermissionVaeCollective" ADD VALUE 'MODIFIER_DROITS_ACCES_COHORTE';

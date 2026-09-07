@@ -39,6 +39,7 @@ describe("get user permissions vae collective", () => {
         "SUPPRIMER_SOUS_COMPTE",
         "VOIR_LISTE_SOUS_COMPTES",
         "VOIR_SOUS_COMPTE",
+        "MODIFIER_DROITS_ACCES_COHORTE",
       ],
     });
   });
