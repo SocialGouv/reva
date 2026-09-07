@@ -1,0 +1,2 @@
+INSERT INTO "features" ("key", "label", "description", "is_active")
+VALUES ('SHOW_METABASE_DASHBOARD_FOR_REGISTRY_MANAGER', 'Tableaux de bord pour les gestionnaires de certifications', 'Afficher le tableau de bord Metabase pour les gestionnaires de certifications', false);

@@ -34,3 +34,8 @@ export interface UpdateCertificationAuthorityLocalAccountGeneralInformationInput
   contactEmail?: string | null;
   contactPhone?: string | null;
 }
+
+export interface CertificationAuthorityStructure {
+  id: string;
+  label: string;
+}

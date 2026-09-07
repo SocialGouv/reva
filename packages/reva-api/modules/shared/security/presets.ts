@@ -180,3 +180,5 @@ export const isAdminOrCertificationAuthorityLocalAccountManagerOrCertificationAu
       isCertificationAuthorityLocalAccountOwner,
     ),
   ];
+
+export const isRegistryManager = [hasRole(["manage_certification_registry"])];

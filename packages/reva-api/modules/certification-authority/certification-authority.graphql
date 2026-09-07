@@ -69,6 +69,7 @@ type CertificationAuthorityStructure {
   certificationRegistryManager: CertificationRegistryManager
   cguAcceptanceRequired: Boolean!
   hasReducedRequirements: Boolean!
+  metabaseDashboardIframeUrlForRegistryManager: String
 }
 
 type CertificationRegistryManager {

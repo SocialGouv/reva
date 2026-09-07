@@ -2,6 +2,7 @@ import {
   Account,
   Candidacy,
   CertificationAuthorityLocalAccount,
+  CertificationAuthorityStructure,
   CertificationRegistryManager,
 } from "@prisma/client";
 import mercurius from "mercurius";
@@ -27,6 +28,7 @@ import {
   isAdminOrIsCertificationAuthorityStructureRegistryManagerMember,
   isAdminOrManager,
   isAnyone,
+  isRegistryManager,
 } from "../shared/security/presets";
 import { withPolicies } from "../shared/security/withPolicies";
 
@@ -67,6 +69,7 @@ import { getHumanAccountByCertificationAuthorityId } from "./features/getHumanAc
 import { getHumanAccountByCertificationAuthorityLocalAccountId } from "./features/getHumanAccountByCertificationAuthorityLocalAccountId";
 import { getLastProfessionalCguCertificateur } from "./features/getLastProfessionalCguCertificateur";
 import { getMetabaseIframeUrl } from "./features/getMetabaseIframeUrl";
+import { getMetabaseIframeUrlForRegistryManager } from "./features/getMetabaseIframeUrlForRegistryManager";
 import { getPaginatedCertifications } from "./features/getPaginatedCertifications";
 import { getParcoursForCertificationAndCertificationAuthority } from "./features/getParcoursForCertificationAndCertificationAuthority";
 import { isCandidacyCertificationAuthorityUpdatable } from "./features/isCandidacyCertificationAuthorityUpdatable";
@@ -227,6 +230,9 @@ const unsafeResolvers = {
           (await getLastProfessionalCguCertificateur())?.version == cguVersion,
       };
     },
+    metabaseDashboardIframeUrlForRegistryManager: async (
+      parent: CertificationAuthorityStructure,
+    ) => getMetabaseIframeUrlForRegistryManager(parent),
   },
   CertificationRegistryManager: {
     certificationAuthorityStructure: (parent: CertificationRegistryManager) =>
@@ -675,6 +681,7 @@ export const certificationAuthorityResolvers = withPolicies(unsafeResolvers, {
     certifications:
       isAdminOrCertificationRegistryManagerOfCertificationOrIsCertificationAuthorityStructureMember,
     cgu: isAnyone,
+    metabaseDashboardIframeUrlForRegistryManager: isRegistryManager,
   },
   CertificationRegistryManager: {
     certificationAuthorityStructure:
