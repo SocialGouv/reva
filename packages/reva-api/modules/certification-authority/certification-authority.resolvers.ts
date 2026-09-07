@@ -232,7 +232,13 @@ const unsafeResolvers = {
     },
     metabaseDashboardIframeUrlForRegistryManager: async (
       parent: CertificationAuthorityStructure,
-    ) => getMetabaseIframeUrlForRegistryManager(parent),
+      _params: unknown,
+      context: GraphqlContext,
+    ) =>
+      getMetabaseIframeUrlForRegistryManager(
+        parent,
+        context.auth.userInfo?.sub || "",
+      ),
   },
   CertificationRegistryManager: {
     certificationAuthorityStructure: (parent: CertificationRegistryManager) =>

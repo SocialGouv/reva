@@ -6,9 +6,11 @@ import { CertificationAuthorityStructure } from "../certification-authority.type
 
 export const getMetabaseIframeUrlForRegistryManager = async (
   certificationAuthorityStructure: CertificationAuthorityStructure,
+  keycloakId: string,
 ) => {
   const isFeatureActive = await isFeatureActiveForUser({
     feature: "SHOW_METABASE_DASHBOARD_FOR_REGISTRY_MANAGER",
+    userKeycloakId: keycloakId,
   });
 
   if (!isFeatureActive) {
