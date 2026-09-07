@@ -1,8 +1,10 @@
 import { parse } from "date-fns";
 
 import { logger } from "@/modules/shared/logger/logger";
+import { prismaClient } from "@/prisma/client";
 
-const URL = "https://api.francecompetences.fr/referentiels/v2.0/fiches";
+const URL_V2 = "https://api.francecompetences.fr/referentiels/v2.0/fiches";
+const URL_V4 = "https://api.francecompetences.fr/referentiels/v4.0/fiches";
 
 type FindParams = {
   STATUT?: "ACTIF" | "INACTIF";
@@ -47,10 +49,11 @@ export type RNCPCertification = {
 export class RNCPReferential {
   private static instance: RNCPReferential;
 
-  private apiKey: string;
-
-  private constructor() {
-    const FRANCE_COMPENTENCES_API_KEY = process.env.FRANCE_COMPENTENCES_API_KEY;
+  private getApiKey(version: "v2" | "v4"): string {
+    const FRANCE_COMPENTENCES_API_KEY =
+      version === "v4"
+        ? process.env.FRANCE_COMPENTENCES_API_KEY_V4
+        : process.env.FRANCE_COMPENTENCES_API_KEY;
 
     if (!FRANCE_COMPENTENCES_API_KEY) {
       const error = `"FRANCE_COMPENTENCES_API_KEY" has not been set`;
@@ -60,7 +63,11 @@ export class RNCPReferential {
       throw new Error(error);
     }
 
-    this.apiKey = FRANCE_COMPENTENCES_API_KEY;
+    return FRANCE_COMPENTENCES_API_KEY;
+  }
+
+  private getUrl(version: "v2" | "v4"): string {
+    return version === "v4" ? URL_V4 : URL_V2;
   }
 
   public static getInstance(): RNCPReferential {
@@ -76,12 +83,24 @@ export class RNCPReferential {
     certifications: RNCPCertification[];
   }> {
     try {
+      const isFranceCompetencesRncpV4Enabled =
+        await prismaClient.feature.findFirst({
+          where: {
+            key: "FRANCE_COMPETENCES_RNCP_V4",
+            isActive: true,
+          },
+        });
+
+      const version: "v2" | "v4" = isFranceCompetencesRncpV4Enabled
+        ? "v4"
+        : "v2";
+
       const queryParams = new URLSearchParams(params || {});
 
-      const url = `${URL}?REPERTOIRE=RNCP&${queryParams.toString()}`;
+      const url = `${this.getUrl(version)}?REPERTOIRE=RNCP&${queryParams.toString()}`;
       const response = await fetch(url, {
         headers: {
-          "X-Gravitee-Api-Key": this.apiKey,
+          "X-Gravitee-Api-Key": this.getApiKey(version),
         },
       });
 
@@ -91,7 +110,7 @@ export class RNCPReferential {
       };
 
       const certifications: RNCPCertification[] = data.fiches.map(
-        mapToRNCPCertification,
+        (certification) => mapToRNCPCertification(certification, version),
       );
 
       return {
@@ -229,7 +248,10 @@ function splitString(value: string): string[] {
   return [];
 }
 
-export function mapToRNCPCertification(data: any): RNCPCertification {
+export function mapToRNCPCertification(
+  data: any,
+  version: "v2" | "v4",
+): RNCPCertification {
   try {
     const certification: RNCPCertification = {
       ID_FICHE: data.ID_FICHE,
@@ -244,7 +266,10 @@ export function mapToRNCPCertification(data: any): RNCPCertification {
       NOMENCLATURE_EUROPE: data.NOMENCLATURE_EUROPE
         ? {
             NIVEAU: data.NOMENCLATURE_EUROPE.NIVEAU,
-            INTITULE: data.NOMENCLATURE_EUROPE.INTITULE,
+            INTITULE:
+              version === "v4"
+                ? data.NOMENCLATURE_EUROPE.LIBELLE
+                : data.NOMENCLATURE_EUROPE.INTITULE,
           }
         : undefined,
       DATE_FIN_ENREGISTREMENT: data.DATE_FIN_ENREGISTREMENT
