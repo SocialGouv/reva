@@ -113,15 +113,15 @@ const getNextActionTiles = ({
 
   const rules: { condition: boolean; tile: NextActionTile }[] = [
     //! ACCOMPAGNE
-    // ACCOMPAGNE : Remplir mes objectifs
+    // ACCOMPAGNE : Compléter mes objectifs
     {
       condition: isProjectStatus && goalsCount === 0 && isAccompagne,
-      tile: { title: "Remplir mes objectifs", link: ROUTES.SET_GOALS },
+      tile: { title: "Compléter mes objectifs", link: ROUTES.SET_GOALS },
     },
-    // ACCOMPAGNE : Remplir mes expériences
+    // ACCOMPAGNE : Compléter mes expériences
     {
       condition: isProjectStatus && experiencesCount === 0 && isAccompagne,
-      tile: { title: "Remplir mes expériences", link: ROUTES.EXPERIENCES },
+      tile: { title: "Compléter mes expériences", link: ROUTES.EXPERIENCES },
     },
     // ACCOMPAGNE : Choisir mon accompagnateur
     {

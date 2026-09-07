@@ -52,7 +52,7 @@ const createCandidacyWithGoalsAndExperiences = (
 test.describe("Next actions tiles", () => {
   const typesAccompagnement: TypeAccompagnement[] = ["AUTONOME", "ACCOMPAGNE"];
   test.describe("ACCOMPAGNE", () => {
-    test.describe("Remplir mes objectifs", () => {
+    test.describe("Compléter mes objectifs", () => {
       const candidacy = createCandidacyWithGoals(0);
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
@@ -61,19 +61,21 @@ test.describe("Next actions tiles", () => {
         mswHandlers: [handlers, { scope: "test" }],
       });
 
-      test("shows 'Remplir mes objectifs' when no goals", async ({ page }) => {
+      test("shows 'Compléter mes objectifs' when no goals", async ({
+        page,
+      }) => {
         await login(page);
         await dashboardWait(page);
         await expect(
           page.locator('[data-testid="dashboard-sidebar"]'),
         ).toBeVisible();
         await expect(
-          page.getByRole("button", { name: "Remplir mes objectifs" }),
+          page.getByRole("button", { name: "Compléter mes objectifs" }),
         ).toBeVisible();
       });
     });
 
-    test.describe("Remplir mes expériences", () => {
+    test.describe("Compléter mes expériences", () => {
       const candidacy = createCandidacyWithGoalsAndExperiences(1, 0);
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
@@ -82,13 +84,13 @@ test.describe("Next actions tiles", () => {
         mswHandlers: [handlers, { scope: "test" }],
       });
 
-      test("shows 'Remplir mes expériences' when no experiences", async ({
+      test("shows 'Compléter mes expériences' when no experiences", async ({
         page,
       }) => {
         await login(page);
         await dashboardWait(page);
         await expect(
-          page.getByRole("button", { name: "Remplir mes expériences" }),
+          page.getByRole("button", { name: "Compléter mes expériences" }),
         ).toBeVisible();
       });
     });
