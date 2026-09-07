@@ -3,6 +3,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { hasPermission } from "@/components/auth/actions";
 import { RoleDependentBreadcrumb } from "@/components/role-dependent-breadcrumb/RoleDependentBreadcrumb";
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
+import { getActiveFeatures } from "@/helpers/get-actives-features";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
 
@@ -114,10 +115,18 @@ export default async function CohortePage({
     !certificationSelected ||
     (cohorte.status !== "BROUILLON" && !organismSelected) ||
     !canModifyCohorte;
+  const { isFeatureActive } = await getActiveFeatures();
 
-  const showAccessRightsCard = await hasPermission(
+  const isVaeCollectiveAccountsFeatureActive = isFeatureActive(
+    "VAE_COLLECTIVE_ACCOUNTS",
+  );
+
+  const hasAccessRightsPermission = await hasPermission(
     "MODIFIER_DROITS_ACCES_COHORTE",
   );
+
+  const showAccessRightsCard =
+    isVaeCollectiveAccountsFeatureActive && hasAccessRightsPermission;
 
   return (
     <div className="flex flex-col w-full">
