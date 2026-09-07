@@ -8,6 +8,7 @@ import { client } from "@/helpers/graphql/urql-client/urqlClient";
 
 import { graphql } from "@/graphql/generated";
 
+import { AccessRightsCard } from "./_components/access-rights-card/AccessRightsCard";
 import { CertificationsCard } from "./_components/certifications-card/CertificationsCard";
 import { DeleteCohorteButton } from "./_components/delete-cohorte-button/DeleteCohorteButton";
 import { GenerateCohorteCodeInscriptionButton } from "./_components/generate-cohorte-code-inscription-button/GenerateCohorteCodeInscriptionButton";
@@ -114,6 +115,10 @@ export default async function CohortePage({
     (cohorte.status !== "BROUILLON" && !organismSelected) ||
     !canModifyCohorte;
 
+  const showAccessRightsCard = await hasPermission(
+    "MODIFIER_DROITS_ACCES_COHORTE",
+  );
+
   return (
     <div className="flex flex-col w-full">
       <RoleDependentBreadcrumb
@@ -161,6 +166,12 @@ export default async function CohortePage({
         readonly={cohorte.status !== "BROUILLON"}
         certificationSelected={certificationSelected}
       />
+      {showAccessRightsCard && (
+        <AccessRightsCard
+          className="mt-8"
+          accessRightsPageHref={`/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/droits-acces`}
+        />
+      )}
       <hr className="mt-8 mb-2" />
       {cohorte.status === "BROUILLON" && (
         <>
