@@ -21,6 +21,7 @@ export const createAccount = async (params: {
   maisonMereAAPRaisonSociale?: string;
   dontSendKeycloakEmail?: boolean;
   isApiUser?: boolean;
+  emailOtpEnabled?: boolean;
 }): Promise<Account> => {
   // On n'envoie pas d'email de définition de mot de passe si le flag dontSendKeycloakEmail est positionné ou si l'envitonnement est sandbox
   // Les comptes créés dans l'environnement de sandbox ou avec le flag isApiUser sont destinés à une utilisation via API
@@ -100,6 +101,7 @@ export const createAccount = async (params: {
       certificationAuthorityLocalAccountId:
         params.certificationAuthorityLocalAccountId,
       isApiUser: params.isApiUser,
+      emailOtpEnabled: params.emailOtpEnabled,
     },
   });
 };
