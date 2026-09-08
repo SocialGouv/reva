@@ -24,6 +24,7 @@ export const createCommanditaireVaeCollective = async ({
     lastname: gestionnaireLastname,
     group: "commanditaire_vae_collective",
     dontSendKeycloakEmail: true,
+    disableEmailOtp: true,
   });
 
   //Create commanditaire VAE collective

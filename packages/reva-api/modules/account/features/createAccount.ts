@@ -1,6 +1,7 @@
 import { Account } from "@prisma/client";
 
 import { getCertificationAuthorityById } from "@/modules/feasibility/feasibility.features";
+import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -21,8 +22,17 @@ export const createAccount = async (params: {
   maisonMereAAPRaisonSociale?: string;
   dontSendKeycloakEmail?: boolean;
   isApiUser?: boolean;
-  emailOtpEnabled?: boolean;
+  disableEmailOtp?: boolean;
 }): Promise<Account> => {
+  const isEnableEmailOtpOnAccountCreationFeatureActive =
+    await isFeatureActiveForUser({
+      userKeycloakId: null,
+      feature: "ENABLE_EMAIL_OTP_ON_ACCOUNT_CREATION",
+    });
+
+  const emailOtpEnabled =
+    !params.disableEmailOtp && isEnableEmailOtpOnAccountCreationFeatureActive;
+
   // On n'envoie pas d'email de définition de mot de passe si le flag dontSendKeycloakEmail est positionné ou si l'envitonnement est sandbox
   // Les comptes créés dans l'environnement de sandbox ou avec le flag isApiUser sont destinés à une utilisation via API
   // et ne doivent pas recevoir de mail de création de mot de passe
@@ -101,7 +111,7 @@ export const createAccount = async (params: {
       certificationAuthorityLocalAccountId:
         params.certificationAuthorityLocalAccountId,
       isApiUser: params.isApiUser,
-      emailOtpEnabled: params.emailOtpEnabled,
+      emailOtpEnabled,
     },
   });
 };
