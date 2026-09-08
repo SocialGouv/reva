@@ -30,6 +30,7 @@ test.describe("Login", () => {
               account_loginWithCredentials: {
                 requiresOtp: false,
                 otpChallengeToken: null,
+                otpType: "none",
                 tokens: successTokens,
                 account: successAccount,
               },
@@ -80,7 +81,7 @@ test.describe("Login", () => {
   });
 });
 
-test.describe("Login with OTP", () => {
+test.describe("Login with authenticator OTP", () => {
   test.use({
     mswHandlers: [
       [
@@ -90,6 +91,7 @@ test.describe("Login with OTP", () => {
               account_loginWithCredentials: {
                 requiresOtp: true,
                 otpChallengeToken: "challenge-token",
+                otpType: "authenticator",
                 tokens: null,
                 account: successAccount,
               },
@@ -111,7 +113,7 @@ test.describe("Login with OTP", () => {
     ],
   });
 
-  test("it should show the OTP step and redirect to post-login after a valid code", async ({
+  test("it should show the authenticator OTP step and redirect to post-login after a valid code", async ({
     page,
   }) => {
     await login({ page, role: "notConnected" });
@@ -126,11 +128,93 @@ test.describe("Login with OTP", () => {
       page.getByRole("textbox", { name: "Code de vérification" }),
     ).toBeVisible();
 
-    await page.fill("input[name='totp']", "123456");
+    await page.fill("input[name='otp']", "123456");
     await page.getByRole("button", { name: "Valider le code" }).click();
 
     await expect(page).toHaveURL((url) =>
       url.pathname.startsWith("/vae-collective/post-login"),
     );
+  });
+});
+
+test.describe("Login with email OTP", () => {
+  test.use({
+    mswHandlers: [
+      [
+        fvae.mutation("Login", () => {
+          return HttpResponse.json({
+            data: {
+              account_loginWithCredentials: {
+                requiresOtp: true,
+                otpChallengeToken: "challenge-token",
+                otpType: "email",
+                tokens: null,
+                account: successAccount,
+              },
+            },
+          });
+        }),
+        fvae.mutation("VerifyOtpChallengeVaeCollective", () => {
+          return HttpResponse.json({
+            data: {
+              account_verifyOtpChallenge: {
+                tokens: successTokens,
+                account: successAccount,
+              },
+            },
+          });
+        }),
+        fvae.mutation("ResendEmailOtpVaeCollective", () => {
+          return HttpResponse.json({
+            data: { account_resendEmailOtp: true },
+          });
+        }),
+      ],
+      { scope: "test" },
+    ],
+  });
+
+  test("it should show the email OTP step and redirect to post-login after a valid code", async ({
+    page,
+  }) => {
+    await login({ page, role: "notConnected" });
+
+    await page.goto("/vae-collective/login");
+
+    await page.fill("input[name='email']", "test@test.com");
+    await page.fill("input[name='password']", "password");
+    await page.getByRole("button", { name: "Se connecter" }).click();
+
+    await expect(
+      page.getByRole("textbox", { name: "Vérification de votre identité" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Renvoyer un code" }),
+    ).toBeVisible();
+
+    await page.fill("input[name='otp']", "123456");
+    await page.getByRole("button", { name: "Valider" }).click();
+
+    await expect(page).toHaveURL((url) =>
+      url.pathname.startsWith("/vae-collective/post-login"),
+    );
+  });
+
+  test("it should show a success alert after resending the email OTP code", async ({
+    page,
+  }) => {
+    await login({ page, role: "notConnected" });
+
+    await page.goto("/vae-collective/login");
+
+    await page.fill("input[name='email']", "test@test.com");
+    await page.fill("input[name='password']", "password");
+    await page.getByRole("button", { name: "Se connecter" }).click();
+
+    await page.getByRole("button", { name: "Renvoyer un code" }).click();
+
+    await expect(
+      page.getByText("Un nouveau code a été envoyé à test@test.com."),
+    ).toBeVisible();
   });
 });

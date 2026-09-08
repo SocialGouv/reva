@@ -16,9 +16,10 @@ import {
 type FormState = {
   step?: "credentials" | "otp";
   email?: string;
+  otpType?: "authenticator" | "email";
   errors?: {
     password?: { message: string };
-    totp?: { message: string };
+    otp?: { message: string };
   };
 };
 
@@ -27,7 +28,12 @@ const OTP_CHALLENGE_COOKIE = "otp_challenge";
 // donc le path du cookie doit refléter ce préfixe pour que le navigateur le
 // renvoie à l'étape OTP.
 const OTP_CHALLENGE_COOKIE_PATH = "/vae-collective/login";
-const OTP_CHALLENGE_COOKIE_MAX_AGE = 5 * 60;
+
+// TTL pour OTP généré par l'authenticateur : 5 minutes
+const AUTHENTICATOR_OTP_CHALLENGE_COOKIE_MAX_AGE = 5 * 60;
+
+// TTL pour OTP généré par email : 10 minutes
+const EMAIL_OTP_CHALLENGE_COOKIE_MAX_AGE = 10 * 60;
 
 const loginMutation = graphql(`
   mutation Login($email: String!, $password: String!) {
@@ -38,6 +44,7 @@ const loginMutation = graphql(`
     ) {
       requiresOtp
       otpChallengeToken
+      otpType
       tokens {
         accessToken
         refreshToken
@@ -69,6 +76,12 @@ const verifyOtpChallengeMutation = graphql(`
         }
       }
     }
+  }
+`);
+
+const resendEmailOtpMutation = graphql(`
+  mutation ResendEmailOtpVaeCollective($email: String!) {
+    account_resendEmailOtp(email: $email)
   }
 `);
 
@@ -109,7 +122,11 @@ export const login = async (
   formData: FormData,
 ): Promise<FormState> => {
   const email = formData.get("email")?.toString().trim() ?? "";
-  const totp = formData.get("totp")?.toString().trim() || undefined;
+  const otp = formData.get("otp")?.toString().trim() || undefined;
+  const otpType = formData.get("otpType")?.toString() as
+    | "email"
+    | "authenticator"
+    | undefined;
   const intent = formData.get("intent")?.toString();
 
   const cookieStore = await cookies();
@@ -126,7 +143,7 @@ export const login = async (
 
   // Étape 2 : vérification OTP. Le mot de passe n'est jamais ré-envoyé par le
   // navigateur, il vit côté serveur dans le cookie httpOnly chiffré.
-  if (totp) {
+  if (otp && otpType) {
     const challengeToken = cookieStore.get(OTP_CHALLENGE_COOKIE)?.value;
     if (!challengeToken) {
       return {
@@ -140,17 +157,25 @@ export const login = async (
 
     const result = await client.mutation(verifyOtpChallengeMutation, {
       challengeToken,
-      otp: totp,
+      otp,
     });
 
     if (result.error) {
-      const message = result.error.networkError
-        ? "Service indisponible, merci de réessayer plus tard."
-        : "Code de vérification incorrect";
+      let message = "";
+      if (result.error.networkError) {
+        message = "Service indisponible, merci de réessayer plus tard.";
+      } else if (otpType === "email") {
+        message =
+          "Ce code est incorrect ou a expiré. Vérifiez votre email ou renvoyez un nouveau code";
+      } else {
+        message = "Code de vérification incorrect";
+      }
+
       return {
         step: "otp",
         email,
-        errors: { totp: { message } },
+        otpType,
+        errors: { otp: { message } },
       };
     }
 
@@ -159,7 +184,8 @@ export const login = async (
       return {
         step: "otp",
         email,
-        errors: { totp: { message: "Code de vérification incorrect" } },
+        otpType,
+        errors: { otp: { message: "Code de vérification incorrect" } },
       };
     }
 
@@ -212,14 +238,28 @@ export const login = async (
         },
       };
     }
+    let otpCookieMaxAge = 0;
+    switch (payload.otpType) {
+      case "authenticator":
+        otpCookieMaxAge = AUTHENTICATOR_OTP_CHALLENGE_COOKIE_MAX_AGE;
+        break;
+      case "email":
+        otpCookieMaxAge = EMAIL_OTP_CHALLENGE_COOKIE_MAX_AGE;
+        break;
+    }
+
     cookieStore.set(OTP_CHALLENGE_COOKIE, payload.otpChallengeToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: OTP_CHALLENGE_COOKIE_PATH,
-      maxAge: OTP_CHALLENGE_COOKIE_MAX_AGE,
+      maxAge: otpCookieMaxAge,
     });
-    return { step: "otp", email };
+
+    if (payload.otpType === "none") {
+      throw new Error("OTP type not defined");
+    }
+    return { step: "otp", email, otpType: payload.otpType };
   }
 
   if (!payload?.tokens) {
@@ -239,4 +279,12 @@ export const login = async (
         payload.account.commanditaireVaeCollective?.id,
     }),
   );
+};
+
+export const resendEmailOtp = async (email: string) => {
+  const result = await client.mutation(resendEmailOtpMutation, { email });
+  if (result.error) {
+    throw new Error("Une erreur est survenue, veuillez réessayer.");
+  }
+  return result.data?.account_resendEmailOtp;
 };

@@ -24,7 +24,8 @@ export default function LoginPage() {
             {isOtpStep ? (
               <OtpStep
                 email={state.email ?? ""}
-                totpError={state.errors?.totp?.message}
+                otpError={state.errors?.otp?.message}
+                otpType={state.otpType ?? "authenticator"}
                 pending={pending}
               />
             ) : (
