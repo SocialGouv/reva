@@ -29,7 +29,15 @@ export const createSousCompteVaeCollective = async ({
     dontSendKeycloakEmail: true,
   });
 
-  console.log("isAAPAccount", isAAPAccount);
+  const commanditaireVaeCollective =
+    await prismaClient.commanditaireVaeCollective.findUnique({
+      where: {
+        id: commanditaireVaeCollectiveId,
+      },
+      include: {
+        gestionnaire: true,
+      },
+    });
 
   const sousCompteVaeCollective =
     await prismaClient.sousCompteVaeCollective.create({
@@ -48,12 +56,24 @@ export const createSousCompteVaeCollective = async ({
       },
     });
   }
-  await sendSetupPasswordEmail({ email: accountEmail });
+  await sendSetupPasswordEmail({
+    email: accountEmail,
+    adminFirstName: commanditaireVaeCollective?.gestionnaire?.firstname ?? "",
+    adminLastName: commanditaireVaeCollective?.gestionnaire?.lastname ?? "",
+  });
 
   return sousCompteVaeCollective;
 };
 
-const sendSetupPasswordEmail = async ({ email }: { email: string }) => {
+const sendSetupPasswordEmail = async ({
+  email,
+  adminFirstName,
+  adminLastName,
+}: {
+  email: string;
+  adminFirstName: string;
+  adminLastName: string;
+}) => {
   const TOKEN_EXPIRATION_IN_SECONDS = 4 * 24 * 60 * 60;
   const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
   const token = generateJwt(
@@ -79,6 +99,8 @@ const sendSetupPasswordEmail = async ({ email }: { email: string }) => {
       setupPasswordUrl: url.toString(),
       resetPasswordUrl: resetPasswordUrl.toString(),
       tokenDuration: humanReadableTokenDuration,
+      adminFirstName,
+      adminLastName,
     },
   });
 };
