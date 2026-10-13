@@ -91,11 +91,25 @@ const updateCertificationAuthorityCertificationsHandlers = (args?: {
     }),
   );
 
+  const removeAllCertificationAuthorityCertificationsHandler = fvae.mutation(
+    "removeAllCertificationAuthorityCertificationsForAdminCertificationsPage",
+    graphQLResolver({
+      certification_authority_removeAllCertificationAuthorityCertifications: true,
+    }),
+  );
+
   return [
     getCertificationAuthorityForCertificationsPageHandler,
     updateCertificationAuthorityCertificationsHandler,
+    removeAllCertificationAuthorityCertificationsHandler,
   ];
 };
+
+const certificationsPageUrl =
+  "/admin2/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/certifications/";
+
+const removeAllCertificationsModalDescription =
+  "Toutes les certifications gérées par ce certificateur administrateur seront retirées. S'il y avait des parcours associés à ces certifications, ils seront également supprimés. Cette action est irréversible.";
 
 test.describe("Certification authority certifications page", () => {
   test.describe("when I access the certifications page", () => {
@@ -324,6 +338,133 @@ test.describe("Certification authority certifications page", () => {
           }),
         ).toBeVisible();
       });
+    });
+  });
+
+  test.describe("when I remove all managed certifications", () => {
+    test.use({
+      mswHandlers: [
+        [
+          ...updateCertificationAuthorityCertificationsHandlers(),
+          ...aapCommonHandlers,
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("it shows the admin section", async ({ page }) => {
+      await login({ role: "admin", page });
+      await page.goto(certificationsPageUrl);
+      await waitForPageQueries(page);
+
+      await expect(
+        page.getByRole("region", { name: "Actions admin" }),
+      ).toBeVisible();
+      await expect(
+        page.getByRole("button", { name: "Supprimer les certifications gérées" }),
+      ).toBeVisible();
+    });
+
+    test("it hides the admin section for a non-admin user", async ({
+      page,
+    }) => {
+      await login({ role: "certificateur", page });
+      await page.goto(certificationsPageUrl);
+      await waitForPageQueries(page);
+
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+        "Certifications gérées",
+      );
+      await expect(
+        page.getByRole("button", { name: "Supprimer les certifications gérées" }),
+      ).not.toBeVisible();
+    });
+
+    test("it opens a confirmation modal", async ({ page }) => {
+      await login({ role: "admin", page });
+      await page.goto(certificationsPageUrl);
+      await waitForPageQueries(page);
+
+      await page
+        .getByRole("button", { name: "Supprimer les certifications gérées" })
+        .click();
+
+      await expect(
+        page.getByRole("heading", {
+          name: "Suppression des certifications gérées",
+        }),
+      ).toBeVisible();
+      await expect(
+        page.getByText(removeAllCertificationsModalDescription),
+      ).toBeVisible();
+      await expect(page.getByRole("button", { name: "Annuler" })).toBeVisible();
+      await expect(page.getByRole("button", { name: "Valider" })).toBeVisible();
+    });
+
+    test("it closes the modal without calling the mutation when clicking Annuler", async ({
+      page,
+    }) => {
+      await login({ role: "admin", page });
+      await page.goto(certificationsPageUrl);
+      await waitForPageQueries(page);
+
+      const mutationRequests: string[] = [];
+      page.on("request", (request) => {
+        const postData = request.postData();
+        if (
+          postData?.includes(
+            "removeAllCertificationAuthorityCertificationsForAdminCertificationsPage",
+          )
+        ) {
+          mutationRequests.push(postData);
+        }
+      });
+
+      await page
+        .getByRole("button", { name: "Supprimer les certifications gérées" })
+        .click();
+      await page.getByRole("button", { name: "Annuler" }).click();
+
+      await expect(
+        page.getByRole("heading", {
+          name: "Suppression des certifications gérées",
+        }),
+      ).not.toBeVisible();
+      expect(mutationRequests).toEqual([]);
+    });
+
+    test("it calls the mutation when clicking Valider", async ({ page }) => {
+      await login({ role: "admin", page });
+      await page.goto(certificationsPageUrl);
+      await waitForPageQueries(page);
+
+      await page
+        .getByRole("button", { name: "Supprimer les certifications gérées" })
+        .click();
+
+      const mutationPromise = waitGraphQL(
+        page,
+        "removeAllCertificationAuthorityCertificationsForAdminCertificationsPage",
+      );
+
+      await page.getByRole("button", { name: "Valider" }).click();
+
+      const response = await mutationPromise;
+      expect(response.request().postDataJSON()).toMatchObject({
+        variables: {
+          certificationAuthorityId: "c7399291-e79b-4e0f-b798-d3c97661e47f",
+        },
+      });
+
+      await expect(
+        page.getByRole("heading", {
+          name: "Suppression des certifications gérées",
+        }),
+      ).not.toBeVisible();
+      await expect(page.getByTestId("toast-success")).toBeVisible();
+      await expect(
+        page.getByText("Les certifications gérées ont été supprimées"),
+      ).toBeVisible();
     });
   });
 
