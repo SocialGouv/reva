@@ -4,12 +4,14 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
+import { useAuth } from "@/components/auth/auth";
 import { getAdminCertificationAuthorityBreadcrumbSegments } from "@/components/certification-authority/settings-breadcrumb-segments/adminCertificationAuthorityBreadcrumbSegments";
 import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList";
 import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/SettingsBreadcrumb";
 import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 import { graphqlErrorToast } from "@/components/toast/toast";
 
+import { RemoveAllCertificationsModal } from "./_components/RemoveAllCertificationsModal";
 import { useCertificationsPage } from "./certifications.hooks";
 
 const CertificationAuthorityCertificationsPage = () => {
@@ -20,6 +22,7 @@ const CertificationAuthorityCertificationsPage = () => {
     }>();
 
   const router = useRouter();
+  const { isAdmin } = useAuth();
 
   const searchParams = useSearchParams();
   const searchParamsPage = searchParams.get("page");
@@ -122,6 +125,24 @@ const CertificationAuthorityCertificationsPage = () => {
             </>
           }
         />
+        {isAdmin && (
+          <section className="mb-8" aria-label="Actions admin">
+            <div className="border border-b-2">
+              <p className="text-xl font-bold my-0 leading-loose p-4 pl-6">
+                <span
+                  className="fr-icon-user-star-line fr-icon--lg mr-2"
+                  aria-hidden="true"
+                />
+                Actions admin
+              </p>
+            </div>
+            <div className="border border-t-0 p-4 pl-6">
+              <RemoveAllCertificationsModal
+                certificationAuthorityId={certificationAuthorityId}
+              />
+            </div>
+          </section>
+        )}
         <MultiSelectList
           pageItems={certificationPage?.rows.map((c) => ({
             id: c.id,
