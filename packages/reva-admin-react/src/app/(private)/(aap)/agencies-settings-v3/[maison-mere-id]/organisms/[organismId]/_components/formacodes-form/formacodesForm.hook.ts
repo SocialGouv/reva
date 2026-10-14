@@ -5,7 +5,7 @@ import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
-import { ActiveCertificationsFiltersInput } from "@/graphql/generated/graphql";
+import { CertificationsFiltersInput } from "@/graphql/generated/graphql";
 
 const organismAndReferentialQuery = graphql(`
   query getOrganismForFormacodesForm($organismId: ID!) {
@@ -120,8 +120,8 @@ export const useFormacodesForm = ({ organismId }: { organismId: string }) => {
 };
 
 const getActiveCertificationsQuery = graphql(`
-  query getActiveCertifications($filters: ActiveCertificationsFiltersInput) {
-    getActiveCertifications(filters: $filters) {
+  query getActiveCertifications($filters: CertificationsFiltersInput) {
+    getCertifications(active: true, filters: $filters) {
       id
       codeRncp
       label
@@ -131,7 +131,7 @@ const getActiveCertificationsQuery = graphql(`
 `);
 
 export const useActiveCertifications = (
-  filters?: ActiveCertificationsFiltersInput,
+  filters?: CertificationsFiltersInput,
 ) => {
   const { graphqlClient } = useGraphQlClient();
 
@@ -141,5 +141,5 @@ export const useActiveCertifications = (
       graphqlClient.request(getActiveCertificationsQuery, { filters }),
   });
 
-  return { certifications: data?.getActiveCertifications };
+  return { certifications: data?.getCertifications };
 };

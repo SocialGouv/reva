@@ -1,4 +1,4 @@
-import { getActiveCertifications } from "@/modules/referential/features/getActiveCertifications";
+import { getCertifications } from "@/modules/referential/features/getCertifications";
 import {
   IDENTIFIANT_ORGANISME_VIDE,
   ORGANISME_NON_TROUVE,
@@ -31,7 +31,7 @@ export const getOrganismCertificationsByOrganismId = async ({
     throw new Error(ORGANISME_NON_TROUVE);
   }
 
-  const certifications = await getActiveCertifications({
+  const certifications = await getCertifications(true, {
     domaines: organism.organismOnFormacode.map(
       (organismOnFormacode) => organismOnFormacode.formacodeId,
     ),

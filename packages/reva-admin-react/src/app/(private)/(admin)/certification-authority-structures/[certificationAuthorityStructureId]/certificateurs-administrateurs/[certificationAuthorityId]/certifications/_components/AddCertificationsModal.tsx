@@ -15,9 +15,9 @@ import {
 
 import { graphql } from "@/graphql/generated";
 
-const getActiveCertificationsQuery = graphql(`
-  query getActiveCertifications($filters: ActiveCertificationsFiltersInput) {
-    getActiveCertifications(filters: $filters) {
+const getCertificationsQuery = graphql(`
+  query getCertifications($filters: CertificationsFiltersInput) {
+    getCertifications(filters: $filters) {
       id
       codeRncp
       label
@@ -82,10 +82,10 @@ export const AddCertificationsModal = ({
     useState(false);
 
   const { data, isError } = useQuery({
-    queryKey: ["getActiveCertifications", "addCertificationsModal"],
+    queryKey: ["getCertifications", "addCertificationsModal"],
     queryFn: async () => {
       try {
-        return await graphqlClient.request(getActiveCertificationsQuery, {});
+        return await graphqlClient.request(getCertificationsQuery, {});
       } catch (error) {
         graphqlErrorToast(error);
         throw error;
@@ -98,7 +98,7 @@ export const AddCertificationsModal = ({
   const knownRncpCodes = useMemo(
     () =>
       new Set(
-        (data?.getActiveCertifications ?? []).map((certification) =>
+        (data?.getCertifications ?? []).map((certification) =>
           normalizeRncpCode(certification.codeRncp).toLowerCase(),
         ),
       ),
@@ -113,7 +113,7 @@ export const AddCertificationsModal = ({
     (code) => !knownRncpCodes.has(code.toLowerCase()),
   );
   const matchedCertifications = parsedRncpCodes.flatMap((code) =>
-    (data?.getActiveCertifications ?? []).filter(
+    (data?.getCertifications ?? []).filter(
       (certification) =>
         normalizeRncpCode(certification.codeRncp).toLowerCase() ===
         code.toLowerCase(),

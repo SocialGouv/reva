@@ -160,7 +160,7 @@ function createCertificationsHandlers() {
             parentCode: "DOMB",
           },
         ],
-        getActiveCertifications: [
+        getCertifications: [
           coveredCertification,
           uncoveredCertificationLevel3,
           uncoveredCertificationLevel4,
@@ -467,7 +467,7 @@ test.describe("navigation", () => {
         ),
         fvae.query(
           "getActiveCertifications",
-          graphQLResolver({ getActiveCertifications: [] }),
+          graphQLResolver({ getCertifications: [] }),
         ),
       ],
       { scope: "test" },

@@ -2,16 +2,19 @@ import { prismaClient } from "@/prisma/client";
 
 import { Certification } from "../referential.types";
 
-export const getActiveCertifications = async (filters?: {
-  domaines?: string[];
-  branches?: string[];
-  levels?: number[];
-}): Promise<Certification[]> => {
-  // If no filters, return all active certifications
+export const getCertifications = async (
+  visible?: boolean,
+  filters?: {
+    domaines?: string[];
+    branches?: string[];
+    levels?: number[];
+  },
+): Promise<Certification[]> => {
+  // If no filters, return all certifications
   if (!filters) {
     const certifications = await prismaClient.certification.findMany({
       where: {
-        visible: true,
+        visible,
         certificationOnConventionCollective: {
           none: {},
         },
@@ -26,7 +29,7 @@ export const getActiveCertifications = async (filters?: {
     return mappedCertifications;
   }
 
-  // If filters, return active certifications filtered by filters
+  // If filters, return certifications filtered by filters
   const { domaines, branches, levels } = filters;
 
   let certifications: Certification[] = [];
@@ -37,7 +40,7 @@ export const getActiveCertifications = async (filters?: {
         where: {
           formacodeId: { in: domaines },
           certification: {
-            visible: true,
+            visible,
             level: { in: levels },
             certificationOnConventionCollective: {
               none: {},
@@ -76,7 +79,7 @@ export const getActiveCertifications = async (filters?: {
         where: {
           ccnId: { in: branches },
           certification: {
-            visible: true,
+            visible,
             level: { in: levels },
           },
         },
