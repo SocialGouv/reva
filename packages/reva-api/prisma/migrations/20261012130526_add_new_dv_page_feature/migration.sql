@@ -1,0 +1,2 @@
+INSERT INTO "features" ("key", "label", "description", "is_active")
+VALUES ('NEW_DV_PAGE', 'Nouvelle présentation du dossier de validation', 'Afficher la nouvelle présentation du dossier de validation', false);
