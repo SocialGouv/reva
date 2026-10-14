@@ -11,6 +11,7 @@ import { SettingsBreadcrumb } from "@/components/settings/settings-breadcrumb/Se
 import { SettingsPageHeader } from "@/components/settings/settings-page-header/SettingsPageHeader";
 import { graphqlErrorToast } from "@/components/toast/toast";
 
+import { AddCertificationsModal } from "./_components/AddCertificationsModal";
 import { RemoveAllCertificationsModal } from "./_components/RemoveAllCertificationsModal";
 import { useCertificationsPage } from "./certifications.hooks";
 
@@ -137,6 +138,12 @@ const CertificationAuthorityCertificationsPage = () => {
               </p>
             </div>
             <div className="border border-t-0 p-4 pl-6">
+              <AddCertificationsModal
+                certificationAuthorityId={certificationAuthorityId}
+                currentCertificationIds={certificationAuthority.certifications.map(
+                  (certification) => certification.id,
+                )}
+              />
               <RemoveAllCertificationsModal
                 certificationAuthorityId={certificationAuthorityId}
               />
