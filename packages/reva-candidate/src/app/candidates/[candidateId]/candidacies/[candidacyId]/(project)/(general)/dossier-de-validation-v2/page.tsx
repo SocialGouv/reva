@@ -3,7 +3,7 @@
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
-import { toDate } from "date-fns";
+import { format, toDate } from "date-fns";
 
 import { Panel } from "@/components/layout/Panel";
 
@@ -106,7 +106,13 @@ export default function DossierDeValidationPag() {
             ) : (
               <div className="flex flex-row gap-4">
                 <div className="lg:basis-9/12">
-                  <DateAndSubmissionTiles />
+                  <DateAndSubmissionTiles
+                    readyForJuryEstimatedAt={
+                      readyForJuryEstimatedAt
+                        ? format(readyForJuryEstimatedAt, "dd/MM/yyyy")
+                        : undefined
+                    }
+                  />
                 </div>
                 <div className="lg:basis-3/12">
                   <ResourcesSection certification={certification} />
