@@ -70,14 +70,18 @@ const parseRncpCodes = (value: string) => {
 
 export const AddCertificationsModal = ({
   certificationAuthorityId,
+  certificationAuthorityLabel,
   currentCertificationIds,
 }: {
   certificationAuthorityId: string;
+  certificationAuthorityLabel: string;
   currentCertificationIds: string[];
 }) => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
+
   const [codesInput, setCodesInput] = useState("");
+
   const [isCertificationsQueryEnabled, setIsCertificationsQueryEnabled] =
     useState(false);
 
@@ -106,12 +110,16 @@ export const AddCertificationsModal = ({
   );
 
   const hasCodesInput = codesInput.trim().length > 0;
+
   const isCheckingCodes = hasCodesInput && !data && !isError;
+
   const parsedRncpCodes =
     hasCodesInput && data ? parseRncpCodes(codesInput) : [];
+
   const unknownRncpCodes = parsedRncpCodes.filter(
     (code) => !knownRncpCodes.has(code.toLowerCase()),
   );
+
   const matchedCertifications = parsedRncpCodes.flatMap((code) =>
     (data?.getCertifications ?? []).filter(
       (certification) =>
@@ -129,6 +137,7 @@ export const AddCertificationsModal = ({
   }
 
   const unknownRncpCodesCountLabel = `${unknownRncpCodes.length} code(s) RNCP non référencé(s) sur ${parsedRncpCodes.length} code(s)`;
+  const matchedRncpCodesCountLabel = `${matchedCertifications.length} code(s) RNCP référencé(s) sur ${parsedRncpCodes.length} code(s)`;
 
   const updateCertificationAuthorityCertifications = useMutation({
     mutationFn: ({
@@ -162,8 +171,10 @@ export const AddCertificationsModal = ({
           ]),
         ],
       });
+
       setCodesInput("");
       addCertificationsModal.close();
+
       successToast("Les certifications ont été ajoutées");
     } catch (error) {
       graphqlErrorToast(error);
@@ -179,16 +190,33 @@ export const AddCertificationsModal = ({
     }
   };
 
+  const handleCopyMatchedRncpCodes = async () => {
+    try {
+      await navigator.clipboard.writeText(
+        matchedCertifications
+          .map((certification) => certification.codeRncp)
+          .join(", "),
+      );
+      successToast("Codes RNCP copiés");
+    } catch {
+      errorToast("Les codes RNCP n'ont pas pu être copiés");
+    }
+  };
+
   return (
     <>
       <addCertificationsModal.Component
-        title="Ajout de certifications"
+        title={`Ajouter des certifications gérées`}
         size="large"
         className="[&>.fr-container]:max-w-full"
         buttons={[
           {
+            priority: "secondary",
+            children: "Annuler",
+          },
+          {
             priority: "primary",
-            children: "Valider",
+            children: "Ajouter",
             doClosesModal: false,
             onClick: handleAddMatchedCertifications,
             disabled:
@@ -201,66 +229,83 @@ export const AddCertificationsModal = ({
         ]}
       >
         <p>
-          Les certifications sélectionnées seront ajoutées à la liste des
-          certifications gérées par ce certificateur administrateur.
+          Les certifications saisies seront ajoutées à la liste des
+          certifications gérées par{" "}
+          <strong>{certificationAuthorityLabel}</strong>.
         </p>
         <Input
-          label="Liste des codes RNCP"
+          label="Codes RNCP"
           hintText="Séparez les codes par un espace, une virgule ou un point-virgule. Le préfixe RNCP est optionnel."
           textArea
           data-testid="add-certifications-codes-input"
           nativeTextAreaProps={{
             value: codesInput,
             onChange: (event) => setCodesInput(event.target.value),
-            rows: 1,
+            rows: 3,
             spellCheck: false,
           }}
         />
 
         {hasCodesInput && (
-          <div className="mt-4 flex items-center gap-4">
-            <p className="mb-0" data-testid="add-certifications-unknown-codes">
-              {unknownCodesHint || unknownRncpCodesCountLabel}
-            </p>
-            {!unknownCodesHint && unknownRncpCodes.length > 0 && (
-              <Button
-                priority="tertiary no outline"
-                size="small"
-                iconId="fr-icon-clipboard-line"
-                onClick={handleCopyUnknownRncpCodes}
-                nativeButtonProps={{
-                  "data-testid": "add-certifications-copy-unknown-codes-button",
-                }}
-              >
-                Copier
-              </Button>
-            )}
-          </div>
-        )}
-
-        <p className="mt-4 mb-0" data-testid="add-certifications-unknown-codes">
-          {`Code RNCP référencé(s) : ${parsedRncpCodes.length - unknownRncpCodes.length}`}
-        </p>
-
-        {matchedCertifications.length > 0 && (
-          <ul
-            className="mt-4 mb-0 list-none pl-0 max-h-[100px] overflow-y-auto"
-            data-testid="add-certifications-matched-certifications"
-          >
-            {matchedCertifications.map((certification) => (
-              <li key={certification.id} className="border-b py-3">
-                <p className="mb-0 font-bold">
-                  RNCP {normalizeRncpCode(certification.codeRncp)} :{" "}
-                  {certification.label}
+          <>
+            <div className="flex-col items-center gap-4">
+              <div className="mt-4 flex items-center gap-4">
+                <p
+                  className="mb-0"
+                  data-testid="add-certifications-unknown-codes"
+                >
+                  {unknownCodesHint || unknownRncpCodesCountLabel}
                 </p>
-              </li>
-            ))}
-          </ul>
+                {!unknownCodesHint && unknownRncpCodes.length > 0 && (
+                  <Button
+                    priority="tertiary no outline"
+                    size="small"
+                    iconId="fr-icon-clipboard-line"
+                    onClick={handleCopyUnknownRncpCodes}
+                    nativeButtonProps={{
+                      "data-testid":
+                        "add-certifications-copy-unknown-codes-button",
+                    }}
+                  >
+                    Copier
+                  </Button>
+                )}
+              </div>
+              <label className="fr-hint-text text-sm">
+                Ils ne correspondent à aucune certification disponible sur
+                France VAE. Vérifiez-les ou copiez-les pour les traiter à part.
+              </label>
+            </div>
+
+            <div className="mt-4 flex items-center gap-4">
+              <p
+                className="mb-0"
+                data-testid="add-certifications-unknown-codes"
+              >
+                {matchedRncpCodesCountLabel}
+              </p>
+
+              {matchedCertifications.length > 0 && (
+                <Button
+                  priority="tertiary no outline"
+                  size="small"
+                  iconId="fr-icon-clipboard-line"
+                  onClick={handleCopyMatchedRncpCodes}
+                  nativeButtonProps={{
+                    "data-testid":
+                      "add-certifications-copy-matched-codes-button",
+                  }}
+                >
+                  Copier
+                </Button>
+              )}
+            </div>
+          </>
         )}
       </addCertificationsModal.Component>
       <Button
-        className="mr-4"
-        priority="secondary"
+        priority="tertiary no outline"
+        size="small"
         iconId="fr-icon-add-line"
         onClick={() => {
           setIsCertificationsQueryEnabled(true);
@@ -268,7 +313,7 @@ export const AddCertificationsModal = ({
         }}
         data-testid="add-certifications-button"
       >
-        Ajouter des certifications
+        Ajouter une liste de certifications
       </Button>
     </>
   );
