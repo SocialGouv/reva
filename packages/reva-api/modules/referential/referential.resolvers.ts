@@ -17,7 +17,6 @@ import {
   findKbis,
   findQualiopiStatus,
 } from "./features/entreprise";
-import { getActiveCertifications } from "./features/getActiveCertifications";
 import { getAdditionalDocumentsFilaNamesAndUrlsByCertificationAdditionalInfoId } from "./features/getAdditionalDocumentsFilaNamesAndUrlsByCertificationAdditionalInfoId";
 import { getAdditionalInfoByCertificationId } from "./features/getAdditionalInfoByCertificationId";
 import { getCandidacyFinancingMethods } from "./features/getCandidacyFinancingMethods";
@@ -25,6 +24,7 @@ import { getCertificationById } from "./features/getCertificationById";
 import { getCertificationCompetenceBlocById } from "./features/getCertificationCompetenceBlocById";
 import { getCertificationCompetencesByBlocId } from "./features/getCertificationCompetencesByBlocId";
 import { getCertificationPrerequisitesByCertificationId } from "./features/getCertificationPrerequisitesByCertificationId";
+import { getCertifications } from "./features/getCertifications";
 import { getCompetenceBlocsByCertificationId } from "./features/getCompetenceBlocsByCertificationId";
 import { getConventionsCollectivesByCertificationId } from "./features/getConventionsCollectivesByCertificationId";
 import { getCountOfChildrenByParentCode } from "./features/getCountOfChildrenByParentCode";
@@ -251,16 +251,17 @@ const unsafeReferentialResolvers = {
     getEtablissementAsAdmin: (_: unknown, { siret }: { siret: string }) =>
       findEtablissement({ siret }),
     getFormacodes: () => getAvailableFormacodes(),
-    getActiveCertifications: (
+    getCertifications: (
       _: any,
       payload: {
+        active?: boolean;
         filters?: {
           domaines?: string[];
           branches?: string[];
           levels?: number[];
         };
       },
-    ) => getActiveCertifications(payload.filters),
+    ) => getCertifications(payload.active, payload.filters),
     getCandidacyFinancingMethods,
     getCertificationCompetenceBloc: (
       _: unknown,
@@ -390,7 +391,7 @@ export const referentialResolvers = withPolicies(unsafeReferentialResolvers, {
     getEtablissement: isAnyone,
     getEtablissementAsAdmin: isAdmin,
     getFormacodes: isAnyone,
-    getActiveCertifications: isAnyone,
+    getCertifications: isAnyone,
     getCandidacyFinancingMethods: isAnyone,
     getCertificationCompetenceBloc: isAnyone,
   },

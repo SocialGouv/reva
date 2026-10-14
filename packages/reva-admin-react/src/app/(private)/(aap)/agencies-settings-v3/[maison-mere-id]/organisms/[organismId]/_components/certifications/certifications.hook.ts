@@ -37,7 +37,7 @@ const organismAndReferentialQuery = graphql(`
       label
       parentCode
     }
-    getActiveCertifications {
+    getCertifications(active: true) {
       id
       codeRncp
       label
@@ -74,7 +74,7 @@ export const useCertifications = ({ organismId }: { organismId: string }) => {
 
   const organism = organismAndReferentialResponse?.organism_getOrganism;
   const activeCertifications =
-    organismAndReferentialResponse?.getActiveCertifications || [];
+    organismAndReferentialResponse?.getCertifications || [];
 
   return {
     degrees,

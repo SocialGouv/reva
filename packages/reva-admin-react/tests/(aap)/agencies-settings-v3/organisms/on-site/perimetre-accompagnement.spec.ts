@@ -141,7 +141,7 @@ function createPerimetreAccompagnementHandlers(args?: {
     fvae.query(
       "getActiveCertifications",
       graphQLResolver({
-        getActiveCertifications: [
+        getCertifications: [
           {
             id: "cert-1",
             codeRncp: "RNCP12345",
@@ -444,7 +444,7 @@ test.describe("when form data fails to load", () => {
         createPerimetreAccompagnementErrorHandler(),
         fvae.query(
           "getActiveCertifications",
-          graphQLResolver({ getActiveCertifications: [] }),
+          graphQLResolver({ getCertifications: [] }),
         ),
       ],
       { scope: "test" },
