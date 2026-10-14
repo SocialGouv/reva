@@ -98,18 +98,69 @@ const updateCertificationAuthorityCertificationsHandlers = (args?: {
     }),
   );
 
+  const getCertificationsHandler = fvae.query(
+    "getCertifications",
+    graphQLResolver({
+      getCertifications: [
+        {
+          id: "cert-1",
+          codeRncp: "RNCP12345",
+          label: "Certification 1",
+          level: 5,
+        },
+        {
+          id: "cert-2",
+          codeRncp: "RNCP67890",
+          label: "Certification 2",
+          level: 4,
+        },
+        {
+          id: "cert-3",
+          codeRncp: "RNCP11111",
+          label: "Certification 3",
+          level: 3,
+        },
+      ],
+    }),
+  );
+
   return [
     getCertificationAuthorityForCertificationsPageHandler,
     updateCertificationAuthorityCertificationsHandler,
     removeAllCertificationAuthorityCertificationsHandler,
+    getCertificationsHandler,
   ];
 };
 
 const certificationsPageUrl =
   "/admin2/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/certifications/";
 
-const removeAllCertificationsModalDescription =
-  "Toutes les certifications gérées par ce certificateur administrateur seront retirées. S'il y avait des parcours associés à ces certifications, ils seront également supprimés. Cette action est irréversible.";
+const certificationAuthorityLabel = "certification authority label";
+
+const removeAllCertificationsModalDescription = `Toutes les certifications gérées par ${certificationAuthorityLabel} seront retirées. Les parcours associés à ces certifications seront également détachés.`;
+
+async function openAddCertificationsModal(page: Page) {
+  const certificationsQuery = waitGraphQL(page, "getCertifications");
+
+  await page
+    .getByRole("button", { name: "Ajouter une liste de certifications" })
+    .click();
+  await certificationsQuery;
+
+  return page.getByRole("dialog", {
+    name: "Ajouter des certifications gérées",
+  });
+}
+
+async function openRemoveAllCertificationsModal(page: Page) {
+  await page
+    .getByRole("button", { name: "Retirer toutes les certifications" })
+    .click();
+
+  return page.getByRole("dialog", {
+    name: "Retirer toutes les certifications gérées",
+  });
+}
 
 test.describe("Certification authority certifications page", () => {
   test.describe("when I access the certifications page", () => {
@@ -352,20 +403,20 @@ test.describe("Certification authority certifications page", () => {
       ],
     });
 
-    test("it shows the admin section", async ({ page }) => {
+    test("it shows the admin actions", async ({ page }) => {
       await login({ role: "admin", page });
       await page.goto(certificationsPageUrl);
       await waitForPageQueries(page);
 
       await expect(
-        page.getByRole("region", { name: "Actions admin" }),
+        page.getByRole("button", { name: "Ajouter une liste de certifications" }),
       ).toBeVisible();
       await expect(
-        page.getByRole("button", { name: "Supprimer les certifications gérées" }),
+        page.getByRole("button", { name: "Retirer toutes les certifications" }),
       ).toBeVisible();
     });
 
-    test("it hides the admin section for a non-admin user", async ({
+    test("it hides the admin actions for a non-admin user", async ({
       page,
     }) => {
       await login({ role: "certificateur", page });
@@ -376,7 +427,10 @@ test.describe("Certification authority certifications page", () => {
         "Certifications gérées",
       );
       await expect(
-        page.getByRole("button", { name: "Supprimer les certifications gérées" }),
+        page.getByRole("button", { name: "Ajouter une liste de certifications" }),
+      ).not.toBeVisible();
+      await expect(
+        page.getByRole("button", { name: "Retirer toutes les certifications" }),
       ).not.toBeVisible();
     });
 
@@ -385,20 +439,15 @@ test.describe("Certification authority certifications page", () => {
       await page.goto(certificationsPageUrl);
       await waitForPageQueries(page);
 
-      await page
-        .getByRole("button", { name: "Supprimer les certifications gérées" })
-        .click();
+      const modal = await openRemoveAllCertificationsModal(page);
 
+      await expect(modal).toBeVisible();
+      await expect(modal).toContainText(removeAllCertificationsModalDescription);
+      await expect(modal).toContainText("Cette action est irréversible.");
+      await expect(modal.getByRole("button", { name: "Annuler" })).toBeVisible();
       await expect(
-        page.getByRole("heading", {
-          name: "Suppression des certifications gérées",
-        }),
+        modal.getByRole("button", { name: "Retirer", exact: true }),
       ).toBeVisible();
-      await expect(
-        page.getByText(removeAllCertificationsModalDescription),
-      ).toBeVisible();
-      await expect(page.getByRole("button", { name: "Annuler" })).toBeVisible();
-      await expect(page.getByRole("button", { name: "Valider" })).toBeVisible();
     });
 
     test("it closes the modal without calling the mutation when clicking Annuler", async ({
@@ -420,34 +469,26 @@ test.describe("Certification authority certifications page", () => {
         }
       });
 
-      await page
-        .getByRole("button", { name: "Supprimer les certifications gérées" })
-        .click();
-      await page.getByRole("button", { name: "Annuler" }).click();
+      const modal = await openRemoveAllCertificationsModal(page);
+      await modal.getByRole("button", { name: "Annuler" }).click();
 
-      await expect(
-        page.getByRole("heading", {
-          name: "Suppression des certifications gérées",
-        }),
-      ).not.toBeVisible();
+      await expect(modal).not.toBeVisible();
       expect(mutationRequests).toEqual([]);
     });
 
-    test("it calls the mutation when clicking Valider", async ({ page }) => {
+    test("it calls the mutation when clicking Retirer", async ({ page }) => {
       await login({ role: "admin", page });
       await page.goto(certificationsPageUrl);
       await waitForPageQueries(page);
 
-      await page
-        .getByRole("button", { name: "Supprimer les certifications gérées" })
-        .click();
+      const modal = await openRemoveAllCertificationsModal(page);
 
       const mutationPromise = waitGraphQL(
         page,
         "removeAllCertificationAuthorityCertificationsForAdminCertificationsPage",
       );
 
-      await page.getByRole("button", { name: "Valider" }).click();
+      await modal.getByRole("button", { name: "Retirer", exact: true }).click();
 
       const response = await mutationPromise;
       expect(response.request().postDataJSON()).toMatchObject({
@@ -456,14 +497,195 @@ test.describe("Certification authority certifications page", () => {
         },
       });
 
-      await expect(
-        page.getByRole("heading", {
-          name: "Suppression des certifications gérées",
-        }),
-      ).not.toBeVisible();
+      await expect(modal).not.toBeVisible();
       await expect(page.getByTestId("toast-success")).toBeVisible();
       await expect(
         page.getByText("Les certifications gérées ont été supprimées"),
+      ).toBeVisible();
+    });
+  });
+
+  test.describe("when I add a list of certifications", () => {
+    test.use({
+      mswHandlers: [
+        [
+          ...updateCertificationAuthorityCertificationsHandlers(),
+          ...aapCommonHandlers,
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("it opens a modal to paste RNCP codes", async ({ page }) => {
+      await login({ role: "admin", page });
+      await page.goto(certificationsPageUrl);
+      await waitForPageQueries(page);
+
+      const modal = await openAddCertificationsModal(page);
+
+      await expect(modal).toBeVisible();
+      await expect(modal).toContainText(
+        `Les certifications saisies seront ajoutées à la liste des certifications gérées par ${certificationAuthorityLabel}.`,
+      );
+      await expect(
+        modal.getByRole("textbox", { name: "Codes RNCP" }),
+      ).toBeVisible();
+      await expect(modal.getByRole("button", { name: "Annuler" })).toBeVisible();
+      await expect(
+        modal.getByRole("button", { name: "Ajouter", exact: true }),
+      ).toBeDisabled();
+    });
+
+    test("it shows referenced and unknown RNCP codes", async ({ page }) => {
+      await login({ role: "admin", page });
+      await page.goto(certificationsPageUrl);
+      await waitForPageQueries(page);
+
+      const modal = await openAddCertificationsModal(page);
+
+      await modal
+        .getByRole("textbox", { name: "Codes RNCP" })
+        .fill("RNCP12345, 99999; rncp67890");
+
+      await expect(modal).toContainText(
+        "1 code(s) RNCP non référencé(s) sur 3 code(s)",
+      );
+      await expect(modal).toContainText(
+        "Ils ne correspondent à aucune certification disponible sur France VAE. Vérifiez-les ou copiez-les pour les traiter à part.",
+      );
+      await expect(modal).toContainText(
+        "2 code(s) RNCP référencé(s) sur 3 code(s)",
+      );
+      await expect(
+        modal.getByTestId("add-certifications-copy-unknown-codes-button"),
+      ).toBeVisible();
+      await expect(
+        modal.getByTestId("add-certifications-copy-matched-codes-button"),
+      ).toBeVisible();
+      await expect(
+        modal.getByRole("button", { name: "Ajouter", exact: true }),
+      ).toBeEnabled();
+    });
+
+    test("it keeps the add button disabled when no code matches", async ({
+      page,
+    }) => {
+      await login({ role: "admin", page });
+      await page.goto(certificationsPageUrl);
+      await waitForPageQueries(page);
+
+      const modal = await openAddCertificationsModal(page);
+
+      await modal.getByRole("textbox", { name: "Codes RNCP" }).fill("99999");
+
+      await expect(modal).toContainText(
+        "1 code(s) RNCP non référencé(s) sur 1 code(s)",
+      );
+      await expect(modal).toContainText(
+        "0 code(s) RNCP référencé(s) sur 1 code(s)",
+      );
+      await expect(
+        modal.getByTestId("add-certifications-copy-unknown-codes-button"),
+      ).toBeVisible();
+      await expect(
+        modal.getByTestId("add-certifications-copy-matched-codes-button"),
+      ).toHaveCount(0);
+      await expect(
+        modal.getByRole("button", { name: "Ajouter", exact: true }),
+      ).toBeDisabled();
+    });
+
+    test("it copies unknown and referenced RNCP codes", async ({ page }) => {
+      await page.context().grantPermissions([
+        "clipboard-read",
+        "clipboard-write",
+      ]);
+      await login({ role: "admin", page });
+      await page.goto(certificationsPageUrl);
+      await waitForPageQueries(page);
+
+      const modal = await openAddCertificationsModal(page);
+
+      await modal
+        .getByRole("textbox", { name: "Codes RNCP" })
+        .fill("RNCP12345, 99999; rncp67890");
+
+      await modal
+        .getByTestId("add-certifications-copy-unknown-codes-button")
+        .click();
+
+      await expect(page.getByText("Codes RNCP copiés")).toBeVisible();
+      await expect
+        .poll(() => page.evaluate(() => navigator.clipboard.readText()))
+        .toBe("99999");
+
+      await modal
+        .getByTestId("add-certifications-copy-matched-codes-button")
+        .click();
+
+      await expect
+        .poll(() => page.evaluate(() => navigator.clipboard.readText()))
+        .toBe("RNCP12345, RNCP67890");
+    });
+
+    test("it closes the modal without calling the mutation when clicking Annuler", async ({
+      page,
+    }) => {
+      await login({ role: "admin", page });
+      await page.goto(certificationsPageUrl);
+      await waitForPageQueries(page);
+
+      const mutationRequests: string[] = [];
+      page.on("request", (request) => {
+        const postData = request.postData();
+        if (
+          postData?.includes(
+            "updateCertificationAuthorityForAdminCertificationsPage",
+          )
+        ) {
+          mutationRequests.push(postData);
+        }
+      });
+
+      const modal = await openAddCertificationsModal(page);
+      await modal
+        .getByRole("textbox", { name: "Codes RNCP" })
+        .fill("RNCP67890");
+      await modal.getByRole("button", { name: "Annuler" }).click();
+
+      await expect(modal).not.toBeVisible();
+      expect(mutationRequests).toEqual([]);
+    });
+
+    test("it adds the referenced certifications", async ({ page }) => {
+      await login({ role: "admin", page });
+      await page.goto(certificationsPageUrl);
+      await waitForPageQueries(page);
+
+      const modal = await openAddCertificationsModal(page);
+      await modal
+        .getByRole("textbox", { name: "Codes RNCP" })
+        .fill("RNCP12345, 99999; rncp67890");
+
+      const mutationPromise = waitGraphQL(
+        page,
+        "updateCertificationAuthorityForAdminCertificationsPage",
+      );
+
+      await modal.getByRole("button", { name: "Ajouter", exact: true }).click();
+
+      const response = await mutationPromise;
+      expect(response.request().postDataJSON()).toMatchObject({
+        variables: {
+          certificationAuthorityId: "c7399291-e79b-4e0f-b798-d3c97661e47f",
+          certificationIds: ["cert-1", "cert-2"],
+        },
+      });
+
+      await expect(modal).not.toBeVisible();
+      await expect(page.getByTestId("toast-success")).toBeVisible();
+      await expect(
+        page.getByText("Les certifications ont été ajoutées"),
       ).toBeVisible();
     });
   });

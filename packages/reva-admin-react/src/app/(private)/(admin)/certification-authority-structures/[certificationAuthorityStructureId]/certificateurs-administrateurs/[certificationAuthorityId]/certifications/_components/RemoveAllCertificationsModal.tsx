@@ -26,8 +26,10 @@ const removeAllCertificationsModal = createModal({
 
 export const RemoveAllCertificationsModal = ({
   certificationAuthorityId,
+  certificationAuthorityLabel,
 }: {
   certificationAuthorityId: string;
+  certificationAuthorityLabel: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
@@ -63,7 +65,7 @@ export const RemoveAllCertificationsModal = ({
   return (
     <>
       <removeAllCertificationsModal.Component
-        title="Suppression des certifications gérées"
+        title={`Retirer toutes les certifications gérées`}
         buttons={[
           {
             priority: "secondary",
@@ -71,7 +73,7 @@ export const RemoveAllCertificationsModal = ({
           },
           {
             priority: "primary",
-            children: "Valider",
+            children: "Retirer",
             doClosesModal: false,
             onClick: handleRemoveAllCertificationAuthorityCertifications,
             disabled: removeAllCertificationAuthorityCertifications.isPending,
@@ -83,13 +85,15 @@ export const RemoveAllCertificationsModal = ({
         ]}
       >
         <p>
-          Toutes les certifications gérées par ce certificateur administrateur
-          seront retirées. S'il y avait des parcours associés à ces
-          certifications, ils seront également supprimés. Cette action est
-          irréversible.
+          Toutes les certifications gérées par{" "}
+          <strong>{certificationAuthorityLabel}</strong> seront retirées. Les
+          parcours associés à ces certifications seront également détachés.
+          <br />
+          Cette action est irréversible.
         </p>
       </removeAllCertificationsModal.Component>
       <Button
+        size="small"
         priority="secondary"
         iconId="fr-icon-delete-line"
         onClick={() => removeAllCertificationsModal.open()}
@@ -98,7 +102,7 @@ export const RemoveAllCertificationsModal = ({
             "remove-all-certification-authority-certifications-button",
         }}
       >
-        Supprimer les certifications gérées
+        Retirer toutes les certifications
       </Button>
     </>
   );

@@ -127,29 +127,22 @@ const CertificationAuthorityCertificationsPage = () => {
           }
         />
         {isAdmin && (
-          <section className="mb-8" aria-label="Actions admin">
-            <div className="border border-b-2">
-              <p className="text-xl font-bold my-0 leading-loose p-4 pl-6">
-                <span
-                  className="fr-icon-user-star-line fr-icon--lg mr-2"
-                  aria-hidden="true"
-                />
-                Actions admin
-              </p>
-            </div>
-            <div className="border border-t-0 p-4 pl-6">
-              <AddCertificationsModal
-                certificationAuthorityId={certificationAuthorityId}
-                currentCertificationIds={certificationAuthority.certifications.map(
-                  (certification) => certification.id,
-                )}
-              />
-              <RemoveAllCertificationsModal
-                certificationAuthorityId={certificationAuthorityId}
-              />
-            </div>
-          </section>
+          <div className="flex justify-end gap-6 mb-6">
+            <AddCertificationsModal
+              certificationAuthorityId={certificationAuthorityId}
+              certificationAuthorityLabel={certificationAuthority.label}
+              currentCertificationIds={certificationAuthority.certifications.map(
+                (certification) => certification.id,
+              )}
+            />
+
+            <RemoveAllCertificationsModal
+              certificationAuthorityId={certificationAuthorityId}
+              certificationAuthorityLabel={certificationAuthority.label}
+            />
+          </div>
         )}
+
         <MultiSelectList
           pageItems={certificationPage?.rows.map((c) => ({
             id: c.id,
