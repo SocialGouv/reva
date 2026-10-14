@@ -24,17 +24,25 @@ export const CertificationParcoursCard = ({
     >
       {parcoursByCertificationAuthorities.length > 0 ? (
         parcoursByCertificationAuthorities.map((pba) => (
-          <div key={pba.certificationAuthority.id}>
-            <div>
+          <div
+            key={pba.certificationAuthority.id}
+            data-testid={`parcours-by-certification-authority-${pba.certificationAuthority.label}`}
+          >
+            {pba.certificationAuthority.websiteUrl ? (
               <a
-                href={pba.certificationAuthority.websiteUrl ?? ""}
+                href={pba.certificationAuthority.websiteUrl}
                 target="_blank"
                 className="fr-link"
               >
                 {pba.certificationAuthority.label}
               </a>
-            </div>
-            <ul>
+            ) : (
+              <span className="text-[#000091]">
+                {pba.certificationAuthority.label}
+              </span>
+            )}
+
+            <ul className="ml-2 text-gray-900">
               {pba.parcours.map((p) => (
                 <li key={p.id}>{p.label}</li>
               ))}

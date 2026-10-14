@@ -39,14 +39,21 @@ export const ParcoursTab = ({
             key={pba.certificationAuthority.label}
             data-testid={`parcours-by-certification-authority-${pba.certificationAuthority.label}`}
           >
-            <a
-              href={pba.certificationAuthority.websiteUrl ?? ""}
-              target="_blank"
-              className="fr-link"
-            >
-              {pba.certificationAuthority.label}
-            </a>
-            <ul className="ml-2">
+            {pba.certificationAuthority.websiteUrl ? (
+              <a
+                href={pba.certificationAuthority.websiteUrl}
+                target="_blank"
+                className="fr-link"
+              >
+                {pba.certificationAuthority.label}
+              </a>
+            ) : (
+              <span className="text-[#000091]">
+                {pba.certificationAuthority.label}
+              </span>
+            )}
+
+            <ul className="ml-2 text-gray-900">
               {pba.parcours.map((p) => (
                 <li key={p.id}>{p.label}</li>
               ))}
