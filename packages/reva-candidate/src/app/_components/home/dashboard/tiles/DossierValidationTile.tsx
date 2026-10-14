@@ -2,6 +2,8 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tile from "@codegouvfr/react-dsfr/Tile";
 import { useRouter } from "next/navigation";
 
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+
 import {
   DossierDeValidationUseCandidateForDashboard,
   FeasibilityUseCandidateForDashboard,
@@ -73,6 +75,8 @@ export const DossierValidationTile = ({
   jury: JuryUseCandidateForDashboard;
 }) => {
   const router = useRouter();
+  const { isFeatureActive } = useFeatureFlipping();
+  const isNewDvPageEnabled = isFeatureActive("NEW_DV_PAGE");
 
   // When the candidacy has a failed jury result,
   // the user can submit another dossier de validation
@@ -107,7 +111,11 @@ export const DossierValidationTile = ({
       imageSvg
       buttonProps={{
         onClick: () => {
-          router.push("./dossier-de-validation");
+          if (isNewDvPageEnabled) {
+            router.push("./dossier-de-validation-v2");
+          } else {
+            router.push("./dossier-de-validation");
+          }
         },
       }}
       imageUrl="/candidat/images/pictograms/binders.svg"
