@@ -338,8 +338,4 @@ type Mutation {
     certificationAuthorityId: ID!
     parcoursCertificationIds: [ID!]!
   ): Boolean!
-
-  certification_authority_removeAllCertificationAuthorityCertifications(
-    certificationAuthorityId: ID!
-  ): Boolean!
 }
