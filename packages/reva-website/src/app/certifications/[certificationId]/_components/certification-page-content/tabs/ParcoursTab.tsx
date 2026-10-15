@@ -48,12 +48,10 @@ export const ParcoursTab = ({
                 {pba.certificationAuthority.label}
               </a>
             ) : (
-              <span className="text-[#000091]">
-                {pba.certificationAuthority.label}
-              </span>
+              <span>{pba.certificationAuthority.label}</span>
             )}
 
-            <ul className="ml-2 text-gray-900">
+            <ul className="ml-2">
               {pba.parcours.map((p) => (
                 <li key={p.id}>{p.label}</li>
               ))}
