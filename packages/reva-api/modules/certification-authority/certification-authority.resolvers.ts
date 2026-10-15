@@ -73,7 +73,6 @@ import { getMetabaseIframeUrlForRegistryManager } from "./features/getMetabaseIf
 import { getPaginatedCertifications } from "./features/getPaginatedCertifications";
 import { getParcoursForCertificationAndCertificationAuthority } from "./features/getParcoursForCertificationAndCertificationAuthority";
 import { isCandidacyCertificationAuthorityUpdatable } from "./features/isCandidacyCertificationAuthorityUpdatable";
-import { removeAllCertificationAuthorityCertifications } from "./features/removeAllCertificationAuthorityCertifications";
 import { searchCertificationAuthoritiesAndLocalAccounts } from "./features/searchCertificationAuthoritiesAndLocalAccounts";
 import { transferCandidacyToAnotherCertificationAuthority } from "./features/transferCandidacyToAnotherCertificationAuthority";
 import { transferCandidacyToCertificationAuthorityLocalAccount } from "./features/transferCandidacyToCertificationAuthorityLocalAccount";
@@ -494,21 +493,6 @@ const unsafeResolvers = {
           parcoursCertificationIds: string[];
         },
       ) => updateParcoursForCertificationAndCertificationAuthority(params),
-    certification_authority_removeAllCertificationAuthorityCertifications:
-      async (
-        _parent: unknown,
-        params: {
-          certificationAuthorityId: string;
-        },
-      ) => {
-        try {
-          await removeAllCertificationAuthorityCertifications(params);
-          return true;
-        } catch (e) {
-          logger.error(e);
-          throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
-        }
-      },
   },
   Query: {
     certification_authority_getCertificationAuthority: async (
@@ -711,8 +695,6 @@ export const certificationAuthorityResolvers = withPolicies(unsafeResolvers, {
     certification_authority_createCertificationAuthorityStructure: isAdmin,
     certification_authority_updateParcoursForCertificationAndCertificationAuthority:
       isAdminOrCertificationAuthorityOwner,
-    certification_authority_removeAllCertificationAuthorityCertifications:
-      isAdmin,
   },
   CertificationAuthorityLocalAccount: {
     certificationAuthority:

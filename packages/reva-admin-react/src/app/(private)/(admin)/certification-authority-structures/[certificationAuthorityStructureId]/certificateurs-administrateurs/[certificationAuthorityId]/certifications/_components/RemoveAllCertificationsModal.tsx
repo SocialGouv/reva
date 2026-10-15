@@ -13,9 +13,12 @@ const removeAllCertificationAuthorityCertificationsMutation = graphql(`
   mutation removeAllCertificationAuthorityCertificationsForAdminCertificationsPage(
     $certificationAuthorityId: ID!
   ) {
-    certification_authority_removeAllCertificationAuthorityCertifications(
+    certification_authority_updateCertificationAuthorityCertifications(
       certificationAuthorityId: $certificationAuthorityId
-    )
+      certificationIds: []
+    ) {
+      id
+    }
   }
 `);
 

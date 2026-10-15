@@ -94,7 +94,9 @@ const updateCertificationAuthorityCertificationsHandlers = (args?: {
   const removeAllCertificationAuthorityCertificationsHandler = fvae.mutation(
     "removeAllCertificationAuthorityCertificationsForAdminCertificationsPage",
     graphQLResolver({
-      certification_authority_removeAllCertificationAuthorityCertifications: true,
+      certification_authority_updateCertificationAuthorityCertifications: {
+        id: "c7399291-e79b-4e0f-b798-d3c97661e47f",
+      },
     }),
   );
 
@@ -491,11 +493,15 @@ test.describe("Certification authority certifications page", () => {
       await modal.getByRole("button", { name: "Retirer", exact: true }).click();
 
       const response = await mutationPromise;
-      expect(response.request().postDataJSON()).toMatchObject({
+      const body = response.request().postDataJSON();
+      expect(body).toMatchObject({
         variables: {
           certificationAuthorityId: "c7399291-e79b-4e0f-b798-d3c97661e47f",
         },
       });
+      expect(body.query).toMatch(
+        /certification_authority_updateCertificationAuthorityCertifications[\s\S]*certificationIds:\s*\[\s*\]/,
+      );
 
       await expect(modal).not.toBeVisible();
       await expect(page.getByTestId("toast-success")).toBeVisible();
