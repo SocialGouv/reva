@@ -13,12 +13,13 @@ import { FeasibilityUseCandidateForDashboard } from "../dashboard.hooks";
 const FeasibilityBadge = ({
   feasibility,
   candidacyIsAutonome,
+  isFeasibilityDemat,
 }: {
   feasibility: FeasibilityUseCandidateForDashboard;
+  isFeasibilityDemat?: boolean;
   candidacyIsAutonome?: boolean;
 }) => {
   const decision = feasibility?.decision;
-  const isDfDemat = feasibility?.feasibilityFormat === "DEMATERIALIZED";
   const isSentToCandidate =
     !!feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt;
   const isCandidateConfirmed = hasFreshCandidateConfirmation({
@@ -45,7 +46,7 @@ const FeasibilityBadge = ({
       }):
       return null;
 
-    case isDfDemat &&
+    case isFeasibilityDemat &&
       decisionIsDraftOrIncomplete &&
       isSentToCandidate &&
       !isCandidateConfirmed:
@@ -55,24 +56,25 @@ const FeasibilityBadge = ({
         </Badge>
       );
 
-    case isDfDemat && feasibilityIsReadyToBeSentToCertificationAuthority:
+    // Accompagné
+    case !candidacyIsAutonome &&
+      isFeasibilityDemat &&
+      feasibilityIsReadyToBeSentToCertificationAuthority:
       return (
-        <Badge
-          severity={candidacyIsAutonome ? "warning" : "info"}
-          data-testid="feasibility-badge-to-send"
-        >
+        <Badge severity="info" data-testid="feasibility-badge-to-send">
           à envoyer au certificateur
         </Badge>
       );
-    // Autonome et DF PDF
+
+    // Autonome
     case candidacyIsAutonome &&
-      !isDfDemat &&
-      (!decision || decision === "INCOMPLETE"):
+      (!decision || decision === "DRAFT" || decision === "INCOMPLETE"):
       return (
         <Badge severity="warning" data-testid="feasibility-badge-to-send">
           à envoyer au certificateur
         </Badge>
       );
+
     // Commun pour autonome et accompagné
     case decision === "ADMISSIBLE":
       return (
@@ -161,6 +163,7 @@ export const FeasibilityTile = ({
       title="Dossier de faisabilité"
       start={
         <FeasibilityBadge
+          isFeasibilityDemat={isFeasibilityDemat}
           feasibility={feasibility}
           candidacyIsAutonome={candidacyIsAutonome}
         />

@@ -112,7 +112,7 @@ test("should display feasibility-badge-to-send for accompanied candidacy when th
   );
 });
 
-test("should display feasibility-badge-to-send for autonomous candidacy when the dematerialized DF is ready to be sent to the certification authority", async ({
+test("should display feasibility-badge-to-send for autonomous candidacy when the dematerialized DF is draft, even if it is not ready to be sent", async ({
   page,
   msw,
 }) => {
@@ -121,9 +121,10 @@ test("should display feasibility-badge-to-send for autonomous candidacy when the
       decision: "DRAFT",
       feasibilityFormat: "DEMATERIALIZED",
       dematerializedFeasibilityFile: {
-        isReadyToBeSentToCertificationAuthority: true,
+        isReadyToBeSentToCertificationAuthority: false,
       },
     }),
+    feasibilityFormat: "DEMATERIALIZED",
     typeAccompagnement: "AUTONOME",
   });
 
@@ -133,15 +134,37 @@ test("should display feasibility-badge-to-send for autonomous candidacy when the
   );
 });
 
-test("should display feasibility-badge-to-send for autonomous candidacy when the PDF DF has not yet been sent to the certification authority", async ({
+test("should keep the to-validate badge for autonomous candidacy when the dematerialized DF was sent and not confirmed yet", async ({
   page,
   msw,
 }) => {
   await setupDashboard(page, msw, {
     feasibility: createFeasibilityEntity({
-      decision: "INCOMPLETE",
+      decision: "DRAFT",
+      feasibilityFormat: "DEMATERIALIZED",
+      dematerializedFeasibilityFile: {
+        sentToCandidateAt: Date.now(),
+        isReadyToBeSentToCertificationAuthority: false,
+      },
+    }),
+    feasibilityFormat: "DEMATERIALIZED",
+    typeAccompagnement: "AUTONOME",
+  });
+
+  await expect(page.getByTestId("feasibility-badge-to-validate")).toBeVisible();
+  await expect(page.getByTestId("feasibility-badge-to-send")).not.toBeVisible();
+});
+
+test("should display feasibility-badge-to-send for autonomous candidacy when the PDF DF decision is draft", async ({
+  page,
+  msw,
+}) => {
+  await setupDashboard(page, msw, {
+    feasibility: createFeasibilityEntity({
+      decision: "DRAFT",
       feasibilityFormat: "UPLOADED_PDF",
     }),
+    feasibilityFormat: "UPLOADED_PDF",
     typeAccompagnement: "AUTONOME",
   });
 
