@@ -139,6 +139,19 @@ export const updateCertificationOfCandidacy = async ({
       candidacyId,
     });
 
+    if (
+      isDfDematAutonomeActive &&
+      candidacy.typeAccompagnement === "AUTONOME" &&
+      feasibilityFormat === "DEMATERIALIZED"
+    ) {
+      await prismaClient.feasibility.updateMany({
+        where: { candidacyId },
+        data: {
+          isActive: false,
+        },
+      });
+    }
+
     await logCandidacyAuditEvent({
       candidacyId: candidacyId,
       eventType: "CERTIFICATION_UPDATED",

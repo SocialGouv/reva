@@ -1,6 +1,10 @@
 import { randomUUID } from "crypto";
 
-import { CandidacyStatusStep } from "@prisma/client";
+import {
+  CandidacyStatusStep,
+  CandidacyTypeAccompagnement,
+  FeasibilityFormat,
+} from "@prisma/client";
 
 import { prismaClient } from "@/prisma/client";
 import { TRAINING_INPUT } from "@/test/fixtures/trainings.fixture";
@@ -8,6 +12,7 @@ import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper"
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
+import { createFeatureHelper } from "@/test/helpers/entities/create-feature-helper";
 import { getCandidateDepartmentIdOrThrow } from "@/test/helpers/entities/get-candidate-department-id-or-throw";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 
@@ -274,4 +279,126 @@ test("should refresh certificationAuthorityId after candidate updates certificat
     where: { id: candidacy.id },
   });
   expect(updated?.certificationAuthorityId).toEqual(ca.id);
+});
+
+const switchCertificationWithExistingFeasibility = async ({
+  typeAccompagnement,
+  candidacyActiveStatus,
+  certificationFeasibilityFormat,
+  dfDematAutonomeActive,
+}: {
+  typeAccompagnement: CandidacyTypeAccompagnement;
+  candidacyActiveStatus: CandidacyStatusStep;
+  certificationFeasibilityFormat: FeasibilityFormat;
+  dfDematAutonomeActive: boolean;
+}) => {
+  if (dfDematAutonomeActive) {
+    await createFeatureHelper({
+      args: {
+        key: "DF_DEMAT_AUTONOME",
+        isActive: true,
+      },
+    });
+  }
+
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus,
+    candidacyArgs: {
+      typeAccompagnement,
+    },
+  });
+  const certification = await createCertificationHelper({
+    feasibilityFormat: certificationFeasibilityFormat,
+  });
+  const feasibility = await prismaClient.feasibility.create({
+    data: {
+      candidacyId: candidacy.id,
+      isActive: true,
+      feasibilityFormat: FeasibilityFormat.DEMATERIALIZED,
+    },
+  });
+
+  const resp = await updateCertification({
+    keycloakId: candidacy.candidate?.keycloakId ?? "",
+    candidacyId: candidacy.id,
+    certificationId: certification.id,
+  });
+
+  const updatedFeasibility = await prismaClient.feasibility.findUnique({
+    where: { id: feasibility.id },
+  });
+  const updatedCandidacy = await prismaClient.candidacy.findUnique({
+    where: { id: candidacy.id },
+  });
+
+  return { resp, updatedFeasibility, updatedCandidacy, certification };
+};
+
+test("should deactivate existing feasibilities when an autonome candidate switches to a dematerialized certification and DF demat autonome is active", async () => {
+  const { resp, updatedFeasibility, updatedCandidacy, certification } =
+    await switchCertificationWithExistingFeasibility({
+      typeAccompagnement: "AUTONOME",
+      candidacyActiveStatus: CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
+      certificationFeasibilityFormat: FeasibilityFormat.DEMATERIALIZED,
+      dfDematAutonomeActive: true,
+    });
+
+  expect(resp.statusCode).toEqual(200);
+  expect(resp.json().errors).toBeUndefined();
+  expect(updatedCandidacy?.certificationId).toEqual(certification.id);
+  expect(updatedCandidacy?.feasibilityFormat).toEqual(
+    FeasibilityFormat.DEMATERIALIZED,
+  );
+  expect(updatedFeasibility?.isActive).toEqual(false);
+});
+
+test("should keep existing feasibilities active when DF demat autonome is inactive", async () => {
+  const { resp, updatedFeasibility, updatedCandidacy } =
+    await switchCertificationWithExistingFeasibility({
+      typeAccompagnement: "AUTONOME",
+      candidacyActiveStatus: CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
+      certificationFeasibilityFormat: FeasibilityFormat.DEMATERIALIZED,
+      dfDematAutonomeActive: false,
+    });
+
+  expect(resp.statusCode).toEqual(200);
+  expect(resp.json().errors).toBeUndefined();
+  expect(updatedCandidacy?.feasibilityFormat).toEqual(
+    FeasibilityFormat.UPLOADED_PDF,
+  );
+  expect(updatedFeasibility?.isActive).toEqual(true);
+});
+
+test("should keep existing feasibilities active when the candidacy is accompagne", async () => {
+  const { resp, updatedFeasibility, updatedCandidacy } =
+    await switchCertificationWithExistingFeasibility({
+      typeAccompagnement: "ACCOMPAGNE",
+      candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
+      certificationFeasibilityFormat: FeasibilityFormat.DEMATERIALIZED,
+      dfDematAutonomeActive: true,
+    });
+
+  expect(resp.statusCode).toEqual(200);
+  expect(resp.json().errors).toBeUndefined();
+  expect(updatedCandidacy?.feasibilityFormat).toEqual(
+    FeasibilityFormat.DEMATERIALIZED,
+  );
+  expect(updatedFeasibility?.isActive).toEqual(true);
+});
+
+test("should keep existing feasibilities active when the new certification uses an uploaded pdf", async () => {
+  const { resp, updatedFeasibility, updatedCandidacy } =
+    await switchCertificationWithExistingFeasibility({
+      typeAccompagnement: "AUTONOME",
+      candidacyActiveStatus: CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
+      certificationFeasibilityFormat: FeasibilityFormat.UPLOADED_PDF,
+      dfDematAutonomeActive: true,
+    });
+
+  expect(resp.statusCode).toEqual(200);
+  expect(resp.json().errors).toBeUndefined();
+  expect(updatedCandidacy?.feasibilityFormat).toEqual(
+    FeasibilityFormat.UPLOADED_PDF,
+  );
+  expect(updatedFeasibility?.isActive).toEqual(true);
 });
