@@ -75,6 +75,7 @@ const GET_CANDIDACY_BY_ID_FOR_DASHBOARD = graphql(`
           swornStatementFileId
           candidateConfirmationAt
           sentToCandidateAt
+          isReadyToBeSentToCertificationAuthority
         }
         certificationAuthority {
           contactEmail

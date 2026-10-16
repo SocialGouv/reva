@@ -29,11 +29,10 @@ const FeasibilityBadge = ({
   });
   const decisionIsDraftOrIncomplete =
     decision === "DRAFT" || decision === "INCOMPLETE";
-  const needsAttestation =
-    isDfDemat &&
-    !candidacyIsAutonome &&
-    (!feasibility?.dematerializedFeasibilityFile?.swornStatementFileId ||
-      !isCandidateConfirmed);
+
+  const feasibilityIsReadyToBeSentToCertificationAuthority =
+    feasibility?.dematerializedFeasibilityFile
+      ?.isReadyToBeSentToCertificationAuthority;
 
   switch (true) {
     // Dossier revenu en "Incomplet" et pas encore re-envoyé par l'AAP : le candidat n'a rien à faire
@@ -46,8 +45,8 @@ const FeasibilityBadge = ({
       }):
       return null;
 
-    case decisionIsDraftOrIncomplete &&
-      isDfDemat &&
+    case isDfDemat &&
+      decisionIsDraftOrIncomplete &&
       isSentToCandidate &&
       !isCandidateConfirmed:
       return (
@@ -56,33 +55,25 @@ const FeasibilityBadge = ({
         </Badge>
       );
 
-    case decisionIsDraftOrIncomplete &&
-      needsAttestation &&
-      isDfDemat &&
-      !candidacyIsAutonome &&
-      !!feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt:
+    case isDfDemat && feasibilityIsReadyToBeSentToCertificationAuthority:
       return (
         <Badge
-          severity="info"
-          data-testid="feasibility-waiting-for-attestation"
+          severity={candidacyIsAutonome ? "warning" : "info"}
+          data-testid="feasibility-badge-to-send"
         >
-          attente attestation
-        </Badge>
-      );
-    case decisionIsDraftOrIncomplete &&
-      !needsAttestation &&
-      !candidacyIsAutonome:
-      return (
-        <Badge severity="info" data-testid="feasibility-badge-to-send">
           à envoyer au certificateur
         </Badge>
       );
-    case candidacyIsAutonome && (!decision || decision === "INCOMPLETE"):
+    // Autonome et DF PDF
+    case candidacyIsAutonome &&
+      !isDfDemat &&
+      (!decision || decision === "INCOMPLETE"):
       return (
         <Badge severity="warning" data-testid="feasibility-badge-to-send">
-          à envoyer
+          à envoyer au certificateur
         </Badge>
       );
+    // Commun pour autonome et accompagné
     case decision === "ADMISSIBLE":
       return (
         <Badge severity="success" data-testid="feasibility-badge-admissible">

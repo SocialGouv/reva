@@ -65,7 +65,7 @@ test("should display 'to validate' feasibility badge when sent to candidate and 
   await expect(page.getByTestId("feasibility-badge-to-validate")).toBeVisible();
 });
 
-test("should display feasibility-waiting-for-attestation when candidate did not submit sworn statement", async ({
+test("should not display a badge when the dematerialized DF is not ready to be sent to the certification authority", async ({
   page,
   msw,
 }) => {
@@ -76,17 +76,19 @@ test("should display feasibility-waiting-for-attestation when candidate did not 
       dematerializedFeasibilityFile: {
         sentToCandidateAt: Date.now(),
         candidateConfirmationAt: Date.now(),
+        isReadyToBeSentToCertificationAuthority: false,
       },
     }),
     typeAccompagnement: "ACCOMPAGNE",
   });
 
+  await expect(page.getByTestId("feasibility-badge-to-send")).not.toBeVisible();
   await expect(
-    page.getByTestId("feasibility-waiting-for-attestation"),
-  ).toBeVisible();
+    page.getByTestId("feasibility-badge-to-validate"),
+  ).not.toBeVisible();
 });
 
-test("should display feasibility-badge-to-send for accompanied candidacy when DF has not yet been sent to certification authority", async ({
+test("should display feasibility-badge-to-send for accompanied candidacy when the dematerialized DF is ready to be sent to the certification authority", async ({
   page,
   msw,
 }) => {
@@ -98,6 +100,7 @@ test("should display feasibility-badge-to-send for accompanied candidacy when DF
         sentToCandidateAt: Date.now(),
         candidateConfirmationAt: Date.now(),
         swornStatementFileId: "1",
+        isReadyToBeSentToCertificationAuthority: true,
       },
     }),
     typeAccompagnement: "ACCOMPAGNE",
@@ -109,21 +112,42 @@ test("should display feasibility-badge-to-send for accompanied candidacy when DF
   );
 });
 
-test("should display feasibility-badge-to-send for autonomous candidacy when DF has not yet been sent to certification authority", async ({
+test("should display feasibility-badge-to-send for autonomous candidacy when the dematerialized DF is ready to be sent to the certification authority", async ({
   page,
   msw,
 }) => {
   await setupDashboard(page, msw, {
-    feasibility: {
-      id: "1",
+    feasibility: createFeasibilityEntity({
+      decision: "DRAFT",
       feasibilityFormat: "DEMATERIALIZED",
-    },
+      dematerializedFeasibilityFile: {
+        isReadyToBeSentToCertificationAuthority: true,
+      },
+    }),
     typeAccompagnement: "AUTONOME",
   });
 
   await expect(page.getByTestId("feasibility-badge-to-send")).toBeVisible();
   await expect(page.getByTestId("feasibility-badge-to-send")).toHaveText(
-    "à envoyer",
+    "à envoyer au certificateur",
+  );
+});
+
+test("should display feasibility-badge-to-send for autonomous candidacy when the PDF DF has not yet been sent to the certification authority", async ({
+  page,
+  msw,
+}) => {
+  await setupDashboard(page, msw, {
+    feasibility: createFeasibilityEntity({
+      decision: "INCOMPLETE",
+      feasibilityFormat: "UPLOADED_PDF",
+    }),
+    typeAccompagnement: "AUTONOME",
+  });
+
+  await expect(page.getByTestId("feasibility-badge-to-send")).toBeVisible();
+  await expect(page.getByTestId("feasibility-badge-to-send")).toHaveText(
+    "à envoyer au certificateur",
   );
 });
 
@@ -237,6 +261,7 @@ test("ne doit afficher aucun label quand le DF est incomplet et pas encore renvo
       dematerializedFeasibilityFile: {
         sentToCandidateAt: Date.parse("2024-01-01T00:00:00.000Z"),
         candidateConfirmationAt: Date.parse("2024-01-01T00:00:00.000Z"),
+        isReadyToBeSentToCertificationAuthority: true,
       },
     }),
     typeAccompagnement: "ACCOMPAGNE",
@@ -245,9 +270,7 @@ test("ne doit afficher aucun label quand le DF est incomplet et pas encore renvo
   await expect(
     page.getByTestId("feasibility-badge-to-validate"),
   ).not.toBeVisible();
-  await expect(
-    page.getByTestId("feasibility-waiting-for-attestation"),
-  ).not.toBeVisible();
+  await expect(page.getByTestId("feasibility-badge-to-send")).not.toBeVisible();
 });
 
 test("should be disabled when DF is incomplete and has not been yet resent to candidate by AAP", async ({
