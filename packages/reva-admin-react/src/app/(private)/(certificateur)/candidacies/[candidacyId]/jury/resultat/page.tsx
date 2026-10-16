@@ -28,7 +28,7 @@ export default function ResultatPage() {
     );
   }
 
-  return candidacy?.typeAccompagnement === "ACCOMPAGNE" &&
+  return candidacy?.feasibilityFormat === "DEMATERIALIZED" &&
     candidacy?.feasibility?.dematerializedFeasibilityFile &&
     isJuryResultsByBlockFeatureActive ? (
     <ResultatByBlocks />

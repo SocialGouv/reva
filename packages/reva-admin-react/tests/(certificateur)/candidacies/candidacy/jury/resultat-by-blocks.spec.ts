@@ -25,10 +25,12 @@ const juryResultRadioByValue = (page: Page, value: string) =>
 function createGetJuryByCandidacyIdHandler({
   typeAccompagnement,
   isCertificationPartial,
+  feasibilityFormat = "DEMATERIALIZED",
   historyJury = [],
 }: {
   typeAccompagnement: "AUTONOME" | "ACCOMPAGNE";
   isCertificationPartial: boolean;
+  feasibilityFormat?: "DEMATERIALIZED" | "UPLOADED_PDF";
   historyJury?: {
     id: string;
     dateOfSession: number;
@@ -51,6 +53,7 @@ function createGetJuryByCandidacyIdHandler({
         id: CANDIDACY_ID,
         isCertificationPartial,
         typeAccompagnement,
+        feasibilityFormat,
         activeDossierDeValidation: {
           updatedAt: 1712102400000,
           decision: "PENDING",
@@ -489,5 +492,51 @@ test.describe("jury result by blocks", () => {
       modal.getByText("Blocs non concernés par la recevabilité :"),
     ).toBeVisible();
     await expect(modal.getByText("B3 - Bloc 3")).toBeVisible();
+  });
+
+  test("displays the by-blocks result form for an autonomous candidacy with a dematerialized feasibility", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...certificateurCommonHandlers,
+      createGetJuryByCandidacyIdHandler({
+        typeAccompagnement: "AUTONOME",
+        isCertificationPartial: false,
+        feasibilityFormat: "DEMATERIALIZED",
+      }),
+    );
+
+    await openResultPage(page);
+
+    await expect(
+      page.getByText("Quel est le résultat du jury pour ce candidat ?"),
+    ).toBeVisible();
+    await expect(page.getByRole("checkbox", { name: "Bloc 1" })).toBeVisible();
+    await expect(page.getByText("Résultats possibles :")).not.toBeVisible();
+  });
+
+  test("displays the classic result form when the feasibility format is an uploaded PDF", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...certificateurCommonHandlers,
+      createGetJuryByCandidacyIdHandler({
+        typeAccompagnement: "ACCOMPAGNE",
+        isCertificationPartial: false,
+        feasibilityFormat: "UPLOADED_PDF",
+      }),
+    );
+
+    await openResultPage(page);
+
+    await expect(page.getByText("Résultats possibles :")).toBeVisible();
+    await expect(
+      page.getByText("Réussite totale à une certification visée en totalité"),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("checkbox", { name: "Bloc 1" }),
+    ).not.toBeVisible();
   });
 });

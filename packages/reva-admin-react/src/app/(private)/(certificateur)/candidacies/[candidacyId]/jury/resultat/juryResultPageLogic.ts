@@ -13,6 +13,7 @@ const getJuryByCandidacyIdQuery = graphql(`
       id
       isCertificationPartial
       typeAccompagnement
+      feasibilityFormat
       candidate {
         firstname
         lastname
