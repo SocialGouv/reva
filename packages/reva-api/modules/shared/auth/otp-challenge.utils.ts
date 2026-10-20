@@ -1,7 +1,7 @@
 import { generateJwt, getJWTContent } from "./jwt.helper";
 
 const AUTHENTICATOR_OTP_CHALLENGE_EXPIRES_IN = 5 * 60;
-const EMAIL_OTP_CHALLENGE_EXPIRES_IN = 10 * 60;
+const EMAIL_OTP_CHALLENGE_EXPIRES_IN = 30 * 60;
 
 // Le mot de passe est embarqué chiffré dans le token, jamais exposé en clair
 // au navigateur entre les deux étapes du flow.

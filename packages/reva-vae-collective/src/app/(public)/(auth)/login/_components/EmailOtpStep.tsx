@@ -30,7 +30,7 @@ export const EmailOtpStep = ({
           description={
             <p>
               Un nouveau code a été envoyé à {email}.
-              <br /> Ce code est valable 10 minutes.
+              <br /> Ce code est valable 30 minutes.
             </p>
           }
         />
@@ -47,7 +47,7 @@ export const EmailOtpStep = ({
         className="mb-0"
         state={otpError ? "error" : "default"}
         stateRelatedMessage={otpError}
-        hintText="Saisissez le code de vérification à 6 chiffres, valable 10 minutes"
+        hintText="Saisissez le code de vérification à 6 chiffres, valable 30 minutes"
         nativeInputProps={{
           id: "otp",
           name: "otp",
