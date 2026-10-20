@@ -6,13 +6,13 @@ import { createAccountHelper } from "@/test/helpers/entities/create-account-help
 import { deleteExpiredAccountEmailOtps } from "./deleteExpiredAccountEmailOtps";
 
 describe("deleteExpiredAccountEmailOtps", () => {
-  test("deletes OTPs older than 10 minutes", async () => {
+  test("deletes OTPs older than 30 minutes", async () => {
     const account = await createAccountHelper();
     await prismaClient.accountEmailOtp.create({
       data: {
         accountId: account.id,
         otp: "123456",
-        createdAt: addMinutes(new Date(), -10),
+        createdAt: addMinutes(new Date(), -30),
       },
     });
 
@@ -30,7 +30,7 @@ describe("deleteExpiredAccountEmailOtps", () => {
       data: {
         accountId: account.id,
         otp: "654321",
-        createdAt: addMinutes(new Date(), -9),
+        createdAt: addMinutes(new Date(), -29),
       },
     });
 
@@ -50,7 +50,7 @@ describe("deleteExpiredAccountEmailOtps", () => {
       data: {
         accountId: expiredAccount.id,
         otp: "111111",
-        createdAt: addMinutes(new Date(), -15),
+        createdAt: addMinutes(new Date(), -35),
       },
     });
     await prismaClient.accountEmailOtp.create({

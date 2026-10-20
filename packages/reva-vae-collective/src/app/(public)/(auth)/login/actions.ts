@@ -32,8 +32,8 @@ const OTP_CHALLENGE_COOKIE_PATH = "/vae-collective/login";
 // TTL pour OTP généré par l'authenticateur : 5 minutes
 const AUTHENTICATOR_OTP_CHALLENGE_COOKIE_MAX_AGE = 5 * 60;
 
-// TTL pour OTP généré par email : 10 minutes
-const EMAIL_OTP_CHALLENGE_COOKIE_MAX_AGE = 10 * 60;
+// TTL pour OTP généré par email : 30 minutes
+const EMAIL_OTP_CHALLENGE_COOKIE_MAX_AGE = 30 * 60;
 
 const loginMutation = graphql(`
   mutation Login($email: String!, $password: String!) {

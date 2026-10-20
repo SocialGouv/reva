@@ -4,11 +4,11 @@ import { prismaClient } from "@/prisma/client";
 
 export const deleteExpiredAccountEmailOtps = async () => {
   const now = new Date();
-  const tenMinutesAgo = addMinutes(now, -10);
+  const thirtyMinutesAgo = addMinutes(now, -30);
 
   await prismaClient.accountEmailOtp.deleteMany({
     where: {
-      createdAt: { lt: tenMinutesAgo },
+      createdAt: { lt: thirtyMinutesAgo },
     },
   });
 };
