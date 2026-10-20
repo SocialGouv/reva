@@ -31,7 +31,7 @@ export default async function AccessRightsPage({
     <div className="flex flex-col w-full">
       <RoleDependentBreadcrumb
         className="mt-0 mb-4"
-        currentPageLabel={cohorte.nom}
+        currentPageLabel="Droits d'accès"
         segments={[
           {
             label: "Cohortes",
