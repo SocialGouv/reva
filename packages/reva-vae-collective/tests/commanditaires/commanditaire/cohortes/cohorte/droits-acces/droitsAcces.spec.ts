@@ -467,3 +467,78 @@ test.describe("Submitting after visiting multiple pages", () => {
     });
   });
 });
+
+test.describe("breadcrumb", () => {
+  test.use({
+    mswHandlers: [
+      [
+        fvae.query("getCommanditaireVaeCollectiveAndCohorteByIdQuery", () =>
+          HttpResponse.json({
+            data: {
+              vaeCollective_getCommanditaireVaeCollective: {
+                id: commanditaireId,
+                sousComptes: {
+                  info: { totalRows: 0 },
+                  rows: [],
+                },
+              },
+              vaeCollective_getCohorteVaeCollectiveById: {
+                id: cohorteVaeCollectiveId,
+                nom: "macohorte",
+              },
+            },
+          }),
+        ),
+        mockQueryActiveFeatures(),
+        mockQueryGetUserPermissions(),
+      ],
+      { scope: "test" },
+    ],
+  });
+
+  test("it should display 'Droits d'accès' as the current page label", async ({
+    page,
+  }) => {
+    await login({ page, role: "gestionnaireVaeCollective" });
+
+    await page.goto(pageUrl);
+
+    await expect(page.locator('[aria-current="page"]')).toHaveText(
+      "Droits d'accès",
+    );
+  });
+
+  test("when i click on the cohorte name it should lead to the cohorte page", async ({
+    page,
+  }) => {
+    await login({ page, role: "gestionnaireVaeCollective" });
+
+    await page.goto(pageUrl);
+
+    await page
+      .getByRole("navigation")
+      .getByRole("link", { name: "macohorte" })
+      .click();
+
+    await page.waitForURL(
+      `/vae-collective/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}`,
+    );
+  });
+
+  test("when i click on the cohortes list link it should lead to the cohortes list page", async ({
+    page,
+  }) => {
+    await login({ page, role: "gestionnaireVaeCollective" });
+
+    await page.goto(pageUrl);
+
+    await page
+      .getByRole("navigation")
+      .getByRole("link", { name: "Cohortes" })
+      .click();
+
+    await page.waitForURL(
+      `/vae-collective/commanditaires/${commanditaireId}/cohortes`,
+    );
+  });
+});
