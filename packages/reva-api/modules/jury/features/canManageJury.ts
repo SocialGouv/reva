@@ -1,6 +1,7 @@
 import { FeasibilityStatus } from "@prisma/client";
 
 import { getAccountByKeycloakId } from "@/modules/account/features/getAccountByKeycloakId";
+import { getCertificationAuthorityIdForAccount } from "@/modules/certification-authority/features/getCertificationAuthorityIdForAccount";
 import { getCertificationAuthorityLocalAccountByAccountId } from "@/modules/certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
 import {
   CANDIDATURE_ETE_ABANDONNEE,
@@ -66,15 +67,12 @@ export const canManageJury = async ({
   // certification authority admin account
   if (roles.includes("manage_certification_authority_local_account")) {
     // is user account attached to a certification authority which manage the candidacy certification
-    const authorized = !!(await prismaClient.account.findFirst({
-      where: {
-        keycloakId,
-        certificationAuthorityId,
-      },
-      select: { id: true },
-    }));
+    const account = await getAccountByKeycloakId({ keycloakId });
+    const accountCertificationAuthorityId = account
+      ? await getCertificationAuthorityIdForAccount(account.id)
+      : undefined;
 
-    return authorized;
+    return accountCertificationAuthorityId === certificationAuthorityId;
   }
 
   // certification authority local account

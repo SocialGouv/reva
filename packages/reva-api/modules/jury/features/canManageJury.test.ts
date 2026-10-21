@@ -7,11 +7,11 @@ import {
   DOSSIER_FAISABILITE_PAS_RECEVABLE,
 } from "@/modules/shared/errors/messages";
 import { prismaClient } from "@/prisma/client";
-import { createAccountHelper } from "@/test/helpers/entities/create-account-helper";
 import { createCandidacyDropOutHelper } from "@/test/helpers/entities/create-candidacy-drop-out-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
+import { createCertificationAuthorityOnAccountHelper } from "@/test/helpers/entities/create-certification-authority-on-account-helper";
 import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 
 import { canManageJury } from "./canManageJury";
@@ -165,9 +165,8 @@ test("returns false when user lacks manage_feasibility role", async () => {
 
 test("returns true when CA admin account is linked to the candidacy CA", async () => {
   const { candidacy, certificationAuthority } = await createAdmissibleSetup();
-  const account = await createAccountHelper({
+  const { account } = await createCertificationAuthorityOnAccountHelper({
     certificationAuthorityId: certificationAuthority.id,
-    keycloakId: faker.string.uuid(),
   });
 
   const result = await canManageJury({
@@ -186,9 +185,8 @@ test("returns false when CA admin account is linked to a different CA", async ()
   const { candidacy } = await createAdmissibleSetup();
   const otherCertificationAuthority =
     await createCertificationAuthorityHelper();
-  const account = await createAccountHelper({
+  const { account } = await createCertificationAuthorityOnAccountHelper({
     certificationAuthorityId: otherCertificationAuthority.id,
-    keycloakId: faker.string.uuid(),
   });
 
   const result = await canManageJury({
