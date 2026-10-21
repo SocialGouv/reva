@@ -173,4 +173,31 @@ test.describe("Certification info display", () => {
     ).toBeVisible();
     await expect(page.getByText("VAE en autonomie")).not.toBeVisible();
   });
+
+  test("shows the RNCP code as a tag", async ({ page, msw }) => {
+    const certification = createCertificationEntity({
+      id: "project-certification-info-rncp",
+      codeRncp: "RNCP9999",
+    });
+    const candidacy = createCandidacyEntity({
+      candidate,
+      certification,
+      status: "PROJET",
+    });
+
+    msw.use(
+      ...createProjectCertificationPageHandlers({ certification, candidacy }),
+    );
+
+    await loginAndWaitForCandidaciesInitialLoad(page);
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification/${certification.id}/`,
+    );
+
+    await expect(
+      page
+        .locator("p.fr-tag")
+        .filter({ hasText: `RNCP ${certification.codeRncp}` }),
+    ).toBeVisible();
+  });
 });

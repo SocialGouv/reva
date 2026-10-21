@@ -1,4 +1,5 @@
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
+import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 
 import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
@@ -146,7 +147,7 @@ export const CertificationPage = async ({
         <p className="mb-0 text-xl">
           {certification?.certificationAuthorityStructure?.label}
         </p>
-        <span className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification?.codeRncp}`}</span>
+        <Tag className="mt-4">{`RNCP ${certification?.codeRncp}`}</Tag>
         <div className="flex flex-col md:flex-row gap-6 mt-8">
           <Tile
             title={`Niveau ${certification.level}`}
