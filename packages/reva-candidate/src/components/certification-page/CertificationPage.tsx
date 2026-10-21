@@ -151,6 +151,13 @@ export const CertificationPage = async ({
         <div className="flex flex-col md:flex-row gap-6 mt-8">
           <Tile
             title={`Niveau ${certification.level}`}
+            desc={
+              certification.typeDiplome ? (
+                <span className="block w-[180px] truncate">
+                  {certification.typeDiplome}
+                </span>
+              ) : undefined
+            }
             classes={{ content: "p-0" }}
             className="min-w-[282px] h-auto"
             small
@@ -159,18 +166,6 @@ export const CertificationPage = async ({
             imageUrl="/candidat/images/pictograms/information.svg"
             imageAlt="icône information"
           />
-          {certification.typeDiplome && (
-            <Tile
-              title={certification.typeDiplome}
-              classes={{ content: "p-0" }}
-              className="min-w-[282px] h-auto"
-              small
-              orientation="horizontal"
-              imageSvg
-              imageUrl="/candidat/images/pictograms/city-hall.svg"
-              imageAlt="icône mairie"
-            />
-          )}
         </div>
       </div>
       <Tabs className="mt-12" tabs={tabs} />

@@ -200,4 +200,40 @@ test.describe("Certification info display", () => {
         .filter({ hasText: `RNCP ${certification.codeRncp}` }),
     ).toBeVisible();
   });
+
+  test("shows the diploma type merged into the level tile", async ({
+    page,
+    msw,
+  }) => {
+    const certification = createCertificationEntity({
+      id: "project-certification-info-level",
+      level: 3,
+      typeDiplome: "Brevet professionnel",
+    });
+    const candidacy = createCandidacyEntity({
+      candidate,
+      certification,
+      status: "PROJET",
+    });
+
+    msw.use(
+      ...createProjectCertificationPageHandlers({ certification, candidacy }),
+    );
+
+    await loginAndWaitForCandidaciesInitialLoad(page);
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification/${certification.id}/`,
+    );
+
+    const levelTile = page.getByRole("heading", {
+      name: `Niveau ${certification.level}`,
+    });
+    await expect(levelTile).toBeVisible();
+    await expect(
+      levelTile.locator("..").getByText("Brevet professionnel"),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Brevet professionnel" }),
+    ).toHaveCount(0);
+  });
 });
