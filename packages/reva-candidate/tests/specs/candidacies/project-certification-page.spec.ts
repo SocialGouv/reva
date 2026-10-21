@@ -236,4 +236,35 @@ test.describe("Certification info display", () => {
       page.getByRole("heading", { name: "Brevet professionnel" }),
     ).toHaveCount(0);
   });
+
+  test("shows the expiration date tile", async ({ page, msw }) => {
+    const rncpExpiresAt = new Date("2030-06-15").getTime();
+    const certification = createCertificationEntity({
+      id: "project-certification-info-expiration",
+      rncpExpiresAt,
+    });
+    const candidacy = createCandidacyEntity({
+      candidate,
+      certification,
+      status: "PROJET",
+    });
+
+    msw.use(
+      ...createProjectCertificationPageHandlers({ certification, candidacy }),
+    );
+
+    await loginAndWaitForCandidaciesInitialLoad(page);
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification/${certification.id}/`,
+    );
+
+    const expirationTile = page.getByRole("heading", {
+      name: "Date d'expiration",
+    });
+    await expect(expirationTile).toBeVisible();
+    const expectedDate = new Date(rncpExpiresAt).toLocaleDateString("fr-FR");
+    await expect(
+      expirationTile.locator("..").getByText(expectedDate),
+    ).toBeVisible();
+  });
 });

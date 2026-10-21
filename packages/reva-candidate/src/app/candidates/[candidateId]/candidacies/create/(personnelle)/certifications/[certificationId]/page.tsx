@@ -23,6 +23,7 @@ const GET_CERTIFICATION = graphql(`
       rncpObjectifsContexte
       level
       typeDiplome
+      rncpExpiresAt
       id
       label
       codeRncp

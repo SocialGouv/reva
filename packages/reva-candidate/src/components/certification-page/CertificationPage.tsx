@@ -2,6 +2,8 @@ import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 
+import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
+
 import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
 
 import { BlocsDeCompetenceTab } from "./tabs/BlocsDeCompetenceTab";
@@ -21,6 +23,7 @@ export const CertificationPage = async ({
     codeRncp: string;
     typeDiplome?: string | null;
     level: number;
+    rncpExpiresAt: number;
     rncpObjectifsContexte?: string | null;
     prerequisites: { id: string; label: string }[];
     juryTypeMiseEnSituationProfessionnelle?: CertificationJuryTypeOfModality | null;
@@ -165,6 +168,17 @@ export const CertificationPage = async ({
             imageSvg
             imageUrl="/candidat/images/pictograms/information.svg"
             imageAlt="icône information"
+          />
+          <Tile
+            title="Date d'expiration"
+            desc={new Date(certification.rncpExpiresAt).toLocaleDateString(
+              "fr-FR",
+            )}
+            classes={{ content: "p-0" }}
+            className="min-w-[282px] h-auto"
+            small
+            orientation="horizontal"
+            pictogram={PICTOGRAMS.calendar}
           />
         </div>
       </div>
