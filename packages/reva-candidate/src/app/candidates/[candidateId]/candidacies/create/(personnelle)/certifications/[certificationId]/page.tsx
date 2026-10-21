@@ -26,7 +26,6 @@ const GET_CERTIFICATION = graphql(`
       id
       label
       codeRncp
-      isAapAvailable
       additionalInfo {
         dossierDeValidationLink
         dossierDeValidationTemplate {

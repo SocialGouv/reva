@@ -1,5 +1,4 @@
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
-import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 
 import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
@@ -18,7 +17,6 @@ export const CertificationPage = async ({
   certification: {
     id: string;
     label: string;
-    isAapAvailable: boolean;
     codeRncp: string;
     typeDiplome?: string | null;
     level: number;
@@ -148,15 +146,7 @@ export const CertificationPage = async ({
         <p className="mb-0 text-xl">
           {certification?.certificationAuthorityStructure?.label}
         </p>
-        <div className="flex flex-row items-center gap-4">
-          <span className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification?.codeRncp}`}</span>
-
-          <Tag small>
-            {certification?.isAapAvailable
-              ? "VAE en autonomie ou accompagnée"
-              : "VAE en autonomie"}
-          </Tag>
-        </div>
+        <span className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification?.codeRncp}`}</span>
         <div className="flex flex-col md:flex-row gap-6 mt-8">
           <Tile
             title={`Niveau ${certification.level}`}

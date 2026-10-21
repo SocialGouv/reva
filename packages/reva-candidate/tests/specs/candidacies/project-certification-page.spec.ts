@@ -11,6 +11,7 @@ import {
   createCandidacyEntity,
 } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
+import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
 import {
   createCandidacyGuardsAndDashboardHandlers,
   createCandidaciesGuardsHandlers,
@@ -143,5 +144,33 @@ test.describe("Shows available parcours", () => {
       page.getByRole("link", { name: "Certification Authority" }),
     ).toHaveAttribute("href", "https://www.certification-authority.com");
     await expect(page.getByText("Parcours 1")).toBeVisible();
+  });
+});
+
+test.describe("Certification info display", () => {
+  test("does not show the VAE en autonomie label", async ({ page, msw }) => {
+    const certification = createCertificationEntity({
+      id: "project-certification-info-autonomie",
+      codeRncp: "RNCP9999",
+    });
+    const candidacy = createCandidacyEntity({
+      candidate,
+      certification,
+      status: "PROJET",
+    });
+
+    msw.use(
+      ...createProjectCertificationPageHandlers({ certification, candidacy }),
+    );
+
+    await loginAndWaitForCandidaciesInitialLoad(page);
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification/${certification.id}/`,
+    );
+
+    await expect(
+      page.getByText(`RNCP ${certification.codeRncp}`, { exact: true }),
+    ).toBeVisible();
+    await expect(page.getByText("VAE en autonomie")).not.toBeVisible();
   });
 });
