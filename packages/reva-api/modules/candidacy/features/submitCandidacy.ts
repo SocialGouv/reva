@@ -39,7 +39,7 @@ export const submitCandidacy = async ({
   }
 
   const candidate = await getCandidateById({
-    candidateId: candidacy.candidateId as string,
+    candidateId: candidacy.candidateId,
   });
 
   if (!candidate) {

@@ -113,7 +113,6 @@ const getCandidaciesFromDb = async ({
 }) => {
   let whereClause: Prisma.CandidacyWhereInput = organismAccountKeycloakId
     ? {
-        candidateId: { not: null },
         organism: {
           OR: [
             {
@@ -135,7 +134,7 @@ const getCandidaciesFromDb = async ({
           ],
         },
       }
-    : { candidateId: { not: null } };
+    : {};
 
   whereClause = {
     ...whereClause,

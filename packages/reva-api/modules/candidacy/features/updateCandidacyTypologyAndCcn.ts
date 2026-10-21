@@ -32,10 +32,6 @@ export const updateCandidacyTypologyAndCcn = async (
     throw new Error(CANDIDATURE_NON_TROUVEE);
   }
 
-  if (!candidacy.candidateId) {
-    throw new Error(`La candidature n'est pas rattachée à un candidat`);
-  }
-
   let ccn = null;
   if (ccnId) {
     ccn = await prismaClient.candidacyConventionCollective.findUnique({

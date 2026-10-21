@@ -212,7 +212,7 @@ test("certificateur can submit a jury result but cannot revoke his decision hims
     await setupTestCandidacyWithFeasibility();
 
   const candidate = await prismaClient.candidate.findUniqueOrThrow({
-    where: { id: candidacy.candidateId! },
+    where: { id: candidacy.candidateId },
   });
 
   const certificationAuthorityLocalAccount =

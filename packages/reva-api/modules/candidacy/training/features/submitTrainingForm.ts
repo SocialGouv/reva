@@ -119,10 +119,6 @@ export const submitTraining = async ({
     status: "PARCOURS_ENVOYE",
   });
 
-  if (!candidacy.candidateId) {
-    throw new Error("La candidature n'a pas de candidat associé");
-  }
-
   const candidate = await getCandidateById({
     candidateId: candidacy.candidateId,
   });

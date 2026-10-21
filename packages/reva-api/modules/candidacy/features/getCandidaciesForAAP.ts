@@ -66,13 +66,7 @@ export const getCandidaciesForAAP = async ({
   const keycloakId = context.auth.userInfo?.sub;
 
   // Get candidacies
-  const andClauses: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] = [
-    {
-      candidacy: {
-        candidateId: { not: null },
-      },
-    },
-  ];
+  const andClauses: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] = [];
 
   // Active candidacies filter
   if (activeCandidacies) {
