@@ -2300,7 +2300,7 @@ model RoleSpecificToSousCompteAndCohorteVaeCollective {
   sousCompteVaeCollective   SousCompteVaeCollective @relation(fields: [sousCompteVaeCollectiveId], references: [id])
   sousCompteVaeCollectiveId String                  @map("sous_compte_vae_collective_id") @db.Uuid
   cohorteVaeCollective      CohorteVaeCollective    @relation(fields: [cohorteVaeCollectiveId], references: [id], onDelete: Cascade)
-  cohorteVaeCollectiveId    String                  @db.Uuid
+  cohorteVaeCollectiveId    String                  @map("cohorte_vae_collective_id") @db.Uuid
   createdAt                 DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                 DateTime?               @map("updated_at") @db.Timestamptz(6)
 
