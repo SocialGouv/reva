@@ -419,50 +419,53 @@ export const TrainingForm = ({
             Ces éléments sont demandés à titre indicatifs, en l'absence
             d'information un montant approximatif peut être renseigné.
           </p>
-          <div className="grid md:grid-cols-[1fr_180px] gap-x-20 gap-y-6 mb-12">
+          <div className="grid md:grid-cols-[1fr_180px] gap-x-20 gap-y-4 mb-12">
             {candidacyFinancingMethodsFields
               .filter((fm) => fm.id !== OTHER_FINANCING_METHOD_ID)
               .map((fm, fmIndex) => (
-                <Fragment key={fm.id}>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-dsfrGray-labelGrey leading-6">
-                      {fm.label}
-                    </span>
-                    {fm.aapDescription && (
-                      <span className="text-dsfrGray-mentionGrey text-xs leading-5">
-                        {fm.aapDescription}
+                <>
+                  <Fragment key={fm.id}>
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-dsfrGray-labelGrey leading-6">
+                        {fm.label}
                       </span>
-                    )}
-                  </div>
-                  <Input
-                    disabled={disabled}
-                    label=""
-                    iconId="fr-icon-money-euro-circle-line"
-                    key={fm.id}
-                    className="mb-0"
-                    classes={{
-                      nativeInputOrTextArea: "text-right pr-8",
-                    }}
-                    nativeInputProps={{
-                      type: "number",
-                      step: "0.01",
-                      inputMode: "decimal",
-                      ...register(
-                        `candidacyFinancingMethods.${fmIndex}.amount`,
-                        { valueAsNumber: true },
-                      ),
-                    }}
-                    state={
-                      errors.candidacyFinancingMethods?.[fmIndex]?.amount
-                        ? "error"
-                        : "default"
-                    }
-                    stateRelatedMessage={
-                      errors.candidacyFinancingMethods?.[fmIndex]?.amount
-                        ?.message
-                    }
-                  />
-                </Fragment>
+                      {fm.aapDescription && (
+                        <span className="text-dsfrGray-mentionGrey text-xs leading-5">
+                          {fm.aapDescription}
+                        </span>
+                      )}
+                    </div>
+                    <Input
+                      disabled={disabled}
+                      label=""
+                      iconId="fr-icon-money-euro-circle-line"
+                      key={fm.id}
+                      className="mb-0"
+                      classes={{
+                        nativeInputOrTextArea: "text-right pr-8",
+                      }}
+                      nativeInputProps={{
+                        type: "number",
+                        step: "0.01",
+                        inputMode: "decimal",
+                        ...register(
+                          `candidacyFinancingMethods.${fmIndex}.amount`,
+                          { valueAsNumber: true },
+                        ),
+                      }}
+                      state={
+                        errors.candidacyFinancingMethods?.[fmIndex]?.amount
+                          ? "error"
+                          : "default"
+                      }
+                      stateRelatedMessage={
+                        errors.candidacyFinancingMethods?.[fmIndex]?.amount
+                          ?.message
+                      }
+                    />
+                  </Fragment>
+                  <hr className="col-span-2 pb-0.5" />
+                </>
               ))}
             <Checkbox
               className={`col-span-2 ${!candidacyFinancingMethodOtherSourceChecked ? "hidden" : ""}`}
@@ -529,11 +532,12 @@ export const TrainingForm = ({
                     ]?.amount?.message
                   }
                 />
+                <hr className="col-span-2 pb-0.5" />
               </>
             )}
 
             <ToggleSwitch
-              className="mt-2 col-span-2"
+              className="col-span-2"
               disabled={disabled}
               label="Financement pris en charge (en totalité ou en partie) par Transitions Pro"
               inputTitle="Financement pris en charge (en totalité ou en partie) par Transitions Pro"
@@ -543,6 +547,7 @@ export const TrainingForm = ({
                 setValue("financementPrisEnChargeParTransitionsPro", checked)
               }
             />
+            <hr className="col-span-2 pb-0.5" />
             <div>Total</div>
             <div className="flex flex-col">
               <span className="font-medium ml-auto">
