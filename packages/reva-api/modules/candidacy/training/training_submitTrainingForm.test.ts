@@ -8,6 +8,7 @@ import {
   NOT_AUTHORIZED_CANDIDACY_MANAGE,
   SESSION_EXPIRED,
 } from "@/modules/shared/security/messages";
+import { prismaClient } from "@/prisma/client";
 import { TRAINING_INPUT } from "@/test/fixtures/trainings.fixture";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
@@ -169,6 +170,32 @@ test("should be able to submit a basic training form with an 'other source' fina
   expect(res.training_submitTrainingForm).toMatchObject({
     status: "PARCOURS_ENVOYE",
   });
+});
+
+test("should save financementPrisEnChargeParTransitionsPro when submitting a training form", async () => {
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
+  });
+  const aapKeycloakId =
+    candidacy.organism?.organismOnAccounts[0].account.keycloakId;
+
+  await submitTrainingForm({
+    candidacyId: candidacy.id,
+    training: {
+      ...TRAINING_INPUT,
+      financementPrisEnChargeParTransitionsPro: true,
+    },
+    role: "manage_candidacy",
+    keycloakId: aapKeycloakId,
+  });
+
+  const updatedCandidacy = await prismaClient.candidacy.findUnique({
+    where: { id: candidacy.id },
+  });
+
+  expect(updatedCandidacy?.financementPrisEnChargeParTransitionsPro).toEqual(
+    true,
+  );
 });
 
 describe("security", () => {

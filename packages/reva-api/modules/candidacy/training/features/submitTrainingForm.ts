@@ -47,6 +47,7 @@ export const submitTraining = async ({
       amount: number;
       additionalInformation: string;
     }[];
+    financementPrisEnChargeParTransitionsPro: boolean;
   };
 } & CandidacyAuditLogUserInfo) => {
   let candidacy = await getCandidacy({ candidacyId });
@@ -154,6 +155,7 @@ const updateTrainingInformations = async (params: {
       amount: number;
       additionalInformation: string;
     }[];
+    financementPrisEnChargeParTransitionsPro: boolean;
   };
 }) =>
   prismaClient.$transaction(async (tx) => {
@@ -214,6 +216,8 @@ const updateTrainingInformations = async (params: {
         collectiveHourCount: params.training.collectiveHourCount,
         additionalHourCount: params.training.additionalHourCount,
         isCertificationPartial: params.training.isCertificationPartial,
+        financementPrisEnChargeParTransitionsPro:
+          params.training.financementPrisEnChargeParTransitionsPro,
       },
     });
 

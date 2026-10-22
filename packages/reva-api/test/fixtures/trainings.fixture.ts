@@ -8,4 +8,5 @@ export const TRAINING_INPUT = {
   mandatoryTrainingIds: [],
   isCertificationPartial: false,
   candidacyFinancingMethodInfos: [],
+  financementPrisEnChargeParTransitionsPro: false,
 };

@@ -7,6 +7,7 @@ type Candidacy {
   basicSkills: [BasicSkill!]!
   mandatoryTrainings: [Training!]!
   candidacyOnCandidacyFinancingMethods: [CandidacyOnCandidacyFinancingMethod!]!
+  financementPrisEnChargeParTransitionsPro: Boolean!
 }
 
 type CandidacyOnCandidacyFinancingMethod {
@@ -46,6 +47,7 @@ input TrainingInput {
   mandatoryTrainingIds: [UUID!]!
   isCertificationPartial: Boolean!
   candidacyFinancingMethodInfos: [CandidacyFinancingMethodInput!]!
+  financementPrisEnChargeParTransitionsPro: Boolean!
 }
 
 input CandidacyFinancingMethodInput {
