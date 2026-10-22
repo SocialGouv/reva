@@ -209,6 +209,8 @@ const TrainingPage = () => {
                     : null,
                 candidacyFinancingMethods,
                 candidacyFinancingMethodOtherSourceText,
+                financementPrisEnChargeParTransitionsPro:
+                  candidacy.financementPrisEnChargeParTransitionsPro,
               }}
               onSubmit={handleFormSubmit}
               disabled={isCandidacyStatusEqualOrAbove(

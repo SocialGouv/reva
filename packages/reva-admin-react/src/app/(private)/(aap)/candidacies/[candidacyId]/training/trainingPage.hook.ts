@@ -40,6 +40,7 @@ const getCandidacyByIdWithReferential = graphql(`
           id
         }
       }
+      financementPrisEnChargeParTransitionsPro
       feasibility {
         decision
       }

@@ -2,6 +2,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
+import ToggleSwitch from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Fragment, useCallback } from "react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
@@ -72,6 +73,7 @@ const trainingFormSchema = z.object({
   candidacyFinancingMethodOtherSourceChecked: z.boolean(),
   candidacyFinancingMethodOtherSourceText:
     sanitizedOptionalTextAllowSpecialCharacters(),
+  financementPrisEnChargeParTransitionsPro: z.boolean(),
 });
 
 type TrainingFormData = z.infer<typeof trainingFormSchema>;
@@ -89,6 +91,7 @@ export interface TrainingFormValues {
   candidacyFinancingMethods: { id: string; amount: number }[];
   candidacyFinancingMethodOtherSourceText?: string;
   candidacyFinancingMethodOtherSourceChecked?: boolean;
+  financementPrisEnChargeParTransitionsPro: boolean;
 }
 
 interface TrainingFormProps {
@@ -159,6 +162,8 @@ export const TrainingForm = ({
         )?.amount || false,
       candidacyFinancingMethodOtherSourceText:
         defaultValues?.candidacyFinancingMethodOtherSourceText || "",
+      financementPrisEnChargeParTransitionsPro:
+        defaultValues?.financementPrisEnChargeParTransitionsPro || false,
     },
   });
 
@@ -264,6 +269,7 @@ export const TrainingForm = ({
       (fm) => fm.id === OTHER_FINANCING_METHOD_ID,
     );
 
+  const { financementPrisEnChargeParTransitionsPro } = useWatch({ control });
   return (
     <form className="flex flex-col" onSubmit={handleFormSubmit}>
       <h2 className="text-lg">Nombre d'heures</h2>
@@ -525,6 +531,18 @@ export const TrainingForm = ({
                 />
               </>
             )}
+
+            <ToggleSwitch
+              className="mt-2 col-span-2"
+              disabled={disabled}
+              label="Financement pris en charge (en totalité ou en partie) par Transitions Pro"
+              inputTitle="Financement pris en charge (en totalité ou en partie) par Transitions Pro"
+              labelPosition="left"
+              checked={financementPrisEnChargeParTransitionsPro}
+              onChange={(checked) =>
+                setValue("financementPrisEnChargeParTransitionsPro", checked)
+              }
+            />
             <div>Total</div>
             <div className="flex flex-col">
               <span className="font-medium ml-auto">

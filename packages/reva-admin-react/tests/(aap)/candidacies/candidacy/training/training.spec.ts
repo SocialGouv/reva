@@ -21,9 +21,13 @@ const { aapCommonHandlers, aapCommonWait } = getAAPCommonHandlers();
 function createTrainingPageHandlers({
   candidacyStatus = "PARCOURS_CONFIRME",
   feasibilityDecision = "DRAFT",
+  financeModule = "unifvae",
+  candidacyFinancingMethods = [],
 }: {
   candidacyStatus?: string;
   feasibilityDecision?: string;
+  financeModule?: string;
+  candidacyFinancingMethods?: { id: string; label: string }[];
 } = {}) {
   return [
     fvae.query(
@@ -43,8 +47,9 @@ function createTrainingPageHandlers({
           isCertificationPartial: false,
           status: candidacyStatus,
           feasibilityFormat: "DEMATERIALIZED",
-          financeModule: "unifvae",
+          financeModule,
           candidacyOnCandidacyFinancingMethods: [],
+          financementPrisEnChargeParTransitionsPro: false,
           feasibility: {
             decision: feasibilityDecision,
           },
@@ -61,7 +66,7 @@ function createTrainingPageHandlers({
             label: "Savoir de base",
           },
         ],
-        getCandidacyFinancingMethods: [],
+        getCandidacyFinancingMethods: candidacyFinancingMethods,
       }),
     ),
   ];
@@ -158,5 +163,45 @@ test.describe("Candidacy training page", () => {
     await expect(page).toHaveURL(
       `/admin2/candidacies/${CANDIDACY_ID}/summary/`,
     );
+  });
+
+  test("should submit financementPrisEnChargeParTransitionsPro when the toggle is switched on", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...createTrainingPageHandlers({
+        candidacyStatus: "PRISE_EN_CHARGE",
+        financeModule: "hors_plateforme",
+        candidacyFinancingMethods: [
+          { id: "financing-method-id", label: "Financement test" },
+        ],
+      }),
+      createSubmitTrainingHandler(),
+      ...aapCommonHandlers,
+    );
+
+    await login({ page, role: "aap" });
+    await visitTrainingPage(page);
+
+    await page.getByRole("spinbutton").last().fill("100");
+
+    await page
+      .getByRole("checkbox", {
+        name: "Financement pris en charge (en totalité ou en partie) par Transitions Pro",
+      })
+      .click();
+
+    const submitTrainingRequest = waitGraphQL(
+      page,
+      "submitTrainingForCandidacyTrainingPage",
+    );
+    await page.getByRole("button", { name: "Envoyer le parcours" }).click();
+    const submitTrainingResponse = await submitTrainingRequest;
+
+    const { variables } = submitTrainingResponse.request().postDataJSON();
+    expect(
+      variables.training.financementPrisEnChargeParTransitionsPro,
+    ).toBe(true);
   });
 });
