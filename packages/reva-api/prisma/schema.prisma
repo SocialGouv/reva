@@ -279,6 +279,7 @@ model Candidacy {
   feasibilityFileDematAutonomeResourceHiddenAt  DateTime?                                       @map("feasibility_file_demat_autonome_resource_hidden_at") @db.Timestamptz(6)
   feasibilityFileDematAutonomeFirstOpeningAt    DateTime?                                       @map("feasibility_file_demat_autonome_first_opening_at") @db.Timestamptz(6)
   accompagnements                               Accompagnement[]
+  financementPrisEnChargeParTransitionsPro      Boolean                                         @default(false) @map("financement_pris_en_charge_par_transitions_pro")
 
   @@index([organismId])
   @@index([candidateId])
