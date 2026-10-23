@@ -1237,6 +1237,7 @@ model CertificationAuthorityOnAccount {
   updatedAt                DateTime?              @map("updated_at") @db.Timestamptz(6)
 
   @@unique([accountId])
+  @@index([certificationAuthorityId])
   @@map("certification_authority_on_account")
 }
 
