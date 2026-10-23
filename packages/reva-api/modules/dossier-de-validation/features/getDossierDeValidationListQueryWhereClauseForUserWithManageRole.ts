@@ -1,14 +1,18 @@
-import { Prisma, CertificationAuthorityLocalAccount } from "@prisma/client";
+import {
+  Prisma,
+  Account,
+  CertificationAuthorityLocalAccount,
+} from "@prisma/client";
 
 import { COMPTE_LOCAL_AUTORITE_CERTIFICATION_NON_TROUVEE } from "@/modules/shared/errors/messages";
 
 export const getDossierDeValidationListQueryWhereClauseForUserWithManageRole =
   ({
-    certificationAuthorityId,
+    account,
     isCertificationAuthorityLocalAccount,
     certificationAuthorityLocalAccount,
   }: {
-    certificationAuthorityId: string | null | undefined;
+    account: Account | null;
     isCertificationAuthorityLocalAccount: boolean;
     certificationAuthorityLocalAccount: CertificationAuthorityLocalAccount | null;
   }): Prisma.DossierDeValidationWhereInput => {
@@ -36,7 +40,7 @@ export const getDossierDeValidationListQueryWhereClauseForUserWithManageRole =
     } else {
       queryWhereClause = {
         ...queryWhereClause,
-        certificationAuthorityId: certificationAuthorityId || "_",
+        certificationAuthorityId: account?.certificationAuthorityId || "_",
       };
     }
 

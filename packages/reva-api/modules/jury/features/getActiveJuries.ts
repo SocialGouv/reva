@@ -1,7 +1,6 @@
 import { Jury, Prisma } from "@prisma/client";
 
 import { candidacySearchWord } from "@/modules/candidacy/utils/candidacy.helper";
-import { getCertificationAuthorityIdForAccount } from "@/modules/certification-authority/features/getCertificationAuthorityIdForAccount";
 import { getCertificationAuthorityLocalAccountByAccountId } from "@/modules/certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
@@ -42,14 +41,12 @@ export const getActiveJuries = async ({
     const account = await prismaClient.account.findFirstOrThrow({
       where: { keycloakId },
     });
-    const accountCertificationAuthorityId =
-      await getCertificationAuthorityIdForAccount(account.id);
 
     if (
       hasRole("manage_certification_authority_local_account") &&
       certificationAuthorityLocalAccountId
     ) {
-      if (!accountCertificationAuthorityId) {
+      if (!account.certificationAuthorityId) {
         throw new Error(NOT_AUTHORIZED);
       }
 
@@ -57,13 +54,13 @@ export const getActiveJuries = async ({
         await prismaClient.certificationAuthorityLocalAccount.findUnique({
           where: {
             id: certificationAuthorityLocalAccountId,
-            certificationAuthorityId: accountCertificationAuthorityId,
+            certificationAuthorityId: account.certificationAuthorityId,
           },
         });
       const candidacyWhereClause = {
         ...queryWhereClause?.candidacy,
         ...getJuryListQueryWhereClauseForUserWithManageRole({
-          certificationAuthorityId: undefined,
+          account: null,
           isCertificationAuthorityLocalAccount: true,
           certificationAuthorityLocalAccount,
         }).candidacy,
@@ -72,7 +69,7 @@ export const getActiveJuries = async ({
       queryWhereClause = {
         ...queryWhereClause,
         ...getJuryListQueryWhereClauseForUserWithManageRole({
-          certificationAuthorityId: undefined,
+          account: null,
           isCertificationAuthorityLocalAccount: true,
           certificationAuthorityLocalAccount,
         }),
@@ -93,7 +90,7 @@ export const getActiveJuries = async ({
       const candidacyWhereClause = {
         ...queryWhereClause?.candidacy,
         ...getJuryListQueryWhereClauseForUserWithManageRole({
-          certificationAuthorityId: accountCertificationAuthorityId,
+          account,
           isCertificationAuthorityLocalAccount,
           certificationAuthorityLocalAccount,
         }).candidacy,
@@ -102,7 +99,7 @@ export const getActiveJuries = async ({
       queryWhereClause = {
         ...queryWhereClause,
         ...getJuryListQueryWhereClauseForUserWithManageRole({
-          certificationAuthorityId: accountCertificationAuthorityId,
+          account,
           isCertificationAuthorityLocalAccount,
           certificationAuthorityLocalAccount,
         }),
@@ -114,24 +111,30 @@ export const getActiveJuries = async ({
     (certificationAuthorityId || certificationAuthorityLocalAccountId)
   ) {
     if (certificationAuthorityId) {
-      const candidacyWhereClause = {
-        ...queryWhereClause?.candidacy,
-        ...getJuryListQueryWhereClauseForUserWithManageRole({
-          certificationAuthorityId,
-          isCertificationAuthorityLocalAccount: false,
-          certificationAuthorityLocalAccount: null,
-        }).candidacy,
-      };
+      const account = await prismaClient.account.findFirst({
+        where: { certificationAuthorityId },
+      });
 
-      queryWhereClause = {
-        ...queryWhereClause,
-        ...getJuryListQueryWhereClauseForUserWithManageRole({
-          certificationAuthorityId,
-          isCertificationAuthorityLocalAccount: false,
-          certificationAuthorityLocalAccount: null,
-        }),
-        candidacy: candidacyWhereClause,
-      };
+      if (account) {
+        const candidacyWhereClause = {
+          ...queryWhereClause?.candidacy,
+          ...getJuryListQueryWhereClauseForUserWithManageRole({
+            account,
+            isCertificationAuthorityLocalAccount: false,
+            certificationAuthorityLocalAccount: null,
+          }).candidacy,
+        };
+
+        queryWhereClause = {
+          ...queryWhereClause,
+          ...getJuryListQueryWhereClauseForUserWithManageRole({
+            account,
+            isCertificationAuthorityLocalAccount: false,
+            certificationAuthorityLocalAccount: null,
+          }),
+          candidacy: candidacyWhereClause,
+        };
+      }
     } else if (certificationAuthorityLocalAccountId) {
       const certificationAuthorityLocalAccount =
         await prismaClient.certificationAuthorityLocalAccount.findUnique({
@@ -145,7 +148,7 @@ export const getActiveJuries = async ({
       const candidacyWhereClause = {
         ...queryWhereClause?.candidacy,
         ...getJuryListQueryWhereClauseForUserWithManageRole({
-          certificationAuthorityId: undefined,
+          account: null,
           isCertificationAuthorityLocalAccount: true,
           certificationAuthorityLocalAccount,
         }).candidacy,
@@ -154,7 +157,7 @@ export const getActiveJuries = async ({
       queryWhereClause = {
         ...queryWhereClause,
         ...getJuryListQueryWhereClauseForUserWithManageRole({
-          certificationAuthorityId: undefined,
+          account: null,
           isCertificationAuthorityLocalAccount: true,
           certificationAuthorityLocalAccount,
         }),

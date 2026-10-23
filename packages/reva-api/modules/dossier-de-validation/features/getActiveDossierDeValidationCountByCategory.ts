@@ -1,8 +1,7 @@
-import { Prisma } from "@prisma/client";
+import { Account, Prisma } from "@prisma/client";
 
 import { getAccountByKeycloakId } from "@/modules/account/features/getAccountByKeycloakId";
 import { candidacySearchWord } from "@/modules/candidacy/utils/candidacy.helper";
-import { getCertificationAuthorityIdForAccount } from "@/modules/certification-authority/features/getCertificationAuthorityIdForAccount";
 import { getCertificationAuthorityLocalAccountByAccountId } from "@/modules/certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
 import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
 import { NOT_AUTHORIZED } from "@/modules/shared/security/messages";
@@ -37,9 +36,6 @@ export const getActiveDossierDeValidationCountByCategory = async ({
   };
 
   const account = await getAccountByKeycloakId({ keycloakId });
-  const accountCertificationAuthorityId = account
-    ? await getCertificationAuthorityIdForAccount(account.id)
-    : undefined;
   const isCertificationAuthorityLocalAccount =
     !hasRole("admin") &&
     !hasRole("manage_certification_authority_local_account");
@@ -51,11 +47,13 @@ export const getActiveDossierDeValidationCountByCategory = async ({
         })
       : null;
 
-  let selectedCertificationAuthorityId: string | undefined;
+  let certificationAuthorityAccount: Account | null;
 
   if (hasRole("admin")) {
     if (certificationAuthorityId) {
-      selectedCertificationAuthorityId = certificationAuthorityId;
+      certificationAuthorityAccount = await prismaClient.account.findFirst({
+        where: { certificationAuthorityId },
+      });
     } else if (certificationAuthorityLocalAccountId) {
       certificationAuthorityLocalAccount =
         await prismaClient.certificationAuthorityLocalAccount.findUnique({
@@ -70,7 +68,7 @@ export const getActiveDossierDeValidationCountByCategory = async ({
     hasRole("manage_certification_authority_local_account") &&
     certificationAuthorityLocalAccountId
   ) {
-    if (!accountCertificationAuthorityId) {
+    if (!account?.certificationAuthorityId) {
       throw new Error(NOT_AUTHORIZED);
     }
 
@@ -78,7 +76,7 @@ export const getActiveDossierDeValidationCountByCategory = async ({
       await prismaClient.certificationAuthorityLocalAccount.findUnique({
         where: {
           id: certificationAuthorityLocalAccountId,
-          certificationAuthorityId: accountCertificationAuthorityId,
+          certificationAuthorityId: account.certificationAuthorityId,
         },
         include: {
           certificationAuthorityLocalAccountOnDepartment: true,
@@ -107,8 +105,7 @@ export const getActiveDossierDeValidationCountByCategory = async ({
                   ...whereClause,
                   ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole(
                     {
-                      certificationAuthorityId:
-                        selectedCertificationAuthorityId,
+                      account: certificationAuthorityAccount,
                       isCertificationAuthorityLocalAccount: true,
                       certificationAuthorityLocalAccount,
                     },
@@ -119,7 +116,7 @@ export const getActiveDossierDeValidationCountByCategory = async ({
                   ...whereClause,
                   ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole(
                     {
-                      certificationAuthorityId: accountCertificationAuthorityId,
+                      account,
                       isCertificationAuthorityLocalAccount,
                       certificationAuthorityLocalAccount,
                     },
@@ -128,16 +125,15 @@ export const getActiveDossierDeValidationCountByCategory = async ({
               }
             } else if (
               hasRole("admin") &&
-              (selectedCertificationAuthorityId ||
+              (certificationAuthorityAccount ||
                 certificationAuthorityLocalAccount)
             ) {
-              if (selectedCertificationAuthorityId) {
+              if (certificationAuthorityAccount) {
                 whereClause = {
                   ...whereClause,
                   ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole(
                     {
-                      certificationAuthorityId:
-                        selectedCertificationAuthorityId,
+                      account: certificationAuthorityAccount,
                       isCertificationAuthorityLocalAccount: false,
                       certificationAuthorityLocalAccount: null,
                     },
@@ -148,8 +144,7 @@ export const getActiveDossierDeValidationCountByCategory = async ({
                   ...whereClause,
                   ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole(
                     {
-                      certificationAuthorityId:
-                        selectedCertificationAuthorityId,
+                      account: certificationAuthorityAccount,
                       isCertificationAuthorityLocalAccount: true,
                       certificationAuthorityLocalAccount,
                     },

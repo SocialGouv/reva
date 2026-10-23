@@ -5,7 +5,6 @@ import {
   Prisma,
 } from "@prisma/client";
 
-import { getCertificationAuthorityIdForAccount } from "@/modules/certification-authority/features/getCertificationAuthorityIdForAccount";
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
 import { prismaClient } from "@/prisma/client";
@@ -332,6 +331,7 @@ const resolveCertificationAuthorityInfo = async (
       },
       select: {
         id: true,
+        certificationAuthorityId: true,
         certificationAuthorityLocalAccountOnAccount: {
           select: {
             certificationAuthorityLocalAccount: {
@@ -353,11 +353,9 @@ const resolveCertificationAuthorityInfo = async (
     }
 
     // Certification Authority admin account
-    const accountCertificationAuthorityId =
-      await getCertificationAuthorityIdForAccount(account.id);
-    if (accountCertificationAuthorityId) {
+    if (account.certificationAuthorityId) {
       return {
-        certificationAuthorityId: accountCertificationAuthorityId,
+        certificationAuthorityId: account.certificationAuthorityId,
         certificationAuthorityLocalAccountId: undefined,
       };
     }

@@ -1,4 +1,3 @@
-import { getCertificationAuthorityIdForAccount } from "@/modules/certification-authority/features/getCertificationAuthorityIdForAccount";
 import { prismaClient } from "@/prisma/client";
 
 export const canAccessCandidacy = async ({
@@ -101,12 +100,9 @@ export const canAccessCandidacy = async ({
       return false;
     }
 
-    const accountCertificationAuthorityId =
-      await getCertificationAuthorityIdForAccount(account.id);
-
     return (
       candidacyFeasibility.certificationAuthorityId ===
-      accountCertificationAuthorityId
+      account.certificationAuthorityId
     );
   }
 
