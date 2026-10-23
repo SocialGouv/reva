@@ -5,7 +5,7 @@
   "main": "index.js",
   "engines": {
     "npm": "10",
-    "node": "22"
+    "node": ">=22.23.4"
   },
   "scripts": {
     "dev": "nodemon -e ts,json,graphql -w . --exec \"ts-node -r tsconfig-paths/register\" ./index.ts | npx pino-pretty",

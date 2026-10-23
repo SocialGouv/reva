@@ -5,7 +5,7 @@
   "description": "France VAE's interoperability API to interface with other official entities",
   "engines": {
     "npm": "10",
-    "node": "22"
+    "node": ">=22.23.4"
   },
   "main": "index.ts",
   "scripts": {

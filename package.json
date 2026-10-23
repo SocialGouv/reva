@@ -4,7 +4,7 @@
   "description": "",
   "engines": {
     "npm": "10",
-    "node": "22"
+    "node": ">=22.23.4"
   },
   "scripts": {
     "dev": "npm-run-all --print-label --parallel \"dev --prefix packages/reva-api\" \"dev --prefix packages/reva-candidate\" \"dev --prefix packages/reva-admin-react\" \"dev --prefix packages/reva-website\" \"dev --prefix packages/reva-vae-collective\"",

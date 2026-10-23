@@ -28,7 +28,7 @@
   },
   "engines": {
     "npm": "10",
-    "node": "22"
+    "node": ">=22.23.4"
   },
   "overrides": {
     "esbuild": "^0.25.12",
